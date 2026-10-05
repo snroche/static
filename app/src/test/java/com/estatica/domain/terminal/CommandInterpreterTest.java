@@ -1,0 +1,47 @@
+package com.estatica.domain.terminal;
+
+import static org.junit.Assert.assertEquals;
+
+import com.estatica.data.content.ContentParser;
+import com.estatica.domain.content.TerminalText;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.StringReader;
+import java.util.List;
+import java.util.Map;
+
+public class CommandInterpreterTest {
+
+    private CommandInterpreter interpreter;
+
+    @Before
+    public void setUp() {
+        String json = "{"
+                + "\"boot\":[\"x\"],"
+                + "\"reconnect\":[[\"y\"]],"
+                + "\"elapsedUnits\":{\"day\":\"d\",\"hour\":\"h\",\"minute\":\"min\",\"lessThanMinute\":\"-\"},"
+                + "\"unknownCommand\":\"No entiendo '{input}'\","
+                + "\"commands\":{\"ayuda\":[\"lista\"],\"estado\":[\"v{version}\"]},"
+                + "\"statNames\":{},\"expedition\":{},\"bunker\":{}"
+                + "}";
+        TerminalText text = new ContentParser().parseTerminal(new StringReader(json));
+        interpreter = new CommandInterpreter(text);
+    }
+
+    @Test
+    public void knownCommandIsFormatted() {
+        assertEquals(List.of("v1.2.3"), interpreter.respond("estado", Map.of("version", "1.2.3")));
+    }
+
+    @Test
+    public void inputIsNormalized() {
+        assertEquals(List.of("lista"), interpreter.respond("  AYÚDA ", Map.of()));
+    }
+
+    @Test
+    public void unknownCommandEchoesTrimmedInput() {
+        assertEquals(List.of("No entiendo 'bailar'"), interpreter.respond(" bailar ", Map.of()));
+    }
+}

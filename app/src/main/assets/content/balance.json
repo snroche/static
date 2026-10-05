@@ -1,0 +1,110 @@
+{
+  "contentVersion": 3,
+  "ui": {
+    "typewriterCharMillis": 22,
+    "logWindowLines": 200,
+    "logPageSize": 100
+  },
+  "_comment": "Todo lo de abajo es [placeholder] (GDD o propio), sin testear. Ajustar con playtesting.",
+  "expedition": {
+    "situationTimeoutMinutes": 15,
+    "disobeyChance": 0.5
+  },
+  "scouts": {
+    "statMax": 10,
+    "initialStress": 10,
+    "initialTrust": 50,
+    "maxStress": 100,
+    "stressWarning": 70,
+    "stressRecoveryPerHour": 10,
+    "stressOnFailure": 10,
+    "stressOnSuccess": -3,
+    "nerveStressReductionPerPoint": 0.05,
+    "trustOnSuccess": 5,
+    "trustOnFailure": 8,
+    "xpOnSuccess": 3,
+    "xpOnFailure": 1,
+    "xpPerLevel": 2,
+    "injuryStatPenalty": [0, 1, 2, 3],
+    "injuryHealHoursPerLevel": 4
+  },
+  "checks": {
+    "baseChance": 0.55,
+    "perPoint": 0.08,
+    "perDanger": 0.05,
+    "minChance": 0.05,
+    "maxChance": 0.95,
+    "stressPenaltyFrom": 50,
+    "stressPenaltyPerPoint": 0.004,
+    "hintGood": 0.7,
+    "hintBad": 0.4
+  },
+  "bond": {
+    "levelThresholds": [0, 15, 35, 60, 85],
+    "max": 100,
+    "talkCooldownHours": 4,
+    "initiatedCooldownHours": 6,
+    "initiatedExpireHours": 12,
+    "neglectGraceHours": 48,
+    "neglectPerDay": 3,
+    "riskyOrderPenalty": 3,
+    "revealHiddenAtLevel": 3,
+    "closeVoiceAtLevel": 3,
+    "askToReturnAtLevel": 3,
+    "giftLiked": 15,
+    "giftDisliked": 6,
+    "giftNeutral": 3,
+    "retreatGranted": 4
+  },
+  "grief": {
+    "baseStress": 15,
+    "stressPerAffinity": 0.4,
+    "traitChance": 0.35,
+    "traitAffinityMin": 25,
+    "traits": [
+      "rencor",
+      "miedo"
+    ]
+  },
+  "affinity": {
+    "trainingPerHour": 2,
+    "sameTaskPerHour": 0.5,
+    "max": 100
+  },
+  "bands": [
+    {
+      "id": "short",
+      "minMinutes": 1,
+      "maxMinutes": 5,
+      "unlockAntennaLevel": 1
+    },
+    {
+      "id": "medium",
+      "minMinutes": 15,
+      "maxMinutes": 60,
+      "unlockAntennaLevel": 2
+    },
+    {
+      "id": "long",
+      "minMinutes": 120,
+      "maxMinutes": 360,
+      "unlockAntennaLevel": 4
+    },
+    {
+      "id": "deep",
+      "minMinutes": 480,
+      "maxMinutes": null,
+      "unlockAntennaLevel": null
+    }
+  ],
+  "radio": {
+    "signalRotationHours": 4
+  },
+  "workshop": {
+    "craftMinMinutes": 1,
+    "craftMaxMinutes": 10
+  },
+  "monetization": {
+    "rewardedAdsDailyCap": 3
+  }
+}

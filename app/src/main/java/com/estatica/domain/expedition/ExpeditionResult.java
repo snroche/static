@@ -1,0 +1,87 @@
+package com.estatica.domain.expedition;
+
+import com.estatica.domain.log.LogLine;
+import com.estatica.domain.scouts.Memory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/** Everything an engine call produced, to be persisted by the caller. */
+public final class ExpeditionResult {
+
+    private final List<LogLine> lines = new ArrayList<>();
+    private final List<Memory> memories = new ArrayList<>();
+    private final Map<String, Integer> delivered = new LinkedHashMap<>();
+    private final List<String> deliveredItems = new ArrayList<>();
+    private boolean situationArrived;
+    private boolean returned;
+    private boolean scoutDied;
+
+    void line(LogLine line) {
+        lines.add(line);
+    }
+
+    void memory(Memory memory) {
+        memories.add(memory);
+    }
+
+    void deliver(Map<String, Integer> loot) {
+        for (Map.Entry<String, Integer> e : loot.entrySet()) {
+            delivered.merge(e.getKey(), e.getValue(), Integer::sum);
+        }
+    }
+
+    void deliverItems(List<String> items) {
+        deliveredItems.addAll(items);
+    }
+
+    /** Personal objects (item ids) brought back to the bunker. */
+    public List<String> getDeliveredItems() {
+        return Collections.unmodifiableList(deliveredItems);
+    }
+
+    void markSituationArrived() {
+        situationArrived = true;
+    }
+
+    void markReturned() {
+        returned = true;
+    }
+
+    void markScoutDied() {
+        scoutDied = true;
+    }
+
+    /** In chronological order for this expedition. */
+    public List<LogLine> getLines() {
+        return Collections.unmodifiableList(lines);
+    }
+
+    public List<Memory> getMemories() {
+        return Collections.unmodifiableList(memories);
+    }
+
+    /** Resources brought back to the bunker. */
+    public Map<String, Integer> getDelivered() {
+        return Collections.unmodifiableMap(delivered);
+    }
+
+    public boolean isSituationArrived() {
+        return situationArrived;
+    }
+
+    public boolean isReturned() {
+        return returned;
+    }
+
+    public boolean isScoutDied() {
+        return scoutDied;
+    }
+
+    public boolean isEmpty() {
+        return lines.isEmpty() && memories.isEmpty() && delivered.isEmpty() && deliveredItems.isEmpty();
+    }
+}

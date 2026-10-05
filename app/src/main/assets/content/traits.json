@@ -1,0 +1,110 @@
+[
+  {
+    "id": "imprudencia",
+    "name": "Imprudencia",
+    "description": "Se arriesga más: trae más botín, pero falla más seguido.",
+    "lootMultiplier": 1.3,
+    "checkBonus": -0.05,
+    "bias": "RISKY"
+  },
+  {
+    "id": "desconfianza",
+    "name": "Desconfianza",
+    "description": "Si no confía en el operador, puede ignorar sus órdenes.",
+    "disobeyBelowTrust": 40
+  },
+  {
+    "id": "pies_ligeros",
+    "name": "Pies ligeros",
+    "description": "Sus expediciones duran menos.",
+    "durationMultiplier": 0.8,
+    "statBonus": {
+      "stealth": 1
+    }
+  },
+  {
+    "id": "metodo",
+    "name": "Método",
+    "description": "Piensa antes de actuar. Prefiere lo seguro.",
+    "statBonus": {
+      "wits": 1
+    },
+    "bias": "CAUTIOUS"
+  },
+  {
+    "id": "miedo",
+    "name": "Miedo",
+    "description": "Lo malo le pesa el doble. Puede aparecer después de una pérdida.",
+    "stressMultiplier": 1.4,
+    "bias": "CAUTIOUS"
+  },
+  {
+    "id": "lealtad",
+    "name": "Lealtad",
+    "description": "Sigue al operador aunque las cosas salgan mal.",
+    "statBonus": {
+      "nerve": 1
+    }
+  },
+  {
+    "id": "sangre_fria",
+    "name": "Sangre fría",
+    "description": "El estrés casi no le hace mella.",
+    "stressMultiplier": 0.7
+  },
+  {
+    "id": "sombra",
+    "name": "Sombra",
+    "kind": "SPECIALIZATION",
+    "description": "Especialización: se mueve sin que la vean.",
+    "statBonus": {
+      "stealth": 1
+    },
+    "checkBonus": 0.02
+  },
+  {
+    "id": "rastreo",
+    "name": "Rastreo",
+    "kind": "SPECIALIZATION",
+    "description": "Especialización: lee el terreno y encuentra más.",
+    "lootMultiplier": 1.2
+  },
+  {
+    "id": "punteria",
+    "name": "Puntería",
+    "kind": "SPECIALIZATION",
+    "description": "Especialización: certero cuando hace falta.",
+    "statBonus": {
+      "endurance": 1
+    },
+    "checkBonus": 0.02
+  },
+  {
+    "id": "mecanica",
+    "name": "Mecánica",
+    "kind": "SPECIALIZATION",
+    "description": "Especialización: arregla lo que sea.",
+    "statBonus": {
+      "craft": 2
+    }
+  },
+  {
+    "id": "primeros_auxilios",
+    "name": "Primeros auxilios",
+    "kind": "SPECIALIZATION",
+    "description": "Especialización: en la enfermería, los demás curan mucho más rápido.",
+    "statBonus": {
+      "wits": 1
+    },
+    "healOthersMultiplier": 1.5
+  },
+  {
+    "id": "rencor",
+    "name": "Rencor",
+    "kind": "SCAR",
+    "description": "Desde la pérdida, se arriesga de más y se carga de bronca.",
+    "checkBonus": 0.03,
+    "stressMultiplier": 1.2,
+    "bias": "RISKY"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "mara",
+    "name": "Mara",
+    "voice": "minusculas",
+    "bio": "Repartía en bicicleta antes del Silencio. Conoce cada pasillo del barrio.",
+    "stats": {
+      "endurance": [3, 6],
+      "stealth": [5, 9],
+      "wits": [4, 7],
+      "nerve": [3, 7],
+      "craft": [2, 5]
+    },
+    "traits": [
+      "pies_ligeros"
+    ],
+    "hiddenTrait": "desconfianza",
+    "likes": [
+      "musica",
+      "dulce"
+    ],
+    "dislikes": [
+      "fe"
+    ]
+  },
+  {
+    "id": "tano",
+    "name": "Tano",
+    "voice": "jerga",
+    "bio": "Albañil. Dice que levantó medio barrio y que lo va a volver a levantar.",
+    "stats": {
+      "endurance": [6, 9],
+      "stealth": [2, 5],
+      "wits": [3, 6],
+      "nerve": [4, 7],
+      "craft": [4, 8]
+    },
+    "traits": [
+      "imprudencia"
+    ],
+    "hiddenTrait": "lealtad",
+    "likes": [
+      "mate",
+      "juego"
+    ],
+    "dislikes": [
+      "lectura"
+    ]
+  },
+  {
+    "id": "irene",
+    "name": "Irene",
+    "voice": "formal",
+    "bio": "Técnica de laboratorio. Anota todo en una libreta que no muestra.",
+    "stats": {
+      "endurance": [2, 5],
+      "stealth": [4, 7],
+      "wits": [6, 9],
+      "nerve": [3, 6],
+      "craft": [5, 8]
+    },
+    "traits": [
+      "metodo"
+    ],
+    "hiddenTrait": "miedo",
+    "likes": [
+      "lectura",
+      "escritura"
+    ],
+    "dislikes": [
+      "juego"
+    ]
+  }
+]

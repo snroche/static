@@ -1,0 +1,58 @@
+[
+  {
+    "id": "descanso",
+    "name": "Descanso",
+    "description": "Duerme, lee, mira el techo. Se recupera del estrés mucho más rápido.",
+    "stat": "nerve",
+    "xpPerHour": 0.3,
+    "selfStressRecoveryMultiplier": 2.5
+  },
+  {
+    "id": "enfermeria",
+    "name": "Enfermería",
+    "description": "Cuida a los heridos: curan más rápido y el grupo se calma.",
+    "stat": "wits",
+    "xpPerHour": 0.5,
+    "groupHealMultiplier": 1.5,
+    "groupStressReliefPerHour": 1
+  },
+  {
+    "id": "cocina",
+    "name": "Cocina",
+    "description": "Hace rendir lo que hay. Un plato caliente baja el estrés de todos.",
+    "stat": "craft",
+    "xpPerHour": 0.5,
+    "groupStressReliefPerHour": 1.5
+  },
+  {
+    "id": "taller",
+    "name": "Taller",
+    "description": "Desarma chatarra: 3 de chatarra se vuelven 1 componente cada 2 h.",
+    "stat": "craft",
+    "xpPerHour": 0.6,
+    "conversion": { "from": "scrap", "input": 3, "to": "components", "hoursPerUnit": 2 }
+  },
+  {
+    "id": "guardia",
+    "name": "Guardia",
+    "description": "Vigila la entrada. Por ahora, nadie vino. Entrena el aguante.",
+    "stat": "endurance",
+    "xpPerHour": 0.6
+  },
+  {
+    "id": "radio",
+    "name": "Asistente de radio",
+    "description": "Acompaña al operador en la consola. La compañía calma a todos.",
+    "stat": "wits",
+    "xpPerHour": 0.5,
+    "groupStressReliefPerHour": 0.5
+  },
+  {
+    "id": "entrenamiento",
+    "name": "Entrenamiento",
+    "description": "Entrena con los demás. Si alguien sabe más, le enseña.",
+    "stat": "endurance",
+    "xpPerHour": 0.8,
+    "mentoring": true
+  }
+]

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
+    <string name="app_name">Estática</string>
+    <string name="input_prompt" translatable="false">&gt;</string>
+    <string name="input_hint">escribí un comando</string>
+    <string name="log_description">Registro de radio</string>
+
+    <string name="title" translatable="false">ESTÁTICA</string>
+    <string name="scouts_button">[ EXPLORADORES ]</string>
+    <string name="panel_close">[ CERRAR ]</string>
+    <string name="panel_back">[ VOLVER ]</string>
+    <string name="panel_diary_button">[ DIARIO ]</string>
+    <string name="panel_scouts_title">EXPLORADORES</string>
+    <string name="panel_zones_title">¿A dónde va %1$s?</string>
+    <string name="panel_gift_title">¿Qué le das a %1$s?</string>
+    <string name="panel_task_title">¿Qué hace %1$s en el búnker?</string>
+    <string name="panel_diary_title">DIARIO</string>
+    <string name="dispatch_button">[ DESPACHAR ]</string>
+    <string name="talk_button">[ HABLAR ]</string>
+    <string name="gift_button">[ REGALAR ]</string>
+    <string name="task_button">[ TAREA ]</string>
+
+    <string name="scout_status_away">%1$s: %2$s</string>
+    <string name="scout_vitals">Estrés %1$d · Confianza %2$d · %3$s</string>
+    <string name="scout_bond">Vínculo %1$s</string>
+    <string name="scout_task">Tarea: %1$s</string>
+    <string name="scout_traits">Rasgos: %1$s</string>
+    <string name="scout_gifts">Lleva: %1$s</string>
+
+    <string name="zone_meta">Peligro %1$s · %2$d–%3$d min</string>
+    <string name="inventory_empty">No hay objetos en el búnker.</string>
+
+    <string name="decision_header">%1$s espera órdenes (hasta las %2$s)</string>
+    <string name="decision_talk_header">%1$s quiere hablar</string>
+    <string name="decision_talk_header_until">%1$s quiere hablar (hasta las %2$s)</string>
+    <string name="decision_more">+%1$d más esperando</string>
+    <string name="decision_option">[%1$d] %2$s</string>
+
+    <string name="notification_channel">Transmisiones</string>
+    <string name="notification_channel_description">Situaciones que necesitan órdenes y regresos al búnker.</string>
+</resources>

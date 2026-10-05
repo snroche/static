@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Terminal palette (GDD §2). Cosmetic palettes will override these later. -->
+    <color name="amber">#FFB000</color>
+    <color name="amber_dim">#B37B00</color>
+    <color name="amber_bright">#FFD066</color>
+    <color name="amber_hint">#664600</color>
+    <color name="terminal_bg">#000000</color>
+</resources>

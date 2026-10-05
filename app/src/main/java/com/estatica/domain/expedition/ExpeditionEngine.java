@@ -1,0 +1,588 @@
+package com.estatica.domain.expedition;
+
+import com.estatica.core.GameRandom;
+import com.estatica.core.Ids;
+import com.estatica.core.TextTemplate;
+import com.estatica.domain.content.Balance;
+import com.estatica.domain.content.EventDef;
+import com.estatica.domain.content.GameContent;
+import com.estatica.domain.content.ItemDrop;
+import com.estatica.domain.content.LootRoll;
+import com.estatica.domain.content.TerminalText;
+import com.estatica.domain.content.VoiceDef;
+import com.estatica.domain.content.ZoneDef;
+import com.estatica.domain.log.LogChannel;
+import com.estatica.domain.log.LogLine;
+import com.estatica.domain.radio.SignalDegrader;
+import com.estatica.domain.scouts.Injury;
+import com.estatica.domain.scouts.Memory;
+import com.estatica.domain.scouts.Scout;
+import com.estatica.domain.scouts.ScoutRules;
+import com.estatica.domain.scouts.StatType;
+import com.estatica.domain.scouts.VoiceRenderer;
+import com.estatica.domain.time.ElapsedFormatter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+/**
+ * Expedition rules: dispatch, catch-up of due segments, and operator decisions.
+ *
+ * <p>Nothing simulates in the background: {@link #advance} resolves, in order, every
+ * segment due by {@code now}. Advancing once to T gives the same result as advancing in
+ * many smaller steps up to T.
+ */
+public final class ExpeditionEngine {
+
+    private static final long MINUTE = 60_000L;
+    private static final double LAST_WORDS_NOISE = 0.25;
+    private static final double LAST_MEMORY_NOISE = 0.4;
+
+    private final GameContent content;
+    private final ScoutRules rules;
+    private final CheckCalculator checks;
+    private final AutoDecider decider;
+    private final Balance.Scouts scoutBalance;
+    private final Balance.Expedition expeditionBalance;
+    private final TerminalText.ExpeditionText text;
+
+    public ExpeditionEngine(GameContent content) {
+        this.content = content;
+        this.rules = new ScoutRules(content);
+        this.checks = new CheckCalculator(content.getBalance().getChecks(), rules);
+        this.decider = new AutoDecider(checks);
+        this.scoutBalance = content.getBalance().getScouts();
+        this.expeditionBalance = content.getBalance().getExpedition();
+        this.text = content.getTerminal().getExpedition();
+    }
+
+    public ScoutRules rules() {
+        return rules;
+    }
+
+    // ---- Dispatch ----
+
+    public static final class Dispatch {
+        public final Expedition expedition;
+        public final List<LogLine> lines;
+
+        Dispatch(Expedition expedition, List<LogLine> lines) {
+            this.expedition = expedition;
+            this.lines = lines;
+        }
+    }
+
+    /**
+     * Sends a scout to a zone. {@code seed} should come from the game RNG
+     * ({@link GameRandom#deriveSeed()}).
+     */
+    public Dispatch dispatch(Scout scout, ZoneDef zone, long seed, long now) {
+        if (!rules.canDispatch(scout)) {
+            throw new IllegalStateException(scout.getName() + " can't be dispatched");
+        }
+        GameRandom rng = GameRandom.fromSeed(seed);
+        List<Segment> segments = TimelineGenerator.generate(zone, rules.durationMultiplier(scout), rng);
+        rules.markDeparted(scout, now);
+
+        VoiceDef voice = content.voice(scout.getVoiceId());
+        Map<String, String> vars = vars(scout);
+        vars.put("zone", zone.getName());
+        vars.put("eta", ElapsedFormatter.format(TimelineGenerator.plannedDuration(segments),
+                content.getTerminal().getElapsedUnits()));
+        List<LogLine> lines = new ArrayList<>();
+        lines.add(system(now, TextTemplate.format(text.getDispatched(), vars), scout));
+        lines.add(radio(now, scout, say(voice, scout, "departure", rng, vars)));
+
+        Expedition expedition = new Expedition(Ids.newId(), scout.getId(), zone.getId(), seed, now,
+                segments, rng.getState(), Expedition.Status.ACTIVE, 0, now, Expedition.NONE,
+                Expedition.NO_CHOICE, Expedition.NONE, Map.of(), List.of(), false);
+        return new Dispatch(expedition, lines);
+    }
+
+    // ---- Decisions ----
+
+    public long timeoutMillis() {
+        return expeditionBalance.getSituationTimeoutMinutes() * MINUTE;
+    }
+
+    /** When the pending situation is decided by the scout alone. */
+    public long deadline(Expedition expedition) {
+        return expedition.getPendingSinceMillis() + timeoutMillis();
+    }
+
+    /** The situation waiting for the operator, or null. */
+    public EventDef pendingEvent(Expedition expedition) {
+        return expedition.isAwaitingDecision()
+                ? content.event(expedition.currentSegment().getEventId())
+                : null;
+    }
+
+    /** Button labels for the pending situation, including "come home" when offered. */
+    public List<String> pendingOptions(Expedition expedition) {
+        EventDef event = pendingEvent(expedition);
+        if (event == null) {
+            return List.of();
+        }
+        List<String> labels = new ArrayList<>();
+        for (EventDef.Option option : event.getOptions()) {
+            labels.add(option.getLabel());
+        }
+        if (expedition.isRetreatOffered()) {
+            labels.add(content.getTerminal().getBunker().getRetreatLabel());
+        }
+        return labels;
+    }
+
+    /** What a dying scout can mention (GDD §5.5). */
+    public static final class DeathContext {
+        public static final DeathContext EMPTY = new DeathContext(List.of(), null);
+
+        /** Names of gifts they carry, most recent last. */
+        public final List<String> gifts;
+        /** Name of the companion they feel closest to, or null. */
+        public final String companion;
+
+        public DeathContext(List<String> gifts, String companion) {
+            this.gifts = gifts;
+            this.companion = companion;
+        }
+    }
+
+    /**
+     * Records the operator's order. Call {@link #advance} up to {@code now} first, then again
+     * afterwards to resolve it.
+     *
+     * @return false if there is nothing to decide anymore (e.g. it timed out)
+     */
+    public boolean choose(Expedition expedition, int option, long now) {
+        if (!expedition.isAwaitingDecision()
+                || now < expedition.getPendingSinceMillis()
+                || now >= deadline(expedition)) {
+            return false;
+        }
+        int count = content.event(expedition.currentSegment().getEventId()).getOptions().size()
+                + (expedition.isRetreatOffered() ? 1 : 0);
+        if (option < 0 || option >= count) {
+            throw new IllegalArgumentException("option " + option + " of " + count);
+        }
+        expedition.setChoice(option, now);
+        return true;
+    }
+
+    /** Next moment something happens without input, or {@link Expedition#NONE}. For notifications. */
+    public long nextEventAt(Expedition expedition) {
+        if (!expedition.isActive()) {
+            return Expedition.NONE;
+        }
+        if (expedition.getPendingSinceMillis() != Expedition.NONE) {
+            return expedition.getChosenOption() != Expedition.NO_CHOICE
+                    ? expedition.getChosenAtMillis()
+                    : deadline(expedition);
+        }
+        return expedition.getCursorAtMillis() + expedition.currentSegment().getDurationMillis();
+    }
+
+    /** Something worth a notification, fully determined by the stored timeline. */
+    public static final class Notice {
+        public enum Type { SITUATION, RETURN }
+
+        public final Type type;
+        public final long atMillis;
+        /** For SITUATION. */
+        public final String eventId;
+
+        Notice(Type type, long atMillis, String eventId) {
+            this.type = type;
+            this.atMillis = atMillis;
+            this.eventId = eventId;
+        }
+    }
+
+    /**
+     * The next situation or return of this expedition, computed without resolving anything
+     * (only transits and finds can lie in between, and those need no decisions). Null if a
+     * situation is already waiting: the operator has seen it, and what follows depends on
+     * how it gets resolved.
+     */
+    public Notice nextNotice(Expedition expedition) {
+        if (!expedition.isActive() || expedition.getPendingSinceMillis() != Expedition.NONE) {
+            return null;
+        }
+        long at = expedition.getCursorAtMillis();
+        List<Segment> segments = expedition.getSegments();
+        for (int i = expedition.getIndex(); i < segments.size(); i++) {
+            Segment segment = segments.get(i);
+            at += segment.getDurationMillis();
+            if (segment.getType() == Segment.Type.SITUATION) {
+                return new Notice(Notice.Type.SITUATION, at, segment.getEventId());
+            }
+            if (segment.getType() == Segment.Type.RETURN) {
+                return new Notice(Notice.Type.RETURN, at, null);
+            }
+        }
+        return null;
+    }
+
+    // ---- Catch-up ----
+
+    /**
+     * Resolves every segment due by {@code now}.
+     *
+     * @param memories the scout's existing memories, newest last (used for last words)
+     */
+    public ExpeditionResult advance(Expedition expedition, Scout scout, List<Memory> memories, long now) {
+        return advance(expedition, scout, memories, DeathContext.EMPTY, now);
+    }
+
+    public ExpeditionResult advance(Expedition expedition, Scout scout, List<Memory> memories,
+                                    DeathContext death, long now) {
+        ExpeditionResult out = new ExpeditionResult();
+        if (!expedition.isActive()) {
+            return out;
+        }
+        ZoneDef zone = content.zone(expedition.getZoneId());
+        VoiceDef voice = content.voice(scout.getVoiceId());
+        GameRandom rng = GameRandom.fromState(expedition.getRngState());
+        List<Memory> known = new ArrayList<>(memories);
+
+        while (expedition.isActive()) {
+            Segment segment = expedition.currentSegment();
+            long due = expedition.getCursorAtMillis() + segment.getDurationMillis();
+
+            if (segment.getType() == Segment.Type.SITUATION) {
+                if (expedition.getPendingSinceMillis() == Expedition.NONE) {
+                    if (due > now) {
+                        break;
+                    }
+                    presentSituation(expedition, scout, zone, voice, rng, due, out);
+                }
+                long resolveAt;
+                boolean ordered;
+                if (expedition.getChosenOption() != Expedition.NO_CHOICE) {
+                    resolveAt = expedition.getChosenAtMillis();
+                    ordered = true;
+                } else if (now >= deadline(expedition)) {
+                    resolveAt = deadline(expedition);
+                    ordered = false;
+                } else {
+                    break;
+                }
+                resolveSituation(expedition, scout, zone, voice, rng, resolveAt, ordered, known, death, out);
+            } else {
+                if (due > now) {
+                    break;
+                }
+                switch (segment.getType()) {
+                    case TRANSIT:
+                        out.line(radio(due, scout, VoiceRenderer.render(voice,
+                                rng.pick(zone.getTransit()), vars(scout))));
+                        expedition.advance(due);
+                        break;
+                    case FIND:
+                        resolveFind(expedition, scout, zone, voice, rng, due, out);
+                        expedition.advance(due);
+                        break;
+                    case RETURN:
+                        resolveReturn(expedition, scout, voice, rng, due, out);
+                        break;
+                    default:
+                        throw new IllegalStateException(segment.getType().name());
+                }
+            }
+        }
+        expedition.setRngState(rng.getState());
+        return out;
+    }
+
+    private void presentSituation(Expedition expedition, Scout scout, ZoneDef zone, VoiceDef voice,
+                                  GameRandom rng, long at, ExpeditionResult out) {
+        expedition.markPending(at);
+        EventDef event = content.event(expedition.currentSegment().getEventId());
+        Map<String, String> vars = vars(scout);
+        for (String line : event.getIntro()) {
+            out.line(radio(at, scout, VoiceRenderer.render(voice, line, vars)));
+        }
+        List<EventDef.Option> options = event.getOptions();
+        for (int i = 0; i < options.size(); i++) {
+            EventDef.Option option = options.get(i);
+            OddsHint hint = checks.hint(checks.chance(scout, option, zone));
+            Map<String, String> optionVars = new HashMap<>(vars);
+            optionVars.put("n", String.valueOf(i + 1));
+            optionVars.put("label", option.getLabel());
+            optionVars.put("hint", VoiceRenderer.phrase(voice, hint.phraseKey(), rng, vars));
+            out.line(radio(at, scout, TextTemplate.format(text.getOptionLine(), optionVars)));
+        }
+        if (rules.asksToReturn(scout)) {
+            expedition.setRetreatOffered(true);
+            out.line(radio(at, scout, say(voice, scout, "askReturn", rng, vars)));
+        }
+        out.line(alert(at, TextTemplate.format(text.getAwaitingOrders(), vars), scout));
+        out.markSituationArrived();
+    }
+
+    private void resolveSituation(Expedition expedition, Scout scout, ZoneDef zone, VoiceDef voice,
+                                  GameRandom rng, long at, boolean ordered, List<Memory> known,
+                                  DeathContext death, ExpeditionResult out) {
+        EventDef event = content.event(expedition.currentSegment().getEventId());
+        Map<String, String> vars = vars(scout);
+
+        if (ordered && expedition.getChosenOption() == event.getOptions().size()) {
+            // The operator told them to come home.
+            out.line(radio(at, scout, say(voice, scout, "goingHome", rng, vars)));
+            rules.addBond(scout, content.getBalance().getBond().getRetreatGranted());
+            expedition.abortToReturn(at);
+            return;
+        }
+
+        int choice;
+        boolean byOrder = ordered;
+        if (ordered) {
+            choice = expedition.getChosenOption();
+            if (scout.getTrust() < rules.disobeyThreshold(scout)
+                    && rng.chance(expeditionBalance.getDisobeyChance())) {
+                int own = decider.pick(event, scout, zone, rules.bias(scout), rng);
+                if (own != choice) {
+                    choice = own;
+                    byOrder = false;
+                    out.line(radio(at, scout, say(voice, scout, "disobey", rng, vars)));
+                }
+            }
+        } else {
+            choice = decider.pick(event, scout, zone, rules.bias(scout), rng);
+            out.line(radio(at, scout, say(voice, scout, "autoDecide", rng, vars)));
+        }
+
+        EventDef.Option option = event.getOptions().get(choice);
+        double chance = checks.chance(scout, option, zone);
+        // GDD §5.5: warned = already in bad shape, or the scout said it looked bad.
+        boolean badOdds = checks.hint(chance) == OddsHint.BAD;
+        boolean warned = rules.isWarned(scout) || badOdds;
+        if (byOrder && badOdds && option.getRisk() == EventDef.Option.Risk.RISKY) {
+            // GDD §5.2: exposing them to unnecessary risk hurts the bond.
+            rules.addBond(scout, -content.getBalance().getBond().getRiskyOrderPenalty());
+        }
+        boolean success = rng.nextDouble() < chance;
+        EventDef.Outcome outcome = success ? option.getSuccess() : option.getFailure();
+
+        for (String line : outcome.getText()) {
+            out.line(radio(at, scout, VoiceRenderer.render(voice, line, vars)));
+        }
+
+        StatType stat = StatType.fromKey(option.getStat());
+        if (rules.train(scout, stat, success)) {
+            Map<String, String> statVars = vars(scout);
+            statVars.put("stat", content.getTerminal().getStatNames().get(stat.key()));
+            statVars.put("value", String.valueOf(scout.stat(stat).getValue()));
+            out.line(system(at, TextTemplate.format(text.getStatUp(), statVars), scout));
+        }
+        rules.addStress(scout, outcome.getStress()
+                + (success ? scoutBalance.getStressOnSuccess() : scoutBalance.getStressOnFailure()));
+        if (byOrder) {
+            rules.addTrust(scout, success ? scoutBalance.getTrustOnSuccess() : -scoutBalance.getTrustOnFailure());
+        }
+        if (outcome.getLoot() != null) {
+            for (LootRoll roll : outcome.getLoot()) {
+                expedition.addLoot(roll.getResource(), rollAmount(roll, scout, rng));
+            }
+        }
+        if (outcome.getMemory() != null) {
+            remember(Memory.create(scout.getId(), Memory.Type.EVENT,
+                    TextTemplate.format(outcome.getMemory(), vars), event.getId(), at), known, out);
+        }
+
+        Injury incoming = Injury.fromKey(outcome.getInjury());
+        boolean notableOrder = byOrder && (success
+                ? option.getRisk() == EventDef.Option.Risk.RISKY
+                : incoming != Injury.NONE || outcome.isLethal());
+        if (notableOrder) {
+            remember(Memory.create(scout.getId(), Memory.Type.ORDER, option.getLabel(),
+                    event.getId(), at), known, out);
+        }
+
+        // GDD §5.5: a death must follow from the operator's decision. It needs a warning AND
+        // an order; choices the scout made alone (timeout, disobedience) hurt but never kill
+        // (§4.2: being away doesn't punish hard). Otherwise the listed injury applies, and
+        // that injury is the warning for next time.
+        boolean lethal = outcome.isLethal()
+                || (incoming != Injury.NONE && scout.getInjury() == Injury.CRITICAL);
+        if (lethal && warned && byOrder) {
+            die(expedition, scout, voice, rng, at, known, death, out);
+            return;
+        }
+        rules.injure(scout, incoming);
+        if (incoming != Injury.NONE) {
+            out.line(radio(at, scout, say(voice, scout, "injured", rng, vars)));
+        }
+        if (scout.getInjury() == Injury.CRITICAL) {
+            expedition.abortToReturn(at);
+        } else {
+            expedition.advance(at);
+        }
+    }
+
+    private void resolveFind(Expedition expedition, Scout scout, ZoneDef zone, VoiceDef voice,
+                             GameRandom rng, long at, ExpeditionResult out) {
+        LootRoll roll = weightedPick(zone.getLoot(), rng);
+        int amount = rollAmount(roll, scout, rng);
+        expedition.addLoot(roll.getResource(), amount);
+        Map<String, String> vars = vars(scout);
+        vars.put("amount", String.valueOf(amount));
+        vars.put("resource", content.resource(roll.getResource()).getName().toLowerCase(Locale.ROOT));
+        out.line(radio(at, scout, VoiceRenderer.phrase(voice, "find", rng, vars)));
+
+        for (ItemDrop drop : zone.getItems()) {
+            if (rng.chance(drop.getChance())) {
+                expedition.addItem(drop.getItem());
+                Map<String, String> itemVars = vars(scout);
+                itemVars.put("item", content.item(drop.getItem()).getName().toLowerCase(Locale.ROOT));
+                out.line(radio(at, scout, VoiceRenderer.phrase(voice, "findItem", rng, itemVars)));
+                break;
+            }
+        }
+    }
+
+    private void resolveReturn(Expedition expedition, Scout scout, VoiceDef voice, GameRandom rng,
+                               long at, ExpeditionResult out) {
+        Map<String, String> vars = vars(scout);
+        out.line(radio(at, scout, say(voice, scout, "arrival", rng, vars)));
+        Map<String, Integer> loot = expedition.getCarriedLoot();
+        if (loot.isEmpty()) {
+            out.line(system(at, TextTemplate.format(text.getReturnedEmpty(), vars), scout));
+        } else {
+            vars.put("loot", describeLoot(loot));
+            out.line(system(at, TextTemplate.format(text.getReturnedWithLoot(), vars), scout));
+        }
+        out.deliver(loot);
+        out.deliverItems(expedition.getCarriedItems());
+        for (String itemId : expedition.getCarriedItems()) {
+            Map<String, String> itemVars = vars(scout);
+            itemVars.put("item", content.item(itemId).getName().toLowerCase(Locale.ROOT));
+            out.line(system(at, TextTemplate.format(content.getTerminal().getBunker().getItemFound(), itemVars), scout));
+        }
+        expedition.clearLoot();
+        expedition.clearItems();
+        rules.markReturned(scout, at);
+        expedition.setStatus(Expedition.Status.COMPLETED);
+        out.markReturned();
+    }
+
+    /**
+     * GDD §5.5: the last transmission is built from what they carry and remember: a gift,
+     * the companion they love, something the operator said. In their voice, breaking up.
+     */
+    private void die(Expedition expedition, Scout scout, VoiceDef voice, GameRandom rng, long at,
+                     List<Memory> known, DeathContext death, ExpeditionResult out) {
+        Map<String, String> vars = vars(scout);
+        boolean close = rules.isClose(scout);
+        List<String> lastWords = new ArrayList<>();
+        lastWords.add(SignalDegrader.degrade(
+                VoiceRenderer.phrase(voice, "lastWords", rng, vars, close), LAST_WORDS_NOISE, rng));
+
+        List<String> mentions = new ArrayList<>();
+        if (!death.gifts.isEmpty()) {
+            Map<String, String> v = vars(scout);
+            v.put("gift", death.gifts.get(death.gifts.size() - 1));
+            mentions.add(VoiceRenderer.phrase(voice, "lastGift", rng, v));
+        }
+        if (death.companion != null) {
+            Map<String, String> v = vars(scout);
+            v.put("companion", death.companion);
+            mentions.add(VoiceRenderer.phrase(voice, "lastCompanion", rng, v));
+        }
+        Memory memory = lastMeaningfulMemory(known);
+        if (memory != null) {
+            Map<String, String> v = vars(scout);
+            v.put("memory", memory.getText());
+            String key = memory.getType() == Memory.Type.ORDER ? "lastOrder" : "lastMemory";
+            mentions.add(VoiceRenderer.phrase(voice, key, rng, v));
+        }
+        for (int i = 0; i < Math.min(2, mentions.size()); i++) {
+            lastWords.add(SignalDegrader.degrade(mentions.get(i), LAST_MEMORY_NOISE, rng));
+        }
+        for (String line : lastWords) {
+            out.line(radio(at, scout, line));
+        }
+        out.line(system(at, text.getSignalLost(), scout));
+        out.line(system(at, TextTemplate.format(text.getDeathNotice(), vars), scout));
+        out.memory(Memory.create(scout.getId(), Memory.Type.LAST_WORDS,
+                String.join("\n", lastWords), expedition.getZoneId(), at));
+
+        rules.markDead(scout, at, expedition.getZoneId());
+        expedition.clearLoot();
+        expedition.clearItems();
+        expedition.setStatus(Expedition.Status.LOST);
+        out.markScoutDied();
+    }
+
+    private static Memory lastMeaningfulMemory(List<Memory> known) {
+        for (int i = known.size() - 1; i >= 0; i--) {
+            Memory.Type type = known.get(i).getType();
+            if (type == Memory.Type.TALK || type == Memory.Type.EVENT || type == Memory.Type.ORDER) {
+                return known.get(i);
+            }
+        }
+        return null;
+    }
+
+    private static void remember(Memory memory, List<Memory> known, ExpeditionResult out) {
+        known.add(memory);
+        out.memory(memory);
+    }
+
+    private int rollAmount(LootRoll roll, Scout scout, GameRandom rng) {
+        int base = rng.nextIntInclusive(roll.getMin(), roll.getMax());
+        return Math.max(1, (int) Math.round(base * rules.lootMultiplier(scout)));
+    }
+
+    private static LootRoll weightedPick(List<LootRoll> table, GameRandom rng) {
+        int total = 0;
+        for (LootRoll roll : table) {
+            total += roll.getWeight();
+        }
+        int ticket = rng.nextInt(total);
+        for (LootRoll roll : table) {
+            ticket -= roll.getWeight();
+            if (ticket < 0) {
+                return roll;
+            }
+        }
+        throw new IllegalStateException("unreachable");
+    }
+
+    private String describeLoot(Map<String, Integer> loot) {
+        List<String> parts = new ArrayList<>();
+        for (Map.Entry<String, Integer> e : loot.entrySet()) {
+            Map<String, String> v = new HashMap<>();
+            v.put("amount", String.valueOf(e.getValue()));
+            v.put("resource", content.resource(e.getKey()).getName().toLowerCase(Locale.ROOT));
+            parts.add(TextTemplate.format(text.getLootItem(), v));
+        }
+        return String.join(text.getLootSeparator(), parts);
+    }
+
+    /** A phrase in the scout voice, warmer when the bond is high. */
+    private String say(VoiceDef voice, Scout scout, String key, GameRandom rng, Map<String, String> vars) {
+        return VoiceRenderer.phrase(voice, key, rng, vars, rules.isClose(scout));
+    }
+
+    private static Map<String, String> vars(Scout scout) {
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", scout.getName());
+        return vars;
+    }
+
+    private static LogLine radio(long at, Scout scout, String line) {
+        return LogLine.draft(at, LogChannel.RADIO, scout.getName(), line, scout.getId());
+    }
+
+    private static LogLine system(long at, String line, Scout scout) {
+        return LogLine.draft(at, LogChannel.SYSTEM, null, line, scout.getId());
+    }
+
+    private static LogLine alert(long at, String line, Scout scout) {
+        return LogLine.draft(at, LogChannel.ALERT, null, line, scout.getId());
+    }
+}

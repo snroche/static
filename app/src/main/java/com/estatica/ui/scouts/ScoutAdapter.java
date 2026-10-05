@@ -1,0 +1,141 @@
+package com.estatica.ui.scouts;
+
+import android.content.res.Resources;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.estatica.R;
+import com.estatica.data.session.SessionSnapshot.ScoutView;
+import com.estatica.data.session.SessionSnapshot.StatView;
+import com.estatica.databinding.ItemScoutBinding;
+
+/** Roster: one card per scout with stats as monospace bars and their actions. */
+public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Holder> {
+
+    public interface Listener {
+        void onDispatch(ScoutView scout);
+
+        void onTalk(ScoutView scout);
+
+        void onGift(ScoutView scout);
+
+        void onTask(ScoutView scout);
+    }
+
+    private static final char FILLED = '■';
+    private static final char EMPTY = '□';
+
+    private final Listener listener;
+
+    public ScoutAdapter(Listener listener) {
+        super(DIFF);
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new Holder(ItemScoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull Holder holder, int position) {
+        holder.bind(getItem(position), listener);
+    }
+
+    static final class Holder extends RecyclerView.ViewHolder {
+        private final ItemScoutBinding b;
+
+        Holder(ItemScoutBinding binding) {
+            super(binding.getRoot());
+            this.b = binding;
+        }
+
+        void bind(ScoutView s, Listener listener) {
+            Resources res = b.getRoot().getResources();
+            b.name.setText(s.name);
+            b.status.setText(s.awayAt != null
+                    ? res.getString(R.string.scout_status_away, s.status, s.awayAt)
+                    : s.status);
+            b.stats.setText(statBlock(s));
+            b.vitals.setText(res.getString(R.string.scout_vitals, s.stress, s.trust, s.injury));
+            b.bond.setText(res.getString(R.string.scout_bond, bar(s.bondLevel, s.bondLevels)));
+            optional(b.task, s.dead ? null : res.getString(R.string.scout_task, s.task));
+            optional(b.traits, s.traits.isEmpty() ? null
+                    : res.getString(R.string.scout_traits, String.join(", ", s.traits)));
+            optional(b.likes, s.likes);
+            optional(b.dislikes, s.dislikes);
+            optional(b.gifts, s.gifts.isEmpty() ? null
+                    : res.getString(R.string.scout_gifts, String.join(", ", s.gifts)));
+            optional(b.bio, s.bio);
+
+            action(b.dispatch, s.canDispatch, v -> listener.onDispatch(s));
+            action(b.talk, s.canTalk, v -> listener.onTalk(s));
+            action(b.gift, s.canGift, v -> listener.onGift(s));
+            action(b.taskButton, s.canAssignTask, v -> listener.onTask(s));
+            // The empty bunk stays on the roster, dimmed (GDD §5.5).
+            b.getRoot().setAlpha(s.dead ? 0.5f : 1f);
+        }
+
+        private static void optional(TextView view, String text) {
+            view.setText(text);
+            view.setVisibility(text == null ? View.GONE : View.VISIBLE);
+        }
+
+        private static void action(TextView button, boolean enabled, View.OnClickListener click) {
+            button.setVisibility(enabled ? View.VISIBLE : View.GONE);
+            button.setOnClickListener(enabled ? click : null);
+        }
+
+        private static String bar(int value, int max) {
+            StringBuilder out = new StringBuilder();
+            for (int i = 0; i < max; i++) {
+                out.append(i < value ? FILLED : EMPTY);
+            }
+            return out.toString();
+        }
+
+        /** "Aguante ■■■■■■□□□ 6/9", one line per stat, names padded to align. */
+        private static String statBlock(ScoutView s) {
+            int width = 0;
+            for (StatView stat : s.stats) {
+                width = Math.max(width, stat.name.length());
+            }
+            StringBuilder out = new StringBuilder();
+            for (StatView stat : s.stats) {
+                if (out.length() > 0) {
+                    out.append('\n');
+                }
+                out.append(stat.name);
+                for (int i = stat.name.length(); i <= width; i++) {
+                    out.append(' ');
+                }
+                for (int i = 0; i < stat.ceiling; i++) {
+                    out.append(i < stat.value ? FILLED : EMPTY);
+                }
+                out.append(' ').append(stat.value).append('/').append(stat.ceiling);
+            }
+            return out.toString();
+        }
+    }
+
+    private static final DiffUtil.ItemCallback<ScoutView> DIFF = new DiffUtil.ItemCallback<ScoutView>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull ScoutView a, @NonNull ScoutView b) {
+            return a.id.equals(b.id);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull ScoutView a, @NonNull ScoutView b) {
+            // Snapshots are rebuilt on every change and the list is tiny: always rebind.
+            return false;
+        }
+    };
+}

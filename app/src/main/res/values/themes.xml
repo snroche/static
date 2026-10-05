@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Platform theme on purpose: no AppCompat/Material dependency for a text-only UI. -->
+    <style name="Theme.Estatica" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/terminal_bg</item>
+        <item name="android:statusBarColor">@color/terminal_bg</item>
+        <item name="android:navigationBarColor">@color/terminal_bg</item>
+        <item name="android:colorAccent">@color/amber</item>
+        <item name="android:colorControlActivated">@color/amber</item>
+        <item name="android:textColorHighlight">@color/amber_dim</item>
+        <item name="android:textColorPrimary">@color/amber</item>
+    </style>
+
+    <style name="TerminalText">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/amber</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <style name="TerminalText.Dim">
+        <item name="android:textColor">@color/amber_dim</item>
+    </style>
+
+    <style name="TerminalText.Bright">
+        <item name="android:textColor">@color/amber_bright</item>
+    </style>
+
+    <!-- Text button: [ LABEL ], 48dp touch target. -->
+    <style name="TerminalButton" parent="TerminalText.Bright">
+        <item name="android:background">@drawable/bg_terminal_button</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+</resources>

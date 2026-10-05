@@ -1,0 +1,11 @@
+[
+  { "id": "armonica",   "name": "Armónica",            "description": "Oxidada, pero suena.",                       "tags": ["musica"] },
+  { "id": "foto",       "name": "Foto vieja",          "description": "Una familia en la playa. Nadie sabe quiénes son.", "tags": ["recuerdo"] },
+  { "id": "chocolate",  "name": "Chocolate",           "description": "Una tableta entera, vencida hace años.",     "tags": ["dulce"] },
+  { "id": "caramelos",  "name": "Caramelos",           "description": "Media bolsa de caramelos de miel.",          "tags": ["dulce"] },
+  { "id": "libro",      "name": "Libro",               "description": "Una novela sin tapas. Faltan las últimas páginas.", "tags": ["lectura"] },
+  { "id": "cuaderno",   "name": "Cuaderno",            "description": "Tapa dura, casi sin usar.",                  "tags": ["escritura"] },
+  { "id": "mate",       "name": "Mate y yerba",        "description": "Un mate de calabaza y un paquete de yerba.", "tags": ["mate"] },
+  { "id": "naipes",     "name": "Mazo de cartas",      "description": "Españolas. Falta el cuatro de copas.",       "tags": ["juego"] },
+  { "id": "estampita",  "name": "Estampita",           "description": "Un santo gastado de tanto tocarlo.",          "tags": ["fe"] }
+]

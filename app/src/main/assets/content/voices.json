@@ -1,0 +1,298 @@
+[
+  {
+    "id": "minusculas",
+    "transform": "LOWER",
+    "phrases": {
+      "departure": [
+        "salgo. no me esperes despierto.",
+        "voy. después te cuento."
+      ],
+      "arrival": [
+        "ya estoy adentro. cerrá.",
+        "volví. todo bien. más o menos."
+      ],
+      "oddsGood": [
+        "eso lo hago fácil.",
+        "tranqui, sale."
+      ],
+      "oddsUnsure": [
+        "no sé. puede salir.",
+        "mitad y mitad."
+      ],
+      "oddsBad": [
+        "esto me da mala espina.",
+        "no me gusta nada."
+      ],
+      "disobey": [
+        "no. lo hago a mi manera.",
+        "perdón, pero no."
+      ],
+      "autoDecide": [
+        "no contestás. decido yo.",
+        "sigo sin respuesta. me arreglo."
+      ],
+      "injured": [
+        "me lastimé. sigo.",
+        "duele. pero puedo caminar."
+      ],
+      "find": [
+        "encontré {amount} de {resource}.",
+        "{amount} de {resource}. algo es algo."
+      ],
+      "lastWords": [
+        "no veo nada. hay mucho ruido acá.",
+        "creo que no vuelvo. perdón."
+      ],
+      "lastMemory": [
+        "me acuerdo de {memory}.",
+        "pensaba en {memory}."
+      ],
+      "lastOrder": [
+        "vos me dijiste \"{memory}\". no es tu culpa."
+      ],
+      "initiate": [
+        "¿tenés un minuto?",
+        "ey. ¿estás?"
+      ],
+      "initiate@close": [
+        "¿tenés un minuto? es importante."
+      ],
+      "askReturn": [
+        "quiero volver a casa, por favor.",
+        "no doy más. ¿puedo volver?"
+      ],
+      "goingHome": [
+        "gracias. vuelvo.",
+        "vuelvo. gracias por entender."
+      ],
+      "findItem": [
+        "encontré algo: {item}. me lo guardo.",
+        "mirá, {item}. lo llevo."
+      ],
+      "lastGift": [
+        "todavía tengo {gift}. acá, en el bolsillo.",
+        "tengo {gift} conmigo."
+      ],
+      "lastCompanion": [
+        "decile a {companion} que no se preocupe.",
+        "cuidá a {companion}."
+      ],
+      "giftLiked": [
+        "¿{item}? no puedo creer. gracias.",
+        "esto... gracias. en serio."
+      ],
+      "giftDisliked": [
+        "ah. {item}. bueno... gracias igual.",
+        "no es lo mío, pero bueno."
+      ],
+      "giftNeutral": [
+        "{item}. gracias.",
+        "lo guardo. gracias."
+      ],
+      "departure@close": [
+        "salgo. guardame un lugar cerca de la radio."
+      ],
+      "arrival@close": [
+        "volví. te extrañé un poco. no le digas a nadie."
+      ],
+      "lastWords@close": [
+        "no cortes. quedate un rato más en el canal."
+      ]
+    }
+  },
+  {
+    "id": "jerga",
+    "transform": "NONE",
+    "replacements": {
+      "muy": "re",
+      "problema": "quilombo",
+      "trabajo": "laburo",
+      "dinero": "guita"
+    },
+    "phrases": {
+      "departure": [
+        "Me voy al toque, jefe.",
+        "Salgo. Poneme la pava que vuelvo."
+      ],
+      "arrival": [
+        "Llegué, jefe. Entero, eh.",
+        "Ya estoy. Qué día, che."
+      ],
+      "oddsGood": [
+        "Esto es pan comido.",
+        "Posta, esto sale."
+      ],
+      "oddsUnsure": [
+        "Ni idea, jefe. Puede ser.",
+        "Es una moneda al aire."
+      ],
+      "oddsBad": [
+        "Esto me da mala espina, jefe.",
+        "Uh, esto no me cierra."
+      ],
+      "disobey": [
+        "Ni loco, jefe. Hago otra cosa.",
+        "No, no, no. Yo sé lo que hago."
+      ],
+      "autoDecide": [
+        "¿Jefe? Nada. Bueno, me la juego solo.",
+        "Nadie contesta. Le mando nomás."
+      ],
+      "injured": [
+        "Me dieron, jefe. Duele en serio.",
+        "Estoy sangrando un poco. Nada grave. Creo."
+      ],
+      "find": [
+        "Encontré {amount} de {resource}. Para la olla.",
+        "Mirá vos: {amount} de {resource}."
+      ],
+      "lastWords": [
+        "Jefe... no me siento las piernas.",
+        "Che, decile a los pibes que... que..."
+      ],
+      "lastMemory": [
+        "Me acuerdo de {memory}, jefe.",
+        "Qué cosa {memory}, ¿no?"
+      ],
+      "lastOrder": [
+        "Vos me dijiste \"{memory}\". Estuvo bien igual, jefe."
+      ],
+      "initiate": [
+        "Jefe, ¿tenés un minuto?",
+        "Che, jefe. ¿Charlamos?"
+      ],
+      "askReturn": [
+        "Jefe, quiero volver a casa. Por favor.",
+        "No doy más, jefe. ¿Me vuelvo?"
+      ],
+      "goingHome": [
+        "Gracias, jefe. Vuelvo al toque."
+      ],
+      "findItem": [
+        "Mirá lo que encontré: {item}.",
+        "Me llevo {item}, jefe. Nunca se sabe."
+      ],
+      "lastGift": [
+        "Tengo {gift} en el bolsillo, jefe. No lo suelto."
+      ],
+      "lastCompanion": [
+        "Decile a {companion} que le debo un truco.",
+        "Cuidame a {companion}, jefe."
+      ],
+      "giftLiked": [
+        "¡{item}! Sos grande, jefe.",
+        "Esto sí que es un regalo, jefe."
+      ],
+      "giftDisliked": [
+        "¿{item}? Bueno... gracias, jefe. Supongo."
+      ],
+      "giftNeutral": [
+        "{item}. Gracias, jefe."
+      ],
+      "departure@close": [
+        "Me voy, hermano. Poneme la pava."
+      ],
+      "arrival@close": [
+        "¡Volví, hermano! ¿Me extrañaste?"
+      ],
+      "lastWords@close": [
+        "Hermano... no me sueltes."
+      ]
+    }
+  },
+  {
+    "id": "formal",
+    "transform": "NONE",
+    "phrases": {
+      "departure": [
+        "Operador, inicio el recorrido.",
+        "Salgo. Reporto en cuanto tenga novedades."
+      ],
+      "arrival": [
+        "Operador, estoy de regreso en el búnker.",
+        "Regreso completado. Sin novedades graves."
+      ],
+      "oddsGood": [
+        "Lo considero viable.",
+        "Puedo hacerlo con seguridad."
+      ],
+      "oddsUnsure": [
+        "El resultado es incierto.",
+        "No puedo garantizarlo."
+      ],
+      "oddsBad": [
+        "Le advierto: esto me da mala espina.",
+        "No lo recomiendo, operador."
+      ],
+      "disobey": [
+        "Con respeto, operador, voy a proceder de otra manera.",
+        "No voy a hacer eso. Tomo otra opción."
+      ],
+      "autoDecide": [
+        "Sin respuesta del búnker. Procedo según mi criterio.",
+        "No recibo instrucciones. Decido yo."
+      ],
+      "injured": [
+        "Tengo una herida. Puedo continuar.",
+        "Sufrí un golpe. Lo registro y sigo."
+      ],
+      "find": [
+        "Registro: {amount} unidades de {resource}.",
+        "Hallazgo: {amount} de {resource}."
+      ],
+      "lastWords": [
+        "Operador... la señal... se corta.",
+        "Dejo constancia: hice lo que pude."
+      ],
+      "lastMemory": [
+        "Quiero que quede registrado: {memory}.",
+        "Recuerdo {memory}. Es extraño lo que uno recuerda."
+      ],
+      "lastOrder": [
+        "Usted me dijo \"{memory}\". No se culpe."
+      ],
+      "initiate": [
+        "Operador, ¿tiene un momento?"
+      ],
+      "initiate@close": [
+        "¿Tenés un momento? Necesito hablar."
+      ],
+      "askReturn": [
+        "Operador, solicito regresar. Por favor.",
+        "Quiero volver a casa. Por favor."
+      ],
+      "goingHome": [
+        "Entendido. Regreso. Gracias."
+      ],
+      "findItem": [
+        "Hallazgo personal: {item}. Lo traigo.",
+        "Registro un objeto: {item}."
+      ],
+      "lastGift": [
+        "Llevo {gift} conmigo. Que conste."
+      ],
+      "lastCompanion": [
+        "Dígale a {companion} que lo siento."
+      ],
+      "giftLiked": [
+        "{item}... No sé qué decir. Gracias.",
+        "Es justo lo que necesitaba. Gracias, de verdad."
+      ],
+      "giftDisliked": [
+        "{item}. Gracias. No es de mi agrado, pero lo valoro."
+      ],
+      "giftNeutral": [
+        "{item}. Gracias, operador."
+      ],
+      "departure@close": [
+        "Salgo. Te aviso apenas llegue."
+      ],
+      "arrival@close": [
+        "Volví. Me alegra escucharte."
+      ],
+      "lastWords@close": [
+        "No te culpes. Por favor, no te culpes."
+      ]
+    }
+  }
+]

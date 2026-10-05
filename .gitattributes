@@ -1,0 +1,6 @@
+# Keep LF in the repo regardless of the local autocrlf setting.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.jar binary
+*.png binary
+*.ogg binary

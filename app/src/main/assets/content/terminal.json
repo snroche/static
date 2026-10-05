@@ -1,0 +1,101 @@
+{
+  "boot": [
+    "ESTÁTICA // terminal de radio v{version}",
+    "Iniciando sistemas del búnker...",
+    "Generador ........ OK",
+    "Filtros de aire .. OK",
+    "Radio ............ OK. Banda corta disponible.",
+    "Barriendo frecuencias...",
+    "Afuera, nadie responde. Todavía.",
+    "Exploradores en el búnker: {scouts}.",
+    "Tocá EXPLORADORES para mandar a alguien afuera.",
+    "Escribí 'ayuda' para ver los comandos."
+  ],
+  "reconnect": [
+    [
+      "Volviste. Pasaron {elapsed} desde tu último turno.",
+      "La estática no cambió."
+    ],
+    [
+      "Terminal reactivada. Ausencia: {elapsed}.",
+      "El generador sigue zumbando. Nadie llamó."
+    ],
+    [
+      "Otra vez frente al dial. Hace {elapsed} que no te sentabas acá.",
+      "Por los parlantes, solo ruido blanco."
+    ]
+  ],
+  "elapsedUnits": {
+    "day": "d",
+    "hour": "h",
+    "minute": "min",
+    "lessThanMinute": "menos de un minuto"
+  },
+  "unknownCommand": "Comando desconocido: '{input}'. Probá 'ayuda'.",
+  "commands": {
+    "ayuda": [
+      "Comandos disponibles:",
+      "  ayuda   muestra esta lista",
+      "  estado  estado del operador y del búnker",
+      "Para hablar, regalar o asignar tareas: [ EXPLORADORES ]."
+    ],
+    "estado": [
+      "Operador #{operator}",
+      "En el búnker desde hace {age}.",
+      "Terminal v{version}.",
+      "Exploradores: {scouts}.",
+      "Reservas: {resources}."
+    ]
+  },
+  "statNames": {
+    "endurance": "Aguante",
+    "stealth": "Sigilo",
+    "wits": "Ingenio",
+    "nerve": "Nervio",
+    "craft": "Oficio"
+  },
+  "scoutStatus": {
+    "IDLE": "en el búnker",
+    "AWAY": "afuera",
+    "DEAD": "sin señal"
+  },
+  "injuries": {
+    "NONE": "sin heridas",
+    "LIGHT": "herida leve",
+    "SERIOUS": "herida grave",
+    "CRITICAL": "herida crítica"
+  },
+  "expedition": {
+    "dispatched": "{name} sale hacia {zone}. Regreso estimado: {eta}.",
+    "optionLine": "[{n}] {label}: {hint}",
+    "awaitingOrders": "{name} espera órdenes.",
+    "statUp": "{name} mejoró en {stat}: ahora tiene {value}.",
+    "returnedWithLoot": "{name} volvió al búnker. Trajo: {loot}.",
+    "returnedEmpty": "{name} volvió al búnker con las manos vacías.",
+    "lootItem": "{amount} de {resource}",
+    "lootSeparator": ", ",
+    "signalLost": "— señal perdida —",
+    "deathNotice": "El canal de {name} quedó abierto. Solo estática.",
+    "notifyReturned": "Estoy de vuelta en el búnker."
+  },
+  "bunker": {
+    "retreatLabel": "Volvé al búnker",
+    "talkCooldown": "{name} no tiene ganas de hablar ahora. Probá en {hours} h.",
+    "conversationExpired": "{name} ya no quiere hablar de eso.",
+    "bondUp": "Tu vínculo con {name} se hizo más fuerte.",
+    "traitRevealed": "Descubriste algo de {name}: {trait}.",
+    "traitGained": "{name} cambió: {trait}.",
+    "taskAssigned": "{name} ahora está en: {task}.",
+    "noTask": "Sin tarea",
+    "workshopOutput": "El taller produjo {amount} de {resource}.",
+    "griefNotice": "{name} se enteró de lo de {dead}.",
+    "itemFound": "{name} trajo algo personal: {item}.",
+    "itemRecovered": "{name} recuperó {item} de {dead}.",
+    "giftGiven": "Le diste {item} a {name}.",
+    "diaryFell": "Sin señal desde el {date} · {zone}",
+    "diaryLastWords": "Última transmisión:",
+    "diaryEmpty": "Nadie cayó. Todavía.",
+    "knownLikes": "Le gusta: {items}",
+    "knownDislikes": "No le gusta: {items}"
+  }
+}
