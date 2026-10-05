@@ -48,6 +48,8 @@ public final class BunkerRules {
         public final List<LogLine> lines = new ArrayList<>();
         /** Resource changes (workshop). */
         public final Map<String, Integer> resourceDelta = new HashMap<>();
+        /** Signals the radio assistant caught on their own. */
+        public int passiveSignals;
     }
 
     public Result advance(Collection<Scout> scouts, Affinities affinities,
@@ -132,6 +134,14 @@ public final class BunkerRules {
             vars.put("value", String.valueOf(s.stat(stat).getValue()));
             out.lines.add(LogLine.draft(now, LogChannel.SYSTEM, null,
                     TextTemplate.format(content.getTerminal().getExpedition().getStatUp(), vars), s.getId()));
+        }
+
+        if (task.isPassiveSweep()) {
+            double progress = s.getLife().getTaskOutputCarry()
+                    + hours / content.getBalance().getRadio().getAssistantHoursPerSignal();
+            int caught = (int) Math.floor(progress);
+            s.getLife().setTaskOutputCarry(progress - caught);
+            out.passiveSignals += caught;
         }
 
         TaskDef.Conversion conversion = task.getConversion();

@@ -1,7 +1,26 @@
 [
-  { "id": "scrap",      "name": "Chatarra" },
-  { "id": "components", "name": "Componentes" },
-  { "id": "rations",    "name": "Raciones" },
-  { "id": "batteries",  "name": "Baterías" },
-  { "id": "medicine",   "name": "Medicinas" }
+  {
+    "id": "scrap",
+    "name": "Chatarra"
+  },
+  {
+    "id": "components",
+    "name": "Componentes"
+  },
+  {
+    "id": "rations",
+    "name": "Raciones"
+  },
+  {
+    "id": "batteries",
+    "name": "Baterías"
+  },
+  {
+    "id": "medicine",
+    "name": "Medicinas"
+  },
+  {
+    "id": "relay_kit",
+    "name": "Kits de repetidora"
+  }
 ]

@@ -19,11 +19,17 @@ public final class CheckCalculator {
     }
 
     public double chance(Scout scout, EventDef.Option option, ZoneDef zone) {
+        return chance(scout, option, zone, 0);
+    }
+
+    /** @param extraBonus e.g. decoded intel about the zone dangers */
+    public double chance(Scout scout, EventDef.Option option, ZoneDef zone, double extraBonus) {
         int stat = rules.effectiveStat(scout, StatType.fromKey(option.getStat()));
         double chance = balance.getBaseChance()
                 + (stat - option.getDifficulty()) * balance.getPerPoint()
                 - Math.max(0, zone.getDanger() - 1) * balance.getPerDanger()
                 + rules.checkBonus(scout)
+                + extraBonus
                 - Math.max(0, scout.getStress() - balance.getStressPenaltyFrom())
                 * balance.getStressPenaltyPerPoint();
         return Math.max(balance.getMinChance(), Math.min(balance.getMaxChance(), chance));

@@ -2,13 +2,11 @@ package com.estatica.domain.terminal;
 
 import static org.junit.Assert.assertEquals;
 
-import com.estatica.data.content.ContentParser;
 import com.estatica.domain.content.TerminalText;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +24,8 @@ public class CommandInterpreterTest {
                 + "\"commands\":{\"ayuda\":[\"lista\"],\"estado\":[\"v{version}\"]},"
                 + "\"statNames\":{},\"expedition\":{},\"bunker\":{}"
                 + "}";
-        TerminalText text = new ContentParser().parseTerminal(new StringReader(json));
+        // Plain Gson: this test is about commands, not about which sections terminal.json needs.
+        TerminalText text = new com.google.gson.Gson().fromJson(json, TerminalText.class);
         interpreter = new CommandInterpreter(text);
     }
 

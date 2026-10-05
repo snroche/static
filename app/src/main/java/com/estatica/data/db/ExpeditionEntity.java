@@ -50,4 +50,32 @@ public class ExpeditionEntity {
     /** DB v3: the pending situation includes "come home". */
     @ColumnInfo(name = "retreat_offered", defaultValue = "0")
     public boolean retreatOffered;
+
+    // ---- DB v4: missions and signal quality ----
+
+    @NonNull
+    @ColumnInfo(name = "mission_type", defaultValue = "'EXPLORE'")
+    public String missionType = "EXPLORE";
+
+    @androidx.annotation.Nullable
+    @ColumnInfo(name = "mission_target")
+    public String missionTarget;
+
+    @ColumnInfo(name = "signal_noise", defaultValue = "0")
+    public double signalNoise;
+
+    @ColumnInfo(name = "order_delay_millis", defaultValue = "0")
+    public long orderDelayMillis;
+
+    @ColumnInfo(name = "cache_intel", defaultValue = "0")
+    public boolean cacheIntel;
+
+    @ColumnInfo(name = "danger_intel", defaultValue = "0")
+    public boolean dangerIntel;
+
+    @ColumnInfo(defaultValue = "0")
+    public boolean aborted;
+
+    @ColumnInfo(name = "lost_hints", defaultValue = "0")
+    public int lostHints;
 }

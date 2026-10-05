@@ -1,5 +1,6 @@
 package com.estatica.domain.content;
 
+import com.estatica.domain.radio.SignalField;
 import com.estatica.domain.scouts.Injury;
 import com.estatica.domain.scouts.ScoutStatus;
 import com.estatica.domain.scouts.StatType;
@@ -49,7 +50,14 @@ public final class ContentValidator {
             }
         }
 
-        for (ScoutTemplate s : content.getStarters()) {
+        List<ScoutTemplate> templates = new ArrayList<>(content.getStarters());
+        templates.addAll(content.getSurvivors());
+        for (ScoutTemplate s : content.getSurvivors()) {
+            checkBand(s.getBand(), "survivor " + s.getId());
+            check(content.getStarters().stream().noneMatch(t -> t.getId().equals(s.getId())),
+                    "survivor " + s.getId() + ": id clashes with a starter");
+        }
+        for (ScoutTemplate s : templates) {
             String where = "scout " + s.getId();
             check(s.getName() != null, where + ": name");
             check(content.getVoices().containsKey(s.getVoice()), where + ": unknown voice " + s.getVoice());
@@ -124,6 +132,46 @@ public final class ContentValidator {
             checkTrait(trait, "balance grief.traits");
         }
 
+        for (BandDef band : content.getBalance().getBands()) {
+            for (String kind : band.getSignalWeights().keySet()) {
+                check(java.util.Set.of("ZONE", "SURVIVOR", "TRANSMISSION", "RARE").contains(kind),
+                        "band " + band.getId() + ": unknown signal kind " + kind);
+            }
+            check(band.getTuneRadius() > 0 && band.getSignalsPerWindow() > 0,
+                    "band " + band.getId() + ": tuneRadius and signalsPerWindow > 0");
+        }
+        for (ModuleDef module : content.getBalance().getModules()) {
+            for (int level = module.getStartLevel(); level < module.getMaxLevel(); level++) {
+                checkResources(module.costFrom(level), "module " + module.getId());
+            }
+        }
+        checkResources(content.getBalance().getRadio().getRelayKitCost(), "radio.relayKitCost");
+        checkResources(content.getBalance().getRadio().getRelayMaintenanceCost(), "radio.relayMaintenanceCost");
+
+        SignalsDef signals = content.getSignals();
+        for (SignalField.Kind kind : SignalField.Kind.values()) {
+            List<String> teasers = signals.getTeasers().get(kind.name());
+            check(teasers != null && !teasers.isEmpty(), "signals: teasers." + kind.name());
+        }
+        for (SignalsDef.Rare rare : signals.getRare()) {
+            if (rare.getBand() != null) {
+                checkBand(rare.getBand(), "rare " + rare.getId());
+            }
+            check(rare.getText() != null && !rare.getText().isEmpty(), "rare " + rare.getId() + ": text");
+            checkResources(rare.getResources(), "rare " + rare.getId());
+        }
+        for (SignalsDef.Transmission t : signals.getTransmissions()) {
+            String where = "transmission " + t.getId();
+            if (t.getBand() != null) {
+                checkBand(t.getBand(), where);
+            }
+            check(t.getReward() != null, where + ": reward");
+            check(t.getText() != null && !com.estatica.domain.radio.Cipher.normalize(
+                    t.getText().replace("{zone}", "")).isEmpty(), where + ": text");
+            checkResources(t.getResources(), where);
+            check(t.getReward() != SignalsDef.Transmission.Reward.LORE || t.getLore() != null, where + ": lore");
+        }
+
         for (ZoneDef z : content.getZones().values()) {
             String where = "zone " + z.getId();
             check(z.getName() != null, where + ": name");
@@ -131,6 +179,7 @@ public final class ContentValidator {
             checkRange(z.getSituations(), 0, where + ": situations");
             checkRange(z.getFinds(), 0, where + ": finds");
             check(z.getDanger() >= 1, where + ": danger ≥ 1");
+            checkBand(z.getBand(), where);
             check(z.getTransit() != null && !z.getTransit().isEmpty(), where + ": transit");
             check(z.getLoot() != null && !z.getLoot().isEmpty(), where + ": loot");
             checkLoot(z.getLoot(), where);
@@ -210,6 +259,23 @@ public final class ContentValidator {
                     where + ": unknown resource " + roll.getResource());
             check(roll.getMin() >= 1 && roll.getMin() <= roll.getMax() && roll.getWeight() > 0,
                     where + ": loot " + roll.getResource() + " needs 1 ≤ min ≤ max, weight > 0");
+        }
+    }
+
+    private void checkBand(String band, String where) {
+        boolean known = false;
+        for (BandDef b : content.getBalance().getBands()) {
+            known |= b.getId().equals(band);
+        }
+        check(known, where + ": unknown band " + band);
+    }
+
+    private void checkResources(Map<String, Integer> amounts, String where) {
+        if (amounts == null) {
+            return;
+        }
+        for (String resource : amounts.keySet()) {
+            check(content.getResources().containsKey(resource), where + ": unknown resource " + resource);
         }
     }
 

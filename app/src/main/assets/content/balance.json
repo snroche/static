@@ -1,5 +1,5 @@
 {
-  "contentVersion": 3,
+  "contentVersion": 4,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
@@ -74,31 +74,95 @@
   "bands": [
     {
       "id": "short",
+      "name": "Banda corta",
       "minMinutes": 1,
       "maxMinutes": 5,
-      "unlockAntennaLevel": 1
+      "unlockAntennaLevel": 1,
+      "noise": 0,
+      "orderDelaySeconds": 0,
+      "tuneRadius": 60,
+      "signalsPerWindow": 3,
+      "signalWeights": {
+        "ZONE": 3,
+        "SURVIVOR": 0,
+        "TRANSMISSION": 4,
+        "RARE": 2
+      },
+      "morseChance": 0.2
     },
     {
       "id": "medium",
+      "name": "Banda media",
       "minMinutes": 15,
       "maxMinutes": 60,
-      "unlockAntennaLevel": 2
+      "unlockAntennaLevel": 2,
+      "noise": 0.12,
+      "orderDelaySeconds": 60,
+      "tuneRadius": 40,
+      "signalsPerWindow": 3,
+      "signalWeights": {
+        "ZONE": 3,
+        "SURVIVOR": 2,
+        "TRANSMISSION": 3,
+        "RARE": 2
+      },
+      "morseChance": 0.5
     },
     {
       "id": "long",
+      "name": "Banda larga",
       "minMinutes": 120,
       "maxMinutes": 360,
-      "unlockAntennaLevel": 4
+      "unlockAntennaLevel": 4,
+      "noise": 0.25,
+      "orderDelaySeconds": 300,
+      "tuneRadius": 25,
+      "signalsPerWindow": 2,
+      "signalWeights": {
+        "ZONE": 3,
+        "SURVIVOR": 2,
+        "TRANSMISSION": 3,
+        "RARE": 1
+      },
+      "morseChance": 0.7
     },
     {
       "id": "deep",
+      "name": "Banda profunda",
       "minMinutes": 480,
-      "maxMinutes": null,
-      "unlockAntennaLevel": null
+      "maxMinutes": 720,
+      "unlockAntennaLevel": 6,
+      "noise": 0.4,
+      "orderDelaySeconds": 900,
+      "tuneRadius": 15,
+      "signalsPerWindow": 1,
+      "signalWeights": {
+        "TRANSMISSION": 2,
+        "RARE": 1
+      },
+      "morseChance": 0.9
     }
   ],
   "radio": {
-    "signalRotationHours": 4
+    "signalRotationHours": 4,
+    "dialMax": 1000,
+    "lockThreshold": 0.85,
+    "hintLossPerNoise": 1.5,
+    "relayKitCost": {
+      "components": 3,
+      "batteries": 2
+    },
+    "relayMaintenanceCost": {
+      "components": 1
+    },
+    "relayDecayPerDay": 10,
+    "relayMinCondition": 30,
+    "relayFactor": 0.3,
+    "dangerIntelCheckBonus": 0.1,
+    "cacheIntelLootRolls": 3,
+    "assistantHoursPerSignal": 6,
+    "maxScouts": 5,
+    "survivorTrust": 30
   },
   "workshop": {
     "craftMinMinutes": 1,
@@ -106,5 +170,34 @@
   },
   "monetization": {
     "rewardedAdsDailyCap": 3
-  }
+  },
+  "modules": [
+    {
+      "id": "antenna",
+      "name": "Antena",
+      "description": "Alcance de la radio: cada nivel abre bandas más lejanas.",
+      "startLevel": 1,
+      "upgradeCosts": [
+        {
+          "scrap": 10,
+          "components": 4
+        },
+        {
+          "scrap": 15,
+          "components": 8,
+          "batteries": 2
+        },
+        {
+          "scrap": 25,
+          "components": 14,
+          "batteries": 4
+        },
+        {
+          "scrap": 40,
+          "components": 22,
+          "batteries": 8
+        }
+      ]
+    }
+  ]
 }

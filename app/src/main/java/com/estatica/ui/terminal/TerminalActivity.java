@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.estatica.R;
 import com.estatica.data.session.SessionSnapshot;
 import com.estatica.databinding.ActivityTerminalBinding;
+import com.estatica.domain.expedition.Mission;
 import com.estatica.domain.log.LogLine;
 import com.estatica.ui.scouts.PickerAdapter;
 import com.estatica.ui.scouts.ScoutAdapter;
@@ -62,16 +63,23 @@ public final class TerminalActivity extends ComponentActivity {
     private String selectedScoutName;
     /** Pending decision currently rendered, to avoid rebuilding its buttons needlessly. */
     private String shownDecisionId;
+    private RadioPanel radioPanel;
+    private DecoderPanel decoderPanel;
 
     private final OnBackPressedCallback closePanelOnBack = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
-            if (panel == Panel.ZONES || panel == Panel.GIFTS || panel == Panel.TASKS
+            if (decoderPanel.isShown()) {
+                decoderPanel.hide();
+            } else if (radioPanel.isShown()) {
+                radioPanel.hide();
+            } else if (panel == Panel.ZONES || panel == Panel.GIFTS || panel == Panel.TASKS
                     || panel == Panel.DIARY) {
                 showPanel(Panel.SCOUTS);
             } else {
                 showPanel(Panel.NONE);
             }
+            updateBack();
         }
     };
 
@@ -86,6 +94,7 @@ public final class TerminalActivity extends ComponentActivity {
         setUpLog();
         setUpInput();
         setUpPanel();
+        setUpRadio();
         getOnBackPressedDispatcher().addCallback(this, closePanelOnBack);
 
         viewModel.getState().observe(this, this::render);
@@ -223,6 +232,7 @@ public final class TerminalActivity extends ComponentActivity {
     private void renderSnapshot(SessionSnapshot snapshot) {
         this.snapshot = snapshot;
         scoutAdapter.submitList(snapshot.scouts);
+        radioPanel.render(snapshot);
         if (panel != Panel.NONE && panel != Panel.SCOUTS) {
             renderPanel();
         }
@@ -318,6 +328,38 @@ public final class TerminalActivity extends ComponentActivity {
         });
     }
 
+    // ---- Radio and decoder ----
+
+    private void setUpRadio() {
+        radioPanel = new RadioPanel(binding.radioPanel, viewModel, new RadioPanel.Host() {
+            @Override
+            public void openDecoder(SessionSnapshot.TransmissionView transmission, boolean morseTable) {
+                decoderPanel.show(transmission, morseTable);
+                updateBack();
+            }
+
+            @Override
+            public void closeRadio() {
+                radioPanel.hide();
+                updateBack();
+            }
+        });
+        decoderPanel = new DecoderPanel(binding.decodePanel, viewModel, () -> {
+            decoderPanel.hide();
+            updateBack();
+        });
+        binding.radioButton.setOnClickListener(v -> {
+            showPanel(Panel.NONE);
+            radioPanel.show();
+            updateBack();
+        });
+        viewModel.getTuning().observe(this, radioPanel::onTuning);
+    }
+
+    private void updateBack() {
+        closePanelOnBack.setEnabled(panel != Panel.NONE || radioPanel.isShown() || decoderPanel.isShown());
+    }
+
     private void select(SessionSnapshot.ScoutView scout) {
         selectedScoutId = scout.id;
         selectedScoutName = scout.name;
@@ -325,10 +367,14 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void onPick(PickerAdapter.Row row) {
         switch (panel) {
-            case ZONES:
+            case ZONES: {
                 requestNotificationPermission();
-                viewModel.dispatch(selectedScoutId, row.key);
+                // key: TYPE|zoneId|target
+                String[] parts = row.key.split("\\|", -1);
+                viewModel.dispatch(selectedScoutId, parts[1], Mission.Type.valueOf(parts[0]),
+                        parts[2].isEmpty() ? null : parts[2]);
                 break;
+            }
             case GIFTS:
                 viewModel.gift(selectedScoutId, row.key);
                 break;
@@ -344,7 +390,9 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void showPanel(Panel target) {
         panel = target;
-        closePanelOnBack.setEnabled(target != Panel.NONE);
+        closePanelOnBack.setEnabled(target != Panel.NONE
+                || (radioPanel != null && radioPanel.isShown())
+                || (decoderPanel != null && decoderPanel.isShown()));
         if (target == Panel.NONE) {
             binding.panel.setVisibility(View.GONE);
             binding.panelList.setAdapter(null);
@@ -371,10 +419,21 @@ public final class TerminalActivity extends ComponentActivity {
         switch (panel) {
             case ZONES:
                 binding.panelTitle.setText(getString(R.string.panel_zones_title, selectedScoutName));
+                for (SessionSnapshot.MissionView m : snapshot.missions) {
+                    rows.add(new PickerAdapter.Row(m.type + "|" + m.zoneId + "|" + (m.target != null ? m.target : ""),
+                            m.label, m.zoneName, null, true));
+                }
                 for (SessionSnapshot.ZoneView z : snapshot.zones) {
-                    rows.add(new PickerAdapter.Row(z.id, z.name,
-                            getString(R.string.zone_meta, dangerBar(z.danger), z.minMinutes, z.maxMinutes),
-                            z.description, true));
+                    StringBuilder extra = new StringBuilder(z.description);
+                    if (z.relay >= 0) {
+                        extra.append("\n").append(getString(R.string.zone_relay, z.relay));
+                    }
+                    if (z.intel) {
+                        extra.append("\n").append(getString(R.string.zone_intel));
+                    }
+                    rows.add(new PickerAdapter.Row(Mission.Type.EXPLORE.name() + "|" + z.id + "|", z.name,
+                            getString(R.string.zone_band_meta, z.band, dangerBar(z.danger), z.minMinutes, z.maxMinutes),
+                            extra.toString(), true));
                 }
                 break;
             case GIFTS:

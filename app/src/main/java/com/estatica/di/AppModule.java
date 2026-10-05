@@ -15,6 +15,7 @@ import com.estatica.data.db.ExpeditionDao;
 import com.estatica.data.db.GameStateDao;
 import com.estatica.data.db.LogDao;
 import com.estatica.data.db.MemoryDao;
+import com.estatica.data.db.RadioDao;
 import com.estatica.data.db.Migrations;
 import com.estatica.data.db.ResourceDao;
 import com.estatica.data.db.ScoutDao;
@@ -91,6 +92,11 @@ public final class AppModule {
     @Provides
     static AffinityDao provideAffinityDao(EstaticaDatabase db) {
         return db.affinityDao();
+    }
+
+    @Provides
+    static RadioDao provideRadioDao(EstaticaDatabase db) {
+        return db.radioDao();
     }
 
     @Provides

@@ -37,7 +37,8 @@
       "Comandos disponibles:",
       "  ayuda   muestra esta lista",
       "  estado  estado del operador y del búnker",
-      "Para hablar, regalar o asignar tareas: [ EXPLORADORES ]."
+      "Para barrer el dial y descifrar: [ RADIO ].",
+      "Para hablar, regalar, asignar tareas o despachar: [ EXPLORADORES ]."
     ],
     "estado": [
       "Operador #{operator}",
@@ -97,5 +98,35 @@
     "diaryEmpty": "Nadie cayó. Todavía.",
     "knownLikes": "Le gusta: {items}",
     "knownDislikes": "No le gusta: {items}"
+  },
+  "radio": {
+    "staticNoise": "kssshhhh...",
+    "hintLost": "—kssh— no se entiende —",
+    "orderDelayed": "Orden enviada. Por la distancia, tarda {delay} en llegar.",
+    "zoneFound": "Coordenadas captadas: {zone} ({band}).",
+    "survivorFound": "Hay alguien: {name}, en {zone}. Pide rescate.",
+    "transmissionFound": "Transmisión cifrada captada. Pendiente de descifrar.",
+    "nothingThere": "Solo estática.",
+    "alreadyCaught": "Esa señal ya la captaste.",
+    "decoded": "Transmisión descifrada: \"{text}\".",
+    "decodeWrong": "No tiene sentido. Seguí probando.",
+    "intelCache": "Dato: hay un escondite en {zone}. La próxima expedición ahí lo va a buscar.",
+    "intelDanger": "Dato: ya sabés qué peligros hay en {zone}. La próxima expedición ahí va mejor preparada.",
+    "loreFound": "Anotado en el Diario.",
+    "resourcesFound": "Recuperado: {loot}.",
+    "morseTableUnlocked": "Era un manual de radioaficionado. Ya podés consultar la tabla de Morse al descifrar.",
+    "rescued": "{name} llegó al búnker.",
+    "rescueFailed": "El rescate de {name} quedó pendiente.",
+    "rosterFull": "No hay literas libres. Hace falta lugar antes de rescatar a alguien más.",
+    "relayInstalled": "Repetidora instalada en {zone}.",
+    "relayMaintained": "Repetidora de {zone} reparada.",
+    "relayFailing": "La repetidora de {zone} dejó de funcionar. Necesita mantenimiento.",
+    "relayBuilt": "Armaste un kit de repetidora.",
+    "moduleUpgraded": "{module} mejorada: nivel {level}.",
+    "cantAfford": "No alcanza. Hace falta: {cost}.",
+    "assistantCaught": "{name} captó una señal mientras no estabas.",
+    "missionRescue": "Rescatar a {name}",
+    "missionInstall": "Instalar repetidora",
+    "missionMaintain": "Reparar repetidora"
   }
 }

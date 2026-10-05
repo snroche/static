@@ -60,8 +60,31 @@ public final class Migrations {
             "CREATE TABLE IF NOT EXISTS `expedition_items` (`expedition_id` TEXT NOT NULL, `idx` INTEGER NOT NULL, `item_id` TEXT NOT NULL, PRIMARY KEY(`expedition_id`, `idx`), FOREIGN KEY(`expedition_id`) REFERENCES `expeditions`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
     );
 
+    /** Phase 3: radio, relays, rescues, intel, lore, modules; mission columns on expeditions. */
+    static final List<String> MIGRATION_3_4_SQL = List.of(
+            "ALTER TABLE `expeditions` ADD COLUMN `mission_type` TEXT NOT NULL DEFAULT 'EXPLORE'",
+            "ALTER TABLE `expeditions` ADD COLUMN `mission_target` TEXT",
+            "ALTER TABLE `expeditions` ADD COLUMN `signal_noise` REAL NOT NULL DEFAULT 0",
+            "ALTER TABLE `expeditions` ADD COLUMN `order_delay_millis` INTEGER NOT NULL DEFAULT 0",
+            "ALTER TABLE `expeditions` ADD COLUMN `cache_intel` INTEGER NOT NULL DEFAULT 0",
+            "ALTER TABLE `expeditions` ADD COLUMN `danger_intel` INTEGER NOT NULL DEFAULT 0",
+            "ALTER TABLE `expeditions` ADD COLUMN `aborted` INTEGER NOT NULL DEFAULT 0",
+            "ALTER TABLE `expeditions` ADD COLUMN `lost_hints` INTEGER NOT NULL DEFAULT 0",
+            "CREATE TABLE IF NOT EXISTS `game_flags` (`flag` TEXT NOT NULL, `set_at_millis` INTEGER NOT NULL, PRIMARY KEY(`flag`))",
+            "CREATE TABLE IF NOT EXISTS `known_zones` (`zone_id` TEXT NOT NULL, `discovered_at_millis` INTEGER NOT NULL, PRIMARY KEY(`zone_id`))",
+            "CREATE TABLE IF NOT EXISTS `caught_signals` (`signal_key` TEXT NOT NULL, `caught_at_millis` INTEGER NOT NULL, PRIMARY KEY(`signal_key`))",
+            "CREATE TABLE IF NOT EXISTS `transmissions` (`id` TEXT NOT NULL, `source_id` TEXT NOT NULL, `kind` TEXT NOT NULL, `plain_text` TEXT NOT NULL, `shift` INTEGER NOT NULL, `band_id` TEXT, `zone_id` TEXT, `received_at_millis` INTEGER NOT NULL, `status` TEXT NOT NULL, PRIMARY KEY(`id`))",
+            "CREATE INDEX IF NOT EXISTS `index_transmissions_status` ON `transmissions` (`status`)",
+            "CREATE TABLE IF NOT EXISTS `intel` (`id` TEXT NOT NULL, `zone_id` TEXT NOT NULL, `type` TEXT NOT NULL, `created_at_millis` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+            "CREATE INDEX IF NOT EXISTS `index_intel_zone_id` ON `intel` (`zone_id`)",
+            "CREATE TABLE IF NOT EXISTS `relays` (`zone_id` TEXT NOT NULL, `condition` REAL NOT NULL, `last_decay_at_millis` INTEGER NOT NULL, PRIMARY KEY(`zone_id`))",
+            "CREATE TABLE IF NOT EXISTS `rescue_targets` (`survivor_id` TEXT NOT NULL, `zone_id` TEXT NOT NULL, `found_at_millis` INTEGER NOT NULL, PRIMARY KEY(`survivor_id`))",
+            "CREATE TABLE IF NOT EXISTS `lore` (`id` TEXT NOT NULL, `source_id` TEXT NOT NULL, `text` TEXT NOT NULL, `found_at_millis` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+            "CREATE TABLE IF NOT EXISTS `modules` (`module_id` TEXT NOT NULL, `level` INTEGER NOT NULL, PRIMARY KEY(`module_id`))"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL);
 
     public static final Migration[] ALL = build();
 

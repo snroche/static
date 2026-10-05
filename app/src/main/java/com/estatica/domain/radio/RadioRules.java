@@ -1,0 +1,199 @@
+package com.estatica.domain.radio;
+
+import com.estatica.core.GameRandom;
+import com.estatica.domain.content.Balance;
+import com.estatica.domain.content.BandDef;
+import com.estatica.domain.content.GameContent;
+import com.estatica.domain.content.ScoutTemplate;
+import com.estatica.domain.content.SignalsDef;
+import com.estatica.domain.content.ZoneDef;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Reach, signal quality and what a caught signal turns out to be (GDD §4.4, §6.1, §6.2).
+ * Pure: all state comes in as arguments.
+ */
+public final class RadioRules {
+
+    private final GameContent content;
+    private final Balance balance;
+
+    public RadioRules(GameContent content) {
+        this.content = content;
+        this.balance = content.getBalance();
+    }
+
+    /**
+     * A band can be swept and reached if the antenna is good enough, or one level short but
+     * a working relay sits in the band before it.
+     */
+    public boolean isUnlocked(BandDef band, int antennaLevel, Collection<Relay> relays) {
+        if (antennaLevel >= band.getUnlockAntennaLevel()) {
+            return true;
+        }
+        int index = balance.bandIndex(band.getId());
+        if (index == 0 || antennaLevel < band.getUnlockAntennaLevel() - 1) {
+            return false;
+        }
+        String previous = balance.getBands().get(index - 1).getId();
+        for (Relay relay : relays) {
+            ZoneDef zone = content.getZones().get(relay.getZoneId());
+            if (zone != null && previous.equals(zone.getBand())
+                    && relay.isWorking(balance.getRadio().getRelayMinCondition())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Noise and order delay for an expedition to {@code zone}. */
+    public static final class Quality {
+        public final double noise;
+        public final long orderDelayMillis;
+
+        Quality(double noise, long orderDelayMillis) {
+            this.noise = noise;
+            this.orderDelayMillis = orderDelayMillis;
+        }
+    }
+
+    /**
+     * @param radioLevel level of the radio module (each level above 1 cleans the signal a bit)
+     */
+    public Quality quality(ZoneDef zone, Map<String, Relay> relays, int radioLevel) {
+        BandDef band = balance.band(zone.getBand());
+        double factor = Math.max(0.2, 1.0 - 0.15 * (radioLevel - 1));
+        Relay relay = relays.get(zone.getId());
+        if (relay != null && relay.isWorking(balance.getRadio().getRelayMinCondition())) {
+            factor *= balance.getRadio().getRelayFactor();
+        }
+        return new Quality(band.getNoise() * factor, Math.round(band.getOrderDelaySeconds() * 1000L * factor));
+    }
+
+    /** What a caught signal turned into. */
+    public static final class Outcome {
+        public final SignalField.Kind kind;
+        public final String zoneId;
+        public final String survivorId;
+        public final SignalsDef.Transmission transmission;
+        public final SignalsDef.Rare rare;
+
+        Outcome(SignalField.Kind kind, String zoneId, String survivorId,
+                SignalsDef.Transmission transmission, SignalsDef.Rare rare) {
+            this.kind = kind;
+            this.zoneId = zoneId;
+            this.survivorId = survivorId;
+            this.transmission = transmission;
+            this.rare = rare;
+        }
+    }
+
+    /**
+     * Resolves a caught signal into something concrete. Falls back to a rare find when its
+     * kind has nothing left (every zone known, every survivor found…).
+     *
+     * @param takenSurvivors survivors already recruited or waiting for rescue
+     * @param usedUnique     unique transmissions already received
+     */
+    public Outcome resolve(SignalField.Spot spot, Set<String> knownZones, Set<String> takenSurvivors,
+                           Set<String> usedUnique, GameRandom rng) {
+        String band = spot.bandId;
+        switch (spot.kind) {
+            case ZONE: {
+                List<String> unknown = new ArrayList<>();
+                for (ZoneDef z : content.getZones().values()) {
+                    if (band.equals(z.getBand()) && !knownZones.contains(z.getId())) {
+                        unknown.add(z.getId());
+                    }
+                }
+                if (!unknown.isEmpty()) {
+                    return new Outcome(SignalField.Kind.ZONE, rng.pick(unknown), null, null, null);
+                }
+                break;
+            }
+            case SURVIVOR: {
+                List<ScoutTemplate> free = new ArrayList<>();
+                for (ScoutTemplate s : content.getSurvivors()) {
+                    if (band.equals(s.getBand()) && !takenSurvivors.contains(s.getId())) {
+                        free.add(s);
+                    }
+                }
+                List<String> zones = zonesOf(band);
+                if (!free.isEmpty() && !zones.isEmpty()) {
+                    return new Outcome(SignalField.Kind.SURVIVOR, rng.pick(zones), rng.pick(free).getId(), null, null);
+                }
+                break;
+            }
+            case TRANSMISSION: {
+                List<SignalsDef.Transmission> options = new ArrayList<>();
+                for (SignalsDef.Transmission t : content.getSignals().getTransmissions()) {
+                    boolean bandOk = t.getBand() == null || band.equals(t.getBand());
+                    if (bandOk && !(t.isUnique() && usedUnique.contains(t.getId()))) {
+                        options.add(t);
+                    }
+                }
+                // The tutorial (Morse table) comes first, before anything else.
+                for (SignalsDef.Transmission t : options) {
+                    if (t.getReward() == SignalsDef.Transmission.Reward.MORSE_TABLE) {
+                        return transmission(t, band, knownZones, rng);
+                    }
+                }
+                if (!options.isEmpty()) {
+                    return transmission(rng.pick(options), band, knownZones, rng);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        List<SignalsDef.Rare> rares = new ArrayList<>();
+        for (SignalsDef.Rare r : content.getSignals().getRare()) {
+            if (r.getBand() == null || band.equals(r.getBand())) {
+                rares.add(r);
+            }
+        }
+        return new Outcome(SignalField.Kind.RARE, null, null, null, rng.pick(rares));
+    }
+
+    private Outcome transmission(SignalsDef.Transmission t, String band, Set<String> knownZones, GameRandom rng) {
+        String zone = null;
+        if (t.needsZone()) {
+            List<String> candidates = new ArrayList<>();
+            for (String id : knownZones) {
+                ZoneDef z = content.getZones().get(id);
+                if (z != null && balance.bandIndex(z.getBand()) <= balance.bandIndex(band)) {
+                    candidates.add(id);
+                }
+            }
+            java.util.Collections.sort(candidates);
+            zone = candidates.isEmpty() ? null : rng.pick(candidates);
+        }
+        return new Outcome(SignalField.Kind.TRANSMISSION, zone, null, t, null);
+    }
+
+    /** Encrypts a transmission: Morse or Caesar depending on the band, harder farther out. */
+    public Transmission encrypt(SignalsDef.Transmission def, String bandId, String zoneId,
+                                String plainText, GameRandom rng, long now) {
+        BandDef band = balance.band(bandId);
+        boolean morse = def.getReward() != SignalsDef.Transmission.Reward.MORSE_TABLE
+                && rng.chance(band.getMorseChance());
+        int shift = morse ? 0 : 1 + rng.nextInt(25);
+        return Transmission.create(def.getId(), morse ? Transmission.Kind.MORSE : Transmission.Kind.CAESAR,
+                plainText, shift, bandId, zoneId, now);
+    }
+
+    private List<String> zonesOf(String band) {
+        List<String> out = new ArrayList<>();
+        for (ZoneDef z : content.getZones().values()) {
+            if (band.equals(z.getBand())) {
+                out.add(z.getId());
+            }
+        }
+        return out;
+    }
+}

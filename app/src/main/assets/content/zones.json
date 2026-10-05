@@ -45,7 +45,8 @@
         "item": "naipes",
         "chance": 0.05
       }
-    ]
+    ],
+    "startKnown": true
   },
   {
     "id": "estacion",
@@ -100,7 +101,8 @@
         "item": "naipes",
         "chance": 0.06
       }
-    ]
+    ],
+    "startKnown": true
   },
   {
     "id": "farmacia",
@@ -149,7 +151,8 @@
         "item": "foto",
         "chance": 0.05
       }
-    ]
+    ],
+    "startKnown": true
   },
   {
     "id": "escuela",
@@ -209,6 +212,263 @@
         "item": "foto",
         "chance": 0.05
       }
-    ]
+    ],
+    "startKnown": true
+  },
+  {
+    "id": "lavadero",
+    "name": "Lavadero industrial",
+    "band": "short",
+    "description": "Galpón de lavarropas gigantes. Huele a jabón viejo y a humedad.",
+    "danger": 1,
+    "durationMinutes": [2, 4],
+    "situations": [1, 2],
+    "finds": [1, 2],
+    "events": [
+      "estanteria",
+      "perro",
+      "persiana"
+    ],
+    "loot": [
+      {
+        "resource": "scrap",
+        "min": 2,
+        "max": 4,
+        "weight": 3
+      },
+      {
+        "resource": "components",
+        "min": 1,
+        "max": 2,
+        "weight": 1
+      }
+    ],
+    "items": [
+      {
+        "item": "foto",
+        "chance": 0.08
+      },
+      {
+        "item": "naipes",
+        "chance": 0.05
+      }
+    ],
+    "transit": [
+      "Hay sábanas colgadas todavía. Se mueven solas.",
+      "El piso está mojado. No sé de dónde sale el agua.",
+      "Cruzo la playa de carga. Nadie."
+    ],
+    "startKnown": false
+  },
+  {
+    "id": "hospital",
+    "name": "Hospital Municipal",
+    "band": "medium",
+    "description": "Seis pisos. Las ambulancias siguen en la rampa.",
+    "danger": 2,
+    "durationMinutes": [20, 40],
+    "situations": [2, 3],
+    "finds": [2, 3],
+    "events": [
+      "gas",
+      "herido",
+      "archivo",
+      "ruido_sotano",
+      "saqueadores"
+    ],
+    "loot": [
+      {
+        "resource": "medicine",
+        "min": 2,
+        "max": 4,
+        "weight": 4
+      },
+      {
+        "resource": "components",
+        "min": 1,
+        "max": 3,
+        "weight": 2
+      }
+    ],
+    "items": [
+      {
+        "item": "foto",
+        "chance": 0.06
+      },
+      {
+        "item": "libro",
+        "chance": 0.06
+      },
+      {
+        "item": "estampita",
+        "chance": 0.06
+      }
+    ],
+    "transit": [
+      "La rampa de ambulancias está llena de hojas.",
+      "Pasillos largos. Las luces de emergencia todavía titilan.",
+      "Hay camillas cruzadas en el hall. Paso por arriba."
+    ],
+    "startKnown": false
+  },
+  {
+    "id": "estacion_tren",
+    "name": "Estación de trenes",
+    "band": "medium",
+    "description": "La última formación quedó en el andén 3, con las puertas abiertas.",
+    "danger": 2,
+    "durationMinutes": [15, 30],
+    "situations": [2, 2],
+    "finds": [2, 3],
+    "events": [
+      "vagon",
+      "jauria",
+      "saqueadores",
+      "radio_encendida"
+    ],
+    "loot": [
+      {
+        "resource": "scrap",
+        "min": 3,
+        "max": 6,
+        "weight": 3
+      },
+      {
+        "resource": "batteries",
+        "min": 1,
+        "max": 3,
+        "weight": 2
+      }
+    ],
+    "items": [
+      {
+        "item": "mate",
+        "chance": 0.06
+      },
+      {
+        "item": "naipes",
+        "chance": 0.07
+      },
+      {
+        "item": "armonica",
+        "chance": 0.05
+      }
+    ],
+    "transit": [
+      "Camino por las vías. Los durmientes crujen.",
+      "El tablero de horarios marca un tren que nunca llegó.",
+      "Hay un perro mirándome desde el puente peatonal."
+    ],
+    "startKnown": false
+  },
+  {
+    "id": "comisaria",
+    "name": "Comisaría 3.ª",
+    "band": "medium",
+    "description": "Rejas, archivos y un depósito de evidencias que nadie abrió.",
+    "danger": 3,
+    "durationMinutes": [25, 50],
+    "situations": [2, 3],
+    "finds": [2, 3],
+    "events": [
+      "archivo",
+      "saqueadores",
+      "gas",
+      "persiana",
+      "jauria"
+    ],
+    "loot": [
+      {
+        "resource": "batteries",
+        "min": 2,
+        "max": 4,
+        "weight": 2
+      },
+      {
+        "resource": "components",
+        "min": 2,
+        "max": 4,
+        "weight": 2
+      },
+      {
+        "resource": "scrap",
+        "min": 2,
+        "max": 4,
+        "weight": 1
+      }
+    ],
+    "items": [
+      {
+        "item": "cuaderno",
+        "chance": 0.07
+      },
+      {
+        "item": "foto",
+        "chance": 0.06
+      }
+    ],
+    "transit": [
+      "Hay patrulleros quemados en la vereda.",
+      "Un cartel de \"Se busca\" con la cara borrada por la lluvia.",
+      "Escucho una radio policial. Solo estática."
+    ],
+    "startKnown": false
+  },
+  {
+    "id": "barrio_privado",
+    "name": "Barrio privado",
+    "band": "medium",
+    "description": "Casas grandes detrás de un paredón. Algunas tienen generador.",
+    "danger": 3,
+    "durationMinutes": [30, 60],
+    "situations": [2, 3],
+    "finds": [2, 3],
+    "events": [
+      "herido",
+      "jauria",
+      "vagon",
+      "saqueadores",
+      "techo"
+    ],
+    "loot": [
+      {
+        "resource": "rations",
+        "min": 2,
+        "max": 5,
+        "weight": 3
+      },
+      {
+        "resource": "components",
+        "min": 2,
+        "max": 3,
+        "weight": 2
+      },
+      {
+        "resource": "batteries",
+        "min": 1,
+        "max": 3,
+        "weight": 1
+      }
+    ],
+    "items": [
+      {
+        "item": "chocolate",
+        "chance": 0.08
+      },
+      {
+        "item": "armonica",
+        "chance": 0.05
+      },
+      {
+        "item": "libro",
+        "chance": 0.05
+      }
+    ],
+    "transit": [
+      "La garita de seguridad tiene la barrera levantada.",
+      "Pileta verde. Algo se mueve abajo. No miro más.",
+      "Un perro de plástico en un jardín. Me asustó igual."
+    ],
+    "startKnown": false
   }
 ]

@@ -1,0 +1,60 @@
+[
+  {
+    "id": "beto",
+    "name": "Beto",
+    "voice": "telegrafico",
+    "band": "medium",
+    "bio": "Señalero del ferrocarril. Habla como si cada palabra costara plata.",
+    "stats": {
+      "endurance": [6, 9],
+      "stealth": [3, 6],
+      "wits": [5, 8],
+      "nerve": [6, 9],
+      "craft": [4, 7]
+    },
+    "traits": [
+      "sangre_fria"
+    ],
+    "hiddenTrait": "desconfianza",
+    "likes": [
+      "mate",
+      "recuerdo"
+    ],
+    "dislikes": [
+      "dulce"
+    ],
+    "rescueLines": [
+      "Aquí Beto. Creí que nadie escuchaba.",
+      "Gracias. Cambio."
+    ]
+  },
+  {
+    "id": "lucho",
+    "name": "Lucho",
+    "voice": "pibe",
+    "band": "medium",
+    "bio": "Diecisiete años. Sobrevivió solo en un barrio cerrado. No quiere hablar de cómo.",
+    "stats": {
+      "endurance": [4, 8],
+      "stealth": [6, 10],
+      "wits": [4, 8],
+      "nerve": [2, 8],
+      "craft": [2, 6]
+    },
+    "traits": [
+      "imprudencia"
+    ],
+    "hiddenTrait": "miedo",
+    "likes": [
+      "musica",
+      "juego"
+    ],
+    "dislikes": [
+      "lectura"
+    ],
+    "rescueLines": [
+      "¿Posta que hay un búnker? ¿Con comida?",
+      "Bueno. Voy. Pero no me pidan que hable de mi vieja."
+    ]
+  }
+]

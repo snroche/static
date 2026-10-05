@@ -8,6 +8,7 @@ import com.estatica.data.db.ExpeditionItemEntity;
 import com.estatica.data.db.ExpeditionLootEntity;
 import com.estatica.data.db.ExpeditionSegmentEntity;
 import com.estatica.domain.expedition.Expedition;
+import com.estatica.domain.expedition.Mission;
 import com.estatica.domain.expedition.Segment;
 
 import java.util.ArrayList;
@@ -48,7 +49,10 @@ public final class ExpeditionRepository {
             out.add(new Expedition(e.id, e.scoutId, e.zoneId, e.seed, e.startedAtMillis, segments,
                     e.rngState, Expedition.Status.valueOf(e.status), e.segmentIndex,
                     e.cursorAtMillis, e.pendingSinceMillis, e.chosenOption, e.chosenAtMillis, loot,
-                    items, e.retreatOffered));
+                    items, e.retreatOffered,
+                    new Mission(Mission.Type.valueOf(e.missionType), e.missionTarget, e.signalNoise,
+                            e.orderDelayMillis, e.cacheIntel, e.dangerIntel),
+                    e.aborted, e.lostHints));
         }
         return out;
     }
@@ -86,6 +90,15 @@ public final class ExpeditionRepository {
         e.chosenOption = expedition.getChosenOption();
         e.chosenAtMillis = expedition.getChosenAtMillis();
         e.retreatOffered = expedition.isRetreatOffered();
+        Mission mission = expedition.getMission();
+        e.missionType = mission.getType().name();
+        e.missionTarget = mission.getTarget();
+        e.signalNoise = mission.getNoise();
+        e.orderDelayMillis = mission.getOrderDelayMillis();
+        e.cacheIntel = mission.hasCacheIntel();
+        e.dangerIntel = mission.hasDangerIntel();
+        e.aborted = expedition.isAborted();
+        e.lostHints = expedition.getLostHints();
         dao.upsert(e);
 
         dao.clearItems(expedition.getId());

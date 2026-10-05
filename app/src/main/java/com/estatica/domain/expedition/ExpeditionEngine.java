@@ -80,6 +80,10 @@ public final class ExpeditionEngine {
      * ({@link GameRandom#deriveSeed()}).
      */
     public Dispatch dispatch(Scout scout, ZoneDef zone, long seed, long now) {
+        return dispatch(scout, zone, seed, Mission.explore(), now);
+    }
+
+    public Dispatch dispatch(Scout scout, ZoneDef zone, long seed, Mission mission, long now) {
         if (!rules.canDispatch(scout)) {
             throw new IllegalStateException(scout.getName() + " can't be dispatched");
         }
@@ -98,7 +102,7 @@ public final class ExpeditionEngine {
 
         Expedition expedition = new Expedition(Ids.newId(), scout.getId(), zone.getId(), seed, now,
                 segments, rng.getState(), Expedition.Status.ACTIVE, 0, now, Expedition.NONE,
-                Expedition.NO_CHOICE, Expedition.NONE, Map.of(), List.of(), false);
+                Expedition.NO_CHOICE, Expedition.NONE, Map.of(), List.of(), false, mission, false, 0);
         return new Dispatch(expedition, lines);
     }
 
@@ -168,7 +172,9 @@ public final class ExpeditionEngine {
         if (option < 0 || option >= count) {
             throw new IllegalArgumentException("option " + option + " of " + count);
         }
-        expedition.setChoice(option, now);
+        // GDD §4.4: far away, the order takes a while to reach them. If it arrives after the
+        // deadline, they will already have decided on their own.
+        expedition.setChoice(option, now + expedition.getMission().getOrderDelayMillis());
         return true;
     }
 
@@ -178,9 +184,7 @@ public final class ExpeditionEngine {
             return Expedition.NONE;
         }
         if (expedition.getPendingSinceMillis() != Expedition.NONE) {
-            return expedition.getChosenOption() != Expedition.NO_CHOICE
-                    ? expedition.getChosenAtMillis()
-                    : deadline(expedition);
+            return orderArrivesInTime(expedition) ? expedition.getChosenAtMillis() : deadline(expedition);
         }
         return expedition.getCursorAtMillis() + expedition.currentSegment().getDurationMillis();
     }
@@ -261,7 +265,10 @@ public final class ExpeditionEngine {
                 }
                 long resolveAt;
                 boolean ordered;
-                if (expedition.getChosenOption() != Expedition.NO_CHOICE) {
+                if (orderArrivesInTime(expedition)) {
+                    if (expedition.getChosenAtMillis() > now) {
+                        break; // the order is still on its way
+                    }
                     resolveAt = expedition.getChosenAtMillis();
                     ordered = true;
                 } else if (now >= deadline(expedition)) {
@@ -277,7 +284,7 @@ public final class ExpeditionEngine {
                 }
                 switch (segment.getType()) {
                     case TRANSIT:
-                        out.line(radio(due, scout, VoiceRenderer.render(voice,
+                        out.line(heard(expedition, rng, due, scout, VoiceRenderer.render(voice,
                                 rng.pick(zone.getTransit()), vars(scout))));
                         expedition.advance(due);
                         break;
@@ -303,16 +310,24 @@ public final class ExpeditionEngine {
         EventDef event = content.event(expedition.currentSegment().getEventId());
         Map<String, String> vars = vars(scout);
         for (String line : event.getIntro()) {
-            out.line(radio(at, scout, VoiceRenderer.render(voice, line, vars)));
+            out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, line, vars)));
         }
         List<EventDef.Option> options = event.getOptions();
+        double noise = expedition.getMission().getNoise();
+        double hintLoss = Math.min(0.8, noise * content.getBalance().getRadio().getHintLossPerNoise());
         for (int i = 0; i < options.size(); i++) {
             EventDef.Option option = options.get(i);
-            OddsHint hint = checks.hint(checks.chance(scout, option, zone));
+            OddsHint hint = checks.hint(chanceFor(expedition, scout, option, zone));
             Map<String, String> optionVars = new HashMap<>(vars);
             optionVars.put("n", String.valueOf(i + 1));
             optionVars.put("label", option.getLabel());
-            optionVars.put("hint", VoiceRenderer.phrase(voice, hint.phraseKey(), rng, vars));
+            if (noise > 0 && rng.chance(hintLoss)) {
+                // GDD §4.4: less information from far away.
+                expedition.markHintLost(i);
+                optionVars.put("hint", content.getTerminal().getRadio().getHintLost());
+            } else {
+                optionVars.put("hint", VoiceRenderer.phrase(voice, hint.phraseKey(), rng, vars));
+            }
             out.line(radio(at, scout, TextTemplate.format(text.getOptionLine(), optionVars)));
         }
         if (rules.asksToReturn(scout)) {
@@ -356,10 +371,11 @@ public final class ExpeditionEngine {
         }
 
         EventDef.Option option = event.getOptions().get(choice);
-        double chance = checks.chance(scout, option, zone);
-        // GDD §5.5: warned = already in bad shape, or the scout said it looked bad.
+        double chance = chanceFor(expedition, scout, option, zone);
+        // GDD §5.5: warned = already in bad shape, or the scout said it looked bad and the
+        // operator actually heard it through the static.
         boolean badOdds = checks.hint(chance) == OddsHint.BAD;
-        boolean warned = rules.isWarned(scout) || badOdds;
+        boolean warned = rules.isWarned(scout) || (badOdds && expedition.heardHint(choice));
         if (byOrder && badOdds && option.getRisk() == EventDef.Option.Risk.RISKY) {
             // GDD §5.2: exposing them to unnecessary risk hurts the bond.
             rules.addBond(scout, -content.getBalance().getBond().getRiskyOrderPenalty());
@@ -368,7 +384,7 @@ public final class ExpeditionEngine {
         EventDef.Outcome outcome = success ? option.getSuccess() : option.getFailure();
 
         for (String line : outcome.getText()) {
-            out.line(radio(at, scout, VoiceRenderer.render(voice, line, vars)));
+            out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, line, vars)));
         }
 
         StatType stat = StatType.fromKey(option.getStat());
@@ -431,7 +447,7 @@ public final class ExpeditionEngine {
         Map<String, String> vars = vars(scout);
         vars.put("amount", String.valueOf(amount));
         vars.put("resource", content.resource(roll.getResource()).getName().toLowerCase(Locale.ROOT));
-        out.line(radio(at, scout, VoiceRenderer.phrase(voice, "find", rng, vars)));
+        out.line(heard(expedition, rng, at, scout, VoiceRenderer.phrase(voice, "find", rng, vars)));
 
         for (ItemDrop drop : zone.getItems()) {
             if (rng.chance(drop.getChance())) {
@@ -448,6 +464,17 @@ public final class ExpeditionEngine {
                                long at, ExpeditionResult out) {
         Map<String, String> vars = vars(scout);
         out.line(radio(at, scout, say(voice, scout, "arrival", rng, vars)));
+        if (expedition.getMission().hasCacheIntel() && !expedition.isAborted()) {
+            // Decoded intel led them to a stash.
+            ZoneDef zone = content.zone(expedition.getZoneId());
+            for (int i = 0; i < content.getBalance().getRadio().getCacheIntelLootRolls(); i++) {
+                LootRoll roll = weightedPick(zone.getLoot(), rng);
+                expedition.addLoot(roll.getResource(), rollAmount(roll, scout, rng));
+            }
+        }
+        if (!expedition.isAborted()) {
+            out.markMissionCompleted();
+        }
         Map<String, Integer> loot = expedition.getCarriedLoot();
         if (loot.isEmpty()) {
             out.line(system(at, TextTemplate.format(text.getReturnedEmpty(), vars), scout));
@@ -561,6 +588,24 @@ public final class ExpeditionEngine {
             parts.add(TextTemplate.format(text.getLootItem(), v));
         }
         return String.join(text.getLootSeparator(), parts);
+    }
+
+    /** An order counts if it reaches the scout before they decide alone. */
+    private boolean orderArrivesInTime(Expedition expedition) {
+        return expedition.getChosenOption() != Expedition.NO_CHOICE
+                && expedition.getChosenAtMillis() < deadline(expedition);
+    }
+
+    private double chanceFor(Expedition expedition, Scout scout, EventDef.Option option, ZoneDef zone) {
+        double intel = expedition.getMission().hasDangerIntel()
+                ? content.getBalance().getRadio().getDangerIntelCheckBonus() : 0;
+        return checks.chance(scout, option, zone, intel);
+    }
+
+    /** A transmission from the field, broken up by distance (GDD §4.4). */
+    private LogLine heard(Expedition expedition, GameRandom rng, long at, Scout scout, String line) {
+        double noise = expedition.getMission().getNoise();
+        return radio(at, scout, noise > 0 ? SignalDegrader.degrade(line, noise, rng) : line);
     }
 
     /** A phrase in the scout voice, warmer when the bond is high. */

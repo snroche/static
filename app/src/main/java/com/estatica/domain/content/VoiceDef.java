@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public final class VoiceDef {
 
-    public enum Transform { NONE, LOWER }
+    public enum Transform { NONE, LOWER, UPPER }
 
     private String id;
     private Transform transform = Transform.NONE;

@@ -15,8 +15,13 @@ import androidx.room.RoomDatabase;
                 ExpeditionEntity.class, ExpeditionSegmentEntity.class, ExpeditionLootEntity.class,
                 ResourceEntity.class,
                 ScoutFlagEntity.class, ConversationEntity.class, ItemEntity.class,
-                AffinityEntity.class, ExpeditionItemEntity.class},
-        version = 3,
+                AffinityEntity.class, ExpeditionItemEntity.class,
+                RadioEntities.GameFlag.class, RadioEntities.KnownZone.class,
+                RadioEntities.CaughtSignal.class, RadioEntities.TransmissionRow.class,
+                RadioEntities.Intel.class, RadioEntities.RelayRow.class,
+                RadioEntities.RescueTarget.class, RadioEntities.Lore.class,
+                RadioEntities.Module.class},
+        version = 4,
         exportSchema = true)
 public abstract class EstaticaDatabase extends RoomDatabase {
 
@@ -39,4 +44,6 @@ public abstract class EstaticaDatabase extends RoomDatabase {
     public abstract ItemDao itemDao();
 
     public abstract AffinityDao affinityDao();
+
+    public abstract RadioDao radioDao();
 }

@@ -19,6 +19,11 @@ public final class TerminalText {
     private Map<String, String> injuries;
     private ExpeditionText expedition;
     private BunkerText bunker;
+    private RadioText radio;
+
+    public RadioText getRadio() {
+        return radio;
+    }
 
     public BunkerText getBunker() {
         return bunker;
@@ -128,6 +133,166 @@ public final class TerminalText {
 
         public String getNotifyReturned() {
             return notifyReturned;
+        }
+    }
+
+    /** System lines about the dial, decoding, relays and rescues. All are templates. */
+    public static final class RadioText {
+        private String staticNoise;
+        private String hintLost;
+        /** {delay}. */
+        private String orderDelayed;
+        /** {zone}, {band}. */
+        private String zoneFound;
+        /** {name}, {zone}. */
+        private String survivorFound;
+        private String transmissionFound;
+        private String nothingThere;
+        private String alreadyCaught;
+        private String decoded;
+        private String decodeWrong;
+        /** {zone}. */
+        private String intelCache;
+        /** {zone}. */
+        private String intelDanger;
+        private String loreFound;
+        /** {loot}. */
+        private String resourcesFound;
+        private String morseTableUnlocked;
+        /** {name}. */
+        private String rescued;
+        /** {name}. */
+        private String rescueFailed;
+        private String rosterFull;
+        /** {zone}. */
+        private String relayInstalled;
+        /** {zone}. */
+        private String relayMaintained;
+        /** {zone}. */
+        private String relayFailing;
+        private String relayBuilt;
+        /** {module}, {level}. */
+        private String moduleUpgraded;
+        /** {cost}. */
+        private String cantAfford;
+        private String assistantCaught;
+        /** {name}, {zone}. */
+        private String missionRescue;
+        /** {zone}. */
+        private String missionInstall;
+        /** {zone}. */
+        private String missionMaintain;
+
+        public String getStaticNoise() {
+            return staticNoise;
+        }
+
+        public String getHintLost() {
+            return hintLost;
+        }
+
+        public String getOrderDelayed() {
+            return orderDelayed;
+        }
+
+        public String getZoneFound() {
+            return zoneFound;
+        }
+
+        public String getSurvivorFound() {
+            return survivorFound;
+        }
+
+        public String getTransmissionFound() {
+            return transmissionFound;
+        }
+
+        public String getNothingThere() {
+            return nothingThere;
+        }
+
+        public String getAlreadyCaught() {
+            return alreadyCaught;
+        }
+
+        public String getDecoded() {
+            return decoded;
+        }
+
+        public String getDecodeWrong() {
+            return decodeWrong;
+        }
+
+        public String getIntelCache() {
+            return intelCache;
+        }
+
+        public String getIntelDanger() {
+            return intelDanger;
+        }
+
+        public String getLoreFound() {
+            return loreFound;
+        }
+
+        public String getResourcesFound() {
+            return resourcesFound;
+        }
+
+        public String getMorseTableUnlocked() {
+            return morseTableUnlocked;
+        }
+
+        public String getRescued() {
+            return rescued;
+        }
+
+        public String getRescueFailed() {
+            return rescueFailed;
+        }
+
+        public String getRosterFull() {
+            return rosterFull;
+        }
+
+        public String getRelayInstalled() {
+            return relayInstalled;
+        }
+
+        public String getRelayMaintained() {
+            return relayMaintained;
+        }
+
+        public String getRelayFailing() {
+            return relayFailing;
+        }
+
+        public String getRelayBuilt() {
+            return relayBuilt;
+        }
+
+        public String getModuleUpgraded() {
+            return moduleUpgraded;
+        }
+
+        public String getCantAfford() {
+            return cantAfford;
+        }
+
+        public String getAssistantCaught() {
+            return assistantCaught;
+        }
+
+        public String getMissionRescue() {
+            return missionRescue;
+        }
+
+        public String getMissionInstall() {
+            return missionInstall;
+        }
+
+        public String getMissionMaintain() {
+            return missionMaintain;
         }
     }
 

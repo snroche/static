@@ -381,6 +381,135 @@ public class ExpeditionEngineTest {
         assertTrue("most last words name the gift or the companion", mentions * 2 > deaths);
     }
 
+    // ---- Phase 3 ----
+
+    private Expedition dispatchWith(Scout s, String zone, long seed, Mission mission) {
+        return engine.dispatch(s, content.zone(zone), seed, mission, T0).expedition;
+    }
+
+    private long untilPending(Expedition e, Scout s) {
+        long t = T0;
+        while (!e.isAwaitingDecision() && e.isActive()) {
+            t += 1_000;
+            engine.advance(e, s, List.of(), t);
+        }
+        return e.getPendingSinceMillis();
+    }
+
+    @Test
+    public void ordersTakeTimeToArriveFromFarAway() {
+        long delay = 5 * 60_000L;
+        Scout s = scout(6, 10, List.of());
+        Expedition e = dispatchWith(s, "almacen", 42, new Mission(Mission.Type.EXPLORE, null, 0, delay, false, false));
+        long arrived = untilPending(e, s);
+        assertTrue(engine.choose(e, 0, arrived + 1_000));
+        assertEquals(arrived + 1_000 + delay, engine.nextEventAt(e));
+        engine.advance(e, s, List.of(), arrived + 2_000);
+        assertTrue("still waiting for the order to arrive", e.isAwaitingDecision() || e.getChosenOption() == 0);
+        assertEquals(arrived, e.getPendingSinceMillis());
+        ExpeditionResult r = engine.advance(e, s, List.of(), arrived + 1_000 + delay);
+        assertTrue(r.getLines().get(0).getTimestampMillis() == arrived + 1_000 + delay);
+    }
+
+    @Test
+    public void anOrderArrivingAfterTheDeadlineIsTooLate() {
+        long delay = engine.timeoutMillis();
+        Scout s = scout(6, 10, List.of());
+        Expedition e = dispatchWith(s, "almacen", 42, new Mission(Mission.Type.EXPLORE, null, 0, delay, false, false));
+        long arrived = untilPending(e, s);
+        long deadline = engine.deadline(e);
+        assertTrue(engine.choose(e, 0, arrived + 1_000));
+        assertEquals(deadline, engine.nextEventAt(e));
+        ExpeditionResult r = engine.advance(e, s, List.of(), arrived + 3 * HOUR);
+        assertEquals("the scout decided alone at the deadline", deadline, r.getLines().get(0).getTimestampMillis());
+    }
+
+    @Test
+    public void noiseBreaksUpReportsAndHidesHints() {
+        int lost = 0;
+        int broken = 0;
+        for (long seed = 0; seed < 50; seed++) {
+            Scout s = scout(6, 10, List.of());
+            Expedition e = dispatchWith(s, "escuela", seed, new Mission(Mission.Type.EXPLORE, null, 0.5, 0, false, false));
+            long t = T0;
+            while (!e.isAwaitingDecision() && e.isActive()) {
+                t += 1_000;
+                for (LogLine line : engine.advance(e, s, List.of(), t).getLines()) {
+                    broken += line.getText().contains("—") ? 1 : 0;
+                    lost += line.getText().contains("no se entiende") ? 1 : 0;
+                }
+            }
+            if (e.getLostHints() != 0) {
+                assertTrue(lost > 0);
+            }
+        }
+        assertTrue(broken > 0);
+        assertTrue(lost > 0);
+    }
+
+    @Test
+    public void aMissedWarningCantKill() {
+        // Bad odds whose hint was lost in the static don't count as a warning (GDD §5.5).
+        for (long seed = 0; seed < 300; seed++) {
+            Scout s = scout(3, 0, List.of());
+            Expedition e = dispatchWith(s, "almacen", seed, new Mission(Mission.Type.EXPLORE, null, 1.0, 0, false, false));
+            long t = T0;
+            while (e.isActive()) {
+                t += 5_000;
+                engine.advance(e, s, List.of(), t);
+                if (e.isAwaitingDecision()) {
+                    // Lethal options whose hint was lost if any, otherwise something safe.
+                    EventDef ev = engine.pendingEvent(e);
+                    int choice = -1;
+                    for (int i = 0; i < ev.getOptions().size() && choice < 0; i++) {
+                        if (ev.getOptions().get(i).getFailure().isLethal() && !e.heardHint(i)) {
+                            choice = i;
+                        }
+                    }
+                    for (int i = 0; i < ev.getOptions().size() && choice < 0; i++) {
+                        if (!ev.getOptions().get(i).getFailure().isLethal()) {
+                            choice = i;
+                        }
+                    }
+                    engine.choose(e, choice, t);
+                }
+            }
+            assertTrue("seed " + seed, s.isAlive());
+        }
+    }
+
+    @Test
+    public void cacheIntelBringsBackMore() {
+        int with = 0;
+        int without = 0;
+        for (long seed = 0; seed < 50; seed++) {
+            Scout a = scout(7, 0, List.of());
+            Scout b = scout(7, 0, List.of());
+            Expedition ea = dispatchWith(a, "estacion", seed, new Mission(Mission.Type.EXPLORE, null, 0, 0, true, false));
+            Expedition eb = dispatchWith(b, "estacion", seed, new Mission(Mission.Type.EXPLORE, null, 0, 0, false, false));
+            with += engine.advance(ea, a, List.of(), T0 + 3 * HOUR).getDelivered().values().stream().mapToInt(Integer::intValue).sum();
+            without += engine.advance(eb, b, List.of(), T0 + 3 * HOUR).getDelivered().values().stream().mapToInt(Integer::intValue).sum();
+        }
+        assertTrue(with > without);
+    }
+
+    @Test
+    public void missionsCountOnlyIfTheyComeBackWhole() {
+        int completed = 0;
+        int aborted = 0;
+        for (long seed = 0; seed < 200; seed++) {
+            Scout s = scout(2, 10, List.of());
+            Expedition e = dispatchWith(s, "escuela", seed, new Mission(Mission.Type.RESCUE, "beto", 0, 0, false, false));
+            ExpeditionResult r = engine.advance(e, s, List.of(), T0 + 3 * HOUR);
+            if (r.isReturned()) {
+                assertEquals(!e.isAborted(), r.isMissionCompleted());
+                completed += r.isMissionCompleted() ? 1 : 0;
+                aborted += e.isAborted() ? 1 : 0;
+            }
+        }
+        assertTrue(completed > 0 && aborted > 0);
+    }
+
     @Test
     public void criticallyInjuredScoutCantBeDispatched() {
         Scout s = scout(5, 10, List.of());

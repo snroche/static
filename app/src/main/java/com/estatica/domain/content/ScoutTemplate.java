@@ -18,6 +18,12 @@ public final class ScoutTemplate {
     private List<String> likes;
     /** Item ids or tags they dislike. */
     private List<String> dislikes;
+    /** Survivors only: band where they can be found (null for starters). */
+    private String band;
+    /** Survivors only: trust when they join (they don't know the operator yet). */
+    private Integer initialTrust;
+    /** Survivors only: what they say when rescued. */
+    private List<String> rescueLines;
 
     public String getId() {
         return id;
@@ -54,5 +60,18 @@ public final class ScoutTemplate {
 
     public List<String> getDislikes() {
         return dislikes != null ? dislikes : List.of();
+    }
+
+    public String getBand() {
+        return band;
+    }
+
+    /** Null means the balance default. */
+    public Integer getInitialTrust() {
+        return initialTrust;
+    }
+
+    public List<String> getRescueLines() {
+        return rescueLines != null ? rescueLines : List.of();
     }
 }

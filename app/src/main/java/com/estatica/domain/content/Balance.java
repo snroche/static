@@ -14,6 +14,9 @@ public final class Balance {
     private Bond bond;
     private Grief grief;
     private Affinity affinity;
+    private java.util.List<BandDef> bands;
+    private Radio radio;
+    private java.util.List<ModuleDef> modules;
 
     public int getContentVersion() {
         return contentVersion;
@@ -45,6 +48,125 @@ public final class Balance {
 
     public Affinity getAffinity() {
         return affinity;
+    }
+
+    /** Bands from nearest to farthest. */
+    public java.util.List<BandDef> getBands() {
+        return bands;
+    }
+
+    public BandDef band(String id) {
+        for (BandDef b : bands) {
+            if (b.getId().equals(id)) {
+                return b;
+            }
+        }
+        throw new IllegalArgumentException("Unknown band: " + id);
+    }
+
+    /** 0-based distance rank of a band. */
+    public int bandIndex(String id) {
+        for (int i = 0; i < bands.size(); i++) {
+            if (bands.get(i).getId().equals(id)) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("Unknown band: " + id);
+    }
+
+    public Radio getRadio() {
+        return radio;
+    }
+
+    public java.util.List<ModuleDef> getModules() {
+        return modules;
+    }
+
+    public ModuleDef module(String id) {
+        for (ModuleDef m : modules) {
+            if (m.getId().equals(id)) {
+                return m;
+            }
+        }
+        throw new IllegalArgumentException("Unknown module: " + id);
+    }
+
+    /** Sweeping, decoding, relays and intel (GDD §4.4, §6.1, §6.2). */
+    public static final class Radio {
+        private int signalRotationHours;
+        private int dialMax;
+        /** Signal strength (0–1) needed to lock on. */
+        private double lockThreshold;
+        /** Chance per point of noise that an odds hint is lost in the static. */
+        private double hintLossPerNoise;
+        private java.util.Map<String, Integer> relayKitCost;
+        private java.util.Map<String, Integer> relayMaintenanceCost;
+        private double relayDecayPerDay;
+        private double relayMinCondition;
+        /** Multiplies noise and order delay in a zone with a working relay. */
+        private double relayFactor;
+        private double dangerIntelCheckBonus;
+        private int cacheIntelLootRolls;
+        /** Radio assistant: hours of work per passively caught signal. */
+        private double assistantHoursPerSignal;
+        private int maxScouts;
+        private int survivorTrust;
+
+        public int getSignalRotationHours() {
+            return signalRotationHours;
+        }
+
+        public int getDialMax() {
+            return dialMax;
+        }
+
+        public double getLockThreshold() {
+            return lockThreshold;
+        }
+
+        public double getHintLossPerNoise() {
+            return hintLossPerNoise;
+        }
+
+        public java.util.Map<String, Integer> getRelayKitCost() {
+            return relayKitCost;
+        }
+
+        public java.util.Map<String, Integer> getRelayMaintenanceCost() {
+            return relayMaintenanceCost;
+        }
+
+        public double getRelayDecayPerDay() {
+            return relayDecayPerDay;
+        }
+
+        public double getRelayMinCondition() {
+            return relayMinCondition;
+        }
+
+        public double getRelayFactor() {
+            return relayFactor;
+        }
+
+        public double getDangerIntelCheckBonus() {
+            return dangerIntelCheckBonus;
+        }
+
+        public int getCacheIntelLootRolls() {
+            return cacheIntelLootRolls;
+        }
+
+        public double getAssistantHoursPerSignal() {
+            return assistantHoursPerSignal;
+        }
+
+        public int getMaxScouts() {
+            return maxScouts;
+        }
+
+        public int getSurvivorTrust() {
+            return survivorTrust;
+        }
     }
 
     /** Personal relationship with the operator (GDD §5.2). Separate from trust. */

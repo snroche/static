@@ -30,7 +30,12 @@
     "description": "Desarma chatarra: 3 de chatarra se vuelven 1 componente cada 2 h.",
     "stat": "craft",
     "xpPerHour": 0.6,
-    "conversion": { "from": "scrap", "input": 3, "to": "components", "hoursPerUnit": 2 }
+    "conversion": {
+      "from": "scrap",
+      "input": 3,
+      "to": "components",
+      "hoursPerUnit": 2
+    }
   },
   {
     "id": "guardia",
@@ -42,10 +47,11 @@
   {
     "id": "radio",
     "name": "Asistente de radio",
-    "description": "Acompaña al operador en la consola. La compañía calma a todos.",
+    "description": "Barre el dial mientras no estás: cada tanto capta una señal. La compañía calma a todos.",
     "stat": "wits",
     "xpPerHour": 0.5,
-    "groupStressReliefPerHour": 0.5
+    "groupStressReliefPerHour": 0.5,
+    "passiveSweep": true
   },
   {
     "id": "entrenamiento",

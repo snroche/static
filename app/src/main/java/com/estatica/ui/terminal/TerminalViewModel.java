@@ -15,6 +15,7 @@ import com.estatica.data.session.SessionSnapshot;
 import com.estatica.di.AppModule;
 import com.estatica.domain.content.GameContent;
 import com.estatica.domain.content.TerminalText;
+import com.estatica.domain.expedition.Mission;
 import com.estatica.domain.log.LogChannel;
 import com.estatica.domain.log.LogLine;
 import com.estatica.domain.terminal.CommandInterpreter;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -56,6 +59,10 @@ public final class TerminalViewModel extends ViewModel {
     private final MutableLiveData<TerminalUiState> state = new MutableLiveData<>();
     private final MutableLiveData<SessionSnapshot> snapshot = new MutableLiveData<>();
     private final MutableLiveData<List<SessionSnapshot.DiaryEntry>> diary = new MutableLiveData<>();
+    private final MutableLiveData<SessionSnapshot.Tuning> tuning = new MutableLiveData<>();
+    /** Latest dial position asked for ("band:position"); older requests are skipped. */
+    private final AtomicReference<String> tuneRequest = new AtomicReference<>();
+    private final AtomicBoolean tuneScheduled = new AtomicBoolean();
     private final List<LogLine> window = new ArrayList<>();
     private final ArrayDeque<Pending> pending = new ArrayDeque<>();
     private long typingSeq = TerminalUiState.NO_TYPING;
@@ -113,6 +120,56 @@ public final class TerminalViewModel extends ViewModel {
 
     LiveData<List<SessionSnapshot.DiaryEntry>> getDiary() {
         return diary;
+    }
+
+    LiveData<SessionSnapshot.Tuning> getTuning() {
+        return tuning;
+    }
+
+    /** Dial moved. Cheap and read-only; while dragging only the latest position is computed. */
+    void tune(String bandId, int position) {
+        if (!ready) {
+            return;
+        }
+        tuneRequest.set(bandId + ":" + position);
+        if (tuneScheduled.compareAndSet(false, true)) {
+            game.execute(() -> {
+                tuneScheduled.set(false);
+                String[] request = tuneRequest.get().split(":");
+                SessionSnapshot.Tuning result = session.tune(request[0], Integer.parseInt(request[1]));
+                main.post(() -> tuning.setValue(result));
+            });
+        }
+    }
+
+    void capture(String bandId, int position) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.capture(bandId, position)));
+        }
+    }
+
+    void decode(String transmissionId, String answer) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.decode(transmissionId, answer)));
+        }
+    }
+
+    void buildRelay() {
+        if (ready) {
+            run(step -> step.animated.addAll(session.buildRelay()));
+        }
+    }
+
+    void upgradeModule(String moduleId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.upgradeModule(moduleId)));
+        }
+    }
+
+    void dispatch(String scoutId, String zoneId, Mission.Type type, String target) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.dispatch(scoutId, zoneId, type, target)));
+        }
     }
 
     // ---- Game executor ----

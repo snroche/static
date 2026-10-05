@@ -7,6 +7,7 @@ import com.estatica.domain.content.ItemDef;
 import com.estatica.domain.content.TaskDef;
 import com.estatica.domain.content.ResourceDef;
 import com.estatica.domain.content.ScoutTemplate;
+import com.estatica.domain.content.SignalsDef;
 import com.estatica.domain.content.TerminalText;
 import com.estatica.domain.content.TraitDef;
 import com.estatica.domain.content.VoiceDef;
@@ -57,6 +58,9 @@ public final class ContentParser {
                 && balance.getBond().getLevelThresholds().length > 0, "balance.json: bond.levelThresholds");
         require(balance.getGrief() != null && balance.getGrief().getTraits() != null, "balance.json: grief");
         require(balance.getAffinity() != null, "balance.json: affinity");
+        require(balance.getBands() != null && !balance.getBands().isEmpty(), "balance.json: bands");
+        require(balance.getRadio() != null && balance.getRadio().getDialMax() > 0, "balance.json: radio");
+        require(balance.getModules() != null, "balance.json: modules");
         return balance;
     }
 
@@ -70,6 +74,7 @@ public final class ContentParser {
         require(text.getStatNames() != null, "terminal.json: statNames");
         require(text.getExpedition() != null, "terminal.json: expedition");
         require(text.getBunker() != null, "terminal.json: bunker");
+        require(text.getRadio() != null, "terminal.json: radio");
         return text;
     }
 
@@ -107,6 +112,19 @@ public final class ContentParser {
 
     public List<DialogueDef> parseDialogues(Reader reader) {
         return parseArray(reader, DialogueDef[].class, "dialogues.json");
+    }
+
+    public List<ScoutTemplate> parseSurvivors(Reader reader) {
+        return parseArray(reader, ScoutTemplate[].class, "survivors.json");
+    }
+
+    public SignalsDef parseSignals(Reader reader) {
+        SignalsDef signals = parse(reader, SignalsDef.class, "signals.json");
+        require(signals.getTeasers() != null, "signals.json: teasers");
+        require(signals.getRare() != null && !signals.getRare().isEmpty(), "signals.json: rare");
+        require(signals.getTransmissions() != null && !signals.getTransmissions().isEmpty(),
+                "signals.json: transmissions");
+        return signals;
     }
 
     private <T> List<T> parseArray(Reader reader, Class<T[]> type, String name) {

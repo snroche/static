@@ -12,11 +12,15 @@ import com.estatica.data.repo.ExpeditionRepository;
 import com.estatica.data.repo.GameStateRepository;
 import com.estatica.data.repo.LogRepository;
 import com.estatica.data.repo.MemoryRepository;
+import com.estatica.data.repo.RadioRepository;
 import com.estatica.data.repo.ResourceRepository;
 import com.estatica.data.repo.ScoutRepository;
 import com.estatica.domain.bunker.BunkerRules;
 import com.estatica.domain.bunker.ItemInstance;
 import com.estatica.domain.content.Balance;
+import com.estatica.domain.content.BandDef;
+import com.estatica.domain.content.ModuleDef;
+import com.estatica.domain.content.SignalsDef;
 import com.estatica.domain.content.DialogueDef;
 import com.estatica.domain.content.GameContent;
 import com.estatica.domain.content.ItemDef;
@@ -30,6 +34,13 @@ import com.estatica.domain.dialogue.DialogueEngine;
 import com.estatica.domain.expedition.Expedition;
 import com.estatica.domain.expedition.ExpeditionEngine;
 import com.estatica.domain.expedition.ExpeditionResult;
+import com.estatica.domain.expedition.Mission;
+import com.estatica.domain.radio.RadioRules;
+import com.estatica.domain.radio.Relay;
+import com.estatica.domain.radio.SignalDegrader;
+import com.estatica.domain.radio.SignalField;
+import com.estatica.domain.radio.Transmission;
+import com.estatica.domain.time.ElapsedFormatter;
 import com.estatica.domain.log.LogChannel;
 import com.estatica.domain.log.LogLine;
 import com.estatica.domain.scouts.Affinities;
@@ -55,6 +66,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -79,6 +92,7 @@ public final class GameSession {
     private final MemoryRepository memoryRepository;
     private final ResourceRepository resourceRepository;
     private final BunkerRepository bunkerRepository;
+    private final RadioRepository radioRepository;
     private final LogRepository logRepository;
     private final GameClock clock;
 
@@ -101,12 +115,30 @@ public final class GameSession {
     private final Map<String, ItemInstance> items = new LinkedHashMap<>();
     private final Map<String, Conversation> conversations = new LinkedHashMap<>();
 
+    // Radio (Phase 3)
+    private RadioRules radio;
+    private SignalField field;
+    private final Set<String> gameFlags = new java.util.LinkedHashSet<>();
+    private final Set<String> knownZones = new java.util.LinkedHashSet<>();
+    private final Set<String> caughtSignals = new java.util.HashSet<>();
+    private final Set<String> receivedTransmissions = new java.util.HashSet<>();
+    private final Map<String, Transmission> transmissions = new LinkedHashMap<>();
+    private final Map<String, Map<String, String>> intel = new HashMap<>();
+    private final Map<String, Relay> relays = new TreeMap<>();
+    private final Map<String, String> rescueTargets = new TreeMap<>();
+    private final Map<String, String> lore = new LinkedHashMap<>();
+    private final Map<String, Integer> moduleLevels = new HashMap<>();
+
+    /** Global flag: the Morse reference table was found. */
+    public static final String FLAG_MORSE_TABLE = "morse_table";
+
     @Inject
     GameSession(EstaticaDatabase db, ContentRepository contentRepository,
                 GameStateRepository gameStateRepository, ScoutRepository scoutRepository,
                 ExpeditionRepository expeditionRepository, MemoryRepository memoryRepository,
                 ResourceRepository resourceRepository, BunkerRepository bunkerRepository,
-                LogRepository logRepository, GameClock clock) {
+                RadioRepository radioRepository, LogRepository logRepository, GameClock clock) {
+        this.radioRepository = radioRepository;
         this.db = db;
         this.contentRepository = contentRepository;
         this.gameStateRepository = gameStateRepository;
@@ -162,6 +194,36 @@ public final class GameSession {
             conversations.put(c.getId(), c);
         }
         affinities = bunkerRepository.affinities(content.getBalance().getAffinity().getMax());
+
+        radio = new RadioRules(content);
+        field = new SignalField(content.getBalance(), state.getRngSeed());
+        gameFlags.addAll(radioRepository.flags());
+        knownZones.addAll(radioRepository.knownZones());
+        caughtSignals.addAll(radioRepository.caughtSignals());
+        receivedTransmissions.addAll(radioRepository.receivedTransmissionSources());
+        for (Transmission t : radioRepository.pendingTransmissions()) {
+            transmissions.put(t.getId(), t);
+        }
+        intel.putAll(radioRepository.intel());
+        relays.putAll(radioRepository.relays());
+        rescueTargets.putAll(radioRepository.rescueTargets());
+        lore.putAll(radioRepository.lore());
+        moduleLevels.putAll(radioRepository.moduleLevels());
+        long now = clock.nowMillis();
+        db.runInTransaction(() -> {
+            // New games and saves from before Phase 3: starting zones and module levels.
+            for (ZoneDef z : content.getZones().values()) {
+                if (z.isStartKnown() && knownZones.add(z.getId())) {
+                    radioRepository.addKnownZone(z.getId(), now);
+                }
+            }
+            for (ModuleDef m : content.getBalance().getModules()) {
+                if (!moduleLevels.containsKey(m.getId())) {
+                    moduleLevels.put(m.getId(), m.getStartLevel());
+                    radioRepository.saveModule(m.getId(), m.getStartLevel());
+                }
+            }
+        });
         gameStateRepository.saveContentVersion(content.getBalance().getContentVersion());
         started = true;
     }
@@ -237,6 +299,10 @@ public final class GameSession {
         final List<Expedition> expeditions = new ArrayList<>();
         final List<Expedition> newExpeditions = new ArrayList<>();
         final List<Conversation> conversationsChanged = new ArrayList<>();
+        final List<Scout> newScouts = new ArrayList<>();
+        final List<Runnable> radioWrites = new ArrayList<>();
+        /** Already applied in memory by pay(); only persisted on commit. */
+        final Map<String, Integer> paid = new HashMap<>();
 
         void system(String template, Map<String, String> vars, Scout scout) {
             lines.add(LogLine.draft(now, LogChannel.SYSTEM, null, TextTemplate.format(template, vars),
@@ -244,6 +310,10 @@ public final class GameSession {
         }
 
         List<LogLine> commit() {
+            // New recruits must exist before their rows are updated with everyone else.
+            for (Scout scout : newScouts) {
+                scouts.remove(scout.getId());
+            }
             // Several sources may have produced lines: interleave them by time.
             lines.sort(Comparator.comparingLong(LogLine::getTimestampMillis));
             List<LogLine> saved = new ArrayList<>();
@@ -260,13 +330,26 @@ public final class GameSession {
                 }
                 memoryRepository.insert(memories);
                 resourceRepository.add(resourceDelta);
+                resourceRepository.add(paid);
                 bunkerRepository.saveItems(items.values());
                 bunkerRepository.saveAffinities(affinities);
                 for (Conversation c : conversationsChanged) {
                     bunkerRepository.save(c);
                 }
+                for (Scout scout : newScouts) {
+                    scoutRepository.insertNew(scout);
+                }
+                for (Runnable write : radioWrites) {
+                    write.run();
+                }
+                for (Relay relay : relays.values()) {
+                    radioRepository.save(relay);
+                }
                 gameStateRepository.saveRngState(random.getState());
             });
+            for (Scout scout : newScouts) {
+                scouts.put(scout.getId(), scout);
+            }
             resourceDelta.forEach((k, v) -> resources.merge(k, v, Integer::sum));
             for (Iterator<Expedition> it = active.values().iterator(); it.hasNext(); ) {
                 if (!it.next().isActive()) {
@@ -302,15 +385,31 @@ public final class GameSession {
             }
             if (result.isReturned()) {
                 recoverLostItems(scout, expedition.getZoneId(), step);
+                finishMission(expedition, scout, result.isMissionCompleted(), step);
             }
             if (result.isScoutDied()) {
                 afterDeath(scout, expedition.getZoneId(), step);
+                if (expedition.getMission().getType() == Mission.Type.RESCUE) {
+                    rescueFailed(expedition.getMission().getTarget(), step);
+                }
+            }
+        }
+
+        Balance.Radio radioBalance = content.getBalance().getRadio();
+        for (Relay relay : relays.values()) {
+            if (relay.decay(now, radioBalance.getRelayDecayPerDay(), radioBalance.getRelayMinCondition())) {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("zone", content.zone(relay.getZoneId()).getName());
+                step.system(content.getTerminal().getRadio().getRelayFailing(), vars, null);
             }
         }
 
         BunkerRules.Result life = bunker.advance(scouts.values(), affinities, resources, now);
         step.lines.addAll(life.lines);
         life.resourceDelta.forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+        for (int i = 0; i < life.passiveSignals; i++) {
+            passiveCatch(step);
+        }
 
         expireConversations(step);
         maybeStartConversation(step);
@@ -419,19 +518,68 @@ public final class GameSession {
 
     // ---- Player actions ----
 
-    /** Sends a scout out. Catches up first so the action happens on current state. */
+    /** Sends a scout out to explore. */
     @WorkerThread
     public List<LogLine> dispatch(String scoutId, String zoneId) {
+        return dispatch(scoutId, zoneId, Mission.Type.EXPLORE, null);
+    }
+
+    /**
+     * Sends a scout out. Catches up first so the action happens on current state.
+     *
+     * @param target survivor id for rescues, else null
+     */
+    @WorkerThread
+    public List<LogLine> dispatch(String scoutId, String zoneId, Mission.Type type, String target) {
         Step step = new Step();
         advance(step);
         Scout scout = scouts.get(scoutId);
-        if (scout != null && rules.canDispatch(scout)) {
-            ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, content.zone(zoneId),
-                    random.deriveSeed(), step.now);
-            step.lines.addAll(dispatch.lines);
-            step.newExpeditions.add(dispatch.expedition);
-            active.put(dispatch.expedition.getId(), dispatch.expedition);
+        ZoneDef zone = content.getZones().get(zoneId);
+        if (scout == null || zone == null || !rules.canDispatch(scout) || !canReach(zone)) {
+            return step.commit();
         }
+        switch (type) {
+            case RESCUE:
+                if (target == null || !zoneId.equals(rescueTargets.get(target))) {
+                    return step.commit();
+                }
+                break;
+            case INSTALL_RELAY:
+                if (relays.containsKey(zoneId) || !pay(Map.of("relay_kit", 1), step)) {
+                    return step.commit();
+                }
+                break;
+            case MAINTAIN_RELAY:
+                if (!relays.containsKey(zoneId)
+                        || !pay(content.getBalance().getRadio().getRelayMaintenanceCost(), step)) {
+                    return step.commit();
+                }
+                break;
+            default:
+                break;
+        }
+        Map<String, String> zoneIntel = intel.getOrDefault(zoneId, Map.of());
+        boolean cache = zoneIntel.containsKey("CACHE");
+        boolean danger = zoneIntel.containsKey("DANGER");
+        if (cache || danger) {
+            String cacheId = zoneIntel.get("CACHE");
+            String dangerId = zoneIntel.get("DANGER");
+            intel.remove(zoneId);
+            step.radioWrites.add(() -> {
+                if (cacheId != null) {
+                    radioRepository.useIntel(cacheId);
+                }
+                if (dangerId != null) {
+                    radioRepository.useIntel(dangerId);
+                }
+            });
+        }
+        RadioRules.Quality quality = radio.quality(zone, relays, moduleLevel("radio"));
+        Mission mission = new Mission(type, target, quality.noise, quality.orderDelayMillis, cache, danger);
+        ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, step.now);
+        step.lines.addAll(dispatch.lines);
+        step.newExpeditions.add(dispatch.expedition);
+        active.put(dispatch.expedition.getId(), dispatch.expedition);
         return step.commit();
     }
 
@@ -442,9 +590,397 @@ public final class GameSession {
         advance(step);
         Expedition expedition = active.get(expeditionId);
         if (expedition != null && engine.choose(expedition, option, step.now)) {
+            long delay = expedition.getMission().getOrderDelayMillis();
+            if (delay > 0) {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("delay", ElapsedFormatter.format(delay, content.getTerminal().getElapsedUnits()));
+                step.system(content.getTerminal().getRadio().getOrderDelayed(), vars,
+                        scouts.get(expedition.getScoutId()));
+            }
             advance(step);
         }
         return step.commit();
+    }
+
+    // ---- Radio (GDD §6.1, §6.2) ----
+
+    public int moduleLevel(String moduleId) {
+        return moduleLevels.getOrDefault(moduleId, 1);
+    }
+
+    private boolean isUnlocked(BandDef band) {
+        return radio.isUnlocked(band, moduleLevel("antenna"), relays.values());
+    }
+
+    /** Known and within reach. */
+    private boolean canReach(ZoneDef zone) {
+        return knownZones.contains(zone.getId()) && isUnlocked(content.getBalance().band(zone.getBand()));
+    }
+
+    /**
+     * What the dial picks up at a position. Read-only: moving the dial changes nothing, only
+     * locking on does.
+     */
+    @WorkerThread
+    public SessionSnapshot.Tuning tune(String bandId, int position) {
+        BandDef band = content.getBalance().band(bandId);
+        long now = clock.nowMillis();
+        if (!isUnlocked(band)) {
+            return new SessionSnapshot.Tuning(0, content.getTerminal().getRadio().getStaticNoise(), false);
+        }
+        SignalField.Reading reading = field.tune(band, position, field.window(now), caughtSignals);
+        if (reading.spot == null || reading.strength < 0.1) {
+            return new SessionSnapshot.Tuning(reading.strength, content.getTerminal().getRadio().getStaticNoise(), false);
+        }
+        List<String> teasers = content.getSignals().getTeasers().get(reading.spot.kind.name());
+        GameRandom flavor = GameRandom.fromSeed(reading.spot.key().hashCode() * 31L + position);
+        String teaser = teasers.get(Math.floorMod(reading.spot.key().hashCode(), teasers.size()));
+        String text = SignalDegrader.degrade(teaser, Math.max(0, 1.0 - reading.strength), flavor);
+        boolean lockable = reading.strength >= content.getBalance().getRadio().getLockThreshold();
+        return new SessionSnapshot.Tuning(reading.strength, text, lockable);
+    }
+
+    /** Locks onto the signal at the dial position, if it's clear enough. */
+    @WorkerThread
+    public List<LogLine> capture(String bandId, int position) {
+        Step step = new Step();
+        advance(step);
+        BandDef band = content.getBalance().band(bandId);
+        SignalField.Spot spot = isUnlocked(band)
+                ? field.lock(band, position, field.window(step.now), caughtSignals) : null;
+        if (spot == null) {
+            step.system(content.getTerminal().getRadio().getNothingThere(), Map.of(), null);
+        } else {
+            receive(spot, step);
+        }
+        return step.commit();
+    }
+
+    /** The radio assistant caught a signal on their own while the operator was away. */
+    private void passiveCatch(Step step) {
+        long window = field.window(step.now);
+        List<SignalField.Spot> free = new ArrayList<>();
+        for (BandDef band : content.getBalance().getBands()) {
+            if (!isUnlocked(band)) {
+                continue;
+            }
+            for (SignalField.Spot spot : field.spots(band, window)) {
+                if (!caughtSignals.contains(spot.key())) {
+                    free.add(spot);
+                }
+            }
+        }
+        if (free.isEmpty()) {
+            return;
+        }
+        Scout assistant = null;
+        for (Scout s : scouts.values()) {
+            String task = s.getLife().getTaskId();
+            if (s.isAlive() && task != null && content.task(task).isPassiveSweep()) {
+                assistant = s;
+            }
+        }
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", assistant != null ? assistant.getName() : "?");
+        step.system(content.getTerminal().getRadio().getAssistantCaught(), vars, assistant);
+        receive(random.pick(free), step);
+    }
+
+    private void receive(SignalField.Spot spot, Step step) {
+        caughtSignals.add(spot.key());
+        step.radioWrites.add(() -> radioRepository.addCaughtSignal(spot.key(), step.now));
+        Set<String> taken = new java.util.HashSet<>(rescueTargets.keySet());
+        for (Scout s : scouts.values()) {
+            if (s.getTemplateId() != null) {
+                taken.add(s.getTemplateId());
+            }
+        }
+        RadioRules.Outcome outcome = radio.resolve(spot, knownZones, taken, receivedTransmissions, random);
+        TerminalText.RadioText text = content.getTerminal().getRadio();
+        Map<String, String> vars = new HashMap<>();
+        switch (outcome.kind) {
+            case ZONE: {
+                discover(outcome.zoneId, step);
+                ZoneDef zone = content.zone(outcome.zoneId);
+                vars.put("zone", zone.getName());
+                vars.put("band", content.getBalance().band(zone.getBand()).getName().toLowerCase(Locale.ROOT));
+                step.system(text.getZoneFound(), vars, null);
+                break;
+            }
+            case SURVIVOR: {
+                discover(outcome.zoneId, step);
+                rescueTargets.put(outcome.survivorId, outcome.zoneId);
+                step.radioWrites.add(() -> radioRepository.addRescueTarget(outcome.survivorId, outcome.zoneId, step.now));
+                vars.put("name", content.starter(outcome.survivorId).getName());
+                vars.put("zone", content.zone(outcome.zoneId).getName());
+                step.system(text.getSurvivorFound(), vars, null);
+                break;
+            }
+            case TRANSMISSION: {
+                SignalsDef.Transmission def = outcome.transmission;
+                String plain = def.getText();
+                if (outcome.zoneId != null) {
+                    plain = plain.replace("{zone}", content.zone(outcome.zoneId).getName());
+                }
+                Transmission t = radio.encrypt(def, spot.bandId, outcome.zoneId, plain.replace("{zone}", ""),
+                        random, step.now);
+                transmissions.put(t.getId(), t);
+                receivedTransmissions.add(def.getId());
+                step.radioWrites.add(() -> radioRepository.save(t));
+                step.system(text.getTransmissionFound(), vars, null);
+                break;
+            }
+            default: {
+                for (String line : outcome.rare.getText()) {
+                    step.system(line, vars, null);
+                }
+                grant(outcome.rare.getResources(), step);
+                if (outcome.rare.getLore() != null) {
+                    addLore(outcome.rare.getId(), outcome.rare.getLore(), step);
+                }
+            }
+        }
+    }
+
+    private void discover(String zoneId, Step step) {
+        if (knownZones.add(zoneId)) {
+            step.radioWrites.add(() -> radioRepository.addKnownZone(zoneId, step.now));
+        }
+    }
+
+    private void addLore(String sourceId, String text, Step step) {
+        if (!lore.containsKey(sourceId)) {
+            lore.put(sourceId, text);
+            step.radioWrites.add(() -> radioRepository.addLore(sourceId, text, step.now));
+            step.system(content.getTerminal().getRadio().getLoreFound(), Map.of(), null);
+        }
+    }
+
+    private void grant(Map<String, Integer> amounts, Step step) {
+        if (amounts.isEmpty()) {
+            return;
+        }
+        amounts.forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+        Map<String, String> vars = new HashMap<>();
+        vars.put("loot", describe(amounts));
+        step.system(content.getTerminal().getRadio().getResourcesFound(), vars, null);
+    }
+
+    /** "3 de chatarra, 2 de componentes". */
+    private String describe(Map<String, Integer> amounts) {
+        List<String> parts = new ArrayList<>();
+        for (Map.Entry<String, Integer> e : new TreeMap<>(amounts).entrySet()) {
+            Map<String, String> v = new HashMap<>();
+            v.put("amount", String.valueOf(e.getValue()));
+            v.put("resource", content.resource(e.getKey()).getName().toLowerCase(Locale.ROOT));
+            parts.add(TextTemplate.format(content.getTerminal().getExpedition().getLootItem(), v));
+        }
+        return String.join(content.getTerminal().getExpedition().getLootSeparator(), parts);
+    }
+
+    private boolean canAfford(Map<String, Integer> cost) {
+        for (Map.Entry<String, Integer> e : cost.entrySet()) {
+            if (resources.getOrDefault(e.getKey(), 0) < e.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Spends resources right away (so a second check in the same step sees the new balance),
+     * or logs what is missing and returns false. Persisted with the step.
+     */
+    private boolean pay(Map<String, Integer> cost, Step step) {
+        if (!canAfford(cost)) {
+            Map<String, String> vars = new HashMap<>();
+            vars.put("cost", describe(cost));
+            step.system(content.getTerminal().getRadio().getCantAfford(), vars, null);
+            return false;
+        }
+        for (Map.Entry<String, Integer> e : cost.entrySet()) {
+            resources.merge(e.getKey(), -e.getValue(), Integer::sum);
+            step.paid.merge(e.getKey(), -e.getValue(), Integer::sum);
+        }
+        return true;
+    }
+
+    /** The operator submits a decoding attempt. */
+    @WorkerThread
+    public List<LogLine> decode(String transmissionId, String answer) {
+        Step step = new Step();
+        advance(step);
+        Transmission t = transmissions.get(transmissionId);
+        TerminalText.RadioText text = content.getTerminal().getRadio();
+        if (t == null || t.getStatus() != Transmission.Status.PENDING) {
+            return step.commit();
+        }
+        if (!t.check(answer)) {
+            step.system(text.getDecodeWrong(), Map.of(), null);
+            return step.commit();
+        }
+        t.markSolved();
+        transmissions.remove(t.getId());
+        step.radioWrites.add(() -> radioRepository.save(t));
+        Map<String, String> vars = new HashMap<>();
+        vars.put("text", t.getPlainText());
+        step.system(text.getDecoded(), vars, null);
+
+        SignalsDef.Transmission def = null;
+        for (SignalsDef.Transmission d : content.getSignals().getTransmissions()) {
+            if (d.getId().equals(t.getSourceId())) {
+                def = d;
+            }
+        }
+        if (def == null) {
+            return step.commit();
+        }
+        switch (def.getReward()) {
+            case CACHE:
+            case DANGER:
+                if (t.getZoneId() != null) {
+                    String type = def.getReward().name();
+                    String zoneId = t.getZoneId();
+                    intel.computeIfAbsent(zoneId, k -> new HashMap<>()).put(type, "pending");
+                    step.radioWrites.add(() -> {
+                        String id = radioRepository.addIntel(zoneId, type, step.now);
+                        intel.get(zoneId).put(type, id);
+                    });
+                    vars.put("zone", content.zone(zoneId).getName());
+                    step.system(def.getReward() == SignalsDef.Transmission.Reward.CACHE
+                            ? text.getIntelCache() : text.getIntelDanger(), vars, null);
+                }
+                break;
+            case LORE:
+                addLore(def.getId(), def.getLore(), step);
+                break;
+            case RESOURCES:
+                grant(def.getResources(), step);
+                break;
+            case MORSE_TABLE:
+                if (gameFlags.add(FLAG_MORSE_TABLE)) {
+                    step.radioWrites.add(() -> radioRepository.addFlag(FLAG_MORSE_TABLE, step.now));
+                }
+                step.system(text.getMorseTableUnlocked(), Map.of(), null);
+                break;
+            default:
+                break;
+        }
+        return step.commit();
+    }
+
+    /** Builds a relay kit from resources (GDD §4.4). */
+    @WorkerThread
+    public List<LogLine> buildRelay() {
+        Step step = new Step();
+        advance(step);
+        if (pay(content.getBalance().getRadio().getRelayKitCost(), step)) {
+            step.resourceDelta.merge("relay_kit", 1, Integer::sum);
+            step.system(content.getTerminal().getRadio().getRelayBuilt(), Map.of(), null);
+        }
+        return step.commit();
+    }
+
+    /** Upgrades a bunker module (the antenna opens farther bands). */
+    @WorkerThread
+    public List<LogLine> upgradeModule(String moduleId) {
+        Step step = new Step();
+        advance(step);
+        ModuleDef module = content.getBalance().module(moduleId);
+        int level = moduleLevel(moduleId);
+        Map<String, Integer> cost = module.costFrom(level);
+        if (cost != null && pay(cost, step)) {
+            moduleLevels.put(moduleId, level + 1);
+            step.radioWrites.add(() -> radioRepository.saveModule(moduleId, level + 1));
+            Map<String, String> vars = new HashMap<>();
+            vars.put("module", module.getName());
+            vars.put("level", String.valueOf(level + 1));
+            step.system(content.getTerminal().getRadio().getModuleUpgraded(), vars, null);
+        }
+        return step.commit();
+    }
+
+    /** Rescue / relay effects when an expedition comes back. */
+    private void finishMission(Expedition expedition, Scout scout, boolean completed, Step step) {
+        Mission mission = expedition.getMission();
+        TerminalText.RadioText text = content.getTerminal().getRadio();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("zone", content.zone(expedition.getZoneId()).getName());
+        switch (mission.getType()) {
+            case RESCUE:
+                if (completed) {
+                    recruit(mission.getTarget(), step);
+                } else {
+                    rescueFailed(mission.getTarget(), step);
+                }
+                break;
+            case INSTALL_RELAY:
+                if (completed) {
+                    relays.put(expedition.getZoneId(), Relay.installed(expedition.getZoneId(), step.now));
+                    step.system(text.getRelayInstalled(), vars, scout);
+                } else {
+                    step.resourceDelta.merge("relay_kit", 1, Integer::sum); // they bring it back
+                }
+                break;
+            case MAINTAIN_RELAY:
+                Relay relay = relays.get(expedition.getZoneId());
+                if (completed && relay != null) {
+                    relay.repair(step.now);
+                    step.system(text.getRelayMaintained(), vars, scout);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void rescueFailed(String survivorId, Step step) {
+        ScoutTemplate template = content.starter(survivorId);
+        if (template != null) {
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", template.getName());
+            step.system(content.getTerminal().getRadio().getRescueFailed(), vars, null);
+        }
+    }
+
+    /** Roster limit (bunks). */
+    public int rosterCap() {
+        return content.getBalance().getRadio().getMaxScouts();
+    }
+
+    private int aliveScouts() {
+        int count = 0;
+        for (Scout s : scouts.values()) {
+            if (s.isAlive()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void recruit(String survivorId, Step step) {
+        ScoutTemplate template = content.starter(survivorId);
+        if (template == null) {
+            return;
+        }
+        if (aliveScouts() >= rosterCap()) {
+            step.system(content.getTerminal().getRadio().getRosterFull(), Map.of(), null);
+            return;
+        }
+        int trust = template.getInitialTrust() != null
+                ? template.getInitialTrust() : content.getBalance().getRadio().getSurvivorTrust();
+        Scout recruit = ScoutFactory.fromTemplate(template, content.getBalance().getScouts(), step.now, trust);
+        rescueTargets.remove(survivorId);
+        step.radioWrites.add(() -> radioRepository.removeRescueTarget(survivorId));
+        step.newScouts.add(recruit);
+        scouts.put(recruit.getId(), recruit);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", recruit.getName());
+        step.system(content.getTerminal().getRadio().getRescued(), vars, recruit);
+        for (String line : template.getRescueLines()) {
+            step.lines.add(LogLine.draft(step.now, LogChannel.RADIO, recruit.getName(),
+                    VoiceRenderer.render(content.voice(recruit.getVoiceId()), line, vars), recruit.getId()));
+        }
     }
 
     /** [HABLAR]: the operator starts a conversation (GDD §5.3), with a cooldown per scout. */
@@ -680,8 +1216,41 @@ public final class GameSession {
 
         List<SessionSnapshot.ZoneView> zones = new ArrayList<>();
         for (ZoneDef z : content.getZones().values()) {
+            if (!canReach(z)) {
+                continue;
+            }
+            Relay relay = relays.get(z.getId());
             zones.add(new SessionSnapshot.ZoneView(z.getId(), z.getName(), z.getDescription(),
-                    z.getDanger(), z.getDurationMinutes()[0], z.getDurationMinutes()[1]));
+                    z.getDanger(), z.getDurationMinutes()[0], z.getDurationMinutes()[1],
+                    content.getBalance().band(z.getBand()).getName(),
+                    relay != null ? (int) Math.round(relay.getCondition()) : -1,
+                    intel.containsKey(z.getId())));
+        }
+
+        TerminalText.RadioText radioText = content.getTerminal().getRadio();
+        List<SessionSnapshot.MissionView> missions = new ArrayList<>();
+        for (Map.Entry<String, String> target : rescueTargets.entrySet()) {
+            ZoneDef z = content.zone(target.getValue());
+            if (canReach(z)) {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("name", content.starter(target.getKey()).getName());
+                missions.add(new SessionSnapshot.MissionView(Mission.Type.RESCUE.name(), z.getId(),
+                        target.getKey(), TextTemplate.format(radioText.getMissionRescue(), vars), z.getName()));
+            }
+        }
+        boolean hasKit = resources.getOrDefault("relay_kit", 0) > 0;
+        for (ZoneDef z : content.getZones().values()) {
+            if (!canReach(z)) {
+                continue;
+            }
+            Relay relay = relays.get(z.getId());
+            if (relay == null && hasKit) {
+                missions.add(new SessionSnapshot.MissionView(Mission.Type.INSTALL_RELAY.name(), z.getId(),
+                        null, radioText.getMissionInstall(), z.getName()));
+            } else if (relay != null && relay.getCondition() < 70) {
+                missions.add(new SessionSnapshot.MissionView(Mission.Type.MAINTAIN_RELAY.name(), z.getId(),
+                        null, radioText.getMissionMaintain(), z.getName()));
+            }
         }
 
         List<SessionSnapshot.ResourceView> resourceViews = new ArrayList<>();
@@ -702,7 +1271,35 @@ public final class GameSession {
         for (TaskDef t : content.getTasks().values()) {
             tasks.add(new SessionSnapshot.TaskView(t.getId(), t.getName(), t.getDescription()));
         }
-        return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, nextWake);
+        return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
+                radioView(), nextWake);
+    }
+
+    private SessionSnapshot.RadioView radioView() {
+        List<SessionSnapshot.BandView> bands = new ArrayList<>();
+        for (BandDef band : content.getBalance().getBands()) {
+            bands.add(new SessionSnapshot.BandView(band.getId(), band.getName(), isUnlocked(band)));
+        }
+        List<SessionSnapshot.TransmissionView> pendingTransmissions = new ArrayList<>();
+        for (Transmission t : transmissions.values()) {
+            pendingTransmissions.add(new SessionSnapshot.TransmissionView(t.getId(), t.getKind().name(),
+                    t.cipherText(), t.getBandId()));
+        }
+        List<SessionSnapshot.ModuleView> modules = new ArrayList<>();
+        for (ModuleDef m : content.getBalance().getModules()) {
+            int level = moduleLevel(m.getId());
+            Map<String, Integer> cost = m.costFrom(level);
+            modules.add(new SessionSnapshot.ModuleView(m.getId(), m.getName(), m.getDescription(), level,
+                    m.getMaxLevel(), cost != null ? describe(cost) : null, cost != null && canAfford(cost)));
+        }
+        List<String> relayLines = new ArrayList<>();
+        for (Relay relay : relays.values()) {
+            relayLines.add(content.zone(relay.getZoneId()).getName() + " " + Math.round(relay.getCondition()) + "%");
+        }
+        Map<String, Integer> kitCost = content.getBalance().getRadio().getRelayKitCost();
+        return new SessionSnapshot.RadioView(bands, content.getBalance().getRadio().getDialMax(),
+                pendingTransmissions, gameFlags.contains(FLAG_MORSE_TABLE), modules,
+                resources.getOrDefault("relay_kit", 0), describe(kitCost), canAfford(kitCost), relayLines);
     }
 
     /** The Diary: one entry per fallen scout, with their story and last transmission. */

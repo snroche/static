@@ -20,11 +20,14 @@ public final class GameContent {
     private final Map<String, ItemDef> items;
     private final Map<String, TaskDef> tasks;
     private final Map<String, DialogueDef> dialogues;
+    private final List<ScoutTemplate> survivors;
+    private final SignalsDef signals;
 
     public GameContent(Balance balance, TerminalText terminal, List<ScoutTemplate> starters,
                        List<TraitDef> traits, List<ZoneDef> zones, List<EventDef> events,
                        List<VoiceDef> voices, List<ResourceDef> resources, List<ItemDef> items,
-                       List<TaskDef> tasks, List<DialogueDef> dialogues) {
+                       List<TaskDef> tasks, List<DialogueDef> dialogues,
+                       List<ScoutTemplate> survivors, SignalsDef signals) {
         this.balance = Objects.requireNonNull(balance);
         this.terminal = Objects.requireNonNull(terminal);
         this.starters = Collections.unmodifiableList(starters);
@@ -36,6 +39,8 @@ public final class GameContent {
         this.items = index(items, ItemDef::getId);
         this.tasks = index(tasks, TaskDef::getId);
         this.dialogues = index(dialogues, DialogueDef::getId);
+        this.survivors = Collections.unmodifiableList(survivors);
+        this.signals = Objects.requireNonNull(signals);
     }
 
     private interface IdOf<T> {
@@ -108,14 +113,28 @@ public final class GameContent {
         return dialogues;
     }
 
-    /** Template by id, or null (e.g. scouts recruited without a template). */
+    /** Template by id (starter or survivor), or null. */
     public ScoutTemplate starter(String templateId) {
         for (ScoutTemplate template : starters) {
             if (template.getId().equals(templateId)) {
                 return template;
             }
         }
+        for (ScoutTemplate template : survivors) {
+            if (template.getId().equals(templateId)) {
+                return template;
+            }
+        }
         return null;
+    }
+
+    /** Recruitable survivors (GDD §4.4: farther = stronger). */
+    public List<ScoutTemplate> getSurvivors() {
+        return survivors;
+    }
+
+    public SignalsDef getSignals() {
+        return signals;
     }
 
     public Map<String, ZoneDef> getZones() {

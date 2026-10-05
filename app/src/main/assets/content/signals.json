@@ -1,0 +1,161 @@
+{
+  "teasers": {
+    "ZONE": [
+      "...coordenadas... cuarenta y dos... sur...",
+      "...un lugar con techo... repito... con techo...",
+      "...el depósito de la calle... ksshh..."
+    ],
+    "SURVIVOR": [
+      "...¿hay alguien? ...por favor...",
+      "...estoy solo... respondan...",
+      "...si alguien escucha... estoy en..."
+    ],
+    "TRANSMISSION": [
+      "· — — · · — · · — ·",
+      "QXF HKP... MZRL... VYQ...",
+      "— · — · · — — · ·"
+    ],
+    "RARE": [
+      "...música... un tango, lejos...",
+      "...una voz cuenta números... siete... tres...",
+      "...un pronóstico del tiempo... soleado..."
+    ]
+  },
+  "rare": [
+    {
+      "id": "tango",
+      "text": [
+        "Un tango sale de la estática. Alguien tiene un tocadiscos andando."
+      ]
+    },
+    {
+      "id": "numeros",
+      "text": [
+        "Una voz cuenta números. Siete, tres, uno, nueve. Después, nada."
+      ],
+      "lore": "Alguien transmite números en la banda corta: 7-3-1-9. Siempre la misma voz."
+    },
+    {
+      "id": "deposito",
+      "text": [
+        "Una baliza automática repite la ubicación de un depósito de baterías. Tu asistente anota lo que alcanza."
+      ],
+      "resources": {
+        "batteries": 2
+      }
+    },
+    {
+      "id": "baliza",
+      "text": [
+        "Una baliza de emergencia, todavía a pilas. La desarmás de oído: sirve para piezas."
+      ],
+      "resources": {
+        "components": 2
+      }
+    },
+    {
+      "id": "pronostico",
+      "text": [
+        "Un pronóstico del tiempo grabado, de hace años. Anuncia sol para todo el fin de semana."
+      ]
+    },
+    {
+      "id": "marta",
+      "band": "medium",
+      "text": [
+        "Alguien llama a una tal Marta. Llama y llama. Nadie contesta."
+      ],
+      "lore": "En la banda media, un hombre llama a Marta todos los días a la misma hora."
+    }
+  ],
+  "transmissions": [
+    {
+      "id": "manual_morse",
+      "band": "short",
+      "unique": true,
+      "reward": "MORSE_TABLE",
+      "text": "Manual de radio adjunto"
+    },
+    {
+      "id": "provisiones",
+      "band": "short",
+      "reward": "CACHE",
+      "text": "Dejamos provisiones en {zone}"
+    },
+    {
+      "id": "perros_aviso",
+      "band": "short",
+      "reward": "DANGER",
+      "text": "Cuidado en {zone} hay perros"
+    },
+    {
+      "id": "baterias_tanque",
+      "band": "short",
+      "reward": "RESOURCES",
+      "resources": {
+        "batteries": 2
+      },
+      "text": "Baterias enterradas junto al tanque"
+    },
+    {
+      "id": "alijo",
+      "band": "medium",
+      "difficulty": 2,
+      "reward": "CACHE",
+      "text": "Hay un alijo debajo del piso en {zone}"
+    },
+    {
+      "id": "frente",
+      "band": "medium",
+      "difficulty": 2,
+      "reward": "DANGER",
+      "text": "No entren por el frente de {zone}"
+    },
+    {
+      "id": "ambulancia",
+      "band": "medium",
+      "reward": "RESOURCES",
+      "resources": {
+        "medicine": 2
+      },
+      "text": "Medicinas en la ambulancia volcada"
+    },
+    {
+      "id": "tres_y_diez",
+      "band": "medium",
+      "unique": true,
+      "reward": "LORE",
+      "text": "El silencio empezo a las tres y diez",
+      "lore": "Una transmisión cifrada dice que el Silencio empezó a las 3:10."
+    },
+    {
+      "id": "no_respondan",
+      "band": "medium",
+      "unique": true,
+      "reward": "LORE",
+      "text": "No respondan a la voz",
+      "lore": "Alguien advierte, en clave: \"No respondan a La Voz\"."
+    },
+    {
+      "id": "sigan",
+      "reward": "LORE",
+      "unique": true,
+      "text": "Si escuchan esto sigan en contacto",
+      "lore": "Un mensaje sin firma pide a quien lo escuche que siga en contacto."
+    },
+    {
+      "id": "combustible",
+      "band": "long",
+      "difficulty": 3,
+      "reward": "CACHE",
+      "text": "Combustible y piezas en {zone}"
+    },
+    {
+      "id": "no_seguro",
+      "band": "long",
+      "difficulty": 3,
+      "reward": "DANGER",
+      "text": "{zone} no es seguro"
+    }
+  ]
+}

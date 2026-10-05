@@ -294,5 +294,160 @@
         "No te culpes. Por favor, no te culpes."
       ]
     }
+  },
+  {
+    "id": "telegrafico",
+    "transform": "UPPER",
+    "phrases": {
+      "departure": [
+        "Salgo. Cambio.",
+        "En marcha. Cambio."
+      ],
+      "arrival": [
+        "Llegué. Todo en orden. Cambio."
+      ],
+      "oddsGood": [
+        "Viable.",
+        "Sin problema."
+      ],
+      "oddsUnsure": [
+        "Dudoso.",
+        "Cincuenta y cincuenta."
+      ],
+      "oddsBad": [
+        "Mala espina. Repito: mala espina.",
+        "No recomendable."
+      ],
+      "disobey": [
+        "Negativo. Procedo distinto."
+      ],
+      "autoDecide": [
+        "Sin respuesta. Decido yo. Cambio."
+      ],
+      "injured": [
+        "Herido. Sigo operativo."
+      ],
+      "find": [
+        "{amount} de {resource}. Cambio."
+      ],
+      "lastWords": [
+        "Señal débil... {name} fuera... cambio..."
+      ],
+      "lastMemory": [
+        "Recuerdo {memory}. Cambio."
+      ],
+      "lastOrder": [
+        "Orden recibida: \"{memory}\". Sin rencor."
+      ],
+      "initiate": [
+        "Operador. Un minuto. Cambio."
+      ],
+      "askReturn": [
+        "Solicito regreso. Por favor."
+      ],
+      "goingHome": [
+        "Regreso. Gracias."
+      ],
+      "findItem": [
+        "Objeto: {item}. Lo llevo."
+      ],
+      "lastGift": [
+        "Tengo {gift}. Conmigo."
+      ],
+      "lastCompanion": [
+        "Avisar a {companion}. Cambio."
+      ],
+      "giftLiked": [
+        "{item}. Gracias. De verdad."
+      ],
+      "giftDisliked": [
+        "{item}. No es lo mío. Gracias."
+      ],
+      "giftNeutral": [
+        "{item}. Recibido."
+      ],
+      "arrival@close": [
+        "Volví. Me alegra oírte. Cambio."
+      ]
+    }
+  },
+  {
+    "id": "pibe",
+    "transform": "NONE",
+    "replacements": {
+      "muy": "re",
+      "verdad": "posta",
+      "dinero": "guita"
+    },
+    "phrases": {
+      "departure": [
+        "Voy, voy. Tranqui.",
+        "Salgo. No me esperen con la luz prendida."
+      ],
+      "arrival": [
+        "Llegué. ¿Hay algo para comer?"
+      ],
+      "oddsGood": [
+        "Fácil, eso lo hago con los ojos cerrados."
+      ],
+      "oddsUnsure": [
+        "Ni idea. Capaz sale."
+      ],
+      "oddsBad": [
+        "Nah, esto me da mala espina.",
+        "Esto pinta horrible."
+      ],
+      "disobey": [
+        "Nah, no hago eso. Hago otra cosa."
+      ],
+      "autoDecide": [
+        "¿Hola? ¿Nadie? Bueno, decido yo."
+      ],
+      "injured": [
+        "Ay. Me hice mal. Pero estoy."
+      ],
+      "find": [
+        "Encontré {amount} de {resource}. De nada."
+      ],
+      "lastWords": [
+        "Che... tengo frío... no me dejen solo..."
+      ],
+      "lastMemory": [
+        "Me acuerdo de {memory}... estuvo bueno eso."
+      ],
+      "lastOrder": [
+        "Me dijiste \"{memory}\"... está bien... está bien."
+      ],
+      "initiate": [
+        "Che, ¿tenés un toque?"
+      ],
+      "askReturn": [
+        "Quiero volver. Por favor. En serio."
+      ],
+      "goingHome": [
+        "Gracias. Vuelvo."
+      ],
+      "findItem": [
+        "Mirá: {item}. Me lo quedo, ¿no?"
+      ],
+      "lastGift": [
+        "Tengo {gift} acá... no lo perdí..."
+      ],
+      "lastCompanion": [
+        "Decile a {companion} que... que gracias."
+      ],
+      "giftLiked": [
+        "¡¿{item}?! Posta, gracias."
+      ],
+      "giftDisliked": [
+        "¿{item}? Ah... bueno."
+      ],
+      "giftNeutral": [
+        "{item}. Gracias, supongo."
+      ],
+      "arrival@close": [
+        "¡Volví! ¿Me guardaste algo?"
+      ]
+    }
   }
 ]

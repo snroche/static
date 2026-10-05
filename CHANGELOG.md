@@ -10,6 +10,53 @@ Cada entrada indica, si cambian, las tres versiones independientes:
 
 _Nada todavía._
 
+## [0.4.0] — Fase 3: Radio activa y distancia — en verificación
+
+App 0.4.0 (versionCode 400) · **DB 3 → 4** · **Contenido 3 → 4**
+
+Sin fecha de release: falta probarla en un dispositivo, incluida la actualización desde 0.3.0.
+
+### Agregado
+- **Bandas y distancia** (GDD §4.4): corta, media, larga y profunda, cada una con su ruido, retraso de órdenes, precisión del dial y mezcla de señales. Todo **[placeholder]** en `balance.json → bands`.
+  - Los reportes de zonas lejanas llegan cortados y a veces el hint de probabilidad se pierde en la estática. Si no se escuchó el "mala espina", no cuenta como aviso para la regla de muerte.
+  - En las bandas lejanas las órdenes tardan en llegar: 1 min en la media, 5 min en la larga. Si llegan después del plazo, el explorador ya decidió solo.
+- **Antena:** primer módulo del búnker. Subirla de nivel cuesta recursos y abre bandas: la media en nivel 2, la larga en nivel 4.
+- **Barrido de frecuencias** (GDD §6.1): dial de 0 a 999 por banda.
+  - Las señales están en posiciones que se derivan de la seed y rotan cada 4 h. El texto se aclara al acercarse y hay vibración al cruzar umbrales; [SINTONIZAR] fija la señal.
+  - Cada señal puede ser una zona nueva, un superviviente, una transmisión cifrada o un hallazgo raro: música, números, balizas.
+- **Descifrado** (GDD §6.2) con controles en pantalla:
+  - César: un dial de corrimiento con vista previa.
+  - Morse: un teclado de punto y raya armando letra por letra, con la tabla de referencia que se desbloquea con la primera transmisión ("manual de radio").
+  - Las recompensas son datos sobre una zona (un escondite, que da botín extra, o sus peligros, que mejoran las tiradas), lore guardado para el Diario, o recursos.
+- **Repetidoras:** kits que se arman con recursos y se instalan mandando a un explorador.
+  - Reducen ruido y retraso en su zona (×0,3) y extienden el alcance a la banda siguiente con un nivel menos de antena.
+  - Se desgastan 10 % por día, dejan de andar por debajo de 30 % y se reparan con otra misión.
+- **Misiones:** rescatar a un superviviente, instalar una repetidora o repararla. Solo cuentan si el explorador vuelve sin abortar.
+- **Supervivientes:**
+  - Beto: ex señalero, voz telegráfica en mayúsculas.
+  - Lucho: diecisiete años, voz de pibe.
+  - Se unen con confianza baja y tienen techos de stats más altos. Cada uno trae 2 diálogos propios.
+  - Límite de 5 exploradores vivos; la Fase 4 lo amplía con las literas.
+- **Asistente de radio:** la tarea ahora barre el dial sola, con una señal cada 6 h de trabajo.
+- **Banda media:** Hospital Municipal, Estación de trenes, Comisaría 3.ª y Barrio privado, más una zona corta oculta (Lavadero industrial). Seis eventos nuevos: jauría, saqueadores, gas, vagón, archivo y herido.
+- **Interfaz:** botón [ RADIO ] con selector de banda, dial, lectura, medidor de señal, transmisiones pendientes, antena y repetidoras. Panel de descifrado. El panel de despacho muestra las misiones disponibles y la banda, repetidora y datos de cada zona.
+- Tests: 96 en total (18 nuevos): cifrados, campo de señales, alcance, calidad de señal, repetidoras, retraso de órdenes, ruido, avisos perdidos, datos de escondite y misiones.
+
+### Cambiado
+- Solo se pueden despachar exploradores a zonas conocidas y dentro del alcance.
+- `GameContent.starter()` busca también entre los supervivientes.
+- El test de comandos ya no depende de qué secciones exige `terminal.json`.
+- La barra superior muestra [ RADIO ] y [ EXPLORADORES ]; se quitó el título para dejar lugar.
+
+### DB 3 → 4
+- Tablas nuevas: `game_flags`, `known_zones`, `caught_signals`, `transmissions`, `intel`, `relays`, `rescue_targets`, `lore` y `modules`.
+- `expeditions`: columnas nuevas `mission_type`, `mission_target`, `signal_noise`, `order_delay_millis`, `cache_intel`, `danger_intel`, `aborted` y `lost_hints`.
+- En las partidas existentes, las zonas iniciales quedan como conocidas y la antena arranca en nivel 1.
+
+### Notas
+- Sin probar en dispositivo.
+- APK release sin firmar: ~1,0 MB.
+
 ## [0.3.0] — Fase 2: Vida en el búnker — en verificación
 
 App 0.3.0 (versionCode 300) · **DB 2 → 3** · **Contenido 2 → 3**
@@ -178,6 +225,7 @@ Sin fecha de release todavía: falta probarla en un dispositivo o emulador. Cuan
 - Lint muestra versiones más nuevas de AGP, Room y Lifecycle. Se usan las que ya estaban en la caché local; actualizar es una decisión aparte.
 
 [Unreleased]: #unreleased
+[0.4.0]: #040--fase-3-radio-activa-y-distancia--en-verificación
 [0.3.0]: #030--fase-2-vida-en-el-búnker--en-verificación
 [0.2.0]: #020--fase-1-expediciones--en-verificación
 [0.1.0]: #010--fase-0-esqueleto--en-verificación

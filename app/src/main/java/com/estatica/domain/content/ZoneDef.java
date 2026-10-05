@@ -24,6 +24,8 @@ public final class ZoneDef {
     private List<ItemDrop> items;
     /** Neutral transit report lines (voice styling is applied on top). */
     private List<String> transit;
+    /** Known from the start; otherwise found on the dial. */
+    private boolean startKnown;
 
     public String getId() {
         return id;
@@ -71,5 +73,9 @@ public final class ZoneDef {
 
     public List<String> getTransit() {
         return transit;
+    }
+
+    public boolean isStartKnown() {
+        return startKnown;
     }
 }

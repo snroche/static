@@ -38,12 +38,18 @@ public final class Expedition {
     private final List<String> carriedItems;
     /** The pending situation includes "come home" (GDD §5.5). */
     private boolean retreatOffered;
+    private final Mission mission;
+    /** Cut short (critical injury, coming home): the mission is not fulfilled. */
+    private boolean aborted;
+    /** Bit i set: the odds hint of option i was lost in the static. */
+    private int lostHints;
 
     public Expedition(String id, String scoutId, String zoneId, long seed, long startedAtMillis,
                       List<Segment> segments, long rngState, Status status, int index,
                       long cursorAtMillis, long pendingSinceMillis, int chosenOption,
                       long chosenAtMillis, Map<String, Integer> carriedLoot,
-                      List<String> carriedItems, boolean retreatOffered) {
+                      List<String> carriedItems, boolean retreatOffered, Mission mission,
+                      boolean aborted, int lostHints) {
         this.id = Objects.requireNonNull(id);
         this.scoutId = Objects.requireNonNull(scoutId);
         this.zoneId = Objects.requireNonNull(zoneId);
@@ -60,6 +66,30 @@ public final class Expedition {
         this.carriedLoot = new LinkedHashMap<>(carriedLoot);
         this.carriedItems = new java.util.ArrayList<>(carriedItems);
         this.retreatOffered = retreatOffered;
+        this.mission = Objects.requireNonNull(mission);
+        this.aborted = aborted;
+        this.lostHints = lostHints;
+    }
+
+    public Mission getMission() {
+        return mission;
+    }
+
+    public boolean isAborted() {
+        return aborted;
+    }
+
+    public int getLostHints() {
+        return lostHints;
+    }
+
+    /** Whether the operator heard the odds hint for this option. */
+    public boolean heardHint(int option) {
+        return (lostHints & (1 << option)) == 0;
+    }
+
+    void markHintLost(int option) {
+        lostHints |= 1 << option;
     }
 
     public List<String> getCarriedItems() {
@@ -171,6 +201,7 @@ public final class Expedition {
     /** Resolves the current segment at {@code atMillis} and moves to the next one. */
     void advance(long atMillis) {
         retreatOffered = false;
+        lostHints = 0;
         cursorAtMillis = atMillis;
         pendingSinceMillis = NONE;
         chosenOption = NO_CHOICE;
@@ -181,6 +212,8 @@ public final class Expedition {
     /** Skips straight to the RETURN segment (e.g. critically injured). */
     void abortToReturn(long atMillis) {
         retreatOffered = false;
+        lostHints = 0;
+        aborted = true;
         cursorAtMillis = atMillis;
         pendingSinceMillis = NONE;
         chosenOption = NO_CHOICE;

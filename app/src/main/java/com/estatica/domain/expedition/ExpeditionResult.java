@@ -19,6 +19,7 @@ public final class ExpeditionResult {
     private boolean situationArrived;
     private boolean returned;
     private boolean scoutDied;
+    private boolean missionCompleted;
 
     void line(LogLine line) {
         lines.add(line);
@@ -49,6 +50,15 @@ public final class ExpeditionResult {
 
     void markReturned() {
         returned = true;
+    }
+
+    void markMissionCompleted() {
+        missionCompleted = true;
+    }
+
+    /** Returned without being cut short: rescue / relay mission fulfilled. */
+    public boolean isMissionCompleted() {
+        return missionCompleted;
     }
 
     void markScoutDied() {

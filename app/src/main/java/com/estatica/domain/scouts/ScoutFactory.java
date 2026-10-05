@@ -16,6 +16,11 @@ public final class ScoutFactory {
     }
 
     public static Scout fromTemplate(ScoutTemplate template, Balance.Scouts balance, long nowMillis) {
+        return fromTemplate(template, balance, nowMillis, balance.getInitialTrust());
+    }
+
+    /** @param trust starting trust (survivors start low: they don't know the operator) */
+    public static Scout fromTemplate(ScoutTemplate template, Balance.Scouts balance, long nowMillis, int trust) {
         Map<StatType, Stat> stats = new EnumMap<>(StatType.class);
         for (Map.Entry<String, int[]> entry : template.getStats().entrySet()) {
             int[] range = entry.getValue();
@@ -29,7 +34,7 @@ public final class ScoutFactory {
             traits.add(new ScoutTrait(template.getHiddenTrait(), true, false));
         }
         return new Scout(Ids.newId(), template.getId(), template.getName(), template.getVoice(),
-                stats, traits, balance.getInitialStress(), balance.getInitialTrust(),
+                stats, traits, balance.getInitialStress(), trust,
                 Injury.NONE, ScoutStatus.IDLE, nowMillis, 0);
     }
 }

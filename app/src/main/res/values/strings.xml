@@ -4,8 +4,6 @@
     <string name="input_prompt" translatable="false">&gt;</string>
     <string name="input_hint">escribí un comando</string>
     <string name="log_description">Registro de radio</string>
-
-    <string name="title" translatable="false">ESTÁTICA</string>
     <string name="scouts_button">[ EXPLORADORES ]</string>
     <string name="panel_close">[ CERRAR ]</string>
     <string name="panel_back">[ VOLVER ]</string>
@@ -26,8 +24,6 @@
     <string name="scout_task">Tarea: %1$s</string>
     <string name="scout_traits">Rasgos: %1$s</string>
     <string name="scout_gifts">Lleva: %1$s</string>
-
-    <string name="zone_meta">Peligro %1$s · %2$d–%3$d min</string>
     <string name="inventory_empty">No hay objetos en el búnker.</string>
 
     <string name="decision_header">%1$s espera órdenes (hasta las %2$s)</string>
@@ -35,6 +31,47 @@
     <string name="decision_talk_header_until">%1$s quiere hablar (hasta las %2$s)</string>
     <string name="decision_more">+%1$d más esperando</string>
     <string name="decision_option">[%1$d] %2$s</string>
+
+    <string name="radio_button">[ RADIO ]</string>
+    <string name="panel_radio_title">RADIO</string>
+    <string name="dial_description">Dial de frecuencias</string>
+    <string name="tune_button">[ SINTONIZAR ]</string>
+    <string name="frequency">Frecuencia %1$d · %2$s</string>
+    <string name="band_locked">%1$s (fuera de alcance)</string>
+    <string name="transmissions_title">TRANSMISIONES SIN DESCIFRAR</string>
+    <string name="no_transmissions">Ninguna por ahora.</string>
+    <string name="transmission_row">[ %1$s ] %2$s</string>
+    <string name="kind_caesar">CÉSAR</string>
+    <string name="kind_morse">MORSE</string>
+    <string name="equipment_title">EQUIPO</string>
+    <string name="module_line">%1$s: nivel %2$d de %3$d</string>
+    <string name="module_upgrade">[ MEJORAR: %1$s ]</string>
+    <string name="relays_line">Kits de repetidora: %1$d · Instaladas: %2$s</string>
+    <string name="relays_none">ninguna</string>
+    <string name="build_relay">[ ARMAR KIT: %1$s ]</string>
+    <string name="zone_band_meta">%1$s · Peligro %2$s · %3$d–%4$d min</string>
+    <string name="zone_relay">Repetidora %1$d%%</string>
+    <string name="zone_intel">Hay datos descifrados de esta zona</string>
+
+    <string name="decode_caesar_title">CÉSAR</string>
+    <string name="decode_morse_title">MORSE</string>
+    <string name="decode_caesar_help">Girá el dial hasta que el mensaje tenga sentido.</string>
+    <string name="decode_morse_help">Transcribí letra por letra: armá cada letra con puntos y rayas y tocá LETRA.</string>
+    <string name="shift_value">Corrimiento: %1$d</string>
+    <string name="shift_up">[ ▶ ]</string>
+    <string name="shift_down">[ ◀ ]</string>
+    <string name="shift_up_description">Correr una letra hacia adelante</string>
+    <string name="shift_down_description">Correr una letra hacia atrás</string>
+    <string name="morse_dot" translatable="false">[ · ]</string>
+    <string name="morse_dash" translatable="false">[ — ]</string>
+    <string name="morse_erase" translatable="false">[ ⌫ ]</string>
+    <string name="dot_description">Punto</string>
+    <string name="dash_description">Raya</string>
+    <string name="erase_description">Borrar</string>
+    <string name="morse_letter">[ LETRA ]</string>
+    <string name="morse_space">[ ESPACIO ]</string>
+    <string name="morse_table">[ TABLA ]</string>
+    <string name="send_button">[ ENVIAR ]</string>
 
     <string name="notification_channel">Transmisiones</string>
     <string name="notification_channel_description">Situaciones que necesitan órdenes y regresos al búnker.</string>

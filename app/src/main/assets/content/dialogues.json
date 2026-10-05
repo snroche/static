@@ -1,222 +1,785 @@
 [
   {
-    "id": "mara_bici", "scout": "mara", "kind": "TALK", "minBondLevel": 1, "priority": 5,
-    "lines": ["¿Sabés qué extraño? La bici.", "Antes del Silencio repartía por todo el barrio. Conocía cada atajo."],
+    "id": "mara_bici",
+    "scout": "mara",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 5,
+    "lines": [
+      "¿Sabés qué extraño? La bici.",
+      "Antes del Silencio repartía por todo el barrio. Conocía cada atajo."
+    ],
     "choices": [
-      { "label": "Contame de tus recorridos.",
-        "reply": ["La panadería de Olazábal, a las seis. Siempre me daban una medialuna."],
-        "bond": 5, "memory": "las medialunas de la panadería de Olazábal" },
-      { "label": "Ahora tus atajos nos sirven acá.",
-        "reply": ["Sí. Algo es algo."], "bond": 2, "trust": 2 }
+      {
+        "label": "Contame de tus recorridos.",
+        "reply": [
+          "La panadería de Olazábal, a las seis. Siempre me daban una medialuna."
+        ],
+        "bond": 5,
+        "memory": "las medialunas de la panadería de Olazábal"
+      },
+      {
+        "label": "Ahora tus atajos nos sirven acá.",
+        "reply": [
+          "Sí. Algo es algo."
+        ],
+        "bond": 2,
+        "trust": 2
+      }
     ]
   },
   {
-    "id": "mara_musica", "scout": "mara", "kind": "TALK", "minBondLevel": 1, "priority": 4,
-    "lines": ["A veces tarareo para no escuchar la estática.", "Mi viejo tocaba la armónica. Mal, pero tocaba."],
+    "id": "mara_musica",
+    "scout": "mara",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "A veces tarareo para no escuchar la estática.",
+      "Mi viejo tocaba la armónica. Mal, pero tocaba."
+    ],
     "choices": [
-      { "label": "¿Te gustaría tener una?",
-        "reply": ["Si encontrás una... no sé. Me haría bien."], "bond": 3, "setFlags": ["likes:armonica"] },
-      { "label": "Tarareá algo, dale.",
-        "reply": ["No. Me da vergüenza. Otro día."], "bond": 1 }
+      {
+        "label": "¿Te gustaría tener una?",
+        "reply": [
+          "Si encontrás una... no sé. Me haría bien."
+        ],
+        "bond": 3,
+        "setFlags": [
+          "likes:armonica"
+        ]
+      },
+      {
+        "label": "Tarareá algo, dale.",
+        "reply": [
+          "No. Me da vergüenza. Otro día."
+        ],
+        "bond": 1
+      }
     ]
   },
   {
-    "id": "mara_dulce", "scout": "mara", "kind": "TALK", "minBondLevel": 2, "priority": 4,
-    "lines": ["¿Te acordás del gusto del chocolate? Yo ya casi no."],
+    "id": "mara_dulce",
+    "scout": "mara",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "¿Te acordás del gusto del chocolate? Yo ya casi no."
+    ],
     "choices": [
-      { "label": "Si aparece uno, es tuyo.",
-        "reply": ["Te lo voy a cobrar, eh."], "bond": 4, "setFlags": ["likes:chocolate", "likes:caramelos"] },
-      { "label": "Hay cosas más importantes.",
-        "reply": ["Ya sé. Por eso lo extraño."], "bond": -1 }
+      {
+        "label": "Si aparece uno, es tuyo.",
+        "reply": [
+          "Te lo voy a cobrar, eh."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:chocolate",
+          "likes:caramelos"
+        ]
+      },
+      {
+        "label": "Hay cosas más importantes.",
+        "reply": [
+          "Ya sé. Por eso lo extraño."
+        ],
+        "bond": -1
+      }
     ]
   },
   {
-    "id": "mara_estampita", "scout": "mara", "kind": "TALK", "minBondLevel": 2, "priority": 3,
-    "lines": ["Hay gente que se aferra a estampitas. Yo no creo en nada de eso."],
+    "id": "mara_estampita",
+    "scout": "mara",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 3,
+    "lines": [
+      "Hay gente que se aferra a estampitas. Yo no creo en nada de eso."
+    ],
     "choices": [
-      { "label": "Cada uno se agarra de lo que puede.",
-        "reply": ["Puede ser. Pero a mí no me regales una, eh."], "bond": 2, "setFlags": ["dislikes:estampita"] },
-      { "label": "Yo tampoco.",
-        "reply": ["Bien. Somos dos."], "bond": 3, "setFlags": ["dislikes:estampita"] }
+      {
+        "label": "Cada uno se agarra de lo que puede.",
+        "reply": [
+          "Puede ser. Pero a mí no me regales una, eh."
+        ],
+        "bond": 2,
+        "setFlags": [
+          "dislikes:estampita"
+        ]
+      },
+      {
+        "label": "Yo tampoco.",
+        "reply": [
+          "Bien. Somos dos."
+        ],
+        "bond": 3,
+        "setFlags": [
+          "dislikes:estampita"
+        ]
+      }
     ]
   },
   {
-    "id": "mara_confianza", "scout": "mara", "kind": "TALK", "minBondLevel": 3, "priority": 6,
-    "lines": ["No le cuento esto a nadie.", "Antes de llegar acá estuve sola mucho tiempo. Aprendí a no confiar en nadie."],
+    "id": "mara_confianza",
+    "scout": "mara",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 6,
+    "lines": [
+      "No le cuento esto a nadie.",
+      "Antes de llegar acá estuve sola mucho tiempo. Aprendí a no confiar en nadie."
+    ],
     "choices": [
-      { "label": "Conmigo podés.",
-        "reply": ["Ya sé. Por eso te lo cuento."], "bond": 6, "revealHidden": true,
-        "memory": "que me dijiste que con vos podía" },
-      { "label": "Hiciste bien en desconfiar.",
-        "reply": ["Sí. Pero cansa."], "bond": 3, "trust": 3, "revealHidden": true }
+      {
+        "label": "Conmigo podés.",
+        "reply": [
+          "Ya sé. Por eso te lo cuento."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "que me dijiste que con vos podía"
+      },
+      {
+        "label": "Hiciste bien en desconfiar.",
+        "reply": [
+          "Sí. Pero cansa."
+        ],
+        "bond": 3,
+        "trust": 3,
+        "revealHidden": true
+      }
     ]
   },
   {
-    "id": "mara_guia", "scout": "mara", "kind": "GUIDANCE", "minBondLevel": 2, "priority": 8,
-    "requiresStats": { "stealth": 7 }, "forbidsFlags": ["specialized"],
-    "lines": ["Necesito que me digas algo.", "¿Aprendo a moverme sin que me vean, o a leer el terreno para encontrar cosas?"],
+    "id": "mara_guia",
+    "scout": "mara",
+    "kind": "GUIDANCE",
+    "minBondLevel": 2,
+    "priority": 8,
+    "requiresStats": {
+      "stealth": 7
+    },
+    "forbidsFlags": [
+      "specialized"
+    ],
+    "lines": [
+      "Necesito que me digas algo.",
+      "¿Aprendo a moverme sin que me vean, o a leer el terreno para encontrar cosas?"
+    ],
     "choices": [
-      { "label": "Que nadie te vea.",
-        "reply": ["Una sombra. Me gusta."], "bond": 3, "addTrait": "sombra", "setFlags": ["specialized"],
-        "memory": "que me enseñaste a ser una sombra" },
-      { "label": "Aprendé a leer el terreno.",
-        "reply": ["Ojos abiertos, entonces."], "bond": 3, "addTrait": "rastreo", "setFlags": ["specialized"],
-        "memory": "que me dijiste que mirara el terreno" }
-    ]
-  },
-
-  {
-    "id": "tano_obra", "scout": "tano", "kind": "TALK", "minBondLevel": 1, "priority": 5,
-    "lines": ["¿Ves esta pared, jefe? Mal revocada. Si tuviera cal la dejaba como nueva.", "Yo levanté medio barrio, ¿sabías?"],
-    "choices": [
-      { "label": "Contame de tu primera obra.",
-        "reply": ["Una casita en Lanús. La dueña me cebaba mate todas las tardes. Amargo, como debe ser."],
-        "bond": 5, "setFlags": ["likes:mate"], "memory": "la casita de Lanús y el mate de la dueña" },
-      { "label": "¿Y después del Silencio?",
-        "reply": ["Todo de nuevo, jefe. Todo."], "bond": 3, "trust": 2 }
-    ]
-  },
-  {
-    "id": "tano_truco", "scout": "tano", "kind": "TALK", "minBondLevel": 1, "priority": 4,
-    "lines": ["¿Jugás al truco? Acá nadie sabe jugar. Una vergüenza."],
-    "choices": [
-      { "label": "Enseñame.",
-        "reply": ["Primero hay que conseguir un mazo. Si ves uno por ahí, avisá."], "bond": 4, "setFlags": ["likes:naipes"] },
-      { "label": "No tengo tiempo para juegos.",
-        "reply": ["Mal, jefe. Sin un truco no se aguanta esto."], "bond": -1 }
-    ]
-  },
-  {
-    "id": "tano_libros", "scout": "tano", "kind": "TALK", "minBondLevel": 2, "priority": 3,
-    "lines": ["Hay gente que se pasa el día leyendo. Yo me duermo en la segunda página."],
-    "choices": [
-      { "label": "Cada uno con lo suyo.",
-        "reply": ["Eso. A mí no me traigas libros, que los uso para calzar la mesa."], "bond": 2, "setFlags": ["dislikes:libro"] },
-      { "label": "Te haría bien leer.",
-        "reply": ["Ni loco, jefe."], "setFlags": ["dislikes:libro"] }
-    ]
-  },
-  {
-    "id": "tano_lealtad", "scout": "tano", "kind": "TALK", "minBondLevel": 3, "priority": 6,
-    "lines": ["Te voy a decir algo, jefe, y no te rías.", "Yo no me voy a ir nunca. Si vos decís, yo voy."],
-    "choices": [
-      { "label": "Lo sé, Tano.",
-        "reply": ["Así me gusta."], "bond": 6, "revealHidden": true,
-        "memory": "que me dijiste que sabías que no me iba a ir" },
-      { "label": "No hace falta que me sigas a todo.",
-        "reply": ["Igual lo hago, jefe."], "bond": 3, "revealHidden": true }
+      {
+        "label": "Que nadie te vea.",
+        "reply": [
+          "Una sombra. Me gusta."
+        ],
+        "bond": 3,
+        "addTrait": "sombra",
+        "setFlags": [
+          "specialized"
+        ],
+        "memory": "que me enseñaste a ser una sombra"
+      },
+      {
+        "label": "Aprendé a leer el terreno.",
+        "reply": [
+          "Ojos abiertos, entonces."
+        ],
+        "bond": 3,
+        "addTrait": "rastreo",
+        "setFlags": [
+          "specialized"
+        ],
+        "memory": "que me dijiste que mirara el terreno"
+      }
     ]
   },
   {
-    "id": "tano_guia", "scout": "tano", "kind": "GUIDANCE", "minBondLevel": 2, "priority": 8,
-    "requiresStats": { "endurance": 7 }, "forbidsFlags": ["specialized"],
-    "lines": ["Jefe, una consulta.", "¿Me pongo a practicar puntería, o le doy al oficio, a arreglar cosas?"],
+    "id": "tano_obra",
+    "scout": "tano",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 5,
+    "lines": [
+      "¿Ves esta pared, jefe? Mal revocada. Si tuviera cal la dejaba como nueva.",
+      "Yo levanté medio barrio, ¿sabías?"
+    ],
     "choices": [
-      { "label": "Puntería.",
-        "reply": ["Ojo de halcón, jefe. Ya vas a ver."], "bond": 3, "addTrait": "punteria", "setFlags": ["specialized"],
-        "memory": "que me dijiste que practicara puntería" },
-      { "label": "El oficio.",
-        "reply": ["Lo mío, jefe. Lo mío."], "bond": 3, "addTrait": "mecanica", "setFlags": ["specialized"],
-        "memory": "que me mandaste a darle al oficio" }
-    ]
-  },
-
-  {
-    "id": "irene_libreta", "scout": "irene", "kind": "TALK", "minBondLevel": 1, "priority": 5,
-    "lines": ["Anoto todo, operador. Horarios, ruidos, quién dijo qué.", "Es una costumbre del laboratorio. Me ordena."],
-    "choices": [
-      { "label": "¿Puedo leerla?",
-        "reply": ["No. Todavía no."], "bond": 1 },
-      { "label": "Seguí anotando. Nos sirve.",
-        "reply": ["Gracias. Me alivia que alguien lo valore."], "bond": 5, "setFlags": ["likes:cuaderno"],
-        "memory": "que valoró mi libreta" }
-    ]
-  },
-  {
-    "id": "irene_lectura", "scout": "irene", "kind": "TALK", "minBondLevel": 1, "priority": 4,
-    "lines": ["Terminé el último libro que había en el búnker. Por tercera vez."],
-    "choices": [
-      { "label": "Voy a pedir que busquen libros.",
-        "reply": ["Le estaría muy agradecida."], "bond": 4, "setFlags": ["likes:libro"] },
-      { "label": "Leelo otra vez.",
-        "reply": ["Supongo."] }
+      {
+        "label": "Contame de tu primera obra.",
+        "reply": [
+          "Una casita en Lanús. La dueña me cebaba mate todas las tardes. Amargo, como debe ser."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "likes:mate"
+        ],
+        "memory": "la casita de Lanús y el mate de la dueña"
+      },
+      {
+        "label": "¿Y después del Silencio?",
+        "reply": [
+          "Todo de nuevo, jefe. Todo."
+        ],
+        "bond": 3,
+        "trust": 2
+      }
     ]
   },
   {
-    "id": "irene_juego", "scout": "irene", "kind": "TALK", "minBondLevel": 2, "priority": 3,
-    "lines": ["Me quieren enseñar a jugar a las cartas. No le veo el sentido."],
+    "id": "tano_truco",
+    "scout": "tano",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "¿Jugás al truco? Acá nadie sabe jugar. Una vergüenza."
+    ],
     "choices": [
-      { "label": "Es para pasar el rato.",
-        "reply": ["Prefiero no. Y no me regale naipes, por favor."], "bond": 2, "setFlags": ["dislikes:naipes"] },
-      { "label": "Dale una oportunidad.",
-        "reply": ["Lo pensaré. No prometo nada."], "bond": 1, "setFlags": ["dislikes:naipes"] }
+      {
+        "label": "Enseñame.",
+        "reply": [
+          "Primero hay que conseguir un mazo. Si ves uno por ahí, avisá."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:naipes"
+        ]
+      },
+      {
+        "label": "No tengo tiempo para juegos.",
+        "reply": [
+          "Mal, jefe. Sin un truco no se aguanta esto."
+        ],
+        "bond": -1
+      }
     ]
   },
   {
-    "id": "irene_miedo", "scout": "irene", "kind": "TALK", "minBondLevel": 3, "priority": 6,
-    "lines": ["Operador, tengo que admitir algo.", "Cuando salgo, tengo miedo todo el tiempo. Lo disimulo con procedimientos."],
+    "id": "tano_libros",
+    "scout": "tano",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 3,
+    "lines": [
+      "Hay gente que se pasa el día leyendo. Yo me duermo en la segunda página."
+    ],
     "choices": [
-      { "label": "El miedo también te cuida.",
-        "reply": ["Nunca lo había pensado así."], "bond": 6, "revealHidden": true,
-        "memory": "que me dijo que el miedo también cuida" },
-      { "label": "Si no podés, no salgas.",
-        "reply": ["Puedo. Solo quería que lo supiera."], "bond": 3, "revealHidden": true }
+      {
+        "label": "Cada uno con lo suyo.",
+        "reply": [
+          "Eso. A mí no me traigas libros, que los uso para calzar la mesa."
+        ],
+        "bond": 2,
+        "setFlags": [
+          "dislikes:libro"
+        ]
+      },
+      {
+        "label": "Te haría bien leer.",
+        "reply": [
+          "Ni loco, jefe."
+        ],
+        "setFlags": [
+          "dislikes:libro"
+        ]
+      }
     ]
   },
   {
-    "id": "irene_guia", "scout": "irene", "kind": "GUIDANCE", "minBondLevel": 2, "priority": 8,
-    "requiresStats": { "wits": 7 }, "forbidsFlags": ["specialized"],
-    "lines": ["Necesito su opinión.", "¿Me dedico a la enfermería o a la mecánica?"],
+    "id": "tano_lealtad",
+    "scout": "tano",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 6,
+    "lines": [
+      "Te voy a decir algo, jefe, y no te rías.",
+      "Yo no me voy a ir nunca. Si vos decís, yo voy."
+    ],
     "choices": [
-      { "label": "Enfermería.",
-        "reply": ["Entonces voy a cuidarlos a todos."], "bond": 3, "addTrait": "primeros_auxilios", "setFlags": ["specialized"],
-        "memory": "que me eligió para cuidar a los demás" },
-      { "label": "Mecánica.",
-        "reply": ["Lógico. Las máquinas no mienten."], "bond": 3, "addTrait": "mecanica", "setFlags": ["specialized"],
-        "memory": "que me mandó a la mecánica" }
-    ]
-  },
-
-  {
-    "id": "charla_rutina", "kind": "TALK", "repeatable": true, "priority": 0,
-    "lines": ["Acá todo tranquilo. Raro, pero tranquilo."],
-    "choices": [
-      { "label": "¿Necesitás algo?", "reply": ["Que esto se termine. Fuera de eso, nada."], "bond": 2 },
-      { "label": "Aprovechá para descansar.", "reply": ["Lo intento."], "bond": 2 }
-    ]
-  },
-  {
-    "id": "charla_antes", "kind": "TALK", "repeatable": true, "priority": 0,
-    "lines": ["A veces pienso en cómo era todo antes."],
-    "choices": [
-      { "label": "Yo también.", "reply": ["Mejor no pensar mucho."], "bond": 2 },
-      { "label": "Mejor mirar para adelante.", "reply": ["Puede ser."], "bond": 2 }
-    ]
-  },
-  {
-    "id": "pedido_compania", "kind": "INITIATED", "minBondLevel": 2, "repeatable": true, "priority": 1,
-    "lines": ["No pasa nada. Solo quería hablar con alguien que no sea la pared."],
-    "choices": [
-      { "label": "Acá estoy.", "reply": ["Gracias."], "bond": 4, "stress": -5,
-        "memory": "que estuviste ahí cuando necesitaba hablar" },
-      { "label": "Ahora no puedo.", "reply": ["Bueno. Otro día."], "bond": -2 }
+      {
+        "label": "Lo sé, Tano.",
+        "reply": [
+          "Así me gusta."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "que me dijiste que sabías que no me iba a ir"
+      },
+      {
+        "label": "No hace falta que me sigas a todo.",
+        "reply": [
+          "Igual lo hago, jefe."
+        ],
+        "bond": 3,
+        "revealHidden": true
+      }
     ]
   },
   {
-    "id": "duelo_recuerdo", "kind": "GRIEF", "minHoursSinceDeath": 24, "priority": 10,
-    "lines": ["Estuve pensando en {dead}.", "Todavía espero escuchar su voz en la radio."],
+    "id": "tano_guia",
+    "scout": "tano",
+    "kind": "GUIDANCE",
+    "minBondLevel": 2,
+    "priority": 8,
+    "requiresStats": {
+      "endurance": 7
+    },
+    "forbidsFlags": [
+      "specialized"
+    ],
+    "lines": [
+      "Jefe, una consulta.",
+      "¿Me pongo a practicar puntería, o le doy al oficio, a arreglar cosas?"
+    ],
     "choices": [
-      { "label": "Yo también pienso en {dead}.", "reply": ["Gracias por decirlo."], "bond": 5, "stress": -10,
-        "memory": "que hablamos de {dead}" },
-      { "label": "Hay que seguir.", "reply": ["Ya sé. Pero no es fácil."], "bond": 1, "stress": -3 }
+      {
+        "label": "Puntería.",
+        "reply": [
+          "Ojo de halcón, jefe. Ya vas a ver."
+        ],
+        "bond": 3,
+        "addTrait": "punteria",
+        "setFlags": [
+          "specialized"
+        ],
+        "memory": "que me dijiste que practicara puntería"
+      },
+      {
+        "label": "El oficio.",
+        "reply": [
+          "Lo mío, jefe. Lo mío."
+        ],
+        "bond": 3,
+        "addTrait": "mecanica",
+        "setFlags": [
+          "specialized"
+        ],
+        "memory": "que me mandaste a darle al oficio"
+      }
     ]
   },
   {
-    "id": "duelo_culpa", "kind": "GRIEF", "minHoursSinceDeath": 48, "minBondLevel": 2, "priority": 9,
-    "lines": ["¿Por qué mandaste a {dead} ahí?"],
+    "id": "irene_libreta",
+    "scout": "irene",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 5,
+    "lines": [
+      "Anoto todo, operador. Horarios, ruidos, quién dijo qué.",
+      "Es una costumbre del laboratorio. Me ordena."
+    ],
     "choices": [
-      { "label": "Fue mi culpa.", "reply": ["...Por lo menos lo admitís."], "bond": 3, "trust": -3 },
-      { "label": "Era necesario.", "reply": ["Para vos, tal vez."], "bond": -3, "trust": 2 }
+      {
+        "label": "¿Puedo leerla?",
+        "reply": [
+          "No. Todavía no."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "Seguí anotando. Nos sirve.",
+        "reply": [
+          "Gracias. Me alivia que alguien lo valore."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "likes:cuaderno"
+        ],
+        "memory": "que valoró mi libreta"
+      }
+    ]
+  },
+  {
+    "id": "irene_lectura",
+    "scout": "irene",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Terminé el último libro que había en el búnker. Por tercera vez."
+    ],
+    "choices": [
+      {
+        "label": "Voy a pedir que busquen libros.",
+        "reply": [
+          "Le estaría muy agradecida."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:libro"
+        ]
+      },
+      {
+        "label": "Leelo otra vez.",
+        "reply": [
+          "Supongo."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "irene_juego",
+    "scout": "irene",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 3,
+    "lines": [
+      "Me quieren enseñar a jugar a las cartas. No le veo el sentido."
+    ],
+    "choices": [
+      {
+        "label": "Es para pasar el rato.",
+        "reply": [
+          "Prefiero no. Y no me regale naipes, por favor."
+        ],
+        "bond": 2,
+        "setFlags": [
+          "dislikes:naipes"
+        ]
+      },
+      {
+        "label": "Dale una oportunidad.",
+        "reply": [
+          "Lo pensaré. No prometo nada."
+        ],
+        "bond": 1,
+        "setFlags": [
+          "dislikes:naipes"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "irene_miedo",
+    "scout": "irene",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 6,
+    "lines": [
+      "Operador, tengo que admitir algo.",
+      "Cuando salgo, tengo miedo todo el tiempo. Lo disimulo con procedimientos."
+    ],
+    "choices": [
+      {
+        "label": "El miedo también te cuida.",
+        "reply": [
+          "Nunca lo había pensado así."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "que me dijo que el miedo también cuida"
+      },
+      {
+        "label": "Si no podés, no salgas.",
+        "reply": [
+          "Puedo. Solo quería que lo supiera."
+        ],
+        "bond": 3,
+        "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "irene_guia",
+    "scout": "irene",
+    "kind": "GUIDANCE",
+    "minBondLevel": 2,
+    "priority": 8,
+    "requiresStats": {
+      "wits": 7
+    },
+    "forbidsFlags": [
+      "specialized"
+    ],
+    "lines": [
+      "Necesito su opinión.",
+      "¿Me dedico a la enfermería o a la mecánica?"
+    ],
+    "choices": [
+      {
+        "label": "Enfermería.",
+        "reply": [
+          "Entonces voy a cuidarlos a todos."
+        ],
+        "bond": 3,
+        "addTrait": "primeros_auxilios",
+        "setFlags": [
+          "specialized"
+        ],
+        "memory": "que me eligió para cuidar a los demás"
+      },
+      {
+        "label": "Mecánica.",
+        "reply": [
+          "Lógico. Las máquinas no mienten."
+        ],
+        "bond": 3,
+        "addTrait": "mecanica",
+        "setFlags": [
+          "specialized"
+        ],
+        "memory": "que me mandó a la mecánica"
+      }
+    ]
+  },
+  {
+    "id": "charla_rutina",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "Acá todo tranquilo. Raro, pero tranquilo."
+    ],
+    "choices": [
+      {
+        "label": "¿Necesitás algo?",
+        "reply": [
+          "Que esto se termine. Fuera de eso, nada."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Aprovechá para descansar.",
+        "reply": [
+          "Lo intento."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "charla_antes",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "A veces pienso en cómo era todo antes."
+    ],
+    "choices": [
+      {
+        "label": "Yo también.",
+        "reply": [
+          "Mejor no pensar mucho."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Mejor mirar para adelante.",
+        "reply": [
+          "Puede ser."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "pedido_compania",
+    "kind": "INITIATED",
+    "minBondLevel": 2,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "No pasa nada. Solo quería hablar con alguien que no sea la pared."
+    ],
+    "choices": [
+      {
+        "label": "Acá estoy.",
+        "reply": [
+          "Gracias."
+        ],
+        "bond": 4,
+        "stress": -5,
+        "memory": "que estuviste ahí cuando necesitaba hablar"
+      },
+      {
+        "label": "Ahora no puedo.",
+        "reply": [
+          "Bueno. Otro día."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "duelo_recuerdo",
+    "kind": "GRIEF",
+    "minHoursSinceDeath": 24,
+    "priority": 10,
+    "lines": [
+      "Estuve pensando en {dead}.",
+      "Todavía espero escuchar su voz en la radio."
+    ],
+    "choices": [
+      {
+        "label": "Yo también pienso en {dead}.",
+        "reply": [
+          "Gracias por decirlo."
+        ],
+        "bond": 5,
+        "stress": -10,
+        "memory": "que hablamos de {dead}"
+      },
+      {
+        "label": "Hay que seguir.",
+        "reply": [
+          "Ya sé. Pero no es fácil."
+        ],
+        "bond": 1,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "duelo_culpa",
+    "kind": "GRIEF",
+    "minHoursSinceDeath": 48,
+    "minBondLevel": 2,
+    "priority": 9,
+    "lines": [
+      "¿Por qué mandaste a {dead} ahí?"
+    ],
+    "choices": [
+      {
+        "label": "Fue mi culpa.",
+        "reply": [
+          "...Por lo menos lo admitís."
+        ],
+        "bond": 3,
+        "trust": -3
+      },
+      {
+        "label": "Era necesario.",
+        "reply": [
+          "Para vos, tal vez."
+        ],
+        "bond": -3,
+        "trust": 2
+      }
+    ]
+  },
+  {
+    "id": "beto_senales",
+    "scout": "beto",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 5,
+    "lines": [
+      "Treinta años de señalero.",
+      "Rojo, amarillo, verde. Ahora todo es estática."
+    ],
+    "choices": [
+      {
+        "label": "¿Extrañás los trenes?",
+        "reply": [
+          "El ruido. Extraño el ruido. Esto es demasiado callado."
+        ],
+        "bond": 5,
+        "memory": "el ruido de los trenes que extraño",
+        "setFlags": [
+          "likes:mate"
+        ]
+      },
+      {
+        "label": "Tu oído nos sirve en la radio.",
+        "reply": [
+          "Afirmativo. Cuente conmigo."
+        ],
+        "bond": 3,
+        "trust": 3
+      }
+    ]
+  },
+  {
+    "id": "beto_foto",
+    "scout": "beto",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Tenía una foto de mi cuadrilla. La perdí en la estación.",
+      "Cualquier foto me haría bien. Aunque sea de desconocidos."
+    ],
+    "choices": [
+      {
+        "label": "Si aparece una, es tuya.",
+        "reply": [
+          "Gracias. Cambio."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:foto"
+        ]
+      },
+      {
+        "label": "Las fotos no sirven de nada acá.",
+        "reply": [
+          "Para usted, tal vez."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "lucho_barrio",
+    "scout": "lucho",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 5,
+    "lines": [
+      "¿Sabés cuánto tiempo estuve solo en ese barrio?",
+      "Yo tampoco. Dejé de contar."
+    ],
+    "choices": [
+      {
+        "label": "Ya no estás solo.",
+        "reply": [
+          "Sí. Ya sé. Gracias, che."
+        ],
+        "bond": 5,
+        "stress": -5,
+        "memory": "que me dijiste que ya no estaba solo"
+      },
+      {
+        "label": "¿Cómo hiciste para aguantar?",
+        "reply": [
+          "Escuchaba música en un celular hasta que se murió la batería."
+        ],
+        "bond": 3,
+        "setFlags": [
+          "likes:armonica"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lucho_cartas",
+    "scout": "lucho",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Tano me quiere enseñar al truco. ¿Vos sabés jugar?"
+    ],
+    "choices": [
+      {
+        "label": "Un poco. Si conseguimos un mazo, jugamos.",
+        "reply": [
+          "¡Dale! Y nada de libros, eh. Me aburren."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:naipes",
+          "dislikes:libro"
+        ]
+      },
+      {
+        "label": "No es momento de jugar.",
+        "reply": [
+          "Nunca es momento de nada acá."
+        ],
+        "bond": -1
+      }
     ]
   }
 ]

@@ -30,6 +30,8 @@ public final class VoiceRenderer {
         }
         if (voice.getTransform() == VoiceDef.Transform.LOWER) {
             text = text.toLowerCase(SPANISH);
+        } else if (voice.getTransform() == VoiceDef.Transform.UPPER) {
+            text = text.toUpperCase(SPANISH);
         }
         return text;
     }

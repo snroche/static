@@ -1,198 +1,1049 @@
 [
   {
     "id": "perro",
-    "intro": ["Hay un perro flaco en la entrada. Me está mirando.", "No ladra. Eso me preocupa más."],
+    "intro": [
+      "Hay un perro flaco en la entrada. Me está mirando.",
+      "No ladra. Eso me preocupa más."
+    ],
     "options": [
       {
-        "id": "ahuyentar", "label": "Ahuyentalo", "stat": "endurance", "difficulty": 5, "risk": "RISKY",
-        "success": { "text": ["Le grité y se fue corriendo. Paso."] },
-        "failure": { "text": ["Me mordió el brazo. Lo pude sacar de encima."], "injury": "light", "stress": 10 }
-      },
-      {
-        "id": "rodear", "label": "Rodealo despacio", "stat": "stealth", "difficulty": 5,
-        "success": { "text": ["Lo rodeé por el costado. Ni se movió."] },
-        "failure": { "text": ["Me vio. Tuve que volver y entrar por atrás. Perdí tiempo."], "stress": 5 }
-      },
-      {
-        "id": "alimentar", "label": "Dale algo de comida", "stat": "wits", "difficulty": 4,
+        "id": "ahuyentar",
+        "label": "Ahuyentalo",
+        "stat": "endurance",
+        "difficulty": 5,
+        "risk": "RISKY",
         "success": {
-          "text": ["Le tiré media galleta. Me siguió un rato y después se quedó."],
+          "text": [
+            "Le grité y se fue corriendo. Paso."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me mordió el brazo. Lo pude sacar de encima."
+          ],
+          "injury": "light",
+          "stress": 10
+        }
+      },
+      {
+        "id": "rodear",
+        "label": "Rodealo despacio",
+        "stat": "stealth",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Lo rodeé por el costado. Ni se movió."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me vio. Tuve que volver y entrar por atrás. Perdí tiempo."
+          ],
+          "stress": 5
+        }
+      },
+      {
+        "id": "alimentar",
+        "label": "Dale algo de comida",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Le tiré media galleta. Me siguió un rato y después se quedó."
+          ],
           "memory": "el perro flaco que me siguió un rato"
         },
-        "failure": { "text": ["No quiso saber nada. Le gruñó a la galleta y a mí."], "stress": 5 }
+        "failure": {
+          "text": [
+            "No quiso saber nada. Le gruñó a la galleta y a mí."
+          ],
+          "stress": 5
+        }
       }
     ]
   },
   {
     "id": "estanteria",
-    "intro": ["Hay una estantería alta, llena arriba. Abajo ya está todo saqueado."],
+    "intro": [
+      "Hay una estantería alta, llena arriba. Abajo ya está todo saqueado."
+    ],
     "options": [
       {
-        "id": "trepar", "label": "Trepala", "stat": "endurance", "difficulty": 6, "risk": "RISKY",
-        "success": { "text": ["Llegué arriba. Hay latas."], "loot": [{ "resource": "rations", "min": 2, "max": 4 }] },
-        "failure": { "text": ["Se vino abajo conmigo encima."], "injury": "light", "stress": 10 }
+        "id": "trepar",
+        "label": "Trepala",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Llegué arriba. Hay latas."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se vino abajo conmigo encima."
+          ],
+          "injury": "light",
+          "stress": 10
+        }
       },
       {
-        "id": "alcanzar", "label": "Buscá algo para bajar las cosas", "stat": "wits", "difficulty": 4,
-        "success": { "text": ["Con un palo de escoba bajé un par de cosas."], "loot": [{ "resource": "rations", "min": 1, "max": 2 }] },
-        "failure": { "text": ["Nada que sirva. Lo dejo."], "stress": 3 }
+        "id": "alcanzar",
+        "label": "Buscá algo para bajar las cosas",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Con un palo de escoba bajé un par de cosas."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Nada que sirva. Lo dejo."
+          ],
+          "stress": 3
+        }
       }
     ]
   },
   {
     "id": "ruido_sotano",
-    "intro": ["Escucho algo en el sótano.", "Puede ser agua. Puede ser alguien."],
+    "intro": [
+      "Escucho algo en el sótano.",
+      "Puede ser agua. Puede ser alguien."
+    ],
     "options": [
       {
-        "id": "bajar", "label": "Bajá a mirar", "stat": "nerve", "difficulty": 6, "risk": "RISKY",
+        "id": "bajar",
+        "label": "Bajá a mirar",
+        "stat": "nerve",
+        "difficulty": 6,
+        "risk": "RISKY",
         "success": {
-          "text": ["Era agua goteando sobre una chapa. Y hay cajas acá abajo."],
-          "loot": [{ "resource": "components", "min": 2, "max": 4 }],
+          "text": [
+            "Era agua goteando sobre una chapa. Y hay cajas acá abajo."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            }
+          ],
           "memory": "el sótano oscuro donde al final no había nadie"
         },
         "failure": {
-          "text": ["No era agua. Algo se me tiró encima en la oscuridad."],
-          "injury": "serious", "stress": 20, "lethal": true
+          "text": [
+            "No era agua. Algo se me tiró encima en la oscuridad."
+          ],
+          "injury": "serious",
+          "stress": 20,
+          "lethal": true
         }
       },
       {
-        "id": "piedra", "label": "Tirá algo y escuchá", "stat": "wits", "difficulty": 5,
-        "success": { "text": ["Tiré una piedra. Nada se movió. Es agua, nomás."], "loot": [{ "resource": "components", "min": 1, "max": 1 }] },
-        "failure": { "text": ["Tiré una piedra y algo se movió allá abajo. Me voy."], "stress": 10 }
+        "id": "piedra",
+        "label": "Tirá algo y escuchá",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Tiré una piedra. Nada se movió. Es agua, nomás."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Tiré una piedra y algo se movió allá abajo. Me voy."
+          ],
+          "stress": 10
+        }
       },
       {
-        "id": "irse", "label": "Salí de ahí", "stat": "nerve", "difficulty": 2,
-        "success": { "text": ["Me voy. No vale la pena."] },
-        "failure": { "text": ["Salí corriendo y me enganché con una puerta."], "injury": "light", "stress": 5 }
+        "id": "irse",
+        "label": "Salí de ahí",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Me voy. No vale la pena."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Salí corriendo y me enganché con una puerta."
+          ],
+          "injury": "light",
+          "stress": 5
+        }
       }
     ]
   },
   {
     "id": "surtidor",
-    "intro": ["El surtidor tiene la tapa forzada. Abajo puede quedar algo."],
+    "intro": [
+      "El surtidor tiene la tapa forzada. Abajo puede quedar algo."
+    ],
     "options": [
       {
-        "id": "desarmar", "label": "Desarmalo", "stat": "craft", "difficulty": 5,
-        "success": { "text": ["Saqué un par de piezas que sirven."], "loot": [{ "resource": "components", "min": 1, "max": 3 }] },
-        "failure": { "text": ["Se me trabó todo. Me corté con la chapa."], "injury": "light", "stress": 5 }
+        "id": "desarmar",
+        "label": "Desarmalo",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Saqué un par de piezas que sirven."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se me trabó todo. Me corté con la chapa."
+          ],
+          "injury": "light",
+          "stress": 5
+        }
       },
       {
-        "id": "local", "label": "Dejalo, revisá el local", "stat": "stealth", "difficulty": 4,
-        "success": { "text": ["En el mostrador había pilas. Todavía andan, creo."], "loot": [{ "resource": "batteries", "min": 1, "max": 2 }] },
-        "failure": { "text": ["El local está vacío. Ni pilas."], "stress": 3 }
+        "id": "local",
+        "label": "Dejalo, revisá el local",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "En el mostrador había pilas. Todavía andan, creo."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "El local está vacío. Ni pilas."
+          ],
+          "stress": 3
+        }
       }
     ]
   },
   {
     "id": "auto_volcado",
-    "intro": ["Hay un auto volcado en la mitad de la calle.", "Adentro se ve una mochila."],
+    "intro": [
+      "Hay un auto volcado en la mitad de la calle.",
+      "Adentro se ve una mochila."
+    ],
     "options": [
       {
-        "id": "ventanilla", "label": "Metete por la ventanilla", "stat": "endurance", "difficulty": 6, "risk": "RISKY",
+        "id": "ventanilla",
+        "label": "Metete por la ventanilla",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
         "success": {
-          "text": ["Me arrastré adentro y saqué la mochila. Tiene cosas."],
-          "loot": [{ "resource": "rations", "min": 1, "max": 2 }, { "resource": "medicine", "min": 1, "max": 1 }]
+          "text": [
+            "Me arrastré adentro y saqué la mochila. Tiene cosas."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 1
+            }
+          ]
         },
-        "failure": { "text": ["El auto se movió cuando entré. Me apretó la pierna."], "injury": "serious", "stress": 15 }
+        "failure": {
+          "text": [
+            "El auto se movió cuando entré. Me apretó la pierna."
+          ],
+          "injury": "serious",
+          "stress": 15
+        }
       },
       {
-        "id": "baul", "label": "Rompé el baúl", "stat": "craft", "difficulty": 5,
-        "success": { "text": ["Con la barreta abrí el baúl. Chatarra, pero sirve."], "loot": [{ "resource": "scrap", "min": 2, "max": 4 }] },
-        "failure": { "text": ["Hice mucho ruido y no abrió."], "stress": 8 }
+        "id": "baul",
+        "label": "Rompé el baúl",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Con la barreta abrí el baúl. Chatarra, pero sirve."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Hice mucho ruido y no abrió."
+          ],
+          "stress": 8
+        }
       },
       {
-        "id": "seguir", "label": "Seguí de largo", "stat": "nerve", "difficulty": 1,
-        "success": { "text": ["Sigo. No me gusta esa mochila ahí sola."] },
-        "failure": { "text": ["Sigo. Pero me quedo pensando en la mochila."], "stress": 3 }
+        "id": "seguir",
+        "label": "Seguí de largo",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Sigo. No me gusta esa mochila ahí sola."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Sigo. Pero me quedo pensando en la mochila."
+          ],
+          "stress": 3
+        }
       }
     ]
   },
   {
     "id": "radio_encendida",
-    "intro": ["Hay una radio encendida en una ventana. Transmite estática.", "Alguien la dejó prendida. O la prendió hace poco."],
+    "intro": [
+      "Hay una radio encendida en una ventana. Transmite estática.",
+      "Alguien la dejó prendida. O la prendió hace poco."
+    ],
     "options": [
       {
-        "id": "llevar", "label": "Llevátela", "stat": "stealth", "difficulty": 5,
+        "id": "llevar",
+        "label": "Llevátela",
+        "stat": "stealth",
+        "difficulty": 5,
         "success": {
-          "text": ["La desenchufé y me la llevo. Tiene pilas adentro."],
-          "loot": [{ "resource": "batteries", "min": 1, "max": 2 }, { "resource": "components", "min": 1, "max": 1 }],
+          "text": [
+            "La desenchufé y me la llevo. Tiene pilas adentro."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 1
+            }
+          ],
           "memory": "la radio que transmitía estática en una ventana"
         },
         "failure": {
-          "text": ["Cuando la agarré se cayó y se rompió. Saqué las pilas igual."],
-          "loot": [{ "resource": "batteries", "min": 1, "max": 1 }], "stress": 3
+          "text": [
+            "Cuando la agarré se cayó y se rompió. Saqué las pilas igual."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            }
+          ],
+          "stress": 3
         }
       },
       {
-        "id": "escuchar", "label": "Escuchá un rato", "stat": "wits", "difficulty": 6,
+        "id": "escuchar",
+        "label": "Escuchá un rato",
+        "stat": "wits",
+        "difficulty": 6,
         "success": {
-          "text": ["Entre la estática hay números. Alguien está contando."],
-          "stress": 5, "memory": "los números escondidos en la estática"
+          "text": [
+            "Entre la estática hay números. Alguien está contando."
+          ],
+          "stress": 5,
+          "memory": "los números escondidos en la estática"
         },
-        "failure": { "text": ["Solo estática. Me dio frío escucharla."], "stress": 8 }
+        "failure": {
+          "text": [
+            "Solo estática. Me dio frío escucharla."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
   {
     "id": "persiana",
-    "intro": ["Hay una persiana a medio bajar. Del otro lado está oscuro."],
+    "intro": [
+      "Hay una persiana a medio bajar. Del otro lado está oscuro."
+    ],
     "options": [
       {
-        "id": "abajo", "label": "Pasá por abajo", "stat": "stealth", "difficulty": 5, "risk": "RISKY",
-        "success": { "text": ["Pasé arrastrándome. Hay un botiquín en la pared."], "loot": [{ "resource": "medicine", "min": 1, "max": 2 }] },
-        "failure": { "text": ["La persiana bajó de golpe. Me agarró la espalda."], "injury": "serious", "stress": 15, "lethal": true }
+        "id": "abajo",
+        "label": "Pasá por abajo",
+        "stat": "stealth",
+        "difficulty": 5,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Pasé arrastrándome. Hay un botiquín en la pared."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "La persiana bajó de golpe. Me agarró la espalda."
+          ],
+          "injury": "serious",
+          "stress": 15,
+          "lethal": true
+        }
       },
       {
-        "id": "levantar", "label": "Levantala de una", "stat": "endurance", "difficulty": 6,
-        "success": { "text": ["Hizo un ruido terrible pero subió. Adentro, poca cosa."], "loot": [{ "resource": "medicine", "min": 1, "max": 1 }] },
-        "failure": { "text": ["No sube. Me hice mal en el hombro."], "injury": "light", "stress": 5 }
+        "id": "levantar",
+        "label": "Levantala de una",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Hizo un ruido terrible pero subió. Adentro, poca cosa."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "No sube. Me hice mal en el hombro."
+          ],
+          "injury": "light",
+          "stress": 5
+        }
       }
     ]
   },
   {
     "id": "otro_superviviente",
-    "intro": ["Hay alguien más acá. Me vio.", "Tiene un caño en la mano. No se mueve."],
+    "intro": [
+      "Hay alguien más acá. Me vio.",
+      "Tiene un caño en la mano. No se mueve."
+    ],
     "options": [
       {
-        "id": "hablar", "label": "Hablale", "stat": "nerve", "difficulty": 5,
+        "id": "hablar",
+        "label": "Hablale",
+        "stat": "nerve",
+        "difficulty": 5,
         "success": {
-          "text": ["Le hablé tranquilo. Me dijo que se iba al sur. Nos dejamos en paz."],
+          "text": [
+            "Le hablé tranquilo. Me dijo que se iba al sur. Nos dejamos en paz."
+          ],
           "memory": "la persona del caño que se iba al sur"
         },
-        "failure": { "text": ["No quiso hablar. Me tiró el caño y salió corriendo."], "injury": "light", "stress": 15 }
+        "failure": {
+          "text": [
+            "No quiso hablar. Me tiró el caño y salió corriendo."
+          ],
+          "injury": "light",
+          "stress": 15
+        }
       },
       {
-        "id": "esconderse", "label": "Escondete", "stat": "stealth", "difficulty": 5,
-        "success": { "text": ["Me metí detrás de un mueble hasta que se fue."] },
-        "failure": { "text": ["Me encontró. Nos miramos un rato largo. Después se fue."], "stress": 15 }
-      },
-      {
-        "id": "enfrentar", "label": "Enfrentalo", "stat": "endurance", "difficulty": 6, "risk": "RISKY",
+        "id": "esconderse",
+        "label": "Escondete",
+        "stat": "stealth",
+        "difficulty": 5,
         "success": {
-          "text": ["Se fue corriendo y dejó su bolso."],
-          "loot": [{ "resource": "rations", "min": 2, "max": 3 }, { "resource": "scrap", "min": 1, "max": 2 }]
+          "text": [
+            "Me metí detrás de un mueble hasta que se fue."
+          ]
         },
-        "failure": { "text": ["Me pegó con el caño. Se fue con lo que tenía."], "injury": "serious", "stress": 20, "lethal": true }
+        "failure": {
+          "text": [
+            "Me encontró. Nos miramos un rato largo. Después se fue."
+          ],
+          "stress": 15
+        }
+      },
+      {
+        "id": "enfrentar",
+        "label": "Enfrentalo",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Se fue corriendo y dejó su bolso."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me pegó con el caño. Se fue con lo que tenía."
+          ],
+          "injury": "serious",
+          "stress": 20,
+          "lethal": true
+        }
       }
     ]
   },
   {
     "id": "techo",
-    "intro": ["Para seguir tengo que cruzar por el techo. Las chapas están flojas."],
+    "intro": [
+      "Para seguir tengo que cruzar por el techo. Las chapas están flojas."
+    ],
     "options": [
       {
-        "id": "cruzar", "label": "Cruzá con cuidado", "stat": "stealth", "difficulty": 6, "risk": "RISKY",
+        "id": "cruzar",
+        "label": "Cruzá con cuidado",
+        "stat": "stealth",
+        "difficulty": 6,
+        "risk": "RISKY",
         "success": {
-          "text": ["Crucé. Del otro lado hay un depósito sin tocar."],
-          "loot": [{ "resource": "components", "min": 2, "max": 3 }],
+          "text": [
+            "Crucé. Del otro lado hay un depósito sin tocar."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 3
+            }
+          ],
           "memory": "el techo de chapas flojas de la escuela"
         },
-        "failure": { "text": ["Una chapa cedió. Caí al aula de abajo."], "injury": "serious", "stress": 20, "lethal": true }
+        "failure": {
+          "text": [
+            "Una chapa cedió. Caí al aula de abajo."
+          ],
+          "injury": "serious",
+          "stress": 20,
+          "lethal": true
+        }
       },
       {
-        "id": "rodear", "label": "Buscá otro camino", "stat": "wits", "difficulty": 5,
-        "success": { "text": ["Encontré una escalera de servicio. Tardé más, pero llegué."], "loot": [{ "resource": "components", "min": 1, "max": 1 }] },
-        "failure": { "text": ["No hay otro camino. Me vuelvo."], "stress": 5 }
+        "id": "rodear",
+        "label": "Buscá otro camino",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Encontré una escalera de servicio. Tardé más, pero llegué."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "No hay otro camino. Me vuelvo."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "jauria",
+    "intro": [
+      "Una jauría. Seis, siete perros. Todavía no me vieron."
+    ],
+    "options": [
+      {
+        "id": "trepar",
+        "label": "Subite a algo alto",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Trepé a un contenedor. Esperé a que se fueran."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me alcanzaron a morder antes de subir."
+          ],
+          "injury": "light",
+          "stress": 15
+        }
+      },
+      {
+        "id": "rodear",
+        "label": "Rodealos contra el viento",
+        "stat": "stealth",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Ni me olieron. Paso."
+          ],
+          "memory": "la jauría que me dejó pasar"
+        },
+        "failure": {
+          "text": [
+            "Me olieron. Corrí hasta que no pude más."
+          ],
+          "stress": 15
+        }
+      },
+      {
+        "id": "enfrentar",
+        "label": "Hacé ruido y enfrentalos",
+        "stat": "endurance",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Grité, golpeé una chapa. Se dispersaron."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Eran demasiados."
+          ],
+          "injury": "serious",
+          "stress": 25,
+          "lethal": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "saqueadores",
+    "intro": [
+      "Hay gente armada adelante. Tres, por lo menos.",
+      "Están revisando lo mismo que yo."
+    ],
+    "options": [
+      {
+        "id": "negociar",
+        "label": "Hablales",
+        "stat": "nerve",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Les ofrecí información a cambio de pasar. Aceptaron."
+          ],
+          "memory": "los saqueadores que me dejaron pasar por hablarles"
+        },
+        "failure": {
+          "text": [
+            "No quisieron saber nada. Me sacaron lo que llevaba."
+          ],
+          "stress": 20
+        }
+      },
+      {
+        "id": "esconderse",
+        "label": "Esperá a que se vayan",
+        "stat": "stealth",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Se fueron. Me quedo con lo que dejaron."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me vieron. Tuve que salir corriendo."
+          ],
+          "injury": "light",
+          "stress": 15
+        }
+      },
+      {
+        "id": "robar",
+        "label": "Robales mientras no miran",
+        "stat": "stealth",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Me llevé una mochila entera."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Uno se dio vuelta. Disparó."
+          ],
+          "injury": "serious",
+          "stress": 25,
+          "lethal": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "gas",
+    "intro": [
+      "Huele a gas. Fuerte.",
+      "Lo que busco está del otro lado."
+    ],
+    "options": [
+      {
+        "id": "taparse",
+        "label": "Tapate la cara y pasá rápido",
+        "stat": "endurance",
+        "difficulty": 7,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Pasé. Me arde la garganta, pero pasé."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me mareé. Caí. Desperté afuera, no sé cómo."
+          ],
+          "injury": "serious",
+          "stress": 20,
+          "lethal": true
+        }
+      },
+      {
+        "id": "valvula",
+        "label": "Buscá la válvula y cerrala",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Cerré la válvula. El aire se limpia de a poco."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "La válvula está trabada. Mejor me voy."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "otra",
+        "label": "Buscá otra entrada",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Hay una ventana del otro lado. Entré por ahí."
+          ]
+        },
+        "failure": {
+          "text": [
+            "No hay otra entrada. Perdí tiempo."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "vagon",
+    "intro": [
+      "Un vagón de carga cerrado con candado.",
+      "Adentro se escucha algo que rueda."
+    ],
+    "options": [
+      {
+        "id": "forzar",
+        "label": "Forzá el candado",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Abrí. Cajas de herramientas."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            },
+            {
+              "resource": "scrap",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se me rompió la barreta. Y el ruido atrajo algo."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "techo",
+        "label": "Entrá por el techo",
+        "stat": "endurance",
+        "difficulty": 7,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Bajé por la escotilla. Hay de todo."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            },
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me resbalé del techo."
+          ],
+          "injury": "serious",
+          "stress": 15
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Dejalo",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Lo dejo. Que ruede lo que sea."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Lo dejo. Pero me quedo con la intriga."
+          ],
+          "stress": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "archivo",
+    "intro": [
+      "Un archivo entero. Carpetas, fichas, mapas.",
+      "Algunas dicen \"Silencio\" en la tapa."
+    ],
+    "options": [
+      {
+        "id": "leer",
+        "label": "Leé lo que puedas",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Hay informes de antes. Fechas, horarios. Me guardo lo importante en la cabeza."
+          ],
+          "memory": "las carpetas que decían Silencio en la tapa"
+        },
+        "failure": {
+          "text": [
+            "No entiendo nada. Siglas, números."
+          ],
+          "stress": 5
+        }
+      },
+      {
+        "id": "llevar",
+        "label": "Llevate todo el papel que puedas",
+        "stat": "endurance",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Cargué una caja. Pesa, pero sirve para prender fuego si no sirve para otra cosa."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se me rompió la caja en la escalera."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "herido",
+    "intro": [
+      "Hay un hombre herido contra una pared.",
+      "Me pide agua."
+    ],
+    "options": [
+      {
+        "id": "curar",
+        "label": "Ayudalo",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Le vendé la pierna. Me dijo dónde había guardado provisiones."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            }
+          ],
+          "memory": "el hombre herido que ayudé"
+        },
+        "failure": {
+          "text": [
+            "Hice lo que pude. No alcanzó."
+          ],
+          "stress": 20
+        }
+      },
+      {
+        "id": "mochila",
+        "label": "Revisale la mochila",
+        "stat": "stealth",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Tenía medicinas. Me las llevo."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 2,
+              "max": 3
+            }
+          ],
+          "stress": 10
+        },
+        "failure": {
+          "text": [
+            "No estaba tan herido. Me clavó algo en el brazo."
+          ],
+          "injury": "serious",
+          "stress": 20
+        }
+      },
+      {
+        "id": "seguir",
+        "label": "Seguí de largo",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Sigo. No miro para atrás."
+          ],
+          "stress": 5
+        },
+        "failure": {
+          "text": [
+            "Sigo. Lo escucho llamarme un rato largo."
+          ],
+          "stress": 15
+        }
       }
     ]
   }

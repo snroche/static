@@ -14,12 +14,17 @@ public final class SessionSnapshot {
     /** Personal objects in the bunker, available as gifts. */
     public final List<ItemView> inventory;
     public final List<TaskView> tasks;
+    /** Rescues and relay jobs available at dispatch, besides plain exploring. */
+    public final List<MissionView> missions;
+    public final RadioView radio;
     /** Next moment the game state changes on its own, or -1. */
     public final long nextWakeAtMillis;
 
     SessionSnapshot(List<ScoutView> scouts, List<PendingDecision> pending, List<ZoneView> zones,
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
-                    long nextWakeAtMillis) {
+                    List<MissionView> missions, RadioView radio, long nextWakeAtMillis) {
+        this.missions = Collections.unmodifiableList(missions);
+        this.radio = radio;
         this.scouts = Collections.unmodifiableList(scouts);
         this.pending = Collections.unmodifiableList(pending);
         this.zones = Collections.unmodifiableList(zones);
@@ -147,14 +152,130 @@ public final class SessionSnapshot {
         public final int danger;
         public final int minMinutes;
         public final int maxMinutes;
+        public final String band;
+        /** Relay condition 0–100, or -1 if none. */
+        public final int relay;
+        /** Decoded intel waiting here (cache / danger). */
+        public final boolean intel;
 
-        ZoneView(String id, String name, String description, int danger, int minMinutes, int maxMinutes) {
+        ZoneView(String id, String name, String description, int danger, int minMinutes, int maxMinutes,
+                 String band, int relay, boolean intel) {
             this.id = id;
             this.name = name;
             this.description = description;
             this.danger = danger;
             this.minMinutes = minMinutes;
             this.maxMinutes = maxMinutes;
+            this.band = band;
+            this.relay = relay;
+            this.intel = intel;
+        }
+    }
+
+    /** A special expedition (rescue, relay install / repair). */
+    public static final class MissionView {
+        public final String type;
+        public final String zoneId;
+        /** Survivor id for rescues, else null. */
+        public final String target;
+        public final String label;
+        public final String zoneName;
+
+        MissionView(String type, String zoneId, String target, String label, String zoneName) {
+            this.type = type;
+            this.zoneId = zoneId;
+            this.target = target;
+            this.label = label;
+            this.zoneName = zoneName;
+        }
+    }
+
+    public static final class BandView {
+        public final String id;
+        public final String name;
+        public final boolean unlocked;
+
+        BandView(String id, String name, boolean unlocked) {
+            this.id = id;
+            this.name = name;
+            this.unlocked = unlocked;
+        }
+    }
+
+    public static final class TransmissionView {
+        public final String id;
+        /** CAESAR or MORSE. */
+        public final String kind;
+        public final String cipherText;
+        public final String band;
+
+        TransmissionView(String id, String kind, String cipherText, String band) {
+            this.id = id;
+            this.kind = kind;
+            this.cipherText = cipherText;
+            this.band = band;
+        }
+    }
+
+    public static final class ModuleView {
+        public final String id;
+        public final String name;
+        public final String description;
+        public final int level;
+        public final int maxLevel;
+        /** "10 chatarra, 4 componentes" or null at max level. */
+        public final String upgradeCost;
+        public final boolean affordable;
+
+        ModuleView(String id, String name, String description, int level, int maxLevel,
+                   String upgradeCost, boolean affordable) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.level = level;
+            this.maxLevel = maxLevel;
+            this.upgradeCost = upgradeCost;
+            this.affordable = affordable;
+        }
+    }
+
+    public static final class RadioView {
+        public final List<BandView> bands;
+        public final int dialMax;
+        public final List<TransmissionView> transmissions;
+        public final boolean morseTable;
+        public final List<ModuleView> modules;
+        public final int relayKits;
+        public final String relayKitCost;
+        public final boolean relayKitAffordable;
+        /** "Hospital Municipal 80%" … */
+        public final List<String> relays;
+
+        RadioView(List<BandView> bands, int dialMax, List<TransmissionView> transmissions,
+                  boolean morseTable, List<ModuleView> modules, int relayKits, String relayKitCost,
+                  boolean relayKitAffordable, List<String> relays) {
+            this.bands = Collections.unmodifiableList(bands);
+            this.dialMax = dialMax;
+            this.transmissions = Collections.unmodifiableList(transmissions);
+            this.morseTable = morseTable;
+            this.modules = Collections.unmodifiableList(modules);
+            this.relayKits = relayKits;
+            this.relayKitCost = relayKitCost;
+            this.relayKitAffordable = relayKitAffordable;
+            this.relays = Collections.unmodifiableList(relays);
+        }
+    }
+
+    /** What the dial picks up right now. */
+    public static final class Tuning {
+        public final double strength;
+        public final String text;
+        public final boolean lockable;
+
+        public Tuning(double strength, String text, boolean lockable) {
+            this.strength = strength;
+            this.text = text;
+            this.lockable = lockable;
         }
     }
 
