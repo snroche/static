@@ -789,7 +789,7 @@
     "minBondLevel": 3,
     "priority": 4,
     "lines": [
-      "The last train left at 2:55. The 2:55 to Temperley.",
+      "The last train left at 2:55. The 2:55 local.",
       "I waved at the driver. Never saw him again."
     ],
     "choices": [
@@ -849,7 +849,7 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "Somebody here wants to teach me truco. You know how to play?"
+      "Somebody here wants to teach me a card game. You know how to play?"
     ],
     "choices": [
       {
@@ -879,7 +879,7 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "Did you ever hear of a band called Los Piojos?",
+      "Did you ever hear of a band called Northern Lights?",
       "My mom played them every Sunday. Loud. The neighbors hated it."
     ],
     "choices": [
@@ -889,7 +889,7 @@
           "No way! You're old, but you're cool."
         ],
         "bond": 5,
-        "memory": "that you like Los Piojos too"
+        "memory": "that you like Northern Lights too"
       },
       {
         "label": "Never heard of them.",
@@ -942,7 +942,7 @@
       {
         "label": "Tell me more.",
         "reply": [
-          "Another day, dear, over a mate."
+          "Another day, dear, over a cup of tea."
         ],
         "bond": 5,
         "setFlags": [
@@ -967,7 +967,7 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "If I had flour and quince jam, I'd make you a pastafrola.",
+      "If I had flour and apples, I'd bake you a pie.",
       "The whole ward's favorite. Sticky fingers for a week."
     ],
     "choices": [
@@ -980,7 +980,7 @@
         "setFlags": [
           "likes:chocolate"
         ],
-        "memory": "the pastafrola I promised to bake"
+        "memory": "the pie I promised to bake"
       },
       {
         "label": "Sugar is a luxury now.",
@@ -1036,7 +1036,7 @@
       {
         "label": "Tell me more.",
         "reply": [
-          "Another day, over a mate."
+          "Another day, over coffee."
         ],
         "bond": 5,
         "setFlags": [
@@ -1664,7 +1664,7 @@
     "priority": 7,
     "lines": [
       "May I request something?",
-      "School No. 14. My classroom. I'd like to see it once more."
+      "The school. My classroom. I'd like to see it once more."
     ],
     "choices": [
       {
@@ -1721,7 +1721,7 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "My old man taught me everything with a wrench in one hand and mate in the other.",
+      "My old man taught me everything with a wrench in one hand and a thermos in the other.",
       "Never said he was proud. Didn't have to."
     ],
     "choices": [
@@ -1813,7 +1813,7 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "Before all this I made the best flan in the province.",
+      "Before all this I made the best flan in the city.",
       "Now I'd settle for a piece of candy."
     ],
     "choices": [

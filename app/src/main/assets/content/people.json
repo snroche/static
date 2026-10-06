@@ -199,7 +199,7 @@
           "minBondLevel": 1
         },
         {
-          "text": "Hums old boleros while folding bandages.",
+          "text": "Hums old love songs while folding bandages.",
           "minBondLevel": 1
         }
       ],
@@ -219,7 +219,7 @@
       "name": "Trucker",
       "bios": [
         "Crossed the country three times in a truck. Has every road memorized.",
-        "Long-haul trucker. Was halfway to Córdoba when the radio went quiet."
+        "Long-haul trucker. Was halfway across the country when the radio went quiet."
       ],
       "primaryStat": "endurance",
       "secondaryStat": "wits",
@@ -264,7 +264,7 @@
       "id": "teacher",
       "name": "Schoolteacher",
       "bios": [
-        "Taught third grade at School No. 14 for twenty years.",
+        "Taught third grade at the school down the road for twenty years.",
         "A schoolteacher who still corrects everyone's grammar out of habit."
       ],
       "primaryStat": "wits",
