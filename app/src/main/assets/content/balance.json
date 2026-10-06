@@ -389,7 +389,8 @@
     "bandCeilingBonus": 1,
     "nicknameChance": 0.15,
     "recentToAvoid": 3,
-    "maxPendingRescues": 2
+    "maxPendingRescues": 2,
+    "generatedStarters": 1
   },
   "barks": {
     "intervalMinutes": 40,

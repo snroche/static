@@ -44,6 +44,12 @@ public final class Balance {
         private int recentToAvoid;
         /** Survivors heard on the dial waiting for rescue, at most. */
         private int maxPendingRescues;
+        /** Generated people in the starting crew, besides the authored starters. */
+        private int generatedStarters;
+
+        public int getGeneratedStarters() {
+            return generatedStarters;
+        }
 
         public int[] getStatBase() {
             return statBase;

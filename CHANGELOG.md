@@ -8,7 +8,8 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+- **A generated third starter:** new games start with Mara, Irene and one generated person (`balance.json → people.generatedStarters`). It comes from the game seed, so each game starts with someone different. Existing saves are untouched.
 
 ## [0.6.3] — Tano removed — in verification
 

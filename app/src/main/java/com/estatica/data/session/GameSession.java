@@ -230,8 +230,9 @@ public final class GameSession {
         if (loaded.isEmpty()) {
             long now = clock.nowMillis();
             db.runInTransaction(() -> {
-                for (ScoutTemplate template : content.getStarters()) {
-                    Scout scout = ScoutFactory.fromTemplate(template, content.getBalance().getScouts(), now);
+                for (ScoutTemplate template : startingCrew()) {
+                    int trust = content.getBalance().getScouts().getInitialTrust();
+                    Scout scout = ScoutFactory.fromTemplate(template, content.getBalance().getScouts(), now, trust);
                     scoutRepository.insertNew(scout);
                     loaded.add(scout);
                 }
@@ -1077,6 +1078,26 @@ public final class GameSession {
             default:
                 break;
         }
+    }
+
+    /**
+     * The authored starters plus generated newcomers, so every game starts with someone
+     * different. Seeded from the game seed: the main RNG is untouched.
+     */
+    private List<ScoutTemplate> startingCrew() {
+        List<ScoutTemplate> crew = new ArrayList<>(content.getStarters());
+        Set<String> names = new java.util.HashSet<>();
+        for (ScoutTemplate t : crew) {
+            names.add(t.getName());
+        }
+        GameRandom rng = GameRandom.fromSeed(state.getRngSeed() ^ 0x5741525453L);
+        for (int i = 0; i < content.getBalance().getPeople().getGeneratedStarters(); i++) {
+            ScoutTemplate person = personas.generate(com.estatica.domain.scouts.PersonaGenerator.ID_PREFIX + Ids.newId(),
+                    0, crew, List.of(), names, rng);
+            crew.add(person);
+            names.add(person.getName());
+        }
+        return crew;
     }
 
     /** Someone new on the dial, unlike anyone in the bunker (see PersonaGenerator). */
