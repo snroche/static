@@ -54,7 +54,7 @@ public class GiftAndGriefTest {
 
     @Test
     public void closerCompanionsGrieveHarder() {
-        Scout dead = TestScouts.custom("tano", 5, 0, 0, T0);
+        Scout dead = TestScouts.custom("lucho", 5, 0, 0, T0);
         Scout close = TestScouts.custom("mara", 5, 0, 0, T0);
         Scout distant = TestScouts.custom("irene", 5, 0, 0, T0);
         Affinities affinities = new Affinities(100);
@@ -72,7 +72,7 @@ public class GiftAndGriefTest {
     public void griefCanLeaveAScarOnTheClosest() {
         int scarred = 0;
         for (long seed = 0; seed < 100; seed++) {
-            Scout dead = TestScouts.custom("tano", 5, 0, 0, T0);
+            Scout dead = TestScouts.custom("lucho", 5, 0, 0, T0);
             Scout close = TestScouts.custom("mara", 5, 0, 0, T0);
             Affinities affinities = new Affinities(100);
             affinities.add(close.getId(), dead.getId(), 60);

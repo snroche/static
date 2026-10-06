@@ -2125,51 +2125,6 @@
     ]
   },
   {
-    "id": "tano_casita",
-    "intro": [
-      "The school annex. I built it, with two helpers.",
-      "It's still standing, boss. Still standing."
-    ],
-    "options": [
-      {
-        "id": "revisar",
-        "label": "Check the structure",
-        "stat": "craft",
-        "difficulty": 5,
-        "success": {
-          "text": [
-            "Not a single crack. I signed the plaster again, like I used to."
-          ],
-          "memory": "the annex I built that's still standing"
-        },
-        "failure": {
-          "text": [
-            "There's a crack. I'll have to redo it."
-          ],
-          "stress": 10
-        }
-      },
-      {
-        "id": "sentarse",
-        "label": "Stay a while",
-        "stat": "nerve",
-        "difficulty": 3,
-        "success": {
-          "text": [
-            "Sat on the steps I made. Just for a bit."
-          ],
-          "memory": "the annex steps"
-        },
-        "failure": {
-          "text": [
-            "Couldn't stay. The anger got me."
-          ],
-          "stress": 10
-        }
-      }
-    ]
-  },
-  {
     "id": "irene_laboratorio",
     "intro": [
       "My laboratory, Operator. Fourth floor.",

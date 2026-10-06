@@ -44,7 +44,7 @@ public class BunkerRulesTest {
     @Test
     public void restingRecoversStressFaster() {
         Scout resting = TestScouts.custom("mara", 0, 60, 0, T0);
-        Scout idle = TestScouts.custom("tano", 0, 60, 0, T0);
+        Scout idle = TestScouts.custom("lucho", 0, 60, 0, T0);
         resting.getLife().setTaskId("descanso");
         advance(List.of(resting, idle), Map.of(), T0 + 2 * HOUR);
         assertEquals(10, resting.getStress()); // 60 − 2 h × 10 × 2.5
@@ -54,7 +54,7 @@ public class BunkerRulesTest {
     @Test
     public void kitchenCalmsEveryoneElse() {
         Scout cook = TestScouts.custom("mara", 0, 0, 0, T0);
-        Scout other = TestScouts.custom("tano", 0, 60, 0, T0);
+        Scout other = TestScouts.custom("lucho", 0, 60, 0, T0);
         cook.getLife().setTaskId("cocina");
         advance(List.of(cook, other), Map.of(), T0 + 2 * HOUR);
         assertEquals(37, other.getStress()); // 60 − 2 × (10 + 1.5)
@@ -63,7 +63,7 @@ public class BunkerRulesTest {
     @Test
     public void infirmaryHealsOthersFaster() {
         Scout nurse = TestScouts.custom("irene", 0, 0, 0, T0);
-        Scout patient = TestScouts.custom("tano", 0, 0, 0, T0);
+        Scout patient = TestScouts.custom("lucho", 0, 0, 0, T0);
         Scout alone = TestScouts.custom("mara", 0, 0, 0, T0);
         nurse.getLife().setTaskId("enfermeria");
         rules.setInjury(patient, Injury.SERIOUS);
@@ -76,7 +76,7 @@ public class BunkerRulesTest {
 
     @Test
     public void workshopTurnsScrapIntoComponents() {
-        Scout worker = TestScouts.custom("tano", 5, 0, 0, T0);
+        Scout worker = TestScouts.custom("lucho", 5, 0, 0, T0);
         worker.getLife().setTaskId("taller");
         Map<String, Integer> resources = new HashMap<>();
         resources.put("scrap", 7);
@@ -87,7 +87,7 @@ public class BunkerRulesTest {
 
     @Test
     public void workshopWithoutScrapProducesNothing() {
-        Scout worker = TestScouts.custom("tano", 5, 0, 0, T0);
+        Scout worker = TestScouts.custom("lucho", 5, 0, 0, T0);
         worker.getLife().setTaskId("taller");
         BunkerRules.Result result = advance(List.of(worker), new HashMap<>(), T0 + 10 * HOUR);
         assertTrue(result.resourceDelta.isEmpty());
@@ -95,7 +95,7 @@ public class BunkerRulesTest {
 
     @Test
     public void mentoringTeachesTheMentorsStrongStatAndBringsThemCloser() {
-        // Irene and Mara don't clash (Tano and Mara do: Desconfianza vs Lealtad).
+        // Irene and Mara don't clash.
         Scout student = TestScouts.starter("irene", T0);  // endurance 2
         Scout mentor = TestScouts.starter("mara", T0);    // endurance 3
         student.getLife().setTaskId("entrenamiento");

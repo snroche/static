@@ -22,7 +22,7 @@ public class ContentParserTest {
         GameContent content = TestContent.get();
         assertTrue(content.getBalance().getContentVersion() >= 1);
         assertFalse(content.getTerminal().getBoot().isEmpty());
-        assertEquals(3, content.getStarters().size());
+        assertEquals(2, content.getStarters().size());
         assertTrue("GDD §11: about 40 events", content.getEvents().size() >= 40);
         assertFalse(content.getZones().isEmpty());
     }

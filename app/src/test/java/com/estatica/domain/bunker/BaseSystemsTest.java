@@ -124,9 +124,9 @@ public class BaseSystemsTest {
     @Test
     public void strongGuardsRepelRaids() {
         RaidRules raids = new RaidRules(content, rules);
-        Scout guard = TestScouts.custom("tano", 10, 0, 0, T0);
+        Scout guard = TestScouts.custom("lucho", 10, 0, 0, T0);
         guard.getLife().setTaskId("guardia");
-        Scout other = TestScouts.custom("tano", 10, 0, 0, T0);
+        Scout other = TestScouts.custom("lucho", 10, 0, 0, T0);
         other.getLife().setTaskId("guardia");
         Map<String, Integer> stock = Map.of("scrap", 10, "rations", 10);
         RaidRules.Result r = raids.resolve(bunkerOf(guard, other), stock, 1, GameRandom.fromSeed(1));

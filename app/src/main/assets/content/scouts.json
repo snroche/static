@@ -5,11 +5,26 @@
     "voice": "minusculas",
     "bio": "Delivered on a bicycle before the Silence. Knows every alley in the neighborhood.",
     "stats": {
-      "endurance": [3, 6],
-      "stealth": [5, 9],
-      "wits": [4, 7],
-      "nerve": [3, 7],
-      "craft": [2, 5]
+      "endurance": [
+        3,
+        6
+      ],
+      "stealth": [
+        5,
+        9
+      ],
+      "wits": [
+        4,
+        7
+      ],
+      "nerve": [
+        3,
+        7
+      ],
+      "craft": [
+        2,
+        5
+      ]
     },
     "traits": [
       "pies_ligeros",
@@ -43,59 +58,31 @@
     ]
   },
   {
-    "id": "tano",
-    "name": "Tano",
-    "voice": "jerga",
-    "bio": "Bricklayer. Says he built half the neighborhood and he'll build it again.",
-    "stats": {
-      "endurance": [6, 9],
-      "stealth": [2, 5],
-      "wits": [3, 6],
-      "nerve": [4, 7],
-      "craft": [4, 8]
-    },
-    "traits": [
-      "imprudencia",
-      "sociable"
-    ],
-    "hiddenTrait": "lealtad",
-    "likes": [
-      "mate",
-      "juego"
-    ],
-    "dislikes": [
-      "lectura"
-    ],
-    "habits": [
-      {
-        "text": "Tells a joke whenever things get tense. Usually a bad one.",
-        "minBondLevel": 1
-      },
-      {
-        "text": "Fixes things nobody asked him to fix.",
-        "minBondLevel": 2
-      },
-      {
-        "text": "Goes quiet when someone mentions Córdoba.",
-        "minBondLevel": 3
-      },
-      {
-        "text": "Keeps a small photo of his daughter in his boot.",
-        "minBondLevel": 4
-      }
-    ]
-  },
-  {
     "id": "irene",
     "name": "Irene",
     "voice": "formal",
     "bio": "Lab technician. Writes everything down in a notebook she won't show anyone.",
     "stats": {
-      "endurance": [2, 5],
-      "stealth": [4, 7],
-      "wits": [6, 9],
-      "nerve": [3, 6],
-      "craft": [5, 8]
+      "endurance": [
+        2,
+        5
+      ],
+      "stealth": [
+        4,
+        7
+      ],
+      "wits": [
+        6,
+        9
+      ],
+      "nerve": [
+        3,
+        6
+      ],
+      "craft": [
+        5,
+        8
+      ]
     },
     "traits": [
       "metodo",
@@ -111,7 +98,7 @@
     ],
     "habits": [
       {
-        "text": "Labels everything. The jars. The shelves. Once, Tano's mug.",
+        "text": "Labels everything. The jars. The shelves. Once, someone else's mug.",
         "minBondLevel": 1
       },
       {

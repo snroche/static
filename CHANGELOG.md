@@ -10,6 +10,23 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.6.3] — Tano removed — in verification
+
+App 0.6.3 (versionCode 603) · DB 6 (unchanged) · Content 8 (IDs removed, see below)
+
+### Removed
+- **Tano**, the third starter. He crashed the game on a device and the cause wasn't found: his whole path through the game logic (every dialogue, chatter, voice phrase, gift and expedition) runs without errors in tests, so the crash is somewhere in the app layer. New games start with Mara and Irene.
+- His 8 dialogues, his personal mission (the school annex) and its situation.
+
+### Changed
+- On load, open conversations whose dialogue no longer exists are dropped instead of crashing.
+- Text and names for generated people are countryless:
+  - New name and nickname pools.
+  - Background lines no longer mention Córdoba, truco, mate, Los Piojos or pastafrola.
+
+### Notes
+- Saves that already have Tano keep him (without bio or dialogues). If the crash came from his saved data, it will still happen there: start a new game.
+
 ## [0.6.2] — Generated survivors — in verification
 
 App 0.6.2 (versionCode 602) · **DB 5 → 6** · **Content 7 → 8**
@@ -477,6 +494,7 @@ No release date yet: it still needs testing on a device or emulator. Once approv
 - Lint reports newer versions of AGP, Room and Lifecycle. The project uses the ones already in the local cache; upgrading is a separate decision.
 
 [Unreleased]: #unreleased
+[0.6.3]: #063--tano-removed--in-verification
 [0.6.2]: #062--generated-survivors--in-verification
 [0.6.1]: #061--english-personalities-and-interface--in-verification
 [0.6.0]: #060--phase-5-content-and-polish--in-verification

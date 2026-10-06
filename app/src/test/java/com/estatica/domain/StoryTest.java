@@ -103,14 +103,14 @@ public class StoryTest {
         ScoutRules rules = new ScoutRules(content);
         BunkerRules bunker = new BunkerRules(content, rules);
         Affinities affinities = new Affinities(100);
-        // Tano is reckless (Imprudencia), Irene methodical (Método): they clash.
-        Scout tano = TestScouts.starter("tano", T0);
+        // Lucho is reckless, Irene methodical (Método): they clash.
+        Scout lucho = TestScouts.starter("lucho", T0);
         Scout irene = TestScouts.starter("irene", T0);
-        tano.getLife().setTaskId("cocina");
+        lucho.getLife().setTaskId("cocina");
         irene.getLife().setTaskId("cocina");
-        bunker.advance(List.of(tano, irene), affinities, Map.of(), T0 + 200 * HOUR);
-        assertTrue(affinities.get(tano.getId(), irene.getId()) < 0);
-        assertEquals("rivals", bunker.relationship(affinities, tano, irene));
+        bunker.advance(List.of(lucho, irene), affinities, Map.of(), T0 + 200 * HOUR);
+        assertTrue(affinities.get(lucho.getId(), irene.getId()) < 0);
+        assertEquals("rivals", bunker.relationship(affinities, lucho, irene));
 
         Affinities friends = new Affinities(100);
         Scout mara = TestScouts.starter("mara", T0);

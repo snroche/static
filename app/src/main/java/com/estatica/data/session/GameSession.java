@@ -255,7 +255,10 @@ public final class GameSession {
             items.put(item.getId(), item);
         }
         for (Conversation c : bunkerRepository.pendingConversations()) {
-            conversations.put(c.getId(), c);
+            // Content updates can remove a dialogue (Tano's, in 0.6.3): drop it instead of crashing.
+            if (content.getDialogues().containsKey(c.getDialogueId())) {
+                conversations.put(c.getId(), c);
+            }
         }
         affinities = bunkerRepository.affinities(content.getBalance().getAffinity().getMax());
 

@@ -56,20 +56,6 @@
       ]
     },
     {
-      "id": "tano_obra",
-      "scout": "tano",
-      "title": "The school annex",
-      "zone": "escuela",
-      "event": "tano_casita",
-      "rewardBond": 15,
-      "rewardStressRelief": 30,
-      "rewardTrait": "en_paz",
-      "memory": "the day I saw my work was still standing",
-      "doneLines": [
-        "Thanks, boss. Now I know something I built is still standing."
-      ]
-    },
-    {
       "id": "irene_lab",
       "scout": "irene",
       "title": "The laboratory",

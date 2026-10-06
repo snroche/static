@@ -53,17 +53,17 @@ public class PersonalityTest {
 
     @Test
     public void rivalsComplainAboutEachOther() {
-        Scout tano = TestScouts.starter("tano", T0);
+        Scout lucho = TestScouts.starter("lucho", T0);
         Scout irene = TestScouts.starter("irene", T0);
         Affinities affinities = new Affinities(100);
-        affinities.put(tano.getId(), irene.getId(), -100);
+        affinities.put(lucho.getId(), irene.getId(), -100);
         BarkRules barks = new BarkRules(content, rules);
         boolean mentioned = false;
         for (long seed = 0; seed < 40; seed++) {
-            LogLine line = barks.bark(List.of(tano, irene), affinities, GameRandom.fromSeed(seed), T0);
+            LogLine line = barks.bark(List.of(lucho, irene), affinities, GameRandom.fromSeed(seed), T0);
             assertNotNull(line);
             assertFalse("placeholders are filled: " + line.getText(), line.getText().contains("{"));
-            String other = line.getSpeaker().equals(tano.getName()) ? irene.getName() : tano.getName();
+            String other = line.getSpeaker().equals(lucho.getName()) ? irene.getName() : lucho.getName();
             mentioned |= line.getText().toLowerCase().contains(other.toLowerCase());
         }
         assertTrue(mentioned);

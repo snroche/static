@@ -43,7 +43,7 @@ public class DialogueEngineTest {
 
     @Test
     public void everyStarterHasSomethingToSayOnDayOne() {
-        for (String id : List.of("mara", "tano", "irene")) {
+        for (String id : List.of("mara", "irene")) {
             Scout s = TestScouts.starter(id, T0);
             DialogueDef d = engine.pick(s, false, List.of(s), rng, T0);
             assertNotNull(id, d);
@@ -113,15 +113,15 @@ public class DialogueEngineTest {
     @Test
     public void griefComesDaysLaterAndOncePerDeath() {
         Scout mara = TestScouts.starter("mara", T0);
-        Scout tano = TestScouts.starter("tano", T0);
-        rules.markDead(tano, T0, "escuela");
-        List<Scout> everyone = List.of(mara, tano);
+        Scout lucho = TestScouts.starter("lucho", T0);
+        rules.markDead(lucho, T0, "escuela");
+        List<Scout> everyone = List.of(mara, lucho);
         DialogueDef grief = content.dialogue("duelo_recuerdo");
 
         assertFalse(engine.isEligible(mara, grief, everyone, T0 + 23 * HOUR));
         assertTrue(engine.isEligible(mara, grief, everyone, T0 + 25 * HOUR));
         List<LogLine> lines = engine.open(mara, grief, true, everyone, rng, T0 + 25 * HOUR);
-        assertTrue(lines.stream().anyMatch(l -> l.getText().contains("tano")));
+        assertTrue(lines.stream().anyMatch(l -> l.getText().contains("lucho")));
         assertFalse(engine.isEligible(mara, grief, everyone, T0 + 50 * HOUR));
     }
 

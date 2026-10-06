@@ -173,11 +173,11 @@ public class PersonaGeneratorTest {
     public void personalityDialoguesFollowTraitsAndConfessionsFollowHiddenOnes() {
         ScoutRules rules = new ScoutRules(content);
         DialogueEngine engine = new DialogueEngine(content, rules);
-        // Starters get trait dialogues too: Tano is reckless.
-        Scout tano = TestScouts.custom("tano", 5, 10, 100, T0);
+        // Authored scouts get trait dialogues too: Lucho is reckless.
+        Scout lucho = TestScouts.custom("lucho", 5, 10, 100, T0);
         Scout irene = TestScouts.custom("irene", 5, 10, 100, T0);
         DialogueDef reckless = content.dialogue("imprudencia_salto");
-        assertTrue(engine.isEligible(tano, reckless, List.of(tano), T0));
+        assertTrue(engine.isEligible(lucho, reckless, List.of(lucho), T0));
         assertFalse(engine.isEligible(irene, reckless, List.of(irene), T0));
 
         for (long seed = 0; seed < 50; seed++) {
