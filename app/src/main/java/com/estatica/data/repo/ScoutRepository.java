@@ -58,7 +58,7 @@ public final class ScoutRepository {
         for (ScoutEntity e : dao.all()) {
             ScoutLife life = new ScoutLife(e.bond, e.taskId, flags.getOrDefault(e.id, Set.of()),
                     e.lastTalkAtMillis, e.lastInitiatedAtMillis, e.lastDecayAtMillis,
-                    e.taskXpCarry, e.taskOutputCarry, e.diedAtMillis, e.diedZoneId, e.stressCarry);
+                    e.taskXpCarry, e.taskOutputCarry, e.diedAtMillis, e.diedZoneId, e.stressCarry, e.gearId);
             scouts.add(new Scout(e.id, e.templateId, e.name, e.voiceId,
                     stats.getOrDefault(e.id, Map.of()),
                     traits.getOrDefault(e.id, List.of()),
@@ -101,7 +101,7 @@ public final class ScoutRepository {
         dao.updateLife(scout.getId(), life.getBond(), life.getTaskId(), life.getLastTalkAtMillis(),
                 life.getLastInitiatedAtMillis(), life.getLastDecayAtMillis(), life.getTaskXpCarry(),
                 life.getTaskOutputCarry(), life.getDiedAtMillis(), life.getDiedZoneId(),
-                life.getStressCarry());
+                life.getStressCarry(), life.getGearId());
         List<ScoutFlagEntity> flags = new ArrayList<>();
         for (String flag : life.getFlags()) {
             ScoutFlagEntity f = new ScoutFlagEntity();

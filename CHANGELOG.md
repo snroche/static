@@ -10,6 +10,56 @@ Cada entrada indica, si cambian, las tres versiones independientes:
 
 _Nada todavía._
 
+## [0.5.0] — Fase 4: Búnker — en verificación
+
+App 0.5.0 (versionCode 500) · **DB 4 → 5** · **Contenido 4 → 5**
+
+Sin fecha de release: falta probarla en un dispositivo, incluida la actualización desde 0.4.0.
+
+### Agregado
+- **Energía** (GDD §6.4): el generador da watts (7 en nivel 1, 17 en nivel 5) que se reparten con [−] [+] entre cinco consumidores:
+  - Filtros de aire: obligatorios, piden un watt más de noche según la hora del dispositivo. Si les falta, todos se estresan.
+  - Radio: menos ruido con los exploradores.
+  - Antena: sin potencia solo se alcanza la banda corta.
+  - Taller: velocidad de fabricación; sin potencia se pausa.
+  - Enfermería: curación y alivio de estrés.
+  - Si falta energía se corta primero lo de menor prioridad, y se avisa en el log.
+- **Reserva de energía:** se carga con los watts libres y fijar una señal en el dial la usa. Se puede recargar gastando una batería.
+- **Apagones:** se programan por día a partir de la seed. Bajan el generador 4 W durante 1 a 3 h.
+- **Incursiones** (GDD §5.3, versión "real" elegida):
+  - También se programan por día a partir de la seed. Su fuerza crece con el nivel de la antena: mientras más lejos se escucha, más llamás la atención.
+  - Los que están de guardia defienden con Aguante y Nervio.
+  - Si fallan o no hay guardia: roban el 30 % de dos materiales y lastiman a alguien (grave si la diferencia es grande). Nunca matan: la muerte requiere una orden del operador.
+- **Módulos** (GDD §7): generador, radio, taller (un puesto más por nivel y recetas nuevas), enfermería y literas (un explorador más por nivel), además de la antena. Los niveles altos piden piezas.
+- **Taller** (GDD §6.5): recetas de 2 a 10 min (`recipes.json`), en paralelo, una por puesto.
+  - Velocidad = potencia × (1 + 5 % del mejor Oficio de quien esté en la tarea Taller).
+  - Fabrica kits de repetidora (pasan de la radio al taller), piezas y equipo.
+- **Equipo** (`gear.json`), uno por explorador, que se pone o se saca con [EQUIPO]. Si el explorador muere, el equipo se pierde.
+  - Linterna: Ingenio +1.
+  - Mochila reforzada: +25 % de botín.
+  - Botiquín: la primera herida es un nivel menos grave, y se gasta.
+  - Chaleco acolchado: Aguante +2.
+  - Radio portátil: −40 % de ruido.
+- **Interfaz:** botón [ BÚNKER ] con energía, reserva, taller, módulos y defensa. Selector de recetas, selector de equipo y botón [EQUIPO] en la ficha. La barra superior tiene tres botones más compactos.
+- Tests: 107 en total (11 nuevos): reparto y cortes de energía, filtros de noche, eventos programados (iguales sin importar cómo se divide el catch-up), incursiones, taller, equipo y botiquín.
+
+### Cambiado
+- Los kits de repetidora ya no se arman desde la radio: son una receta del taller.
+- El panel de radio muestra solo las repetidoras; los módulos pasaron al panel del búnker.
+- Las mejoras de antena de los niveles 4 y 5 piden piezas.
+
+### Notas de diseño
+- Los efectos de la energía en un intervalo de catch-up usan el reparto vigente al final del intervalo. Es una aproximación: no se simula minuto a minuto.
+
+### DB 4 → 5
+- `scouts.gear_id`.
+- Tablas nuevas: `power`, `bunker_state` (reserva, último chequeo de eventos) y `craft_jobs`.
+- En las partidas existentes no hay incursiones ni apagones retroactivos, y la reserva arranca llena.
+
+### Notas
+- Sin probar en dispositivo.
+- APK release sin firmar: ~1,1 MB.
+
 ## [0.4.0] — Fase 3: Radio activa y distancia — en verificación
 
 App 0.4.0 (versionCode 400) · **DB 3 → 4** · **Contenido 3 → 4**
@@ -225,6 +275,7 @@ Sin fecha de release todavía: falta probarla en un dispositivo o emulador. Cuan
 - Lint muestra versiones más nuevas de AGP, Room y Lifecycle. Se usan las que ya estaban en la caché local; actualizar es una decisión aparte.
 
 [Unreleased]: #unreleased
+[0.5.0]: #050--fase-4-búnker--en-verificación
 [0.4.0]: #040--fase-3-radio-activa-y-distancia--en-verificación
 [0.3.0]: #030--fase-2-vida-en-el-búnker--en-verificación
 [0.2.0]: #020--fase-1-expediciones--en-verificación

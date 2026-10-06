@@ -1,5 +1,5 @@
 {
-  "contentVersion": 4,
+  "contentVersion": 5,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
@@ -148,10 +148,6 @@
     "dialMax": 1000,
     "lockThreshold": 0.85,
     "hintLossPerNoise": 1.5,
-    "relayKitCost": {
-      "components": 3,
-      "batteries": 2
-    },
     "relayMaintenanceCost": {
       "components": 1
     },
@@ -188,16 +184,196 @@
           "batteries": 2
         },
         {
-          "scrap": 25,
-          "components": 14,
-          "batteries": 4
+          "scrap": 20,
+          "components": 10,
+          "batteries": 4,
+          "parts": 2
         },
         {
-          "scrap": 40,
-          "components": 22,
-          "batteries": 8
+          "scrap": 30,
+          "components": 14,
+          "batteries": 6,
+          "parts": 4
+        }
+      ]
+    },
+    {
+      "id": "generator",
+      "name": "Generador",
+      "description": "Más watts para repartir.",
+      "startLevel": 1,
+      "upgradeCosts": [
+        {
+          "scrap": 12,
+          "components": 4
+        },
+        {
+          "scrap": 18,
+          "components": 8,
+          "parts": 1
+        },
+        {
+          "scrap": 25,
+          "components": 12,
+          "parts": 3
+        },
+        {
+          "scrap": 35,
+          "components": 16,
+          "parts": 5
+        }
+      ]
+    },
+    {
+      "id": "radio",
+      "name": "Radio",
+      "description": "Señal más limpia y órdenes más rápidas con todos.",
+      "startLevel": 1,
+      "upgradeCosts": [
+        {
+          "components": 6,
+          "batteries": 2
+        },
+        {
+          "components": 10,
+          "batteries": 4,
+          "parts": 2
+        },
+        {
+          "components": 14,
+          "batteries": 6,
+          "parts": 4
+        }
+      ]
+    },
+    {
+      "id": "workshop",
+      "name": "Taller",
+      "description": "Un puesto de trabajo más por nivel y recetas nuevas.",
+      "startLevel": 1,
+      "upgradeCosts": [
+        {
+          "scrap": 10,
+          "components": 5
+        },
+        {
+          "scrap": 16,
+          "components": 8,
+          "parts": 2
+        }
+      ]
+    },
+    {
+      "id": "infirmary",
+      "name": "Enfermería",
+      "description": "Curación más rápida.",
+      "startLevel": 1,
+      "upgradeCosts": [
+        {
+          "scrap": 6,
+          "medicine": 4,
+          "components": 3
+        },
+        {
+          "scrap": 10,
+          "medicine": 8,
+          "parts": 2
+        }
+      ]
+    },
+    {
+      "id": "bunks",
+      "name": "Literas",
+      "description": "Lugar para un explorador más por nivel.",
+      "startLevel": 1,
+      "upgradeCosts": [
+        {
+          "scrap": 12,
+          "rations": 6
+        },
+        {
+          "scrap": 18,
+          "rations": 10,
+          "parts": 1
+        },
+        {
+          "scrap": 25,
+          "rations": 14,
+          "parts": 3
         }
       ]
     }
-  ]
+  ],
+  "energy": {
+    "generatorWatts": [7, 9, 11, 14, 17],
+    "consumers": [
+      {
+        "id": "filters",
+        "name": "Filtros de aire",
+        "description": "Obligatorios. De noche piden un watt más.",
+        "min": 2,
+        "max": 3,
+        "nightExtra": 1,
+        "priority": 5,
+        "start": 2
+      },
+      {
+        "id": "radio",
+        "name": "Radio",
+        "description": "Más potencia, señal más limpia con los exploradores.",
+        "min": 0,
+        "max": 3,
+        "priority": 3,
+        "start": 2
+      },
+      {
+        "id": "antenna",
+        "name": "Antena",
+        "description": "Sin potencia solo alcanza la banda corta.",
+        "min": 0,
+        "max": 2,
+        "priority": 2,
+        "start": 1
+      },
+      {
+        "id": "workshop",
+        "name": "Taller",
+        "description": "Sin potencia no se fabrica nada. Más potencia, más rápido.",
+        "min": 0,
+        "max": 3,
+        "priority": 1,
+        "start": 1
+      },
+      {
+        "id": "infirmary",
+        "name": "Enfermería",
+        "description": "Curación más rápida y menos estrés.",
+        "min": 0,
+        "max": 3,
+        "priority": 4,
+        "start": 1
+      }
+    ],
+    "nightStartHour": 21,
+    "nightEndHour": 6,
+    "batteryBase": 10,
+    "batteryPerGeneratorLevel": 5,
+    "chargePerSpareWattHour": 1,
+    "sweepCost": 2,
+    "rechargePerBattery": 5,
+    "badAirStressPerHour": 3,
+    "blackoutChancePerDay": 0.3,
+    "blackoutMinHours": 1,
+    "blackoutMaxHours": 3,
+    "blackoutWatts": 4,
+    "raids": {
+      "chancePerDay": 0.2,
+      "baseStrength": 4,
+      "strengthPerAntennaLevel": 2,
+      "strengthVariance": 4,
+      "stealFraction": 0.3,
+      "resourcesTargeted": 2,
+      "seriousMargin": 5
+    }
+  }
 }

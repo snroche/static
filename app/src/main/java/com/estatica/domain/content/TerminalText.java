@@ -20,6 +20,11 @@ public final class TerminalText {
     private ExpeditionText expedition;
     private BunkerText bunker;
     private RadioText radio;
+    private BaseText base;
+
+    public BaseText getBase() {
+        return base;
+    }
 
     public RadioText getRadio() {
         return radio;
@@ -136,6 +141,100 @@ public final class TerminalText {
         }
     }
 
+    /** System lines about energy, modules, the workshop and raids. All are templates. */
+    public static final class BaseText {
+        /** {watts}, {hours}. */
+        private String blackout;
+        /** {consumer}. */
+        private String powerCut;
+        private String badAir;
+        /** {guards}. */
+        private String raidRepelled;
+        /** {loot}. */
+        private String raidLost;
+        private String raidUnguarded;
+        /** {name}. */
+        private String raidInjured;
+        /** {item}. */
+        private String craftStarted;
+        /** {item}. */
+        private String craftDone;
+        private String craftNoSlot;
+        /** {name}, {gear}. */
+        private String equipped;
+        /** {name}. */
+        private String unequipped;
+        /** {name}, {gear}. */
+        private String gearSaved;
+        private String reserveLow;
+        private String reserveRecharged;
+        private String nobody;
+
+        public String getBlackout() {
+            return blackout;
+        }
+
+        public String getPowerCut() {
+            return powerCut;
+        }
+
+        public String getBadAir() {
+            return badAir;
+        }
+
+        public String getRaidRepelled() {
+            return raidRepelled;
+        }
+
+        public String getRaidLost() {
+            return raidLost;
+        }
+
+        public String getRaidUnguarded() {
+            return raidUnguarded;
+        }
+
+        public String getRaidInjured() {
+            return raidInjured;
+        }
+
+        public String getCraftStarted() {
+            return craftStarted;
+        }
+
+        public String getCraftDone() {
+            return craftDone;
+        }
+
+        public String getCraftNoSlot() {
+            return craftNoSlot;
+        }
+
+        public String getEquipped() {
+            return equipped;
+        }
+
+        public String getUnequipped() {
+            return unequipped;
+        }
+
+        public String getGearSaved() {
+            return gearSaved;
+        }
+
+        public String getReserveLow() {
+            return reserveLow;
+        }
+
+        public String getReserveRecharged() {
+            return reserveRecharged;
+        }
+
+        public String getNobody() {
+            return nobody;
+        }
+    }
+
     /** System lines about the dial, decoding, relays and rescues. All are templates. */
     public static final class RadioText {
         private String staticNoise;
@@ -170,7 +269,6 @@ public final class TerminalText {
         private String relayMaintained;
         /** {zone}. */
         private String relayFailing;
-        private String relayBuilt;
         /** {module}, {level}. */
         private String moduleUpgraded;
         /** {cost}. */
@@ -265,10 +363,6 @@ public final class TerminalText {
 
         public String getRelayFailing() {
             return relayFailing;
-        }
-
-        public String getRelayBuilt() {
-            return relayBuilt;
         }
 
         public String getModuleUpgraded() {

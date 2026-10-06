@@ -21,6 +21,37 @@
   },
   {
     "id": "relay_kit",
-    "name": "Kits de repetidora"
+    "name": "Kits de repetidora",
+    "kind": "KIT"
+  },
+  {
+    "id": "parts",
+    "name": "Piezas",
+    "kind": "PART"
+  },
+  {
+    "id": "gear_linterna",
+    "name": "Linterna",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_mochila",
+    "name": "Mochila reforzada",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_botiquin",
+    "name": "Botiquín",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_chaleco",
+    "name": "Chaleco acolchado",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_radio",
+    "name": "Radio portátil",
+    "kind": "GEAR"
   }
 ]

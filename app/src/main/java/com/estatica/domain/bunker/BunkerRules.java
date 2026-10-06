@@ -52,8 +52,31 @@ public final class BunkerRules {
         public int passiveSignals;
     }
 
+    /** Bunker-wide modifiers from power and modules for this interval. */
+    public static final class Conditions {
+        public static final Conditions NONE = new Conditions(1.0, 0, 0);
+
+        /** Healing multiplier for everyone (infirmary module and power). */
+        public final double heal;
+        /** Stress relief per hour for everyone (powered infirmary). */
+        public final double relief;
+        /** Stress gained per hour by everyone (filters short of power). */
+        public final double badAir;
+
+        public Conditions(double heal, double relief, double badAir) {
+            this.heal = heal;
+            this.relief = relief;
+            this.badAir = badAir;
+        }
+    }
+
     public Result advance(Collection<Scout> scouts, Affinities affinities,
                           Map<String, Integer> resources, long now) {
+        return advance(scouts, affinities, resources, now, Conditions.NONE);
+    }
+
+    public Result advance(Collection<Scout> scouts, Affinities affinities,
+                          Map<String, Integer> resources, long now, Conditions conditions) {
         Result out = new Result();
         List<Scout> home = new ArrayList<>();
         for (Scout s : scouts) {
@@ -82,7 +105,8 @@ public final class BunkerRules {
                 }
             }
             double self = task != null ? task.getSelfStressRecoveryMultiplier() : 1.0;
-            rules.recoverIdle(s, now, self, heal, relief);
+            rules.recoverIdle(s, now, self, heal * conditions.heal,
+                    relief + conditions.relief - conditions.badAir);
 
             if (task != null && hours > 0) {
                 work(s, task, home, hours, affinities, resources, now, out);

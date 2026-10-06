@@ -8,4 +8,11 @@ public interface GameClock {
 
     /** Wall-clock time in epoch milliseconds. */
     long nowMillis();
+
+    /** Hour of day (0–23) on the device for an instant: night raises power use (GDD §6.4). */
+    default int localHour(long millis) {
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        c.setTimeInMillis(millis);
+        return c.get(java.util.Calendar.HOUR_OF_DAY);
+    }
 }

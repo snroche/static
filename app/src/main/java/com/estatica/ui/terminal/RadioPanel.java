@@ -61,7 +61,6 @@ final class RadioPanel {
                 viewModel.capture(bandId, b.dial.getProgress());
             }
         });
-        b.buildRelay.setOnClickListener(v -> viewModel.buildRelay());
     }
 
     boolean isShown() {
@@ -123,23 +122,8 @@ final class RadioPanel {
             b.transmissions.addView(row);
         }
 
-        b.modules.removeAllViews();
-        for (SessionSnapshot.ModuleView m : radio.modules) {
-            TextView line = (TextView) inflater.inflate(R.layout.item_log_line, b.modules, false);
-            line.setText(res.getString(R.string.module_line, m.name, m.level, m.maxLevel));
-            b.modules.addView(line);
-            if (m.upgradeCost != null) {
-                TextView upgrade = (TextView) inflater.inflate(R.layout.item_decision_option, b.modules, false);
-                upgrade.setText(res.getString(R.string.module_upgrade, m.upgradeCost));
-                upgrade.setAlpha(m.affordable ? 1f : 0.5f);
-                upgrade.setOnClickListener(v -> viewModel.upgradeModule(m.id));
-                b.modules.addView(upgrade);
-            }
-        }
         String relays = radio.relays.isEmpty() ? res.getString(R.string.relays_none) : String.join(", ", radio.relays);
         b.relays.setText(res.getString(R.string.relays_line, radio.relayKits, relays));
-        b.buildRelay.setText(res.getString(R.string.build_relay, radio.relayKitCost));
-        b.buildRelay.setAlpha(radio.relayKitAffordable ? 1f : 0.5f);
     }
 
     void onTuning(SessionSnapshot.Tuning tuning) {

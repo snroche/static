@@ -58,6 +58,7 @@ Reglas:
 | 2 | 0.2.0 | Exploradores, recuerdos, expediciones, recursos; `log_lines.scout_id`, `game_state.content_version` |
 | 3 | 0.3.0 | Vínculo, tareas, flags, conversaciones, objetos personales, afinidad; `expeditions.retreat_offered` |
 | 4 | 0.4.0 | Radio: zonas conocidas, señales captadas, transmisiones, datos, repetidoras, rescates, lore, módulos; misiones en `expeditions` |
+| 5 | 0.5.0 | Energía (`power`, `bunker_state`), taller (`craft_jobs`), `scouts.gear_id` |
 
 `MigrationsTest` (JVM) compara el SQL de cada migración con los esquemas exportados. Al agregar una migración, extender ese test.
 

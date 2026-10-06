@@ -64,6 +64,12 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/gear"
+        style="@style/TerminalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/gifts"
         style="@style/TerminalText"
         android:layout_width="match_parent"
@@ -111,10 +117,17 @@
             android:layout_height="wrap_content"
             android:text="@string/task_button" />
 
+        <TextView
+            android:id="@+id/equipButton"
+            style="@style/TerminalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/equip_button" />
+
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="dispatch,talk,gift,taskButton"
+            app:constraint_referenced_ids="dispatch,talk,gift,taskButton,equipButton"
             app:flow_horizontalBias="0"
             app:flow_horizontalGap="4dp"
             app:flow_horizontalStyle="packed"

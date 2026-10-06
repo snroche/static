@@ -145,7 +145,29 @@ public final class ContentValidator {
                 checkResources(module.costFrom(level), "module " + module.getId());
             }
         }
-        checkResources(content.getBalance().getRadio().getRelayKitCost(), "radio.relayKitCost");
+        for (GearDef gear : content.getGear().values()) {
+            ResourceDef stock = content.getResources().get(gear.getId());
+            check(stock != null && stock.getKind() == ResourceDef.Kind.GEAR,
+                    "gear " + gear.getId() + ": needs a GEAR resource with the same id");
+            if (gear.getStatBonus() != null) {
+                for (String stat : gear.getStatBonus().keySet()) {
+                    check(StatType.fromKey(stat) != null, "gear " + gear.getId() + ": unknown stat " + stat);
+                }
+            }
+        }
+        for (RecipeDef recipe : content.getRecipes().values()) {
+            String where = "recipe " + recipe.getId();
+            checkResources(recipe.getInputs(), where);
+            check(content.getResources().containsKey(recipe.getOutput()), where + ": unknown output " + recipe.getOutput());
+            check(recipe.getMinutes() > 0 && recipe.getAmount() > 0, where + ": minutes and amount > 0");
+        }
+        EnergyDef energy = content.getBalance().getEnergy();
+        for (String id : java.util.List.of("filters", "radio", "antenna", "workshop", "infirmary")) {
+            check(energy.getConsumers().stream().anyMatch(c -> c.getId().equals(id)), "energy: consumer " + id);
+        }
+        for (String id : java.util.List.of("antenna", "generator", "radio", "workshop", "infirmary", "bunks")) {
+            check(content.getBalance().getModules().stream().anyMatch(m -> m.getId().equals(id)), "modules: " + id);
+        }
         checkResources(content.getBalance().getRadio().getRelayMaintenanceCost(), "radio.relayMaintenanceCost");
 
         SignalsDef signals = content.getSignals();

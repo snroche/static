@@ -45,7 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public final class TerminalActivity extends ComponentActivity {
 
-    private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY }
+    private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY, GEAR, RECIPES }
 
     private ActivityTerminalBinding binding;
     private TerminalViewModel viewModel;
@@ -65,16 +65,22 @@ public final class TerminalActivity extends ComponentActivity {
     private String shownDecisionId;
     private RadioPanel radioPanel;
     private DecoderPanel decoderPanel;
+    private BunkerPanel bunkerPanel;
 
     private final OnBackPressedCallback closePanelOnBack = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
             if (decoderPanel.isShown()) {
                 decoderPanel.hide();
+            } else if (panel == Panel.RECIPES) {
+                showPanel(Panel.NONE);
+                bunkerPanel.show();
+            } else if (bunkerPanel.isShown()) {
+                bunkerPanel.hide();
             } else if (radioPanel.isShown()) {
                 radioPanel.hide();
             } else if (panel == Panel.ZONES || panel == Panel.GIFTS || panel == Panel.TASKS
-                    || panel == Panel.DIARY) {
+                    || panel == Panel.DIARY || panel == Panel.GEAR) {
                 showPanel(Panel.SCOUTS);
             } else {
                 showPanel(Panel.NONE);
@@ -233,6 +239,7 @@ public final class TerminalActivity extends ComponentActivity {
         this.snapshot = snapshot;
         scoutAdapter.submitList(snapshot.scouts);
         radioPanel.render(snapshot);
+        bunkerPanel.render(snapshot);
         if (panel != Panel.NONE && panel != Panel.SCOUTS) {
             renderPanel();
         }
@@ -316,6 +323,12 @@ public final class TerminalActivity extends ComponentActivity {
                 select(scout);
                 showPanel(Panel.TASKS);
             }
+
+            @Override
+            public void onEquip(SessionSnapshot.ScoutView scout) {
+                select(scout);
+                showPanel(Panel.GEAR);
+            }
         });
         pickerAdapter = new PickerAdapter(this::onPick);
         binding.panelList.setLayoutManager(new LinearLayoutManager(this));
@@ -350,14 +363,36 @@ public final class TerminalActivity extends ComponentActivity {
         });
         binding.radioButton.setOnClickListener(v -> {
             showPanel(Panel.NONE);
+            bunkerPanel.hide();
             radioPanel.show();
+            updateBack();
+        });
+        bunkerPanel = new BunkerPanel(binding.bunkerPanel, viewModel, new BunkerPanel.Host() {
+            @Override
+            public void closeBunker() {
+                bunkerPanel.hide();
+                updateBack();
+            }
+
+            @Override
+            public void pickRecipe() {
+                // The picker overlay sits below the bunker panel: swap them while choosing.
+                bunkerPanel.hide();
+                showPanel(Panel.RECIPES);
+            }
+        });
+        binding.bunkerButton.setOnClickListener(v -> {
+            showPanel(Panel.NONE);
+            radioPanel.hide();
+            bunkerPanel.show();
             updateBack();
         });
         viewModel.getTuning().observe(this, radioPanel::onTuning);
     }
 
     private void updateBack() {
-        closePanelOnBack.setEnabled(panel != Panel.NONE || radioPanel.isShown() || decoderPanel.isShown());
+        closePanelOnBack.setEnabled(panel != Panel.NONE || radioPanel.isShown() || decoderPanel.isShown()
+                || bunkerPanel.isShown());
     }
 
     private void select(SessionSnapshot.ScoutView scout) {
@@ -381,6 +416,15 @@ public final class TerminalActivity extends ComponentActivity {
             case TASKS:
                 viewModel.assignTask(selectedScoutId, row.key);
                 break;
+            case GEAR:
+                viewModel.equip(selectedScoutId, row.key);
+                break;
+            case RECIPES:
+                viewModel.craft(row.key);
+                showPanel(Panel.NONE);
+                bunkerPanel.show();
+                updateBack();
+                return;
             default:
                 return;
         }
@@ -392,7 +436,8 @@ public final class TerminalActivity extends ComponentActivity {
         panel = target;
         closePanelOnBack.setEnabled(target != Panel.NONE
                 || (radioPanel != null && radioPanel.isShown())
-                || (decoderPanel != null && decoderPanel.isShown()));
+                || (decoderPanel != null && decoderPanel.isShown())
+                || (bunkerPanel != null && bunkerPanel.isShown()));
         if (target == Panel.NONE) {
             binding.panel.setVisibility(View.GONE);
             binding.panelList.setAdapter(null);
@@ -400,6 +445,7 @@ public final class TerminalActivity extends ComponentActivity {
         }
         binding.panel.setVisibility(View.VISIBLE);
         binding.panelExtra.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
+        // The recipe picker opens over the bunker panel and returns to it.
         binding.panelClose.setText(target == Panel.SCOUTS ? R.string.panel_close : R.string.panel_back);
         if (target == Panel.SCOUTS) {
             binding.panelTitle.setText(R.string.panel_scouts_title);
@@ -449,6 +495,26 @@ public final class TerminalActivity extends ComponentActivity {
                 binding.panelTitle.setText(getString(R.string.panel_task_title, selectedScoutName));
                 for (SessionSnapshot.TaskView task : snapshot.tasks) {
                     rows.add(new PickerAdapter.Row(task.id, task.name, null, task.description, true));
+                }
+                break;
+            case GEAR:
+                binding.panelTitle.setText(getString(R.string.panel_gear_title, selectedScoutName));
+                rows.add(new PickerAdapter.Row(null, getString(R.string.gear_none), null, null, true));
+                for (SessionSnapshot.ItemView gear : snapshot.base.gearStock) {
+                    rows.add(new PickerAdapter.Row(gear.id, gear.name, null, gear.description, true));
+                }
+                if (snapshot.base.gearStock.isEmpty()) {
+                    rows.add(new PickerAdapter.Row("-", getString(R.string.gear_empty), null, null, false));
+                }
+                break;
+            case RECIPES:
+                binding.panelTitle.setText(R.string.panel_recipes_title);
+                for (SessionSnapshot.RecipeView r : snapshot.base.recipes) {
+                    boolean available = r.needsLevel == 0;
+                    rows.add(new PickerAdapter.Row(r.id, r.name,
+                            getString(R.string.recipe_meta, r.cost, r.minutes),
+                            available ? null : getString(R.string.recipe_locked, r.needsLevel),
+                            available && r.affordable));
                 }
                 break;
             case DIARY:

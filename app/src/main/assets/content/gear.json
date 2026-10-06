@@ -1,0 +1,36 @@
+[
+  {
+    "id": "gear_linterna",
+    "name": "Linterna",
+    "description": "Ingenio +1: se ve lo que otros no ven.",
+    "statBonus": {
+      "wits": 1
+    }
+  },
+  {
+    "id": "gear_mochila",
+    "name": "Mochila reforzada",
+    "description": "Trae un 25 % más de botín.",
+    "lootMultiplier": 1.25
+  },
+  {
+    "id": "gear_botiquin",
+    "name": "Botiquín",
+    "description": "La primera herida es un nivel menos grave. Se gasta.",
+    "absorbsInjury": true
+  },
+  {
+    "id": "gear_chaleco",
+    "name": "Chaleco acolchado",
+    "description": "Aguante +2.",
+    "statBonus": {
+      "endurance": 2
+    }
+  },
+  {
+    "id": "gear_radio",
+    "name": "Radio portátil",
+    "description": "Su señal llega más limpia: menos ruido y hints perdidos.",
+    "noiseFactor": 0.6
+  }
+]

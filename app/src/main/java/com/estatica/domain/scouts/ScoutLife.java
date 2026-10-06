@@ -27,11 +27,13 @@ public final class ScoutLife {
     private String diedZoneId;
     /** Fractional stress recovery not applied yet (so frequent catch-ups lose nothing). */
     private double stressCarry;
+    /** Equipped gear (resource id), or null. */
+    private String gearId;
 
     public ScoutLife(int bond, String taskId, Set<String> flags, long lastTalkAtMillis,
                      long lastInitiatedAtMillis, long lastDecayAtMillis, double taskXpCarry,
                      double taskOutputCarry, long diedAtMillis, String diedZoneId,
-                     double stressCarry) {
+                     double stressCarry, String gearId) {
         this.bond = bond;
         this.taskId = taskId;
         this.flags = new LinkedHashSet<>(flags);
@@ -43,6 +45,15 @@ public final class ScoutLife {
         this.diedAtMillis = diedAtMillis;
         this.diedZoneId = diedZoneId;
         this.stressCarry = stressCarry;
+        this.gearId = gearId;
+    }
+
+    public String getGearId() {
+        return gearId;
+    }
+
+    public void setGearId(String gearId) {
+        this.gearId = gearId;
     }
 
     public double getStressCarry() {
@@ -55,7 +66,7 @@ public final class ScoutLife {
 
     /** A new scout: no bond yet, the neglect clock starts now. */
     public static ScoutLife fresh(long nowMillis) {
-        return new ScoutLife(0, null, Set.of(), nowMillis, 0, nowMillis, 0, 0, 0, null, 0);
+        return new ScoutLife(0, null, Set.of(), nowMillis, 0, nowMillis, 0, 0, 0, null, 0, null);
     }
 
     public int getBond() {

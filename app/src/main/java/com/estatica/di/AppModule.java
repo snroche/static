@@ -8,6 +8,7 @@ import com.estatica.BuildConfig;
 import com.estatica.core.GameClock;
 import com.estatica.core.SystemGameClock;
 import com.estatica.data.db.AffinityDao;
+import com.estatica.data.db.BaseDao;
 import com.estatica.data.db.ConversationDao;
 import com.estatica.data.db.EstaticaDatabase;
 import com.estatica.data.db.ItemDao;
@@ -97,6 +98,11 @@ public final class AppModule {
     @Provides
     static RadioDao provideRadioDao(EstaticaDatabase db) {
         return db.radioDao();
+    }
+
+    @Provides
+    static BaseDao provideBaseDao(EstaticaDatabase db) {
+        return db.baseDao();
     }
 
     @Provides

@@ -154,9 +154,27 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
-    void buildRelay() {
+    void setPower(String consumerId, int units) {
         if (ready) {
-            run(step -> step.animated.addAll(session.buildRelay()));
+            run(step -> step.animated.addAll(session.setPower(consumerId, units)));
+        }
+    }
+
+    void recharge() {
+        if (ready) {
+            run(step -> step.animated.addAll(session.recharge()));
+        }
+    }
+
+    void craft(String recipeId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.craft(recipeId)));
+        }
+    }
+
+    void equip(String scoutId, String gearId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.equip(scoutId, gearId)));
         }
     }
 

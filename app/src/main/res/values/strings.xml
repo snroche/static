@@ -43,12 +43,10 @@
     <string name="transmission_row">[ %1$s ] %2$s</string>
     <string name="kind_caesar">CÉSAR</string>
     <string name="kind_morse">MORSE</string>
-    <string name="equipment_title">EQUIPO</string>
     <string name="module_line">%1$s: nivel %2$d de %3$d</string>
     <string name="module_upgrade">[ MEJORAR: %1$s ]</string>
-    <string name="relays_line">Kits de repetidora: %1$d · Instaladas: %2$s</string>
+    <string name="relays_line">Kits de repetidora: %1$d (se fabrican en el taller) · Instaladas: %2$s</string>
     <string name="relays_none">ninguna</string>
-    <string name="build_relay">[ ARMAR KIT: %1$s ]</string>
     <string name="zone_band_meta">%1$s · Peligro %2$s · %3$d–%4$d min</string>
     <string name="zone_relay">Repetidora %1$d%%</string>
     <string name="zone_intel">Hay datos descifrados de esta zona</string>
@@ -72,6 +70,40 @@
     <string name="morse_space">[ ESPACIO ]</string>
     <string name="morse_table">[ TABLA ]</string>
     <string name="send_button">[ ENVIAR ]</string>
+
+    <string name="relays_title">REPETIDORAS</string>
+    <string name="bunker_button">[ BÚNKER ]</string>
+    <string name="panel_bunker_title">BÚNKER</string>
+    <string name="energy_title">ENERGÍA</string>
+    <string name="energy_line">En uso %1$d de %2$d W (generador: %3$d W)</string>
+    <string name="energy_blackout">Apagón en curso: el generador rinde menos.</string>
+    <string name="energy_night">Es de noche: los filtros piden más.</string>
+    <string name="energy_bad_air">Los filtros no alcanzan: el aire está pesado.</string>
+    <string name="consumer_line">%1$s %2$s</string>
+    <string name="consumer_description">%1$s: %2$d de %3$d. %4$s</string>
+    <string name="step_up" translatable="false">[ + ]</string>
+    <string name="step_down" translatable="false">[ − ]</string>
+    <string name="power_more">Más potencia a %1$s</string>
+    <string name="power_less">Menos potencia a %1$s</string>
+    <string name="reserve_line">Reserva: %1$d / %2$d (fijar una señal la usa; se carga con los watts libres)</string>
+    <string name="recharge_button">[ RECARGAR CON 1 BATERÍA ]</string>
+    <string name="workshop_title">TALLER</string>
+    <string name="workshop_idle">Nada en marcha.</string>
+    <string name="job_line">%1$s: %2$d%% · faltan %3$d min</string>
+    <string name="job_paused">%1$s: %2$d%% · en pausa (sin energía)</string>
+    <string name="craft_slots">[ FABRICAR ] puestos %1$d/%2$d</string>
+    <string name="panel_recipes_title">¿Qué fabricamos?</string>
+    <string name="recipe_meta">%1$s · %2$d min</string>
+    <string name="recipe_locked">Necesita taller nivel %1$d</string>
+    <string name="modules_title">MÓDULOS</string>
+    <string name="defense_title">DEFENSA</string>
+    <string name="defense_line">De guardia: %1$s · defensa %2$d\nLiteras: %3$d / %4$d</string>
+    <string name="nobody_on_guard">nadie</string>
+    <string name="equip_button">[ EQUIPO ]</string>
+    <string name="scout_gear">Equipo: %1$s</string>
+    <string name="panel_gear_title">¿Qué lleva %1$s?</string>
+    <string name="gear_none">Nada (devolver al búnker)</string>
+    <string name="gear_empty">No hay equipo fabricado. Se hace en el taller.</string>
 
     <string name="notification_channel">Transmisiones</string>
     <string name="notification_channel_description">Situaciones que necesitan órdenes y regresos al búnker.</string>

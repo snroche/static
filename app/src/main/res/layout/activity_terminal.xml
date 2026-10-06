@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/radioButton"
-        style="@style/TerminalButton"
+        style="@style/TerminalButton.Top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -16,8 +16,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/bunkerButton"
+        style="@style/TerminalButton.Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bunker_button"
+        app:layout_constraintEnd_toStartOf="@id/scoutsButton"
+        app:layout_constraintStart_toEndOf="@id/radioButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/scoutsButton"
-        style="@style/TerminalButton"
+        style="@style/TerminalButton.Top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
@@ -166,6 +176,17 @@
     <include
         android:id="@+id/radioPanel"
         layout="@layout/panel_radio"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/bunkerPanel"
+        layout="@layout/panel_bunker"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"

@@ -2,6 +2,7 @@ package com.estatica.domain.scouts;
 
 import com.estatica.domain.content.Balance;
 import com.estatica.domain.content.GameContent;
+import com.estatica.domain.content.GearDef;
 import com.estatica.domain.content.TraitDef;
 
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ public final class ScoutRules {
         for (TraitDef trait : traitsOf(scout)) {
             value += trait.statBonus(type.key());
         }
+        GearDef gear = gearOf(scout);
+        if (gear != null) {
+            value += gear.statBonus(type.key());
+        }
         return Math.max(0, value);
     }
 
@@ -53,7 +58,16 @@ public final class ScoutRules {
         for (TraitDef trait : traitsOf(scout)) {
             m *= trait.getLootMultiplier();
         }
+        GearDef gear = gearOf(scout);
+        if (gear != null) {
+            m *= gear.getLootMultiplier();
+        }
         return m;
+    }
+
+    /** Equipped gear, or null. */
+    public GearDef gearOf(Scout scout) {
+        return content.gear(scout.getLife().getGearId());
     }
 
     public double durationMultiplier(Scout scout) {
@@ -244,7 +258,7 @@ public final class ScoutRules {
         double total = scout.getLife().getStressCarry()
                 + hours * (balance.getStressRecoveryPerHour() * stressMultiplier + extraReliefPerHour);
         int recovered = (int) Math.floor(total);
-        scout.setStress(Math.max(0, scout.getStress() - recovered));
+        scout.setStress(clamp(scout.getStress() - recovered, 0, balance.getMaxStress()));
         // Calm is not banked: at zero stress the leftover is dropped.
         scout.getLife().setStressCarry(scout.getStress() == 0 ? 0 : total - recovered);
 

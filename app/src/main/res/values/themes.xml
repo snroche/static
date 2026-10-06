@@ -26,6 +26,13 @@
         <item name="android:textColor">@color/amber_bright</item>
     </style>
 
+    <!-- Top bar: three buttons must fit at 360dp. -->
+    <style name="TerminalButton.Top">
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+    </style>
+
     <!-- Text button: [ LABEL ], 48dp touch target. -->
     <style name="TerminalButton" parent="TerminalText.Bright">
         <item name="android:background">@drawable/bg_terminal_button</item>

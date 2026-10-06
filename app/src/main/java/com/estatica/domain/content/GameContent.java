@@ -22,12 +22,15 @@ public final class GameContent {
     private final Map<String, DialogueDef> dialogues;
     private final List<ScoutTemplate> survivors;
     private final SignalsDef signals;
+    private final Map<String, GearDef> gear;
+    private final Map<String, RecipeDef> recipes;
 
     public GameContent(Balance balance, TerminalText terminal, List<ScoutTemplate> starters,
                        List<TraitDef> traits, List<ZoneDef> zones, List<EventDef> events,
                        List<VoiceDef> voices, List<ResourceDef> resources, List<ItemDef> items,
                        List<TaskDef> tasks, List<DialogueDef> dialogues,
-                       List<ScoutTemplate> survivors, SignalsDef signals) {
+                       List<ScoutTemplate> survivors, SignalsDef signals, List<GearDef> gear,
+                       List<RecipeDef> recipes) {
         this.balance = Objects.requireNonNull(balance);
         this.terminal = Objects.requireNonNull(terminal);
         this.starters = Collections.unmodifiableList(starters);
@@ -41,6 +44,8 @@ public final class GameContent {
         this.dialogues = index(dialogues, DialogueDef::getId);
         this.survivors = Collections.unmodifiableList(survivors);
         this.signals = Objects.requireNonNull(signals);
+        this.gear = index(gear, GearDef::getId);
+        this.recipes = index(recipes, RecipeDef::getId);
     }
 
     private interface IdOf<T> {
@@ -135,6 +140,23 @@ public final class GameContent {
 
     public SignalsDef getSignals() {
         return signals;
+    }
+
+    /** Gear definition, or null if the id isn't gear. */
+    public GearDef gear(String id) {
+        return id != null ? gear.get(id) : null;
+    }
+
+    public Map<String, GearDef> getGear() {
+        return gear;
+    }
+
+    public RecipeDef recipe(String id) {
+        return require(recipes, id, "recipe");
+    }
+
+    public Map<String, RecipeDef> getRecipes() {
+        return recipes;
     }
 
     public Map<String, ZoneDef> getZones() {

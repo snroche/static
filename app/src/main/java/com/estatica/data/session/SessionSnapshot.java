@@ -17,12 +17,14 @@ public final class SessionSnapshot {
     /** Rescues and relay jobs available at dispatch, besides plain exploring. */
     public final List<MissionView> missions;
     public final RadioView radio;
+    public final BaseView base;
     /** Next moment the game state changes on its own, or -1. */
     public final long nextWakeAtMillis;
 
     SessionSnapshot(List<ScoutView> scouts, List<PendingDecision> pending, List<ZoneView> zones,
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
-                    List<MissionView> missions, RadioView radio, long nextWakeAtMillis) {
+                    List<MissionView> missions, RadioView radio, BaseView base, long nextWakeAtMillis) {
+        this.base = base;
         this.missions = Collections.unmodifiableList(missions);
         this.radio = radio;
         this.scouts = Collections.unmodifiableList(scouts);
@@ -63,8 +65,13 @@ public final class SessionSnapshot {
         public final boolean canAssignTask;
         /** Zone name while away, else null. */
         public final String awayAt;
+        /** Equipped gear name, or null. */
+        public final String gear;
+        public final boolean canEquip;
 
         ScoutView(Builder b) {
+            this.gear = b.gear;
+            this.canEquip = b.canEquip;
             this.id = b.id;
             this.name = b.name;
             this.bio = b.bio;
@@ -110,6 +117,8 @@ public final class SessionSnapshot {
             boolean canGift;
             boolean canAssignTask;
             String awayAt;
+            String gear;
+            boolean canEquip;
         }
     }
 
@@ -244,25 +253,116 @@ public final class SessionSnapshot {
         public final int dialMax;
         public final List<TransmissionView> transmissions;
         public final boolean morseTable;
-        public final List<ModuleView> modules;
         public final int relayKits;
-        public final String relayKitCost;
-        public final boolean relayKitAffordable;
         /** "Hospital Municipal 80%" … */
         public final List<String> relays;
 
         RadioView(List<BandView> bands, int dialMax, List<TransmissionView> transmissions,
-                  boolean morseTable, List<ModuleView> modules, int relayKits, String relayKitCost,
-                  boolean relayKitAffordable, List<String> relays) {
+                  boolean morseTable, int relayKits, List<String> relays) {
             this.bands = Collections.unmodifiableList(bands);
             this.dialMax = dialMax;
             this.transmissions = Collections.unmodifiableList(transmissions);
             this.morseTable = morseTable;
-            this.modules = Collections.unmodifiableList(modules);
             this.relayKits = relayKits;
-            this.relayKitCost = relayKitCost;
-            this.relayKitAffordable = relayKitAffordable;
             this.relays = Collections.unmodifiableList(relays);
+        }
+    }
+
+    /** The bunker (GDD §6.4, §6.5, §7): power, modules, workshop, defense, gear stock. */
+    public static final class BaseView {
+        public final int watts;
+        public final int available;
+        public final int used;
+        public final boolean blackout;
+        public final boolean night;
+        public final boolean filtersShort;
+        public final List<ConsumerView> consumers;
+        public final int reserve;
+        public final int reserveCapacity;
+        public final boolean canRecharge;
+        public final List<ModuleView> modules;
+        public final int slots;
+        public final List<JobView> jobs;
+        public final List<RecipeView> recipes;
+        public final List<String> guards;
+        public final int defense;
+        public final List<ItemView> gearStock;
+        public final int scouts;
+        public final int bunks;
+
+        BaseView(int watts, int available, int used, boolean blackout, boolean night, boolean filtersShort,
+                 List<ConsumerView> consumers, int reserve, int reserveCapacity, boolean canRecharge,
+                 List<ModuleView> modules, int slots, List<JobView> jobs, List<RecipeView> recipes,
+                 List<String> guards, int defense, List<ItemView> gearStock, int scouts, int bunks) {
+            this.watts = watts;
+            this.available = available;
+            this.used = used;
+            this.blackout = blackout;
+            this.night = night;
+            this.filtersShort = filtersShort;
+            this.consumers = Collections.unmodifiableList(consumers);
+            this.reserve = reserve;
+            this.reserveCapacity = reserveCapacity;
+            this.canRecharge = canRecharge;
+            this.modules = Collections.unmodifiableList(modules);
+            this.slots = slots;
+            this.jobs = Collections.unmodifiableList(jobs);
+            this.recipes = Collections.unmodifiableList(recipes);
+            this.guards = Collections.unmodifiableList(guards);
+            this.defense = defense;
+            this.gearStock = Collections.unmodifiableList(gearStock);
+            this.scouts = scouts;
+            this.bunks = bunks;
+        }
+    }
+
+    public static final class ConsumerView {
+        public final String id;
+        public final String name;
+        public final String description;
+        public final int requested;
+        public final int effective;
+        public final int max;
+
+        ConsumerView(String id, String name, String description, int requested, int effective, int max) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.requested = requested;
+            this.effective = effective;
+            this.max = max;
+        }
+    }
+
+    public static final class JobView {
+        public final String name;
+        public final int percent;
+        /** Real minutes left, or -1 while the workshop has no power. */
+        public final int minutesLeft;
+
+        JobView(String name, int percent, int minutesLeft) {
+            this.name = name;
+            this.percent = percent;
+            this.minutesLeft = minutesLeft;
+        }
+    }
+
+    public static final class RecipeView {
+        public final String id;
+        public final String name;
+        public final String cost;
+        public final int minutes;
+        public final boolean affordable;
+        /** Workshop level needed, or 0 if available. */
+        public final int needsLevel;
+
+        RecipeView(String id, String name, String cost, int minutes, boolean affordable, int needsLevel) {
+            this.id = id;
+            this.name = name;
+            this.cost = cost;
+            this.minutes = minutes;
+            this.affordable = affordable;
+            this.needsLevel = needsLevel;
         }
     }
 

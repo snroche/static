@@ -37,11 +37,11 @@ public interface ScoutDao {
     @Query("UPDATE scouts SET bond = :bond, task_id = :taskId, last_talk_at_millis = :lastTalk, "
             + "last_initiated_at_millis = :lastInitiated, last_decay_at_millis = :lastDecay, "
             + "task_xp_carry = :xpCarry, task_output_carry = :outputCarry, "
-            + "died_at_millis = :diedAt, died_zone_id = :diedZone, stress_carry = :stressCarry "
-            + "WHERE id = :id")
+            + "died_at_millis = :diedAt, died_zone_id = :diedZone, stress_carry = :stressCarry, "
+            + "gear_id = :gearId WHERE id = :id")
     void updateLife(String id, int bond, String taskId, long lastTalk, long lastInitiated,
                     long lastDecay, double xpCarry, double outputCarry, long diedAt, String diedZone,
-                    double stressCarry);
+                    double stressCarry, String gearId);
 
     @Upsert
     void upsertStats(List<ScoutStatEntity> stats);

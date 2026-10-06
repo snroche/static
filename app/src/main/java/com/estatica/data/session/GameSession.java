@@ -7,6 +7,7 @@ import com.estatica.core.GameRandom;
 import com.estatica.core.TextTemplate;
 import com.estatica.data.content.ContentRepository;
 import com.estatica.data.db.EstaticaDatabase;
+import com.estatica.data.repo.BaseRepository;
 import com.estatica.data.repo.BunkerRepository;
 import com.estatica.data.repo.ExpeditionRepository;
 import com.estatica.data.repo.GameStateRepository;
@@ -15,13 +16,20 @@ import com.estatica.data.repo.MemoryRepository;
 import com.estatica.data.repo.RadioRepository;
 import com.estatica.data.repo.ResourceRepository;
 import com.estatica.data.repo.ScoutRepository;
+import com.estatica.domain.bunker.BunkerEvents;
 import com.estatica.domain.bunker.BunkerRules;
+import com.estatica.domain.bunker.CraftJob;
+import com.estatica.domain.bunker.PowerGrid;
+import com.estatica.domain.bunker.RaidRules;
 import com.estatica.domain.bunker.ItemInstance;
 import com.estatica.domain.content.Balance;
 import com.estatica.domain.content.BandDef;
 import com.estatica.domain.content.ModuleDef;
 import com.estatica.domain.content.SignalsDef;
 import com.estatica.domain.content.DialogueDef;
+import com.estatica.domain.content.EnergyDef;
+import com.estatica.domain.content.GearDef;
+import com.estatica.domain.content.RecipeDef;
 import com.estatica.domain.content.GameContent;
 import com.estatica.domain.content.ItemDef;
 import com.estatica.domain.content.ResourceDef;
@@ -93,6 +101,7 @@ public final class GameSession {
     private final ResourceRepository resourceRepository;
     private final BunkerRepository bunkerRepository;
     private final RadioRepository radioRepository;
+    private final BaseRepository baseRepository;
     private final LogRepository logRepository;
     private final GameClock clock;
 
@@ -132,13 +141,28 @@ public final class GameSession {
     /** Global flag: the Morse reference table was found. */
     public static final String FLAG_MORSE_TABLE = "morse_table";
 
+    // Bunker (Phase 4)
+    private static final String KEY_RESERVE = "reserve";
+    private static final String KEY_TICK = "base_tick";
+    private BunkerEvents events;
+    private RaidRules raids;
+    private final Map<String, Integer> power = new HashMap<>();
+    private double reserve;
+    /** Last time energy, workshop, blackouts and raids were brought up to date. */
+    private long baseTick;
+    private final List<CraftJob> craftJobs = new ArrayList<>();
+    /** Last power situation reported, to only log changes. */
+    private String lastPowerReport = "";
+
     @Inject
     GameSession(EstaticaDatabase db, ContentRepository contentRepository,
                 GameStateRepository gameStateRepository, ScoutRepository scoutRepository,
                 ExpeditionRepository expeditionRepository, MemoryRepository memoryRepository,
                 ResourceRepository resourceRepository, BunkerRepository bunkerRepository,
-                RadioRepository radioRepository, LogRepository logRepository, GameClock clock) {
+                RadioRepository radioRepository, BaseRepository baseRepository,
+                LogRepository logRepository, GameClock clock) {
         this.radioRepository = radioRepository;
+        this.baseRepository = baseRepository;
         this.db = db;
         this.contentRepository = contentRepository;
         this.gameStateRepository = gameStateRepository;
@@ -224,6 +248,28 @@ public final class GameSession {
                 }
             }
         });
+        EnergyDef energy = content.getBalance().getEnergy();
+        events = new BunkerEvents(energy, state.getRngSeed());
+        raids = new RaidRules(content, rules);
+        power.putAll(baseRepository.power());
+        Map<String, Double> values = baseRepository.values();
+        craftJobs.addAll(baseRepository.craftJobs());
+        db.runInTransaction(() -> {
+            for (EnergyDef.Consumer c : energy.getConsumers()) {
+                if (!power.containsKey(c.getId())) {
+                    power.put(c.getId(), c.getStart());
+                    baseRepository.savePower(c.getId(), c.getStart());
+                }
+            }
+            if (!values.containsKey(KEY_TICK)) {
+                // New games and saves from before Phase 4: no retroactive raids or blackouts.
+                baseRepository.saveValue(KEY_TICK, now);
+                baseRepository.saveValue(KEY_RESERVE, energy.batteryCapacity(moduleLevel("generator")));
+            }
+        });
+        baseTick = values.containsKey(KEY_TICK) ? values.get(KEY_TICK).longValue() : now;
+        reserve = values.containsKey(KEY_RESERVE) ? values.get(KEY_RESERVE)
+                : energy.batteryCapacity(moduleLevel("generator"));
         gameStateRepository.saveContentVersion(content.getBalance().getContentVersion());
         started = true;
     }
@@ -404,7 +450,12 @@ public final class GameSession {
             }
         }
 
-        BunkerRules.Result life = bunker.advance(scouts.values(), affinities, resources, now);
+        PowerGrid.State grid = baseAdvance(step);
+        BunkerRules.Conditions conditions = new BunkerRules.Conditions(
+                PowerGrid.infirmaryHeal(grid.units("infirmary"), moduleLevel("infirmary")),
+                PowerGrid.infirmaryRelief(grid.units("infirmary")),
+                grid.filtersShort ? content.getBalance().getEnergy().getBadAirStressPerHour() : 0);
+        BunkerRules.Result life = bunker.advance(scouts.values(), affinities, resources, now, conditions);
         step.lines.addAll(life.lines);
         life.resourceDelta.forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
         for (int i = 0; i < life.passiveSignals; i++) {
@@ -435,6 +486,7 @@ public final class GameSession {
 
     /** GDD §5.5 "después": belongings stay in the zone, the others grieve, the task is left. */
     private void afterDeath(Scout dead, String zoneId, Step step) {
+        dead.getLife().setGearId(null);
         for (ItemInstance item : items.values()) {
             if (item.getLocation().equals(ItemInstance.carriedBy(dead.getId()))) {
                 item.moveTo(ItemInstance.lostIn(zoneId));
@@ -575,7 +627,12 @@ public final class GameSession {
             });
         }
         RadioRules.Quality quality = radio.quality(zone, relays, moduleLevel("radio"));
-        Mission mission = new Mission(type, target, quality.noise, quality.orderDelayMillis, cache, danger);
+        double noise = quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"));
+        GearDef gear = rules.gearOf(scout);
+        if (gear != null) {
+            noise *= gear.getNoiseFactor();
+        }
+        Mission mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger);
         ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, step.now);
         step.lines.addAll(dispatch.lines);
         step.newExpeditions.add(dispatch.expedition);
@@ -609,6 +666,10 @@ public final class GameSession {
     }
 
     private boolean isUnlocked(BandDef band) {
+        if (content.getBalance().bandIndex(band.getId()) > 0
+                && !PowerGrid.antennaOn(grid(clock.nowMillis()).units("antenna"))) {
+            return false; // an unpowered antenna only hears the short band
+        }
         return radio.isUnlocked(band, moduleLevel("antenna"), relays.values());
     }
 
@@ -648,6 +709,15 @@ public final class GameSession {
         BandDef band = content.getBalance().band(bandId);
         SignalField.Spot spot = isUnlocked(band)
                 ? field.lock(band, position, field.window(step.now), caughtSignals) : null;
+        double cost = content.getBalance().getEnergy().getSweepCost();
+        if (spot != null && reserve < cost) {
+            step.system(content.getTerminal().getBase().getReserveLow(), Map.of(), null);
+            return step.commit();
+        }
+        if (spot != null) {
+            reserve -= cost;
+            step.radioWrites.add(() -> baseRepository.saveValue(KEY_RESERVE, reserve));
+        }
         if (spot == null) {
             step.system(content.getTerminal().getRadio().getNothingThere(), Map.of(), null);
         } else {
@@ -869,18 +939,6 @@ public final class GameSession {
         return step.commit();
     }
 
-    /** Builds a relay kit from resources (GDD §4.4). */
-    @WorkerThread
-    public List<LogLine> buildRelay() {
-        Step step = new Step();
-        advance(step);
-        if (pay(content.getBalance().getRadio().getRelayKitCost(), step)) {
-            step.resourceDelta.merge("relay_kit", 1, Integer::sum);
-            step.system(content.getTerminal().getRadio().getRelayBuilt(), Map.of(), null);
-        }
-        return step.commit();
-    }
-
     /** Upgrades a bunker module (the antenna opens farther bands). */
     @WorkerThread
     public List<LogLine> upgradeModule(String moduleId) {
@@ -945,7 +1003,7 @@ public final class GameSession {
 
     /** Roster limit (bunks). */
     public int rosterCap() {
-        return content.getBalance().getRadio().getMaxScouts();
+        return content.getBalance().getRadio().getMaxScouts() + moduleLevel("bunks") - 1;
     }
 
     private int aliveScouts() {
@@ -981,6 +1039,268 @@ public final class GameSession {
             step.lines.add(LogLine.draft(step.now, LogChannel.RADIO, recruit.getName(),
                     VoiceRenderer.render(content.voice(recruit.getVoiceId()), line, vars), recruit.getId()));
         }
+    }
+
+    // ---- Bunker: energy, workshop, raids (GDD §6.4, §6.5, §7) ----
+
+    private PowerGrid.State grid(long now) {
+        EnergyDef energy = content.getBalance().getEnergy();
+        return PowerGrid.compute(energy, power, moduleLevel("generator"), events.blackoutWattsAt(now),
+                energy.isNight(clock.localHour(now)));
+    }
+
+    /** Brings energy, the workshop, blackouts and raids up to date. */
+    private PowerGrid.State baseAdvance(Step step) {
+        long now = step.now;
+        EnergyDef energy = content.getBalance().getEnergy();
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        if (now > baseTick) {
+            for (BunkerEvents.Blackout b : events.blackoutsStarting(baseTick, now)) {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("watts", String.valueOf(b.watts));
+                vars.put("hours", String.valueOf((b.end - b.start) / HOUR));
+                step.lines.add(LogLine.draft(b.start, LogChannel.ALERT, null, TextTemplate.format(text.getBlackout(), vars)));
+            }
+            for (long at : events.raidsBetween(baseTick, now)) {
+                raid(at, step);
+            }
+            double hours = (now - baseTick) / (double) HOUR;
+            PowerGrid.State g = grid(now);
+            reserve = Math.min(energy.batteryCapacity(moduleLevel("generator")),
+                    reserve + g.spare() * energy.getChargePerSpareWattHour() * hours);
+            craft(hours, g, step);
+            baseTick = now;
+            double savedReserve = reserve;
+            step.radioWrites.add(() -> {
+                baseRepository.saveValue(KEY_TICK, now);
+                baseRepository.saveValue(KEY_RESERVE, savedReserve);
+            });
+        }
+        PowerGrid.State g = grid(now);
+        String report = String.join(",", g.cut) + (g.filtersShort ? "|air" : "");
+        if (!report.equals(lastPowerReport)) {
+            for (String id : g.cut) {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("consumer", energy.consumer(id).getName().toLowerCase(Locale.ROOT));
+                step.system(text.getPowerCut(), vars, null);
+            }
+            if (g.filtersShort) {
+                step.system(text.getBadAir(), Map.of(), null);
+            }
+            lastPowerReport = report;
+        }
+        return g;
+    }
+
+    private void raid(long at, Step step) {
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        Map<String, Integer> stock = new HashMap<>(resources);
+        step.resourceDelta.forEach((k, v) -> stock.merge(k, v, Integer::sum));
+        RaidRules.Result result = raids.resolve(scouts.values(), stock, moduleLevel("antenna"), random);
+        Map<String, String> vars = new HashMap<>();
+        if (result.repelled) {
+            List<String> names = new ArrayList<>();
+            for (Scout g : result.guards) {
+                names.add(g.getName());
+            }
+            vars.put("guards", String.join(", ", names));
+            step.lines.add(LogLine.draft(at, LogChannel.ALERT, null, TextTemplate.format(text.getRaidRepelled(), vars)));
+            return;
+        }
+        if (result.unguarded) {
+            step.lines.add(LogLine.draft(at, LogChannel.ALERT, null, text.getRaidUnguarded()));
+        }
+        if (!result.stolen.isEmpty()) {
+            result.stolen.forEach((k, v) -> step.resourceDelta.merge(k, -v, Integer::sum));
+            vars.put("loot", describe(result.stolen));
+            step.lines.add(LogLine.draft(at, LogChannel.ALERT, null, TextTemplate.format(text.getRaidLost(), vars)));
+        }
+        if (result.injured != null) {
+            vars.put("name", result.injured.getName());
+            step.lines.add(LogLine.draft(at, LogChannel.ALERT, null,
+                    TextTemplate.format(text.getRaidInjured(), vars), result.injured.getId()));
+        }
+    }
+
+    /** Workshop speed: power, and the best Oficio among scouts on the workshop task. */
+    private double workshopSpeed(PowerGrid.State g) {
+        double base = PowerGrid.workshopSpeed(g.units("workshop"));
+        int bestCraft = 0;
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && "taller".equals(s.getLife().getTaskId())) {
+                bestCraft = Math.max(bestCraft, rules.effectiveStat(s, StatType.CRAFT));
+            }
+        }
+        return base * (1 + 0.05 * bestCraft);
+    }
+
+    private void craft(double hours, PowerGrid.State g, Step step) {
+        if (craftJobs.isEmpty()) {
+            return;
+        }
+        List<Double> minutes = new ArrayList<>();
+        for (CraftJob job : craftJobs) {
+            minutes.add(content.recipe(job.getRecipeId()).getMinutes());
+        }
+        List<CraftJob> done = CraftJob.work(craftJobs, minutes, hours, workshopSpeed(g));
+        for (CraftJob job : craftJobs) {
+            if (!done.contains(job)) {
+                step.radioWrites.add(() -> baseRepository.save(job));
+            }
+        }
+        for (CraftJob job : done) {
+            RecipeDef recipe = content.recipe(job.getRecipeId());
+            step.resourceDelta.merge(recipe.getOutput(), recipe.getAmount(), Integer::sum);
+            Map<String, String> vars = new HashMap<>();
+            vars.put("item", recipe.getName());
+            step.system(content.getTerminal().getBase().getCraftDone(), vars, null);
+            craftJobs.remove(job);
+            step.radioWrites.add(() -> baseRepository.delete(job));
+        }
+    }
+
+    /** Next craft completion, blackout or raid, or -1 (for wake-ups while the app is open). */
+    private long nextBaseEvent(long now) {
+        long best = events.nextEventAfter(now);
+        double speed = workshopSpeed(grid(now));
+        for (CraftJob job : craftJobs) {
+            double left = job.minutesLeft(content.recipe(job.getRecipeId()).getMinutes(), speed);
+            if (left >= 0) {
+                long at = now + (long) Math.ceil(left * 60_000);
+                if (best < 0 || at < best) {
+                    best = at;
+                }
+            }
+        }
+        return best;
+    }
+
+    /** The operator sets how many watts a consumer gets. */
+    @WorkerThread
+    public List<LogLine> setPower(String consumerId, int units) {
+        Step step = new Step();
+        advance(step);
+        EnergyDef.Consumer c = content.getBalance().getEnergy().consumer(consumerId);
+        int value = Math.max(0, Math.min(c.getMax(), units));
+        power.put(consumerId, value);
+        step.radioWrites.add(() -> baseRepository.savePower(consumerId, value));
+        baseAdvance(step);
+        return step.commit();
+    }
+
+    /** Spends a battery to refill the energy reserve. */
+    @WorkerThread
+    public List<LogLine> recharge() {
+        Step step = new Step();
+        advance(step);
+        EnergyDef energy = content.getBalance().getEnergy();
+        if (pay(Map.of("batteries", 1), step)) {
+            reserve = Math.min(energy.batteryCapacity(moduleLevel("generator")), reserve + energy.getRechargePerBattery());
+            double saved = reserve;
+            step.radioWrites.add(() -> baseRepository.saveValue(KEY_RESERVE, saved));
+            step.system(content.getTerminal().getBase().getReserveRecharged(), Map.of(), null);
+        }
+        return step.commit();
+    }
+
+    /** Starts a workshop job if there is a free slot and the inputs are there. */
+    @WorkerThread
+    public List<LogLine> craft(String recipeId) {
+        Step step = new Step();
+        advance(step);
+        RecipeDef recipe = content.recipe(recipeId);
+        if (craftJobs.size() >= moduleLevel("workshop")) {
+            step.system(content.getTerminal().getBase().getCraftNoSlot(), Map.of(), null);
+        } else if (moduleLevel("workshop") >= recipe.getMinWorkshopLevel() && pay(recipe.getInputs(), step)) {
+            CraftJob job = CraftJob.start(recipeId, step.now);
+            craftJobs.add(job);
+            step.radioWrites.add(() -> baseRepository.save(job));
+            Map<String, String> vars = new HashMap<>();
+            vars.put("item", recipe.getName());
+            step.system(content.getTerminal().getBase().getCraftStarted(), vars, null);
+        }
+        return step.commit();
+    }
+
+    /** Equips gear from stock ({@code gearId} null to take it off). The old one goes back to stock. */
+    @WorkerThread
+    public List<LogLine> equip(String scoutId, String gearId) {
+        Step step = new Step();
+        advance(step);
+        Scout scout = scouts.get(scoutId);
+        if (scout == null || !scout.isAlive() || scout.getStatus() != ScoutStatus.IDLE) {
+            return step.commit();
+        }
+        String current = scout.getLife().getGearId();
+        if (gearId != null && content.gear(gearId) == null) {
+            return step.commit();
+        }
+        if (gearId != null && !pay(Map.of(gearId, 1), step)) {
+            return step.commit();
+        }
+        if (current != null) {
+            step.resourceDelta.merge(current, 1, Integer::sum);
+        }
+        scout.getLife().setGearId(gearId);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", scout.getName());
+        if (gearId != null) {
+            vars.put("gear", content.gear(gearId).getName().toLowerCase(Locale.ROOT));
+            step.system(content.getTerminal().getBase().getEquipped(), vars, scout);
+        } else {
+            step.system(content.getTerminal().getBase().getUnequipped(), vars, scout);
+        }
+        return step.commit();
+    }
+
+    private SessionSnapshot.BaseView baseView(long now) {
+        EnergyDef energy = content.getBalance().getEnergy();
+        PowerGrid.State g = grid(now);
+        List<SessionSnapshot.ConsumerView> consumers = new ArrayList<>();
+        for (EnergyDef.Consumer c : energy.getConsumers()) {
+            consumers.add(new SessionSnapshot.ConsumerView(c.getId(), c.getName(), c.getDescription(),
+                    power.getOrDefault(c.getId(), c.getStart()), g.units(c.getId()), c.getMax()));
+        }
+        List<SessionSnapshot.ModuleView> modules = new ArrayList<>();
+        for (ModuleDef m : content.getBalance().getModules()) {
+            int level = moduleLevel(m.getId());
+            Map<String, Integer> cost = m.costFrom(level);
+            modules.add(new SessionSnapshot.ModuleView(m.getId(), m.getName(), m.getDescription(), level,
+                    m.getMaxLevel(), cost != null ? describe(cost) : null, cost != null && canAfford(cost)));
+        }
+        double speed = workshopSpeed(g);
+        List<SessionSnapshot.JobView> jobs = new ArrayList<>();
+        for (CraftJob job : craftJobs) {
+            RecipeDef recipe = content.recipe(job.getRecipeId());
+            double left = job.minutesLeft(recipe.getMinutes(), speed);
+            jobs.add(new SessionSnapshot.JobView(recipe.getName(),
+                    (int) Math.round(100 * job.getProgressMinutes() / recipe.getMinutes()),
+                    left < 0 ? -1 : (int) Math.ceil(left)));
+        }
+        List<SessionSnapshot.RecipeView> recipes = new ArrayList<>();
+        for (RecipeDef r : content.getRecipes().values()) {
+            int needs = moduleLevel("workshop") >= r.getMinWorkshopLevel() ? 0 : r.getMinWorkshopLevel();
+            recipes.add(new SessionSnapshot.RecipeView(r.getId(), r.getName(), describe(r.getInputs()),
+                    (int) Math.ceil(r.getMinutes()), canAfford(r.getInputs()), needs));
+        }
+        List<Scout> guards = raids.guards(scouts.values());
+        List<String> guardNames = new ArrayList<>();
+        for (Scout s : guards) {
+            guardNames.add(s.getName());
+        }
+        List<SessionSnapshot.ItemView> gearStock = new ArrayList<>();
+        for (GearDef gear : content.getGear().values()) {
+            int count = resources.getOrDefault(gear.getId(), 0);
+            if (count > 0) {
+                gearStock.add(new SessionSnapshot.ItemView(gear.getId(), gear.getName() + " ×" + count,
+                        gear.getDescription()));
+            }
+        }
+        return new SessionSnapshot.BaseView(energy.watts(moduleLevel("generator")), g.available, g.used,
+                events.blackoutWattsAt(now) > 0, g.night, g.filtersShort, consumers,
+                (int) Math.floor(reserve), (int) energy.batteryCapacity(moduleLevel("generator")),
+                resources.getOrDefault("batteries", 0) > 0, modules, moduleLevel("workshop"), jobs, recipes,
+                guardNames, raids.defense(guards), gearStock, aliveScouts(), rosterCap());
     }
 
     /** [HABLAR]: the operator starts a conversation (GDD §5.3), with a cooldown per scout. */
@@ -1169,6 +1489,9 @@ public final class GameSession {
             b.canTalk = home && !hasPendingConversation(s) && now >= talkReadyAt(s);
             b.canGift = home && hasInventory;
             b.canAssignTask = s.isAlive();
+            GearDef gear = rules.gearOf(s);
+            b.gear = gear != null ? gear.getName() : null;
+            b.canEquip = home;
             Expedition away = byScout.get(s.getId());
             b.awayAt = away != null && s.getStatus() == ScoutStatus.AWAY
                     ? content.zone(away.getZoneId()).getName() : null;
@@ -1271,8 +1594,12 @@ public final class GameSession {
         for (TaskDef t : content.getTasks().values()) {
             tasks.add(new SessionSnapshot.TaskView(t.getId(), t.getName(), t.getDescription()));
         }
+        long baseWake = nextBaseEvent(now);
+        if (baseWake >= 0 && (nextWake < 0 || baseWake < nextWake)) {
+            nextWake = baseWake;
+        }
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
-                radioView(), nextWake);
+                radioView(), baseView(now), nextWake);
     }
 
     private SessionSnapshot.RadioView radioView() {
@@ -1285,21 +1612,13 @@ public final class GameSession {
             pendingTransmissions.add(new SessionSnapshot.TransmissionView(t.getId(), t.getKind().name(),
                     t.cipherText(), t.getBandId()));
         }
-        List<SessionSnapshot.ModuleView> modules = new ArrayList<>();
-        for (ModuleDef m : content.getBalance().getModules()) {
-            int level = moduleLevel(m.getId());
-            Map<String, Integer> cost = m.costFrom(level);
-            modules.add(new SessionSnapshot.ModuleView(m.getId(), m.getName(), m.getDescription(), level,
-                    m.getMaxLevel(), cost != null ? describe(cost) : null, cost != null && canAfford(cost)));
-        }
         List<String> relayLines = new ArrayList<>();
         for (Relay relay : relays.values()) {
             relayLines.add(content.zone(relay.getZoneId()).getName() + " " + Math.round(relay.getCondition()) + "%");
         }
-        Map<String, Integer> kitCost = content.getBalance().getRadio().getRelayKitCost();
         return new SessionSnapshot.RadioView(bands, content.getBalance().getRadio().getDialMax(),
-                pendingTransmissions, gameFlags.contains(FLAG_MORSE_TABLE), modules,
-                resources.getOrDefault("relay_kit", 0), describe(kitCost), canAfford(kitCost), relayLines);
+                pendingTransmissions, gameFlags.contains(FLAG_MORSE_TABLE),
+                resources.getOrDefault("relay_kit", 0), relayLines);
     }
 
     /** The Diary: one entry per fallen scout, with their story and last transmission. */

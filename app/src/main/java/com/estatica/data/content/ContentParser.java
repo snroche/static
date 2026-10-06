@@ -3,6 +3,8 @@ package com.estatica.data.content;
 import com.estatica.domain.content.Balance;
 import com.estatica.domain.content.DialogueDef;
 import com.estatica.domain.content.EventDef;
+import com.estatica.domain.content.GearDef;
+import com.estatica.domain.content.RecipeDef;
 import com.estatica.domain.content.ItemDef;
 import com.estatica.domain.content.TaskDef;
 import com.estatica.domain.content.ResourceDef;
@@ -61,6 +63,8 @@ public final class ContentParser {
         require(balance.getBands() != null && !balance.getBands().isEmpty(), "balance.json: bands");
         require(balance.getRadio() != null && balance.getRadio().getDialMax() > 0, "balance.json: radio");
         require(balance.getModules() != null, "balance.json: modules");
+        require(balance.getEnergy() != null && balance.getEnergy().getConsumers() != null
+                && balance.getEnergy().getRaids() != null, "balance.json: energy");
         return balance;
     }
 
@@ -75,6 +79,7 @@ public final class ContentParser {
         require(text.getExpedition() != null, "terminal.json: expedition");
         require(text.getBunker() != null, "terminal.json: bunker");
         require(text.getRadio() != null, "terminal.json: radio");
+        require(text.getBase() != null, "terminal.json: base");
         return text;
     }
 
@@ -112,6 +117,14 @@ public final class ContentParser {
 
     public List<DialogueDef> parseDialogues(Reader reader) {
         return parseArray(reader, DialogueDef[].class, "dialogues.json");
+    }
+
+    public List<GearDef> parseGear(Reader reader) {
+        return parseArray(reader, GearDef[].class, "gear.json");
+    }
+
+    public List<RecipeDef> parseRecipes(Reader reader) {
+        return parseArray(reader, RecipeDef[].class, "recipes.json");
     }
 
     public List<ScoutTemplate> parseSurvivors(Reader reader) {

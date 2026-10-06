@@ -83,8 +83,16 @@ public final class Migrations {
             "CREATE TABLE IF NOT EXISTS `modules` (`module_id` TEXT NOT NULL, `level` INTEGER NOT NULL, PRIMARY KEY(`module_id`))"
     );
 
+    /** Phase 4: energy, bunker values, workshop jobs; gear on scouts. */
+    static final List<String> MIGRATION_4_5_SQL = List.of(
+            "ALTER TABLE `scouts` ADD COLUMN `gear_id` TEXT",
+            "CREATE TABLE IF NOT EXISTS `power` (`consumer_id` TEXT NOT NULL, `units` INTEGER NOT NULL, PRIMARY KEY(`consumer_id`))",
+            "CREATE TABLE IF NOT EXISTS `bunker_state` (`key` TEXT NOT NULL, `value` REAL NOT NULL, PRIMARY KEY(`key`))",
+            "CREATE TABLE IF NOT EXISTS `craft_jobs` (`id` TEXT NOT NULL, `recipe_id` TEXT NOT NULL, `progress_minutes` REAL NOT NULL, `started_at_millis` INTEGER NOT NULL, PRIMARY KEY(`id`))"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL);
 
     public static final Migration[] ALL = build();
 

@@ -6,6 +6,7 @@ import com.estatica.core.TextTemplate;
 import com.estatica.domain.content.Balance;
 import com.estatica.domain.content.EventDef;
 import com.estatica.domain.content.GameContent;
+import com.estatica.domain.content.GearDef;
 import com.estatica.domain.content.ItemDrop;
 import com.estatica.domain.content.LootRoll;
 import com.estatica.domain.content.TerminalText;
@@ -427,6 +428,15 @@ public final class ExpeditionEngine {
         if (lethal && warned && byOrder) {
             die(expedition, scout, voice, rng, at, known, death, out);
             return;
+        }
+        GearDef gear = rules.gearOf(scout);
+        if (incoming != Injury.NONE && gear != null && gear.isAbsorbsInjury()) {
+            // Used up: one level less of damage.
+            incoming = incoming.better();
+            scout.getLife().setGearId(null);
+            Map<String, String> gearVars = vars(scout);
+            gearVars.put("gear", gear.getName().toLowerCase(Locale.ROOT));
+            out.line(system(at, TextTemplate.format(content.getTerminal().getBase().getGearSaved(), gearVars), scout));
         }
         rules.injure(scout, incoming);
         if (incoming != Injury.NONE) {

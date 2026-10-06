@@ -116,13 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/equipment_title" />
-
-            <LinearLayout
-                android:id="@+id/modules"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:text="@string/relays_title" />
 
             <TextView
                 android:id="@+id/relays"
@@ -130,12 +124,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
-
-            <TextView
-                android:id="@+id/buildRelay"
-                style="@style/TerminalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

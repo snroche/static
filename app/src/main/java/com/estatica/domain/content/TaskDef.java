@@ -24,6 +24,8 @@ public final class TaskDef {
     private Conversion conversion;
     /** Sweeps the dial while the operator is away (radio assistant). */
     private boolean passiveSweep;
+    /** Defends the bunker against raids. */
+    private boolean guards;
 
     public String getId() {
         return id;
@@ -67,6 +69,10 @@ public final class TaskDef {
 
     public boolean isPassiveSweep() {
         return passiveSweep;
+    }
+
+    public boolean isGuards() {
+        return guards;
     }
 
     /** {@code input} units of {@code from} become one {@code to}, every {@code hoursPerUnit}. */

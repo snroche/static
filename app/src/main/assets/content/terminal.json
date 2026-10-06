@@ -121,12 +121,29 @@
     "relayInstalled": "Repetidora instalada en {zone}.",
     "relayMaintained": "Repetidora de {zone} reparada.",
     "relayFailing": "La repetidora de {zone} dejó de funcionar. Necesita mantenimiento.",
-    "relayBuilt": "Armaste un kit de repetidora.",
     "moduleUpgraded": "{module} mejorada: nivel {level}.",
     "cantAfford": "No alcanza. Hace falta: {cost}.",
     "assistantCaught": "{name} captó una señal mientras no estabas.",
     "missionRescue": "Rescatar a {name}",
     "missionInstall": "Instalar repetidora",
     "missionMaintain": "Reparar repetidora"
+  },
+  "base": {
+    "blackout": "Apagón: el generador pierde {watts} W durante {hours} h.",
+    "powerCut": "No alcanza la energía: se cortó {consumer}.",
+    "badAir": "Los filtros no dan abasto. El aire se pone pesado.",
+    "raidRepelled": "Intentaron entrar al búnker. {guards} los hicieron retroceder.",
+    "raidLost": "Entraron al búnker. Se llevaron: {loot}.",
+    "raidUnguarded": "Nadie estaba de guardia.",
+    "raidInjured": "{name} recibió golpes defendiendo el búnker.",
+    "craftStarted": "Taller: empezaron con {item}.",
+    "craftDone": "Taller: {item} listo.",
+    "craftNoSlot": "No hay puestos libres en el taller.",
+    "equipped": "{name} lleva {gear}.",
+    "unequipped": "{name} dejó su equipo en el búnker.",
+    "gearSaved": "El {gear} le evitó algo peor a {name}.",
+    "reserveLow": "La reserva de energía no alcanza para fijar la señal.",
+    "reserveRecharged": "Reserva recargada con una batería.",
+    "nobody": "nadie"
   }
 }

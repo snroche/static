@@ -20,8 +20,9 @@ import androidx.room.RoomDatabase;
                 RadioEntities.CaughtSignal.class, RadioEntities.TransmissionRow.class,
                 RadioEntities.Intel.class, RadioEntities.RelayRow.class,
                 RadioEntities.RescueTarget.class, RadioEntities.Lore.class,
-                RadioEntities.Module.class},
-        version = 4,
+                RadioEntities.Module.class,
+                BaseEntities.Power.class, BaseEntities.Value.class, BaseEntities.CraftJobRow.class},
+        version = 5,
         exportSchema = true)
 public abstract class EstaticaDatabase extends RoomDatabase {
 
@@ -46,4 +47,6 @@ public abstract class EstaticaDatabase extends RoomDatabase {
     public abstract AffinityDao affinityDao();
 
     public abstract RadioDao radioDao();
+
+    public abstract BaseDao baseDao();
 }

@@ -27,6 +27,8 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
         void onGift(ScoutView scout);
 
         void onTask(ScoutView scout);
+
+        void onEquip(ScoutView scout);
     }
 
     private static final char FILLED = '■';
@@ -72,6 +74,7 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
                     : res.getString(R.string.scout_traits, String.join(", ", s.traits)));
             optional(b.likes, s.likes);
             optional(b.dislikes, s.dislikes);
+            optional(b.gear, s.gear == null ? null : res.getString(R.string.scout_gear, s.gear));
             optional(b.gifts, s.gifts.isEmpty() ? null
                     : res.getString(R.string.scout_gifts, String.join(", ", s.gifts)));
             optional(b.bio, s.bio);
@@ -80,6 +83,7 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
             action(b.talk, s.canTalk, v -> listener.onTalk(s));
             action(b.gift, s.canGift, v -> listener.onGift(s));
             action(b.taskButton, s.canAssignTask, v -> listener.onTask(s));
+            action(b.equipButton, s.canEquip, v -> listener.onEquip(s));
             // The empty bunk stays on the roster, dimmed (GDD §5.5).
             b.getRoot().setAlpha(s.dead ? 0.5f : 1f);
         }

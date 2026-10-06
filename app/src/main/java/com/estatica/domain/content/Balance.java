@@ -17,6 +17,7 @@ public final class Balance {
     private java.util.List<BandDef> bands;
     private Radio radio;
     private java.util.List<ModuleDef> modules;
+    private EnergyDef energy;
 
     public int getContentVersion() {
         return contentVersion;
@@ -82,6 +83,10 @@ public final class Balance {
         return modules;
     }
 
+    public EnergyDef getEnergy() {
+        return energy;
+    }
+
     public ModuleDef module(String id) {
         for (ModuleDef m : modules) {
             if (m.getId().equals(id)) {
@@ -99,7 +104,6 @@ public final class Balance {
         private double lockThreshold;
         /** Chance per point of noise that an odds hint is lost in the static. */
         private double hintLossPerNoise;
-        private java.util.Map<String, Integer> relayKitCost;
         private java.util.Map<String, Integer> relayMaintenanceCost;
         private double relayDecayPerDay;
         private double relayMinCondition;
@@ -126,10 +130,6 @@ public final class Balance {
 
         public double getHintLossPerNoise() {
             return hintLossPerNoise;
-        }
-
-        public java.util.Map<String, Integer> getRelayKitCost() {
-            return relayKitCost;
         }
 
         public java.util.Map<String, Integer> getRelayMaintenanceCost() {

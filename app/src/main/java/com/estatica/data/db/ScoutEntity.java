@@ -77,4 +77,9 @@ public class ScoutEntity {
 
     @ColumnInfo(name = "stress_carry", defaultValue = "0")
     public double stressCarry;
+
+    /** DB v5: equipped gear (resource id). */
+    @Nullable
+    @ColumnInfo(name = "gear_id")
+    public String gearId;
 }

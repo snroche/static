@@ -39,7 +39,7 @@ public final class TestScouts {
             stats.put(type, new Stat(statValue, 10, 0));
         }
         List<ScoutTrait> traits = new ArrayList<>(base.getTraits());
-        ScoutLife life = new ScoutLife(bond, null, Set.of(), now, 0, now, 0, 0, 0, null, 0);
+        ScoutLife life = new ScoutLife(bond, null, Set.of(), now, 0, now, 0, 0, 0, null, 0, null);
         return new Scout(base.getId(), templateId, base.getName(), base.getVoiceId(), stats, traits,
                 stress, 50, Injury.NONE, ScoutStatus.IDLE, now, 0, life);
     }

@@ -1,0 +1,77 @@
+[
+  {
+    "id": "relay_kit",
+    "name": "Kit de repetidora",
+    "inputs": {
+      "components": 3,
+      "batteries": 2
+    },
+    "output": "relay_kit",
+    "minutes": 5
+  },
+  {
+    "id": "parts",
+    "name": "Piezas",
+    "inputs": {
+      "scrap": 4,
+      "components": 2
+    },
+    "output": "parts",
+    "minutes": 6
+  },
+  {
+    "id": "linterna",
+    "name": "Linterna",
+    "inputs": {
+      "scrap": 2,
+      "components": 1,
+      "batteries": 1
+    },
+    "output": "gear_linterna",
+    "minutes": 3
+  },
+  {
+    "id": "mochila",
+    "name": "Mochila reforzada",
+    "inputs": {
+      "scrap": 4,
+      "components": 1
+    },
+    "output": "gear_mochila",
+    "minutes": 4
+  },
+  {
+    "id": "botiquin",
+    "name": "Botiquín",
+    "inputs": {
+      "medicine": 2,
+      "scrap": 1
+    },
+    "output": "gear_botiquin",
+    "minutes": 2
+  },
+  {
+    "id": "chaleco",
+    "name": "Chaleco acolchado",
+    "inputs": {
+      "scrap": 6,
+      "components": 2,
+      "parts": 1
+    },
+    "output": "gear_chaleco",
+    "minutes": 8,
+    "minWorkshopLevel": 2
+  },
+  {
+    "id": "radio_portatil",
+    "name": "Radio portátil",
+    "inputs": {
+      "components": 4,
+      "batteries": 2,
+      "parts": 2
+    },
+    "output": "gear_radio",
+    "minutes": 10,
+    "minWorkshopLevel": 3
+  }
+]
