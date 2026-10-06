@@ -11,7 +11,9 @@
     "events": [
       "perro",
       "estanteria",
-      "ruido_sotano"
+      "ruido_sotano",
+      "inundacion",
+      "mapa"
     ],
     "loot": [
       {
@@ -61,7 +63,9 @@
       "surtidor",
       "auto_volcado",
       "perro",
-      "radio_encendida"
+      "radio_encendida",
+      "cables",
+      "avispas"
     ],
     "loot": [
       {
@@ -117,7 +121,9 @@
       "ruido_sotano",
       "persiana",
       "otro_superviviente",
-      "estanteria"
+      "estanteria",
+      "cables",
+      "ratas"
     ],
     "loot": [
       {
@@ -168,7 +174,10 @@
       "radio_encendida",
       "persiana",
       "otro_superviviente",
-      "auto_volcado"
+      "auto_volcado",
+      "mapa",
+      "avispas",
+      "radioaficionado"
     ],
     "loot": [
       {
@@ -227,7 +236,9 @@
     "events": [
       "estanteria",
       "perro",
-      "persiana"
+      "persiana",
+      "inundacion",
+      "cables"
     ],
     "loot": [
       {
@@ -274,7 +285,10 @@
       "herido",
       "archivo",
       "ruido_sotano",
-      "saqueadores"
+      "saqueadores",
+      "derrumbe",
+      "ratas",
+      "francotirador"
     ],
     "loot": [
       {
@@ -324,7 +338,9 @@
       "vagon",
       "jauria",
       "saqueadores",
-      "radio_encendida"
+      "radio_encendida",
+      "trampa",
+      "derrumbe"
     ],
     "loot": [
       {
@@ -375,7 +391,10 @@
       "saqueadores",
       "gas",
       "persiana",
-      "jauria"
+      "jauria",
+      "puerta_blindada",
+      "francotirador",
+      "radioaficionado"
     ],
     "loot": [
       {
@@ -428,7 +447,11 @@
       "jauria",
       "vagon",
       "saqueadores",
-      "techo"
+      "techo",
+      "deposito_frio",
+      "trampa",
+      "puerta_blindada",
+      "helada"
     ],
     "loot": [
       {
@@ -468,6 +491,169 @@
       "La garita de seguridad tiene la barrera levantada.",
       "Pileta verde. Algo se mueve abajo. No miro más.",
       "Un perro de plástico en un jardín. Me asustó igual."
+    ],
+    "startKnown": false
+  },
+  {
+    "id": "aeropuerto",
+    "name": "Aeropuerto regional",
+    "band": "long",
+    "description": "Una pista abierta, hangares, un avión de carga partido al medio.",
+    "danger": 3,
+    "durationMinutes": [120, 240],
+    "situations": [3, 4],
+    "finds": [3, 4],
+    "events": [
+      "pista",
+      "avion",
+      "tormenta",
+      "campamento",
+      "saqueadores",
+      "cables",
+      "helada"
+    ],
+    "loot": [
+      {
+        "resource": "parts",
+        "min": 1,
+        "max": 2,
+        "weight": 2
+      },
+      {
+        "resource": "components",
+        "min": 3,
+        "max": 6,
+        "weight": 3
+      },
+      {
+        "resource": "batteries",
+        "min": 2,
+        "max": 4,
+        "weight": 2
+      }
+    ],
+    "items": [
+      {
+        "item": "foto",
+        "chance": 0.08
+      },
+      {
+        "item": "armonica",
+        "chance": 0.06
+      },
+      {
+        "item": "chocolate",
+        "chance": 0.06
+      }
+    ],
+    "transit": [
+      "La ruta al aeropuerto está llena de autos abandonados en fila.",
+      "Pasé por un peaje. Las barreras siguen bajas.",
+      "Se ve la torre de control. Ninguna luz."
+    ],
+    "startKnown": false
+  },
+  {
+    "id": "represa",
+    "name": "La represa",
+    "band": "long",
+    "description": "Hormigón y agua. Las turbinas se detuvieron con el Silencio. Casi todas.",
+    "danger": 4,
+    "durationMinutes": [180, 300],
+    "situations": [3, 4],
+    "finds": [3, 4],
+    "events": [
+      "compuertas",
+      "turbinas",
+      "tormenta",
+      "inundacion",
+      "trampa",
+      "campamento",
+      "helada"
+    ],
+    "loot": [
+      {
+        "resource": "parts",
+        "min": 2,
+        "max": 3,
+        "weight": 3
+      },
+      {
+        "resource": "components",
+        "min": 3,
+        "max": 5,
+        "weight": 2
+      },
+      {
+        "resource": "scrap",
+        "min": 4,
+        "max": 8,
+        "weight": 2
+      }
+    ],
+    "items": [
+      {
+        "item": "cuaderno",
+        "chance": 0.07
+      },
+      {
+        "item": "mate",
+        "chance": 0.07
+      }
+    ],
+    "transit": [
+      "El lago está quieto como un espejo.",
+      "Un cartel: \"Peligro. Crecidas repentinas\".",
+      "Camino por la corona de la represa. Mucho viento."
+    ],
+    "startKnown": false
+  },
+  {
+    "id": "antena_norte",
+    "name": "Antena del norte",
+    "band": "long",
+    "description": "Una torre de transmisión en un cerro. Alguien la mantiene encendida.",
+    "danger": 4,
+    "durationMinutes": [240, 360],
+    "situations": [3, 4],
+    "finds": [2, 3],
+    "events": [
+      "la_voz_rele",
+      "torre",
+      "tormenta",
+      "campamento",
+      "puerta_blindada",
+      "cables",
+      "radioaficionado"
+    ],
+    "loot": [
+      {
+        "resource": "batteries",
+        "min": 3,
+        "max": 6,
+        "weight": 3
+      },
+      {
+        "resource": "parts",
+        "min": 1,
+        "max": 3,
+        "weight": 2
+      }
+    ],
+    "items": [
+      {
+        "item": "estampita",
+        "chance": 0.06
+      },
+      {
+        "item": "libro",
+        "chance": 0.06
+      }
+    ],
+    "transit": [
+      "El camino de ripio sube y sube.",
+      "Se escucha un zumbido eléctrico que viene de arriba.",
+      "En la radio portátil, los números de La Voz suenan más fuertes."
     ],
     "startKnown": false
   }

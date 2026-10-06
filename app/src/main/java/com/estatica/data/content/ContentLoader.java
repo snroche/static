@@ -11,6 +11,7 @@ import com.estatica.domain.content.GameContent;
 import com.estatica.domain.content.ResourceDef;
 import com.estatica.domain.content.ScoutTemplate;
 import com.estatica.domain.content.SignalsDef;
+import com.estatica.domain.content.StoryDef;
 import com.estatica.domain.content.TerminalText;
 import com.estatica.domain.content.TraitDef;
 import com.estatica.domain.content.VoiceDef;
@@ -46,6 +47,7 @@ public final class ContentLoader {
         SignalsDef signals;
         List<GearDef> gear;
         List<RecipeDef> recipes;
+        StoryDef story;
         try (Reader r = source.open("balance.json")) {
             balance = parser.parseBalance(r);
         }
@@ -91,7 +93,10 @@ public final class ContentLoader {
         try (Reader r = source.open("recipes.json")) {
             recipes = parser.parseRecipes(r);
         }
+        try (Reader r = source.open("story.json")) {
+            story = parser.parseStory(r);
+        }
         return new GameContent(balance, terminal, scouts, traits, zones, events, voices, resources,
-                items, tasks, dialogues, survivors, signals, gear, recipes);
+                items, tasks, dialogues, survivors, signals, gear, recipes, story);
     }
 }

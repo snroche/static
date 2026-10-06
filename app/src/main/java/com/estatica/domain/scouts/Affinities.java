@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Hidden closeness between pairs of scouts. Minimal on purpose: it decides who grieves most
- * and whom a dying scout names. Friendships and rivalries are Phase 5.
+ * Hidden closeness between pairs of scouts, from −max (rivals) to +max (inseparable). It
+ * decides who grieves most, whom a dying scout names, and how sharing a task feels.
  */
 public final class Affinities {
 
@@ -36,7 +36,7 @@ public final class Affinities {
         if (a.equals(b) || delta == 0) {
             return;
         }
-        values.put(key(a, b), Math.max(0, Math.min(max, get(a, b) + delta)));
+        values.put(key(a, b), Math.max(-max, Math.min(max, get(a, b) + delta)));
     }
 
     /** The scout among {@code others} closest to {@code scoutId}, or null if none above 0. */

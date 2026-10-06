@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateFormat;
 import android.view.GestureDetector;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,6 +33,8 @@ import com.estatica.R;
 import com.estatica.data.session.SessionSnapshot;
 import com.estatica.databinding.ActivityTerminalBinding;
 import com.estatica.domain.expedition.Mission;
+import com.estatica.data.settings.Settings;
+import com.estatica.domain.log.LogChannel;
 import com.estatica.domain.log.LogLine;
 import com.estatica.ui.scouts.PickerAdapter;
 import com.estatica.ui.scouts.ScoutAdapter;
@@ -40,10 +43,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public final class TerminalActivity extends ComponentActivity {
+
+    @Inject
+    Settings settings;
+    private SoundEngine sound;
+    private int typedSinceTick;
 
     private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY, GEAR, RECIPES }
 
@@ -97,6 +107,8 @@ public final class TerminalActivity extends ComponentActivity {
         applyInsets();
 
         viewModel = new ViewModelProvider(this).get(TerminalViewModel.class);
+        sound = new SoundEngine(settings.isSoundOn());
+        viewModel.getSoundOn().observe(this, sound::setEnabled);
         setUpLog();
         setUpInput();
         setUpPanel();
@@ -128,6 +140,10 @@ public final class TerminalActivity extends ComponentActivity {
             @Override
             public void onTick(int visibleChars) {
                 adapter.updateTyping(visibleChars);
+                if (++typedSinceTick >= 3) {
+                    typedSinceTick = 0;
+                    sound.tick();
+                }
                 if (followingTail) {
                     scrollToBottom();
                 }
@@ -148,6 +164,12 @@ public final class TerminalActivity extends ComponentActivity {
         if (newTypingLine) {
             typewriter.cancel();
             adapter.startTyping(state.typingSeq);
+            LogLine line = findLine(state, state.typingSeq);
+            if (line != null && line.getChannel() == LogChannel.ALERT) {
+                // GDD §2: short haptic when an urgent message arrives.
+                binding.getRoot().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                sound.beep();
+            }
         }
         adapter.submitList(state.lines, () -> {
             if (newTypingLine) {
@@ -356,7 +378,7 @@ public final class TerminalActivity extends ComponentActivity {
                 radioPanel.hide();
                 updateBack();
             }
-        });
+        }, sound);
         decoderPanel = new DecoderPanel(binding.decodePanel, viewModel, () -> {
             decoderPanel.hide();
             updateBack();
@@ -466,6 +488,9 @@ public final class TerminalActivity extends ComponentActivity {
             case ZONES:
                 binding.panelTitle.setText(getString(R.string.panel_zones_title, selectedScoutName));
                 for (SessionSnapshot.MissionView m : snapshot.missions) {
+                    if (m.scoutId != null && !m.scoutId.equals(selectedScoutId)) {
+                        continue;
+                    }
                     rows.add(new PickerAdapter.Row(m.type + "|" + m.zoneId + "|" + (m.target != null ? m.target : ""),
                             m.label, m.zoneName, null, true));
                 }
@@ -521,8 +546,10 @@ public final class TerminalActivity extends ComponentActivity {
                 binding.panelTitle.setText(R.string.panel_diary_title);
                 List<SessionSnapshot.DiaryEntry> entries = viewModel.getDiary().getValue();
                 if (entries != null) {
+                    int i = 0;
                     for (SessionSnapshot.DiaryEntry e : entries) {
-                        rows.add(new PickerAdapter.Row(e.name, e.name, e.header, diaryText(e), false));
+                        String title = e.section ? "── " + e.name + " ──" : e.name;
+                        rows.add(new PickerAdapter.Row("diary" + i++, title, e.header, diaryText(e), false));
                     }
                 }
                 break;
@@ -596,6 +623,7 @@ public final class TerminalActivity extends ComponentActivity {
 
     @Override
     protected void onDestroy() {
+        sound.release();
         typewriter.cancel();
         super.onDestroy();
     }

@@ -30,6 +30,8 @@ public final class TraitDef {
     private Kind kind = Kind.PERSONALITY;
     /** Multiplies healing of every other scout while this one works in the infirmary. */
     private double healOthersMultiplier = 1.0;
+    /** Traits that rub this one the wrong way: sharing a task builds friction. */
+    private java.util.List<String> clashes;
 
     public String getId() {
         return id;
@@ -85,5 +87,9 @@ public final class TraitDef {
 
     public double getHealOthersMultiplier() {
         return healOthersMultiplier;
+    }
+
+    public java.util.List<String> getClashes() {
+        return clashes != null ? clashes : java.util.List.of();
     }
 }

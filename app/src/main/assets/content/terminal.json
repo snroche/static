@@ -35,10 +35,11 @@
   "commands": {
     "ayuda": [
       "Comandos disponibles:",
-      "  ayuda   muestra esta lista",
-      "  estado  estado del operador y del búnker",
-      "Para barrer el dial y descifrar: [ RADIO ].",
-      "Para hablar, regalar, asignar tareas o despachar: [ EXPLORADORES ]."
+      "  ayuda           muestra esta lista",
+      "  estado          estado del operador y del búnker",
+      "  sonido          activa o desactiva el sonido",
+      "  notificaciones  activa o desactiva las notificaciones",
+      "[ RADIO ] dial y descifrado · [ BÚNKER ] energía, taller, módulos · [ EXPLORADORES ] el equipo."
     ],
     "estado": [
       "Operador #{operator}",
@@ -145,5 +146,26 @@
     "reserveLow": "La reserva de energía no alcanza para fijar la señal.",
     "reserveRecharged": "Reserva recargada con una batería.",
     "nobody": "nadie"
+  },
+  "story": {
+    "personalAvailable": "{name} te pidió algo: «{title}». Aparece como misión al despachar.",
+    "personalDone": "{name} cerró una cuenta pendiente: {title}.",
+    "missionPersonal": "Misión personal: {title}",
+    "plotFound": "La Voz — {title}: fragmento {found} de {total} anotado en el Diario.",
+    "voiceSpeaker": "La Voz",
+    "friends": "Amistad con {other}",
+    "inseparable": "Inseparable de {other}",
+    "rivals": "Roces con {other}",
+    "goalDone": "Objetivo cumplido: {label}.",
+    "goalReward": "Recompensa: {loot}.",
+    "soundOn": "Sonido activado.",
+    "soundOff": "Sonido desactivado.",
+    "notificationsOn": "Notificaciones activadas.",
+    "notificationsOff": "Notificaciones desactivadas.",
+    "diaryFallen": "CAÍDOS",
+    "diaryVoice": "LA VOZ",
+    "diaryLore": "TRANSMISIONES",
+    "diaryZones": "ZONAS",
+    "diaryUnknownFragment": "??? (fragmento sin encontrar)"
   }
 }

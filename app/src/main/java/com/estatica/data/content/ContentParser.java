@@ -10,6 +10,7 @@ import com.estatica.domain.content.TaskDef;
 import com.estatica.domain.content.ResourceDef;
 import com.estatica.domain.content.ScoutTemplate;
 import com.estatica.domain.content.SignalsDef;
+import com.estatica.domain.content.StoryDef;
 import com.estatica.domain.content.TerminalText;
 import com.estatica.domain.content.TraitDef;
 import com.estatica.domain.content.VoiceDef;
@@ -80,6 +81,7 @@ public final class ContentParser {
         require(text.getBunker() != null, "terminal.json: bunker");
         require(text.getRadio() != null, "terminal.json: radio");
         require(text.getBase() != null, "terminal.json: base");
+        require(text.getStory() != null, "terminal.json: story");
         return text;
     }
 
@@ -117,6 +119,13 @@ public final class ContentParser {
 
     public List<DialogueDef> parseDialogues(Reader reader) {
         return parseArray(reader, DialogueDef[].class, "dialogues.json");
+    }
+
+    public StoryDef parseStory(Reader reader) {
+        StoryDef story = parse(reader, StoryDef.class, "story.json");
+        require(story.getChapters() != null && story.getPersonalMissions() != null
+                && story.getObjectives() != null, "story.json: chapters, personalMissions, objectives");
+        return story;
     }
 
     public List<GearDef> parseGear(Reader reader) {

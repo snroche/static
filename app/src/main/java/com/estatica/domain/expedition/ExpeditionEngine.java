@@ -90,6 +90,9 @@ public final class ExpeditionEngine {
         }
         GameRandom rng = GameRandom.fromSeed(seed);
         List<Segment> segments = TimelineGenerator.generate(zone, rules.durationMultiplier(scout), rng);
+        if (mission.getType() == Mission.Type.PERSONAL) {
+            forceEvent(segments, content.getStory().personalMission(mission.getTarget()).getEvent());
+        }
         rules.markDeparted(scout, now);
 
         VoiceDef voice = content.voice(scout.getVoiceId());
@@ -105,6 +108,22 @@ public final class ExpeditionEngine {
                 segments, rng.getState(), Expedition.Status.ACTIVE, 0, now, Expedition.NONE,
                 Expedition.NO_CHOICE, Expedition.NONE, Map.of(), List.of(), false, mission, false, 0);
         return new Dispatch(expedition, lines);
+    }
+
+    /**
+     * A personal mission plays its own situation: it replaces the first one (or, if the
+     * timeline has none, the first leg after leaving).
+     */
+    private static void forceEvent(List<Segment> segments, String eventId) {
+        for (int i = 0; i < segments.size(); i++) {
+            Segment s = segments.get(i);
+            if (s.getType() == Segment.Type.SITUATION) {
+                segments.set(i, new Segment(Segment.Type.SITUATION, s.getDurationMillis(), eventId));
+                return;
+            }
+        }
+        Segment first = segments.get(Math.min(1, segments.size() - 2));
+        segments.set(segments.indexOf(first), new Segment(Segment.Type.SITUATION, first.getDurationMillis(), eventId));
     }
 
     // ---- Decisions ----
@@ -404,6 +423,9 @@ public final class ExpeditionEngine {
             for (LootRoll roll : outcome.getLoot()) {
                 expedition.addLoot(roll.getResource(), rollAmount(roll, scout, rng));
             }
+        }
+        if (outcome.getPlot() != null) {
+            out.plot(outcome.getPlot());
         }
         if (outcome.getMemory() != null) {
             remember(Memory.create(scout.getId(), Memory.Type.EVENT,

@@ -12,6 +12,7 @@ import com.estatica.core.TextTemplate;
 import com.estatica.data.repo.LogRepository;
 import com.estatica.data.session.GameSession;
 import com.estatica.data.session.SessionSnapshot;
+import com.estatica.data.settings.Settings;
 import com.estatica.di.AppModule;
 import com.estatica.domain.content.GameContent;
 import com.estatica.domain.content.TerminalText;
@@ -49,6 +50,8 @@ public final class TerminalViewModel extends ViewModel {
 
     private final GameSession session;
     private final NotificationScheduler notifications;
+    private final Settings settings;
+    private final MutableLiveData<Boolean> soundOn = new MutableLiveData<>();
     private final LogRepository logRepository;
     private final GameClock clock;
     private final ExecutorService game;
@@ -98,16 +101,22 @@ public final class TerminalViewModel extends ViewModel {
     }
 
     @Inject
-    TerminalViewModel(GameSession session, NotificationScheduler notifications,
+    TerminalViewModel(GameSession session, NotificationScheduler notifications, Settings settings,
                       LogRepository logRepository, GameClock clock, ExecutorService game,
                       @Named(AppModule.APP_VERSION) String appVersion) {
         this.session = session;
         this.notifications = notifications;
+        this.settings = settings;
+        soundOn.setValue(settings.isSoundOn());
         this.logRepository = logRepository;
         this.clock = clock;
         this.game = game;
         this.appVersion = appVersion;
         game.execute(this::startSession);
+    }
+
+    LiveData<Boolean> getSoundOn() {
+        return soundOn;
     }
 
     LiveData<TerminalUiState> getState() {
@@ -259,14 +268,41 @@ public final class TerminalViewModel extends ViewModel {
         if (!ready || command.isEmpty()) {
             return;
         }
+        String setting = applySetting(command);
         run(step -> {
             step.animated.addAll(session.catchUp());
             List<LogLine> drafts = new ArrayList<>();
             drafts.add(LogLine.draft(clock.nowMillis(), LogChannel.OPERATOR, null, command));
-            CommandInterpreter interpreter = new CommandInterpreter(session.content().getTerminal());
-            drafts.addAll(systemLines(interpreter.respond(command, baseVars()), Map.of()));
+            if (setting != null) {
+                TerminalText.StoryText text = session.content().getTerminal().getStory();
+                String line = "sound:on".equals(setting) ? text.getSoundOn()
+                        : "sound:off".equals(setting) ? text.getSoundOff()
+                        : "notifications:on".equals(setting) ? text.getNotificationsOn() : text.getNotificationsOff();
+                drafts.add(LogLine.draft(clock.nowMillis(), LogChannel.SYSTEM, null, line));
+            } else {
+                CommandInterpreter interpreter = new CommandInterpreter(session.content().getTerminal());
+                drafts.addAll(systemLines(interpreter.respond(command, baseVars()), Map.of()));
+            }
             step.animated.addAll(session.log(drafts));
         });
+    }
+
+    /** Device settings typed in the terminal (GDD §9). Returns what changed, or null. */
+    private String applySetting(String command) {
+        String normalized = command.toLowerCase(Locale.ROOT).trim();
+        if (normalized.equals("sonido")) {
+            boolean on = settings.toggleSound();
+            soundOn.setValue(on);
+            return on ? "sound:on" : "sound:off";
+        }
+        if (normalized.equals("notificaciones")) {
+            boolean on = settings.toggleNotifications();
+            if (!on) {
+                notifications.cancelAll();
+            }
+            return on ? "notifications:on" : "notifications:off";
+        }
+        return null;
     }
 
     void dispatch(String scoutId, String zoneId) {

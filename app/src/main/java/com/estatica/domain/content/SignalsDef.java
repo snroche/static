@@ -59,7 +59,7 @@ public final class SignalsDef {
 
     /** An encrypted message. Plain text uses only A–Z and spaces once normalized. */
     public static final class Transmission {
-        public enum Reward { CACHE, DANGER, LORE, RESOURCES, MORSE_TABLE }
+        public enum Reward { CACHE, DANGER, LORE, RESOURCES, MORSE_TABLE, PLOT }
 
         private String id;
         private String band;
@@ -69,6 +69,8 @@ public final class SignalsDef {
         private Reward reward;
         private Map<String, Integer> resources;
         private String lore;
+        /** PLOT: fragment id. */
+        private String plot;
         /** Only offered once (tutorial, lore). */
         private boolean unique;
 
@@ -102,6 +104,10 @@ public final class SignalsDef {
 
         public boolean isUnique() {
             return unique;
+        }
+
+        public String getPlot() {
+            return plot;
         }
 
         /** Needs a target zone ({zone} in text, CACHE/DANGER rewards). */

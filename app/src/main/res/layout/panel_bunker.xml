@@ -51,6 +51,19 @@
                 style="@style/TerminalText.Bright"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/goals_title" />
+
+            <TextView
+                android:id="@+id/goals"
+                style="@style/TerminalText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                style="@style/TerminalText.Bright"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/energy_title" />
 
             <TextView

@@ -95,8 +95,9 @@ public class BunkerRulesTest {
 
     @Test
     public void mentoringTeachesTheMentorsStrongStatAndBringsThemCloser() {
-        Scout student = TestScouts.starter("mara", T0);   // endurance 3
-        Scout mentor = TestScouts.starter("tano", T0);    // endurance 6
+        // Irene and Mara don't clash (Tano and Mara do: Desconfianza vs Lealtad).
+        Scout student = TestScouts.starter("irene", T0);  // endurance 2
+        Scout mentor = TestScouts.starter("mara", T0);    // endurance 3
         student.getLife().setTaskId("entrenamiento");
         mentor.getLife().setTaskId("entrenamiento");
         int before = student.stat(StatType.ENDURANCE).getValue();

@@ -286,6 +286,27 @@ public final class Balance {
         private double trainingPerHour;
         private double sameTaskPerHour;
         private int max;
+        private int friendAt;
+        private int inseparableAt;
+        private int rivalAt;
+        /** Stress relief per hour (friends) or stress (rivals) when sharing a task. */
+        private double sharedTaskEffect;
+
+        public int getFriendAt() {
+            return friendAt;
+        }
+
+        public int getInseparableAt() {
+            return inseparableAt;
+        }
+
+        public int getRivalAt() {
+            return rivalAt;
+        }
+
+        public double getSharedTaskEffect() {
+            return sharedTaskEffect;
+        }
 
         public double getTrainingPerHour() {
             return trainingPerHour;

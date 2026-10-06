@@ -7,6 +7,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.estatica.data.session.GameSession;
+import com.estatica.data.settings.Settings;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,15 +27,20 @@ public final class NotificationScheduler {
     private static final String TAG = "estatica-notice";
 
     private final Context context;
+    private final Settings settings;
 
     @Inject
-    public NotificationScheduler(@ApplicationContext Context context) {
+    public NotificationScheduler(@ApplicationContext Context context, Settings settings) {
         this.context = context;
+        this.settings = settings;
     }
 
     public void schedule(List<GameSession.ScheduledNotice> notices, long nowMillis) {
         WorkManager workManager = WorkManager.getInstance(context);
         workManager.cancelAllWorkByTag(TAG);
+        if (!settings.areNotificationsOn()) {
+            return; // GDD §9: the player decides
+        }
         for (GameSession.ScheduledNotice notice : notices) {
             Data data = new Data.Builder()
                     .putString(NotifyWorker.KEY_ID, notice.key)

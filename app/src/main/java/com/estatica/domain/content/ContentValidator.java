@@ -161,6 +161,60 @@ public final class ContentValidator {
             check(content.getResources().containsKey(recipe.getOutput()), where + ": unknown output " + recipe.getOutput());
             check(recipe.getMinutes() > 0 && recipe.getAmount() > 0, where + ": minutes and amount > 0");
         }
+        StoryDef story = content.getStory();
+        java.util.Set<String> fragments = new java.util.HashSet<>();
+        for (StoryDef.Chapter chapter : story.getChapters()) {
+            check(chapter.getFinale() != null && !chapter.getFinale().isEmpty(), "chapter " + chapter.getId() + ": finale");
+            for (StoryDef.Fragment f : chapter.getFragments()) {
+                check(fragments.add(f.getId()), "story: duplicate fragment " + f.getId());
+            }
+        }
+        for (SignalsDef.Transmission t : content.getSignals().getTransmissions()) {
+            if (t.getReward() == SignalsDef.Transmission.Reward.PLOT) {
+                check(fragments.contains(t.getPlot()), "transmission " + t.getId() + ": unknown fragment " + t.getPlot());
+            }
+        }
+        for (EventDef e : content.getEvents().values()) {
+            if (e.getOptions() == null) {
+                continue;
+            }
+            for (EventDef.Option o : e.getOptions()) {
+                for (EventDef.Outcome out : java.util.Arrays.asList(o.getSuccess(), o.getFailure())) {
+                    if (out != null && out.getPlot() != null) {
+                        check(fragments.contains(out.getPlot()), "event " + e.getId() + ": unknown fragment " + out.getPlot());
+                    }
+                }
+            }
+        }
+        for (StoryDef.PersonalMission m : story.getPersonalMissions()) {
+            String where = "personal " + m.getId();
+            check(content.starter(m.getScout()) != null, where + ": unknown scout " + m.getScout());
+            check(content.getZones().containsKey(m.getZone()), where + ": unknown zone " + m.getZone());
+            check(content.getEvents().containsKey(m.getEvent()), where + ": unknown event " + m.getEvent());
+            if (m.getRewardTrait() != null) {
+                checkTrait(m.getRewardTrait(), where);
+            }
+            boolean offered = false;
+            for (DialogueDef d : content.getDialogues().values()) {
+                for (DialogueDef.Choice c : d.getChoices() != null ? d.getChoices() : java.util.List.<DialogueDef.Choice>of()) {
+                    offered |= c.getSetFlags().contains(m.offeredFlag());
+                }
+            }
+            check(offered, where + ": no dialogue offers it");
+        }
+        java.util.List<StoryDef.Goal> goals = new java.util.ArrayList<>(story.getObjectives().getDaily());
+        goals.add(story.getObjectives().getWeekly());
+        for (StoryDef.Goal g : goals) {
+            check(java.util.Set.of("decode", "expeditions", "sweeps").contains(g.getCounter()),
+                    "goal " + g.getId() + ": unknown counter " + g.getCounter());
+            checkResources(g.getReward(), "goal " + g.getId());
+        }
+        for (TraitDef trait : content.getTraits().values()) {
+            for (String other : trait.getClashes()) {
+                checkTrait(other, "trait " + trait.getId() + " clashes");
+            }
+        }
+
         EnergyDef energy = content.getBalance().getEnergy();
         for (String id : java.util.List.of("filters", "radio", "antenna", "workshop", "infirmary")) {
             check(energy.getConsumers().stream().anyMatch(c -> c.getId().equals(id)), "energy: consumer " + id);

@@ -105,6 +105,9 @@
     <string name="gear_none">Nada (devolver al búnker)</string>
     <string name="gear_empty">No hay equipo fabricado. Se hace en el taller.</string>
 
+    <string name="goals_title">OBJETIVOS</string>
+    <string name="goal_line">%1$s %2$s (%3$d/%4$d)</string>
+
     <string name="notification_channel">Transmisiones</string>
     <string name="notification_channel_description">Situaciones que necesitan órdenes y regresos al búnker.</string>
 </resources>

@@ -24,13 +24,14 @@ public final class GameContent {
     private final SignalsDef signals;
     private final Map<String, GearDef> gear;
     private final Map<String, RecipeDef> recipes;
+    private final StoryDef story;
 
     public GameContent(Balance balance, TerminalText terminal, List<ScoutTemplate> starters,
                        List<TraitDef> traits, List<ZoneDef> zones, List<EventDef> events,
                        List<VoiceDef> voices, List<ResourceDef> resources, List<ItemDef> items,
                        List<TaskDef> tasks, List<DialogueDef> dialogues,
                        List<ScoutTemplate> survivors, SignalsDef signals, List<GearDef> gear,
-                       List<RecipeDef> recipes) {
+                       List<RecipeDef> recipes, StoryDef story) {
         this.balance = Objects.requireNonNull(balance);
         this.terminal = Objects.requireNonNull(terminal);
         this.starters = Collections.unmodifiableList(starters);
@@ -46,6 +47,7 @@ public final class GameContent {
         this.signals = Objects.requireNonNull(signals);
         this.gear = index(gear, GearDef::getId);
         this.recipes = index(recipes, RecipeDef::getId);
+        this.story = Objects.requireNonNull(story);
     }
 
     private interface IdOf<T> {
@@ -149,6 +151,10 @@ public final class GameContent {
 
     public Map<String, GearDef> getGear() {
         return gear;
+    }
+
+    public StoryDef getStory() {
+        return story;
     }
 
     public RecipeDef recipe(String id) {

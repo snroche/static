@@ -26,6 +26,7 @@ import com.estatica.domain.content.Balance;
 import com.estatica.domain.content.BandDef;
 import com.estatica.domain.content.ModuleDef;
 import com.estatica.domain.content.SignalsDef;
+import com.estatica.domain.content.StoryDef;
 import com.estatica.domain.content.DialogueDef;
 import com.estatica.domain.content.EnergyDef;
 import com.estatica.domain.content.GearDef;
@@ -153,6 +154,8 @@ public final class GameSession {
     private final List<CraftJob> craftJobs = new ArrayList<>();
     /** Last power situation reported, to only log changes. */
     private String lastPowerReport = "";
+    /** Numeric bunker values (goal counters and done marks live here too). */
+    private final Map<String, Double> baseValues = new HashMap<>();
 
     @Inject
     GameSession(EstaticaDatabase db, ContentRepository contentRepository,
@@ -253,6 +256,7 @@ public final class GameSession {
         raids = new RaidRules(content, rules);
         power.putAll(baseRepository.power());
         Map<String, Double> values = baseRepository.values();
+        baseValues.putAll(values);
         craftJobs.addAll(baseRepository.craftJobs());
         db.runInTransaction(() -> {
             for (EnergyDef.Consumer c : energy.getConsumers()) {
@@ -429,9 +433,15 @@ public final class GameSession {
                 ItemInstance found = ItemInstance.found(itemId, now);
                 items.put(found.getId(), found);
             }
+            for (String fragment : result.getPlotFragments()) {
+                foundPlot(fragment, step);
+            }
             if (result.isReturned()) {
                 recoverLostItems(scout, expedition.getZoneId(), step);
                 finishMission(expedition, scout, result.isMissionCompleted(), step);
+                if (result.isMissionCompleted()) {
+                    count("expeditions", step);
+                }
             }
             if (result.isScoutDied()) {
                 afterDeath(scout, expedition.getZoneId(), step);
@@ -607,6 +617,13 @@ public final class GameSession {
                     return step.commit();
                 }
                 break;
+            case PERSONAL: {
+                StoryDef.PersonalMission personal = content.getStory().personalMission(target);
+                if (personal == null || !personalAvailable(personal, scout) || !zoneId.equals(personal.getZone())) {
+                    return step.commit();
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -715,6 +732,7 @@ public final class GameSession {
             return step.commit();
         }
         if (spot != null) {
+            count("sweeps", step);
             reserve -= cost;
             step.radioWrites.add(() -> baseRepository.saveValue(KEY_RESERVE, reserve));
         }
@@ -890,6 +908,7 @@ public final class GameSession {
             return step.commit();
         }
         t.markSolved();
+        count("decode", step);
         transmissions.remove(t.getId());
         step.radioWrites.add(() -> radioRepository.save(t));
         Map<String, String> vars = new HashMap<>();
@@ -926,6 +945,9 @@ public final class GameSession {
                 break;
             case RESOURCES:
                 grant(def.getResources(), step);
+                break;
+            case PLOT:
+                foundPlot(def.getPlot(), step);
                 break;
             case MORSE_TABLE:
                 if (gameFlags.add(FLAG_MORSE_TABLE)) {
@@ -985,6 +1007,11 @@ public final class GameSession {
                 if (completed && relay != null) {
                     relay.repair(step.now);
                     step.system(text.getRelayMaintained(), vars, scout);
+                }
+                break;
+            case PERSONAL:
+                if (completed) {
+                    completePersonal(content.getStory().personalMission(mission.getTarget()), scout, step);
                 }
                 break;
             default:
@@ -1296,11 +1323,131 @@ public final class GameSession {
                         gear.getDescription()));
             }
         }
-        return new SessionSnapshot.BaseView(energy.watts(moduleLevel("generator")), g.available, g.used,
+        return new SessionSnapshot.BaseView(goalViews(now), energy.watts(moduleLevel("generator")), g.available, g.used,
                 events.blackoutWattsAt(now) > 0, g.night, g.filtersShort, consumers,
                 (int) Math.floor(reserve), (int) energy.batteryCapacity(moduleLevel("generator")),
                 resources.getOrDefault("batteries", 0) > 0, modules, moduleLevel("workshop"), jobs, recipes,
                 guardNames, raids.defense(guards), gearStock, aliveScouts(), rosterCap());
+    }
+
+    // ---- Story: personal missions, La Voz, goals (GDD §5.2, §8, §9) ----
+
+    private boolean personalAvailable(StoryDef.PersonalMission m, Scout s) {
+        return s.isAlive() && m.getScout().equals(s.getTemplateId())
+                && s.getLife().hasFlag(m.offeredFlag()) && !s.getLife().hasFlag(m.doneFlag());
+    }
+
+    private void completePersonal(StoryDef.PersonalMission m, Scout scout, Step step) {
+        if (m == null || scout.getLife().hasFlag(m.doneFlag())) {
+            return;
+        }
+        scout.getLife().addFlag(m.doneFlag());
+        com.estatica.domain.scouts.DialogueOutcomes.applyBond(content, rules, scout, m.getRewardBond(), step.now, step.lines);
+        rules.addStress(scout, -m.getRewardStressRelief());
+        if (m.getRewardTrait() != null && rules.addTrait(scout, m.getRewardTrait())) {
+            com.estatica.domain.scouts.DialogueOutcomes.announceTrait(content, scout, m.getRewardTrait(),
+                    content.getTerminal().getBunker().getTraitGained(), step.now, step.lines);
+        }
+        if (m.getMemory() != null) {
+            step.memories.add(Memory.create(scout.getId(), Memory.Type.EVENT, m.getMemory(), m.getId(), step.now));
+        }
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", scout.getName());
+        vars.put("title", m.getTitle());
+        for (String line : m.getDoneLines()) {
+            step.lines.add(LogLine.draft(step.now, LogChannel.RADIO, scout.getName(),
+                    VoiceRenderer.render(content.voice(scout.getVoiceId()), line, vars), scout.getId()));
+        }
+        step.system(content.getTerminal().getStory().getPersonalDone(), vars, scout);
+    }
+
+    /** A La Voz fragment was found. When a chapter is complete, La Voz speaks (GDD §8). */
+    private void foundPlot(String fragmentId, Step step) {
+        StoryDef.Chapter chapter = content.getStory().chapterOf(fragmentId);
+        if (chapter == null || !gameFlags.add("plot:" + fragmentId)) {
+            return;
+        }
+        step.radioWrites.add(() -> radioRepository.addFlag("plot:" + fragmentId, step.now));
+        int found = 0;
+        for (StoryDef.Fragment f : chapter.getFragments()) {
+            found += gameFlags.contains("plot:" + f.getId()) ? 1 : 0;
+        }
+        Map<String, String> vars = new HashMap<>();
+        vars.put("title", chapter.getTitle());
+        vars.put("found", String.valueOf(found));
+        vars.put("total", String.valueOf(chapter.getFragments().size()));
+        step.system(content.getTerminal().getStory().getPlotFound(), vars, null);
+        if (found == chapter.getFragments().size() && gameFlags.add("chapter:" + chapter.getId())) {
+            step.radioWrites.add(() -> radioRepository.addFlag("chapter:" + chapter.getId(), step.now));
+            String speaker = content.getTerminal().getStory().getVoiceSpeaker();
+            for (String line : chapter.getFinale()) {
+                step.lines.add(LogLine.draft(step.now, LogChannel.RADIO, speaker, line));
+            }
+            step.lines.add(LogLine.draft(step.now, LogChannel.ALERT, null, chapter.getClosing()));
+        }
+    }
+
+    private long localDay(long now) {
+        return clock.localEpochDay(now);
+    }
+
+    /** Monday-based week index (epoch day 0 was a Thursday). */
+    private static long week(long day) {
+        return Math.floorDiv(day + 3, 7);
+    }
+
+    private double value(String key) {
+        return baseValues.getOrDefault(key, 0.0);
+    }
+
+    private void setValue(String key, double v, Step step) {
+        baseValues.put(key, v);
+        step.radioWrites.add(() -> baseRepository.saveValue(key, v));
+    }
+
+    /** Counts towards daily and weekly goals and pays out those just completed (GDD §9). */
+    private void count(String counter, Step step) {
+        long day = localDay(step.now);
+        String dayKey = "obj:d:" + day + ":" + counter;
+        String weekKey = "obj:w:" + week(day) + ":" + counter;
+        setValue(dayKey, value(dayKey) + 1, step);
+        setValue(weekKey, value(weekKey) + 1, step);
+        StoryDef.Objectives objectives = content.getStory().getObjectives();
+        for (StoryDef.Goal goal : objectives.getDaily()) {
+            checkGoal(goal, dayKey, "done:d:" + day + ":" + goal.getId(), counter, step);
+        }
+        StoryDef.Goal weekly = objectives.getWeekly();
+        checkGoal(weekly, weekKey, "done:w:" + week(day) + ":" + weekly.getId(), counter, step);
+    }
+
+    private void checkGoal(StoryDef.Goal goal, String counterKey, String doneKey, String counter, Step step) {
+        if (!goal.getCounter().equals(counter) || value(doneKey) > 0 || value(counterKey) < goal.getTarget()) {
+            return;
+        }
+        setValue(doneKey, 1, step);
+        TerminalText.StoryText text = content.getTerminal().getStory();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("label", goal.getLabel());
+        step.system(text.getGoalDone(), vars, null);
+        if (!goal.getReward().isEmpty()) {
+            goal.getReward().forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+            vars.put("loot", describe(goal.getReward()));
+            step.system(text.getGoalReward(), vars, null);
+        }
+    }
+
+    private List<SessionSnapshot.GoalView> goalViews(long now) {
+        long day = localDay(now);
+        StoryDef.Objectives objectives = content.getStory().getObjectives();
+        List<SessionSnapshot.GoalView> out = new ArrayList<>();
+        for (StoryDef.Goal g : objectives.getDaily()) {
+            out.add(new SessionSnapshot.GoalView(g.getLabel(),
+                    (int) Math.min(g.getTarget(), value("obj:d:" + day + ":" + g.getCounter())), g.getTarget(), false));
+        }
+        StoryDef.Goal w = objectives.getWeekly();
+        out.add(new SessionSnapshot.GoalView(w.getLabel(),
+                (int) Math.min(w.getTarget(), value("obj:w:" + week(day) + ":" + w.getCounter())), w.getTarget(), true));
+        return out;
     }
 
     /** [HABLAR]: the operator starts a conversation (GDD §5.3), with a cooldown per scout. */
@@ -1341,8 +1488,17 @@ public final class GameSession {
         if (c != null && c.isPending()) {
             Scout scout = scouts.get(c.getScoutId());
             DialogueDef dialogue = content.dialogue(c.getDialogueId());
+            Set<String> before = new java.util.HashSet<>(scout.getLife().getFlags());
             DialogueEngine.Answer answer = dialogues.answer(scout, dialogue, choice, scouts.values(), step.now);
             step.lines.addAll(answer.lines);
+            for (StoryDef.PersonalMission m : content.getStory().getPersonalMissions()) {
+                if (!before.contains(m.offeredFlag()) && scout.getLife().hasFlag(m.offeredFlag())) {
+                    Map<String, String> vars = new HashMap<>();
+                    vars.put("name", scout.getName());
+                    vars.put("title", m.getTitle());
+                    step.system(content.getTerminal().getStory().getPersonalAvailable(), vars, scout);
+                }
+            }
             step.memories.addAll(answer.memories);
             scout.getLife().setLastTalkAtMillis(step.now);
             c.setStatus(Conversation.Status.ANSWERED);
@@ -1492,6 +1648,19 @@ public final class GameSession {
             GearDef gear = rules.gearOf(s);
             b.gear = gear != null ? gear.getName() : null;
             b.canEquip = home;
+            b.relations = new ArrayList<>();
+            for (Scout other : scouts.values()) {
+                String relation = other == s || !other.isAlive() || !s.isAlive()
+                        ? null : bunker.relationship(affinities, s, other);
+                if (relation != null) {
+                    Map<String, String> vars = new HashMap<>();
+                    vars.put("other", other.getName());
+                    TerminalText.StoryText st = content.getTerminal().getStory();
+                    String relationText = "inseparable".equals(relation) ? st.getInseparable()
+                            : "friends".equals(relation) ? st.getFriends() : st.getRivals();
+                    b.relations.add(TextTemplate.format(relationText, vars));
+                }
+            }
             Expedition away = byScout.get(s.getId());
             b.awayAt = away != null && s.getStatus() == ScoutStatus.AWAY
                     ? content.zone(away.getZoneId()).getName() : null;
@@ -1561,6 +1730,18 @@ public final class GameSession {
                         target.getKey(), TextTemplate.format(radioText.getMissionRescue(), vars), z.getName()));
             }
         }
+        for (Scout s : scouts.values()) {
+            for (StoryDef.PersonalMission m : content.getStory().getPersonalMissions()) {
+                ZoneDef z = content.zone(m.getZone());
+                if (personalAvailable(m, s) && canReach(z)) {
+                    Map<String, String> vars = new HashMap<>();
+                    vars.put("title", m.getTitle());
+                    missions.add(new SessionSnapshot.MissionView(Mission.Type.PERSONAL.name(), z.getId(), m.getId(),
+                            TextTemplate.format(content.getTerminal().getStory().getMissionPersonal(), vars),
+                            z.getName(), s.getId()));
+                }
+            }
+        }
         boolean hasKit = resources.getOrDefault("relay_kit", 0) > 0;
         for (ZoneDef z : content.getZones().values()) {
             if (!canReach(z)) {
@@ -1621,12 +1802,19 @@ public final class GameSession {
                 resources.getOrDefault("relay_kit", 0), relayLines);
     }
 
-    /** The Diary: one entry per fallen scout, with their story and last transmission. */
+    /**
+     * The Diary (GDD §6.6): the fallen with their story and last transmission, La Voz
+     * fragments, decoded transmissions and known zones.
+     */
     @WorkerThread
     public List<SessionSnapshot.DiaryEntry> diary() {
         TerminalText.BunkerText text = content.getTerminal().getBunker();
+        TerminalText.StoryText story = content.getTerminal().getStory();
         SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy HH:mm", Locale.forLanguageTag("es"));
         List<SessionSnapshot.DiaryEntry> out = new ArrayList<>();
+
+        out.add(SessionSnapshot.DiaryEntry.section(story.getDiaryFallen()));
+        List<SessionSnapshot.DiaryEntry> fallen = new ArrayList<>();
         for (Scout s : scouts.values()) {
             if (s.isAlive()) {
                 continue;
@@ -1645,10 +1833,38 @@ public final class GameSession {
                 }
             }
             ScoutTemplate template = content.starter(s.getTemplateId());
-            out.add(new SessionSnapshot.DiaryEntry(s.getName(), TextTemplate.format(text.getDiaryFell(), vars),
+            fallen.add(new SessionSnapshot.DiaryEntry(s.getName(), TextTemplate.format(text.getDiaryFell(), vars),
                     template != null ? template.getBio() : null, memories, lastWords));
         }
-        out.sort(Comparator.comparing(e -> e.name));
+        fallen.sort(Comparator.comparing(e -> e.name));
+        if (fallen.isEmpty()) {
+            fallen.add(new SessionSnapshot.DiaryEntry(text.getDiaryEmpty(), null, null, List.of(), null));
+        }
+        out.addAll(fallen);
+
+        out.add(SessionSnapshot.DiaryEntry.section(story.getDiaryVoice()));
+        for (StoryDef.Chapter chapter : content.getStory().getChapters()) {
+            List<String> fragments = new ArrayList<>();
+            for (StoryDef.Fragment f : chapter.getFragments()) {
+                fragments.add(gameFlags.contains("plot:" + f.getId()) ? f.getText() : story.getDiaryUnknownFragment());
+            }
+            String finale = gameFlags.contains("chapter:" + chapter.getId())
+                    ? String.join("\n", chapter.getFinale()) : null;
+            out.add(new SessionSnapshot.DiaryEntry(chapter.getTitle(), null, null, fragments, finale));
+        }
+
+        out.add(SessionSnapshot.DiaryEntry.section(story.getDiaryLore()));
+        for (String line : lore.values()) {
+            out.add(new SessionSnapshot.DiaryEntry(line, null, null, List.of(), null));
+        }
+
+        out.add(SessionSnapshot.DiaryEntry.section(story.getDiaryZones()));
+        for (ZoneDef z : content.getZones().values()) {
+            if (knownZones.contains(z.getId())) {
+                out.add(new SessionSnapshot.DiaryEntry(z.getName(),
+                        content.getBalance().band(z.getBand()).getName(), z.getDescription(), List.of(), null));
+            }
+        }
         return out;
     }
 

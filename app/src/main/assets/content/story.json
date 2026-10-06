@@ -1,0 +1,156 @@
+{
+  "_draft": "BORRADOR de la trama (capítulo 1 de La Voz) para revisar y reescribir.",
+  "chapters": [
+    {
+      "id": "c1",
+      "title": "Capítulo 1: Siete, tres, uno, nueve",
+      "fragments": [
+        {
+          "id": "c1_1",
+          "source": "Dial (banda corta)",
+          "text": "Los números de La Voz no son al azar: 7-3-1-9 se repite cada hora en punto, como un horario."
+        },
+        {
+          "id": "c1_2",
+          "source": "Dial (banda media)",
+          "text": "Una estación que se hace llamar Eco-7 contesta en la banda media. Dice su nombre y corta."
+        },
+        {
+          "id": "c1_3",
+          "source": "Comisaría (archivo) o laboratorio de Irene",
+          "text": "Una carpeta: «Proyecto Eco. Red de alerta temprana. Activación: 03:10». Es la hora en que empezó el Silencio."
+        },
+        {
+          "id": "c1_4",
+          "source": "Antena del norte",
+          "text": "En la antena del norte hay un equipo instalado después del Silencio. Placa: ECO-7. Retransmite algo que viene de más lejos."
+        },
+        {
+          "id": "c1_5",
+          "source": "Dial (banda larga)",
+          "text": "Por primera vez, La Voz pregunta algo: «¿Quién más escucha?»."
+        }
+      ],
+      "finale": [
+        "Operador del búnker. Siete, tres, uno, nueve. Sabemos que escuchás.",
+        "El Silencio no terminó. Solo se hizo más bajo.",
+        "Cuando estés listo, buscá la estación Eco-7. Fin de la transmisión."
+      ],
+      "closing": "Capítulo 1 completo. La Voz sabe que existís."
+    }
+  ],
+  "personalMissions": [
+    {
+      "id": "mara_ruta",
+      "scout": "mara",
+      "title": "La panadería de Olazábal",
+      "zone": "almacen",
+      "event": "mara_olazabal",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "el día que volví a la panadería de Olazábal",
+      "doneLines": [
+        "gracias por dejarme ir.",
+        "no sabía que necesitaba esto."
+      ]
+    },
+    {
+      "id": "tano_obra",
+      "scout": "tano",
+      "title": "El anexo de la escuela",
+      "zone": "escuela",
+      "event": "tano_casita",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "el día que vi que mi obra seguía en pie",
+      "doneLines": [
+        "Gracias, jefe. Ahora sé que algo de lo que hice sigue en pie."
+      ]
+    },
+    {
+      "id": "irene_lab",
+      "scout": "irene",
+      "title": "El laboratorio",
+      "zone": "hospital",
+      "event": "irene_laboratorio",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "el día que volví a mi laboratorio",
+      "doneLines": [
+        "Gracias por esto, operador. Necesitaba cerrar esa puerta."
+      ]
+    },
+    {
+      "id": "beto_casilla",
+      "scout": "beto",
+      "title": "La casilla de señales",
+      "zone": "estacion_tren",
+      "event": "beto_cuadrilla",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "el día que volví a la casilla",
+      "doneLines": [
+        "Misión cumplida. Gracias. Cambio y fuera."
+      ]
+    },
+    {
+      "id": "lucho_casa",
+      "scout": "lucho",
+      "title": "La casa del barrio",
+      "zone": "barrio_privado",
+      "event": "lucho_vieja",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "el día que volví a casa",
+      "doneLines": [
+        "Gracias. En serio. No sé qué más decir."
+      ]
+    }
+  ],
+  "objectives": {
+    "daily": [
+      {
+        "id": "d_decode",
+        "counter": "decode",
+        "target": 1,
+        "label": "Descifrar 1 transmisión",
+        "reward": {
+          "batteries": 1
+        }
+      },
+      {
+        "id": "d_expeditions",
+        "counter": "expeditions",
+        "target": 2,
+        "label": "Completar 2 expediciones",
+        "reward": {
+          "rations": 2
+        }
+      },
+      {
+        "id": "d_sweeps",
+        "counter": "sweeps",
+        "target": 5,
+        "label": "Fijar 5 señales en el dial",
+        "reward": {
+          "components": 1
+        }
+      }
+    ],
+    "weekly": {
+      "id": "w_expeditions",
+      "counter": "expeditions",
+      "target": 10,
+      "label": "Completar 10 expediciones en la semana",
+      "reward": {
+        "parts": 2,
+        "medicine": 2
+      }
+    }
+  }
+}

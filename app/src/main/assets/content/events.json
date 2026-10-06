@@ -931,9 +931,10 @@
         "difficulty": 6,
         "success": {
           "text": [
-            "Hay informes de antes. Fechas, horarios. Me guardo lo importante en la cabeza."
+            "Hay informes de antes. Una carpeta dice \"Proyecto Eco\". Me guardo lo importante en la cabeza."
           ],
-          "memory": "las carpetas que decían Silencio en la tapa"
+          "memory": "las carpetas que decían Silencio en la tapa",
+          "plot": "c1_3"
         },
         "failure": {
           "text": [
@@ -1042,6 +1043,1370 @@
           "text": [
             "Sigo. Lo escucho llamarme un rato largo."
           ],
+          "stress": 15
+        }
+      }
+    ]
+  },
+  {
+    "id": "inundacion",
+    "intro": [
+      "El sótano está inundado hasta la cintura.",
+      "Abajo flota algo que parece una caja."
+    ],
+    "options": [
+      {
+        "id": "nadar",
+        "label": "Metete y traela",
+        "stat": "endurance",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Fría como el demonio, pero la traje. Herramientas."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me resbalé en la escalera. Tragué agua."
+          ],
+          "injury": "light",
+          "stress": 10
+        }
+      },
+      {
+        "id": "gancho",
+        "label": "Armá un gancho y pescala",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Con un alambre la acerqué. Seca por dentro."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se hundió más. Perdida."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "cables",
+    "intro": [
+      "Hay cables pelados en el piso. Escucho un zumbido.",
+      "Todavía hay corriente en algún lado."
+    ],
+    "options": [
+      {
+        "id": "cortar",
+        "label": "Cortá la corriente",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Encontré el tablero y bajé la llave. Me llevo los fusibles."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me dio una patada eléctrica. Tengo la mano dormida."
+          ],
+          "injury": "light",
+          "stress": 10
+        }
+      },
+      {
+        "id": "saltar",
+        "label": "Pasá por encima con cuidado",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Paso por arriba, despacito."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Pisé mal. Chispas. Salté justo."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "bateria",
+        "label": "Buscá de dónde sale la corriente",
+        "stat": "craft",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Un banco de baterías en el cuarto de máquinas. Todavía cargan algo."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "No la encontré. Y el zumbido me pone nervioso."
+          ],
+          "stress": 8
+        },
+        "risk": "RISKY"
+      }
+    ]
+  },
+  {
+    "id": "avispas",
+    "intro": [
+      "Un panal enorme sobre la puerta que necesito.",
+      "El zumbido no para."
+    ],
+    "options": [
+      {
+        "id": "humo",
+        "label": "Hacé humo y pasá",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Con trapos mojados y fuego las aturdí. Paso."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se enojaron. Me picaron la cara."
+          ],
+          "injury": "light",
+          "stress": 10
+        }
+      },
+      {
+        "id": "rodear",
+        "label": "Buscá otra entrada",
+        "stat": "stealth",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Por la ventana del baño. Más lento, pero entero."
+          ]
+        },
+        "failure": {
+          "text": [
+            "No hay otra. Me vuelvo."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "puerta_blindada",
+    "intro": [
+      "Una puerta blindada. Del otro lado, silencio.",
+      "Tiene una cerradura de combinación."
+    ],
+    "options": [
+      {
+        "id": "combinacion",
+        "label": "Probá combinaciones",
+        "stat": "wits",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Siete, tres, uno, nueve. Abrió. No sé por qué probé esos números."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 3
+            }
+          ],
+          "memory": "la puerta que abrió con los números de La Voz"
+        },
+        "failure": {
+          "text": [
+            "Nada. Me cansé."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "bisagras",
+        "label": "Atacá las bisagras",
+        "stat": "craft",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "Saqué los pernos uno por uno. Adentro, un depósito."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 3,
+              "max": 6
+            },
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me rompí una uña y nada más."
+          ],
+          "stress": 6
+        },
+        "risk": "RISKY"
+      }
+    ]
+  },
+  {
+    "id": "mapa",
+    "intro": [
+      "En la pared hay un mapa del barrio con marcas en rojo.",
+      "Alguien anotó cosas a mano."
+    ],
+    "options": [
+      {
+        "id": "copiar",
+        "label": "Copiá las marcas",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Lo copié todo. Hay cruces sobre algunas calles: zonas a evitar, creo."
+          ],
+          "memory": "el mapa con cruces rojas",
+          "stress": -5
+        },
+        "failure": {
+          "text": [
+            "No entiendo la letra. Me llevo lo que puedo."
+          ],
+          "stress": 3
+        }
+      },
+      {
+        "id": "arrancar",
+        "label": "Arrancalo y traelo",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Lo traigo enrollado."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se deshizo en mis manos."
+          ],
+          "stress": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "francotirador",
+    "intro": [
+      "Un disparo. Pegó en la pared, cerca.",
+      "Alguien tira desde un techo."
+    ],
+    "options": [
+      {
+        "id": "cubrirse",
+        "label": "Cubrite y esperá la noche",
+        "stat": "nerve",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Esperé horas. Se fue. Sigo."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me temblaron las piernas toda la espera."
+          ],
+          "stress": 20
+        }
+      },
+      {
+        "id": "correr",
+        "label": "Corré hasta el próximo edificio",
+        "stat": "endurance",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Llegué. Respiro."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me rozó la pierna."
+          ],
+          "injury": "serious",
+          "stress": 20,
+          "lethal": true
+        },
+        "risk": "RISKY"
+      },
+      {
+        "id": "hablar",
+        "label": "Gritale que no venís a robar",
+        "stat": "nerve",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "Dejó de tirar. Me hizo señas para que siguiera."
+          ],
+          "memory": "el tirador que me dejó pasar"
+        },
+        "failure": {
+          "text": [
+            "No le importó. Tiró de nuevo."
+          ],
+          "injury": "light",
+          "stress": 20
+        }
+      }
+    ]
+  },
+  {
+    "id": "derrumbe",
+    "intro": [
+      "Se vino abajo parte del techo. Estoy del lado equivocado."
+    ],
+    "options": [
+      {
+        "id": "escombros",
+        "label": "Mové los escombros",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Abrí un hueco. Debajo había algo útil."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se movió todo de nuevo. Me golpeó el hombro."
+          ],
+          "injury": "light",
+          "stress": 12
+        }
+      },
+      {
+        "id": "ventilacion",
+        "label": "Salí por la ventilación",
+        "stat": "stealth",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Por el ducto, arrastrándome. Salí."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me trabé un rato largo. Muy largo."
+          ],
+          "stress": 18
+        }
+      }
+    ]
+  },
+  {
+    "id": "ratas",
+    "intro": [
+      "Ratas. Cientos. Salen de las cloacas."
+    ],
+    "options": [
+      {
+        "id": "fuego",
+        "label": "Ahuyentalas con fuego",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Se dispersaron. El depósito quedó libre."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Casi prendo fuego todo."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "esperar",
+        "label": "Quedate quieto hasta que pasen",
+        "stat": "nerve",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Pasaron por al lado. Ni me miraron."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Una me mordió el tobillo."
+          ],
+          "injury": "light",
+          "stress": 15
+        }
+      }
+    ]
+  },
+  {
+    "id": "deposito_frio",
+    "intro": [
+      "Una cámara frigorífica. La puerta está trabada desde adentro."
+    ],
+    "options": [
+      {
+        "id": "forzar",
+        "label": "Forzá la puerta",
+        "stat": "endurance",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Adentro hay latas que aguantaron todo."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 6
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me lastimé la espalda empujando."
+          ],
+          "injury": "light",
+          "stress": 8
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "No la abras",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Trabada desde adentro. Mejor no saber."
+          ]
+        },
+        "failure": {
+          "text": [
+            "No la abro. Pero escuché algo golpear."
+          ],
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "trampa",
+    "intro": [
+      "Hay un alambre a la altura del tobillo.",
+      "Alguien puso una trampa."
+    ],
+    "options": [
+      {
+        "id": "desarmar",
+        "label": "Desarmala",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "La desarmé. El mecanismo sirve para piezas."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Saltó. Me cortó la pierna."
+          ],
+          "injury": "serious",
+          "stress": 15
+        }
+      },
+      {
+        "id": "evitar",
+        "label": "Rodeala",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "La esquivé. Quien la puso no debe estar lejos."
+          ],
+          "stress": 5
+        },
+        "failure": {
+          "text": [
+            "Había otra. La pisé."
+          ],
+          "injury": "light",
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "tormenta",
+    "intro": [
+      "Se levantó una tormenta de polvo. No veo a dos metros."
+    ],
+    "options": [
+      {
+        "id": "refugio",
+        "label": "Buscá refugio y esperá",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Me metí en un colectivo. Pasó en dos horas."
+          ]
+        },
+        "failure": {
+          "text": [
+            "No encontré nada. Me tapé con la campera."
+          ],
+          "stress": 18
+        }
+      },
+      {
+        "id": "seguir",
+        "label": "Seguí con la brújula",
+        "stat": "nerve",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "Llegué derecho. Ni sé cómo."
+          ],
+          "memory": "la tormenta que crucé a ciegas"
+        },
+        "failure": {
+          "text": [
+            "Me perdí. Tardé el doble en volver al camino."
+          ],
+          "injury": "light",
+          "stress": 20
+        },
+        "risk": "RISKY"
+      }
+    ]
+  },
+  {
+    "id": "pista",
+    "intro": [
+      "La pista del aeropuerto está a cielo abierto.",
+      "Hay que cruzarla. Sin dónde esconderse."
+    ],
+    "options": [
+      {
+        "id": "correr",
+        "label": "Cruzala corriendo",
+        "stat": "endurance",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Crucé. Nadie disparó."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Algo me persiguió hasta el hangar."
+          ],
+          "injury": "light",
+          "stress": 20
+        }
+      },
+      {
+        "id": "noche",
+        "label": "Esperá a la noche",
+        "stat": "stealth",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "De noche, despacito. Llegué."
+          ]
+        },
+        "failure": {
+          "text": [
+            "La noche tiene sus cosas. Llegué temblando."
+          ],
+          "stress": 18
+        }
+      }
+    ]
+  },
+  {
+    "id": "avion",
+    "intro": [
+      "Un avión de carga partido al medio.",
+      "La bodega está entera."
+    ],
+    "options": [
+      {
+        "id": "bodega",
+        "label": "Entrá a la bodega",
+        "stat": "endurance",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "Cajas de repuestos. Esto vale oro."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 3
+            },
+            {
+              "resource": "components",
+              "min": 3,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "El fuselaje cedió. Me quedé atrapado un rato."
+          ],
+          "injury": "serious",
+          "stress": 20,
+          "lethal": true
+        },
+        "risk": "RISKY"
+      },
+      {
+        "id": "cabina",
+        "label": "Revisá la cabina",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "El equipo de radio del avión todavía tiene piezas."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Nada que sirva. Y un olor que no quiero describir."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "compuertas",
+    "intro": [
+      "Las compuertas de la represa crujen.",
+      "El agua empuja del otro lado."
+    ],
+    "options": [
+      {
+        "id": "cerrar",
+        "label": "Trabá la compuerta",
+        "stat": "craft",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "La trabé con una barra. Del cuarto de control me llevo lo que pude."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 3,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se soltó. El agua me arrastró unos metros."
+          ],
+          "injury": "serious",
+          "stress": 25,
+          "lethal": true
+        },
+        "risk": "RISKY"
+      },
+      {
+        "id": "alejarse",
+        "label": "Alejate por arriba",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Subí por la escalera de servicio. Desde arriba se ve todo."
+          ]
+        },
+        "failure": {
+          "text": [
+            "La escalera está podrida. Bajé por donde pude."
+          ],
+          "injury": "light",
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "turbinas",
+    "intro": [
+      "La sala de turbinas. Una todavía gira, lenta."
+    ],
+    "options": [
+      {
+        "id": "desarmar",
+        "label": "Desarmá lo que puedas",
+        "stat": "craft",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Bobinas, rodamientos, cobre. Todo sirve."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "scrap",
+              "min": 3,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me agarró la manga. Salí con un tirón."
+          ],
+          "injury": "light",
+          "stress": 15
+        }
+      },
+      {
+        "id": "frenar",
+        "label": "Frená la turbina primero",
+        "stat": "wits",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "La frené. Ahora sí, todo con calma."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 4
+            },
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "No entiendo los controles. Mejor no toco."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "torre",
+    "intro": [
+      "La torre de la antena tiene cuarenta metros.",
+      "Arriba hay una caja que no es de antes."
+    ],
+    "options": [
+      {
+        "id": "subir",
+        "label": "Subí",
+        "stat": "endurance",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "Subí. Viento terrible. Bajé la caja."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            }
+          ],
+          "memory": "la torre de cuarenta metros"
+        },
+        "failure": {
+          "text": [
+            "Un peldaño se soltó."
+          ],
+          "injury": "serious",
+          "stress": 25,
+          "lethal": true
+        },
+        "risk": "RISKY"
+      },
+      {
+        "id": "mirar",
+        "label": "Mirala de lejos con lo que tengas",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Desde abajo se ve: es un retransmisor. Alguien lo mantiene."
+          ]
+        },
+        "failure": {
+          "text": [
+            "No se distingue nada."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "campamento",
+    "intro": [
+      "Un campamento. Fogatas recientes.",
+      "Hay gente, y no parecen amables."
+    ],
+    "options": [
+      {
+        "id": "negociar",
+        "label": "Acercate y negociá",
+        "stat": "nerve",
+        "difficulty": 8,
+        "success": {
+          "text": [
+            "Intercambiamos noticias. Me dieron comida."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            }
+          ],
+          "memory": "el campamento que me dio comida"
+        },
+        "failure": {
+          "text": [
+            "Me sacaron todo y me echaron."
+          ],
+          "injury": "light",
+          "stress": 25
+        }
+      },
+      {
+        "id": "observar",
+        "label": "Observalos de lejos",
+        "stat": "stealth",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Tienen radios. Escuchan lo mismo que nosotros."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Un perro me olió. Salí corriendo."
+          ],
+          "stress": 20
+        }
+      },
+      {
+        "id": "robar",
+        "label": "Robales de noche",
+        "stat": "stealth",
+        "difficulty": 9,
+        "success": {
+          "text": [
+            "Me llevé baterías y medicinas."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "medicine",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Me agarraron."
+          ],
+          "injury": "serious",
+          "stress": 30,
+          "lethal": true
+        },
+        "risk": "RISKY"
+      }
+    ]
+  },
+  {
+    "id": "la_voz_rele",
+    "intro": [
+      "Encontré un equipo en la sala de la antena.",
+      "No es de antes del Silencio. Alguien lo instaló después.",
+      "Repite los números. Siete, tres, uno, nueve."
+    ],
+    "options": [
+      {
+        "id": "estudiar",
+        "label": "Estudiá el equipo",
+        "stat": "wits",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Tiene una placa: ECO-7. Retransmite algo que viene de más lejos."
+          ],
+          "plot": "c1_4",
+          "memory": "el equipo que repetía los números"
+        },
+        "failure": {
+          "text": [
+            "No entiendo cómo funciona. Lo dejo como está."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "desconectar",
+        "label": "Desconectalo",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Lo apagué. Treinta segundos después, se prendió solo."
+          ],
+          "plot": "c1_4",
+          "stress": 15
+        },
+        "failure": {
+          "text": [
+            "Me dio una descarga."
+          ],
+          "injury": "light",
+          "stress": 15
+        },
+        "risk": "RISKY"
+      }
+    ]
+  },
+  {
+    "id": "mara_olazabal",
+    "intro": [
+      "La panadería de Olazábal. La persiana está baja, pero hay luz adentro.",
+      "Alguien vive acá."
+    ],
+    "options": [
+      {
+        "id": "golpear",
+        "label": "Golpeá",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Abrió el hijo de Olazábal. Me reconoció. Lloramos los dos.",
+            "Me dio la receta de las medialunas, escrita a mano."
+          ],
+          "memory": "el hijo de Olazábal y la receta de las medialunas"
+        },
+        "failure": {
+          "text": [
+            "No abrió nadie. La luz se apagó."
+          ],
+          "stress": 15
+        }
+      },
+      {
+        "id": "mirar",
+        "label": "Mirá por la ventana",
+        "stat": "stealth",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Es el hijo de Olazábal. Está bien. Le dejo una nota."
+          ],
+          "memory": "la nota que le dejé al hijo de Olazábal"
+        },
+        "failure": {
+          "text": [
+            "No se ve nada."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "tano_casita",
+    "intro": [
+      "El anexo de la escuela. Lo levanté yo, con dos ayudantes.",
+      "Sigue en pie, jefe. Sigue en pie."
+    ],
+    "options": [
+      {
+        "id": "revisar",
+        "label": "Revisá la estructura",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Ni una fisura. Le dejé mi firma en el revoque, como antes."
+          ],
+          "memory": "el anexo que levanté y sigue en pie"
+        },
+        "failure": {
+          "text": [
+            "Hay una grieta. La voy a tener que volver a hacer."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "sentarse",
+        "label": "Quedate un rato",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Me senté en la escalera que hice. Un rato nomás."
+          ],
+          "memory": "la escalera del anexo"
+        },
+        "failure": {
+          "text": [
+            "No pude quedarme. Me ganó la bronca."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "irene_laboratorio",
+    "intro": [
+      "Mi laboratorio, operador. El piso cuatro.",
+      "Las heladeras están abiertas. Alguien estuvo acá."
+    ],
+    "options": [
+      {
+        "id": "archivos",
+        "label": "Buscá sus notas",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Están mis cuadernos. Y otros, que no son míos.",
+            "Hablan de una red de alerta. Proyecto Eco."
+          ],
+          "memory": "mis cuadernos del laboratorio",
+          "plot": "c1_3"
+        },
+        "failure": {
+          "text": [
+            "Se llevaron todo. Solo quedan carpetas vacías."
+          ],
+          "stress": 15
+        }
+      },
+      {
+        "id": "muestras",
+        "label": "Rescatá lo que se pueda",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Medicamentos que todavía sirven."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 3,
+              "max": 5
+            }
+          ],
+          "memory": "las muestras que rescaté del laboratorio"
+        },
+        "failure": {
+          "text": [
+            "Todo vencido. Todo."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "beto_cuadrilla",
+    "intro": [
+      "La casilla de señales. Acá trabajé treinta años.",
+      "La palanca del cambio de vías sigue en su lugar."
+    ],
+    "options": [
+      {
+        "id": "libro",
+        "label": "Buscá el libro de guardia",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Está. Las firmas de mi cuadrilla. Todas.",
+            "Me lo llevo."
+          ],
+          "memory": "el libro de guardia con las firmas de la cuadrilla"
+        },
+        "failure": {
+          "text": [
+            "La lluvia lo deshizo."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "palanca",
+        "label": "Mové la palanca una vez más",
+        "stat": "endurance",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Clac. Como antes. Cambio y fuera."
+          ],
+          "memory": "la palanca del cambio de vías"
+        },
+        "failure": {
+          "text": [
+            "Trabada. Como todo ahora."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "lucho_vieja",
+    "intro": [
+      "La casa del barrio. Acá esperé a mi vieja.",
+      "No volvió nunca."
+    ],
+    "options": [
+      {
+        "id": "buscar",
+        "label": "Buscá su carta",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Estaba debajo del colchón. Dice que me quiere. Que me vaya al sur si no vuelve.",
+            "Ya está. Ya sé."
+          ],
+          "memory": "la carta de mi vieja"
+        },
+        "failure": {
+          "text": [
+            "No la encontré. Capaz nunca hubo carta."
+          ],
+          "stress": 20
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Dejale algo vos",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Le dejé mi gorra en la mesa. Por si vuelve."
+          ],
+          "memory": "la gorra que le dejé a mi vieja"
+        },
+        "failure": {
+          "text": [
+            "No pude entrar. Me quedé en la vereda."
+          ],
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "radioaficionado",
+    "intro": [
+      "Una casa con una antena casera en el techo.",
+      "Adentro, un equipo de radioaficionado con el dial marcado."
+    ],
+    "options": [
+      {
+        "id": "anotar",
+        "label": "Anotá las frecuencias marcadas",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Hay frecuencias marcadas con lápiz. Una dice \"VOZ\" y está subrayada tres veces."
+          ],
+          "memory": "el dial marcado del radioaficionado"
+        },
+        "failure": {
+          "text": [
+            "La letra es ilegible. Una lástima."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "desarmar",
+        "label": "Desarmá el equipo",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Válvulas, bobinas. Para el taller."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se me rompió todo en las manos."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "helada",
+    "intro": [
+      "Bajó la temperatura de golpe. Escarcha en todo.",
+      "Me tiemblan las manos."
+    ],
+    "options": [
+      {
+        "id": "fuego",
+        "label": "Hacé un fuego y esperá",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Un fuego chico en un tacho. Se pasa."
+          ]
+        },
+        "failure": {
+          "text": [
+            "No prende. Pasé la noche temblando."
+          ],
+          "injury": "light",
+          "stress": 12
+        }
+      },
+      {
+        "id": "seguir",
+        "label": "Seguí caminando para no enfriarte",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Caminé toda la noche. Llegué entero."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Se me congelaron los dedos.",
+            "Puedo seguir, pero duele."
+          ],
+          "injury": "serious",
           "stress": 15
         }
       }

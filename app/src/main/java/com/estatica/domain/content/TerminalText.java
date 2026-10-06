@@ -21,6 +21,11 @@ public final class TerminalText {
     private BunkerText bunker;
     private RadioText radio;
     private BaseText base;
+    private StoryText story;
+
+    public StoryText getStory() {
+        return story;
+    }
 
     public BaseText getBase() {
         return base;
@@ -138,6 +143,112 @@ public final class TerminalText {
 
         public String getNotifyReturned() {
             return notifyReturned;
+        }
+    }
+
+    /** Personal missions, La Voz, relationships, goals and settings. All are templates. */
+    public static final class StoryText {
+        /** {name}, {title}. */
+        private String personalAvailable;
+        /** {name}, {title}. */
+        private String personalDone;
+        /** {title}. */
+        private String missionPersonal;
+        /** {title}, {found}, {total}. */
+        private String plotFound;
+        private String voiceSpeaker;
+        /** {name}, {other}. */
+        private String friends;
+        private String inseparable;
+        private String rivals;
+        /** {label}. */
+        private String goalDone;
+        /** {loot}. */
+        private String goalReward;
+        private String soundOn;
+        private String soundOff;
+        private String notificationsOn;
+        private String notificationsOff;
+        private String diaryFallen;
+        private String diaryVoice;
+        private String diaryLore;
+        private String diaryZones;
+        private String diaryUnknownFragment;
+
+        public String getPersonalAvailable() {
+            return personalAvailable;
+        }
+
+        public String getPersonalDone() {
+            return personalDone;
+        }
+
+        public String getMissionPersonal() {
+            return missionPersonal;
+        }
+
+        public String getPlotFound() {
+            return plotFound;
+        }
+
+        public String getVoiceSpeaker() {
+            return voiceSpeaker;
+        }
+
+        public String getFriends() {
+            return friends;
+        }
+
+        public String getInseparable() {
+            return inseparable;
+        }
+
+        public String getRivals() {
+            return rivals;
+        }
+
+        public String getGoalDone() {
+            return goalDone;
+        }
+
+        public String getGoalReward() {
+            return goalReward;
+        }
+
+        public String getSoundOn() {
+            return soundOn;
+        }
+
+        public String getSoundOff() {
+            return soundOff;
+        }
+
+        public String getNotificationsOn() {
+            return notificationsOn;
+        }
+
+        public String getNotificationsOff() {
+            return notificationsOff;
+        }
+
+        public String getDiaryFallen() {
+            return diaryFallen;
+        }
+
+        public String getDiaryVoice() {
+            return diaryVoice;
+        }
+
+        public String getDiaryLore() {
+            return diaryLore;
+        }
+
+        public String getDiaryZones() {
+            return diaryZones;
+        }
+
+        public String getDiaryUnknownFragment() {
+            return diaryUnknownFragment;
         }
     }
 

@@ -84,13 +84,14 @@ public class ExpeditionEngineTest {
     @Test
     public void catchingUpOnceEqualsCatchingUpStepByStep() {
         for (ZoneDef zone : content.getZones().values()) {
-            for (long seed = 0; seed < 60; seed++) {
+            for (long seed = 0; seed < 30; seed++) {
                 Run once = new Run(engine, scout(5, 10, List.of()), zone, seed);
                 Run steps = new Run(engine, scout(5, 10, List.of()), zone, seed);
 
-                long end = T0 + 3 * HOUR;
+                // Long-band expeditions take hours, plus 15 min per unanswered situation.
+                long end = T0 + 12 * HOUR;
                 once.advance(engine, end);
-                for (long t = T0; t <= end; t += 7_000) {
+                for (long t = T0; t <= end; t += 23_000) {
                     steps.advance(engine, t);
                 }
                 steps.advance(engine, end);

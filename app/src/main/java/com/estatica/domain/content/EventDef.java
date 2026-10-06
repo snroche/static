@@ -73,6 +73,8 @@ public final class EventDef {
         private List<LootRoll> loot;
         /** Nullable: a memory the scout keeps from this moment. */
         private String memory;
+        /** Nullable: a La Voz fragment found here (GDD §8). */
+        private String plot;
 
         public List<String> getText() {
             return text;
@@ -96,6 +98,10 @@ public final class EventDef {
 
         public String getMemory() {
             return memory;
+        }
+
+        public String getPlot() {
+            return plot;
         }
     }
 }

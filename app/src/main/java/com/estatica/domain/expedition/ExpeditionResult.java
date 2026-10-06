@@ -16,6 +16,7 @@ public final class ExpeditionResult {
     private final List<Memory> memories = new ArrayList<>();
     private final Map<String, Integer> delivered = new LinkedHashMap<>();
     private final List<String> deliveredItems = new ArrayList<>();
+    private final List<String> plotFragments = new ArrayList<>();
     private boolean situationArrived;
     private boolean returned;
     private boolean scoutDied;
@@ -42,6 +43,15 @@ public final class ExpeditionResult {
     /** Personal objects (item ids) brought back to the bunker. */
     public List<String> getDeliveredItems() {
         return Collections.unmodifiableList(deliveredItems);
+    }
+
+    void plot(String fragmentId) {
+        plotFragments.add(fragmentId);
+    }
+
+    /** La Voz fragments found on this leg (GDD §8). */
+    public List<String> getPlotFragments() {
+        return Collections.unmodifiableList(plotFragments);
     }
 
     void markSituationArrived() {

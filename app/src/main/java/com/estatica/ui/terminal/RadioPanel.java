@@ -30,11 +30,14 @@ final class RadioPanel {
     private final PanelRadioBinding b;
     private final TerminalViewModel viewModel;
     private final Host host;
+    private final SoundEngine sound;
     private SessionSnapshot snapshot;
+    private boolean wasLockable;
     private String bandId;
     private int lastTick = -1;
 
-    RadioPanel(PanelRadioBinding binding, TerminalViewModel viewModel, Host host) {
+    RadioPanel(PanelRadioBinding binding, TerminalViewModel viewModel, Host host, SoundEngine sound) {
+        this.sound = sound;
         this.b = binding;
         this.viewModel = viewModel;
         this.host = host;
@@ -58,6 +61,7 @@ final class RadioPanel {
         });
         b.tune.setOnClickListener(v -> {
             if (bandId != null) {
+                sound.click();
                 viewModel.capture(bandId, b.dial.getProgress());
             }
         });
@@ -138,6 +142,12 @@ final class RadioPanel {
         }
         b.meter.setText(meter);
         b.tune.setAlpha(tuning.lockable ? 1f : 0.5f);
+        if (tuning.lockable && !wasLockable) {
+            sound.click();
+        } else if (!tuning.lockable) {
+            sound.staticNoise((float) (0.35 * (1.0 - tuning.strength)));
+        }
+        wasLockable = tuning.lockable;
 
         int tick = -1;
         for (int i = 0; i < TICKS.length; i++) {

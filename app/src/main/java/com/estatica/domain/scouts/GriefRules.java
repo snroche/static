@@ -41,7 +41,8 @@ public final class GriefRules {
             if (s == dead || !s.isAlive()) {
                 continue;
             }
-            double closeness = affinities.get(s.getId(), dead.getId());
+            // Rivals still feel it, just not as a close friend would.
+            double closeness = Math.max(0, affinities.get(s.getId(), dead.getId()));
             rules.addStress(s, (int) Math.round(grief.getBaseStress() + closeness * grief.getStressPerAffinity()));
 
             Map<String, String> vars = new HashMap<>();

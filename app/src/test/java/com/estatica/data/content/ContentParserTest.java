@@ -23,6 +23,7 @@ public class ContentParserTest {
         assertTrue(content.getBalance().getContentVersion() >= 1);
         assertFalse(content.getTerminal().getBoot().isEmpty());
         assertEquals(3, content.getStarters().size());
+        assertTrue("GDD §11: about 40 events", content.getEvents().size() >= 40);
         assertFalse(content.getZones().isEmpty());
     }
 
@@ -39,8 +40,10 @@ public class ContentParserTest {
         GameContent content = TestContent.get();
         for (String eventId : content.getEvents().keySet()) {
             boolean used = content.getZones().values().stream()
-                    .anyMatch(z -> z.getEvents().contains(eventId));
-            assertTrue("event not used by any zone: " + eventId, used);
+                    .anyMatch(z -> z.getEvents().contains(eventId))
+                    || content.getStory().getPersonalMissions().stream()
+                    .anyMatch(m -> m.getEvent().equals(eventId));
+            assertTrue("event not used by any zone or personal mission: " + eventId, used);
         }
     }
 

@@ -56,5 +56,63 @@
       "¿Posta que hay un búnker? ¿Con comida?",
       "Bueno. Voy. Pero no me pidan que hable de mi vieja."
     ]
+  },
+  {
+    "id": "nilda",
+    "name": "Nilda",
+    "voice": "abuela",
+    "band": "long",
+    "bio": "Enfermera jubilada. Atendió en el hospital hasta el último día. Llama \"nene\" a todo el mundo.",
+    "stats": {
+      "endurance": [3, 6],
+      "stealth": [3, 6],
+      "wits": [7, 10],
+      "nerve": [6, 10],
+      "craft": [5, 8]
+    },
+    "traits": [
+      "metodo"
+    ],
+    "hiddenTrait": "sangre_fria",
+    "likes": [
+      "fe",
+      "dulce"
+    ],
+    "dislikes": [
+      "juego"
+    ],
+    "rescueLines": [
+      "Ay, querido. Pensé que nadie iba a venir.",
+      "Llevame. Y que alguien me cebe un mate."
+    ]
+  },
+  {
+    "id": "rusa",
+    "name": "La Rusa",
+    "voice": "jerga",
+    "band": "long",
+    "bio": "Camionera. Cruzó el país tres veces después del Silencio. No dice su nombre de verdad.",
+    "stats": {
+      "endurance": [7, 10],
+      "stealth": [4, 7],
+      "wits": [4, 7],
+      "nerve": [7, 10],
+      "craft": [6, 9]
+    },
+    "traits": [
+      "sangre_fria"
+    ],
+    "hiddenTrait": "imprudencia",
+    "likes": [
+      "mate",
+      "musica"
+    ],
+    "dislikes": [
+      "escritura"
+    ],
+    "rescueLines": [
+      "Bueno, jefe. Me convenciste. Pero manejo yo.",
+      "Tenés un búnker, me dijeron. Vamos a ver."
+    ]
   }
 ]

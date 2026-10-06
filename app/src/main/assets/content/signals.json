@@ -156,6 +156,32 @@
       "difficulty": 3,
       "reward": "DANGER",
       "text": "{zone} no es seguro"
+    },
+    {
+      "id": "voz_horario",
+      "band": "short",
+      "unique": true,
+      "reward": "PLOT",
+      "plot": "c1_1",
+      "text": "Siete tres uno nueve cada hora en punto"
+    },
+    {
+      "id": "voz_eco",
+      "band": "medium",
+      "difficulty": 2,
+      "unique": true,
+      "reward": "PLOT",
+      "plot": "c1_2",
+      "text": "Aqui eco siete fin"
+    },
+    {
+      "id": "voz_pregunta",
+      "band": "long",
+      "difficulty": 3,
+      "unique": true,
+      "reward": "PLOT",
+      "plot": "c1_5",
+      "text": "Quien mas escucha"
     }
   ]
 }

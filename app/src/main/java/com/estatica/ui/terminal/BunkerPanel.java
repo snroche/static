@@ -56,6 +56,16 @@ final class BunkerPanel {
         LayoutInflater inflater = LayoutInflater.from(b.getRoot().getContext());
         SessionSnapshot.BaseView base = snapshot.base;
 
+        StringBuilder goals = new StringBuilder();
+        for (SessionSnapshot.GoalView g : base.goals) {
+            if (goals.length() > 0) {
+                goals.append('\n');
+            }
+            String check = g.progress >= g.target ? "[x]" : "[ ]";
+            goals.append(res.getString(R.string.goal_line, check, g.label, g.progress, g.target));
+        }
+        b.goals.setText(goals);
+
         StringBuilder energy = new StringBuilder(res.getString(R.string.energy_line, base.used, base.available, base.watts));
         if (base.blackout) {
             energy.append('\n').append(res.getString(R.string.energy_blackout));

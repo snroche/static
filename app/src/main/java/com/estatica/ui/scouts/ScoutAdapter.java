@@ -74,6 +74,7 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
                     : res.getString(R.string.scout_traits, String.join(", ", s.traits)));
             optional(b.likes, s.likes);
             optional(b.dislikes, s.dislikes);
+            optional(b.relations, s.relations.isEmpty() ? null : String.join("\n", s.relations));
             optional(b.gear, s.gear == null ? null : res.getString(R.string.scout_gear, s.gear));
             optional(b.gifts, s.gifts.isEmpty() ? null
                     : res.getString(R.string.scout_gifts, String.join(", ", s.gifts)));

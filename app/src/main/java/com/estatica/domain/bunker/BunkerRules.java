@@ -101,7 +101,15 @@ public final class BunkerRules {
                     heal *= t.getGroupHealMultiplier() * rules.healOthersMultiplier(other);
                 }
                 if (task != null && t.getId().equals(task.getId())) {
-                    affinities.add(s.getId(), other.getId(), affinity.getSameTaskPerHour() * hours / 2);
+                    affinities.add(s.getId(), other.getId(),
+                            sign(s, other) * affinity.getSameTaskPerHour() * hours / 2);
+                    // Friends working side by side calm each other; rivals grate.
+                    double closeness = affinities.get(s.getId(), other.getId());
+                    if (closeness >= affinity.getFriendAt()) {
+                        relief += affinity.getSharedTaskEffect();
+                    } else if (closeness <= affinity.getRivalAt()) {
+                        relief -= affinity.getSharedTaskEffect();
+                    }
                 }
             }
             double self = task != null ? task.getSelfStressRecoveryMultiplier() : 1.0;
@@ -141,7 +149,7 @@ public final class BunkerRules {
                         stat = type;
                     }
                 }
-                affinities.add(s.getId(), other.getId(), affinity.getTrainingPerHour() * hours / 2);
+                affinities.add(s.getId(), other.getId(), sign(s, other) * affinity.getTrainingPerHour() * hours / 2);
             }
             if (mentor != null) {
                 rate *= MENTOR_BONUS;
@@ -201,6 +209,30 @@ public final class BunkerRules {
             rules.addBond(s, (int) -(days * bond.getNeglectPerDay()));
             s.getLife().setLastDecayAtMillis(from + days * DAY);
         }
+    }
+
+    /** −1 if their traits clash (GDD §5.3: rivalries), else +1. */
+    private double sign(Scout a, Scout b) {
+        for (com.estatica.domain.content.TraitDef ta : rules.traitsOf(a)) {
+            for (com.estatica.domain.content.TraitDef tb : rules.traitsOf(b)) {
+                if (ta.getClashes().contains(tb.getId()) || tb.getClashes().contains(ta.getId())) {
+                    return -1;
+                }
+            }
+        }
+        return 1;
+    }
+
+    /** Relationship label key between two scouts: "inseparable", "friends", "rivals" or null. */
+    public String relationship(Affinities affinities, Scout a, Scout b) {
+        double v = affinities.get(a.getId(), b.getId());
+        if (v >= affinity.getInseparableAt()) {
+            return "inseparable";
+        }
+        if (v >= affinity.getFriendAt()) {
+            return "friends";
+        }
+        return v <= affinity.getRivalAt() ? "rivals" : null;
     }
 
     private TaskDef taskOf(Scout s) {

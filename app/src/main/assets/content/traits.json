@@ -5,13 +5,19 @@
     "description": "Se arriesga más: trae más botín, pero falla más seguido.",
     "lootMultiplier": 1.3,
     "checkBonus": -0.05,
-    "bias": "RISKY"
+    "bias": "RISKY",
+    "clashes": [
+      "metodo"
+    ]
   },
   {
     "id": "desconfianza",
     "name": "Desconfianza",
     "description": "Si no confía en el operador, puede ignorar sus órdenes.",
-    "disobeyBelowTrust": 40
+    "disobeyBelowTrust": 40,
+    "clashes": [
+      "lealtad"
+    ]
   },
   {
     "id": "pies_ligeros",
@@ -106,5 +112,15 @@
     "checkBonus": 0.03,
     "stressMultiplier": 1.2,
     "bias": "RISKY"
+  },
+  {
+    "id": "en_paz",
+    "name": "En paz",
+    "kind": "SCAR",
+    "description": "Cerró una cuenta pendiente. El estrés le pesa menos.",
+    "stressMultiplier": 0.8,
+    "statBonus": {
+      "nerve": 1
+    }
   }
 ]

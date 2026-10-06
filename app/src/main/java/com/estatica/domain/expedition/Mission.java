@@ -16,7 +16,9 @@ public final class Mission {
         /** Carry a relay kit and install it. */
         INSTALL_RELAY,
         /** Repair the relay in the zone. */
-        MAINTAIN_RELAY
+        MAINTAIN_RELAY,
+        /** A scout's own arc (target: personal mission id). */
+        PERSONAL
     }
 
     private final Type type;

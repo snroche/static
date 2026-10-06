@@ -68,8 +68,11 @@ public final class SessionSnapshot {
         /** Equipped gear name, or null. */
         public final String gear;
         public final boolean canEquip;
+        /** "Amistad con Tano", "Roces con Irene"… */
+        public final List<String> relations;
 
         ScoutView(Builder b) {
+            this.relations = Collections.unmodifiableList(b.relations);
             this.gear = b.gear;
             this.canEquip = b.canEquip;
             this.id = b.id;
@@ -119,6 +122,7 @@ public final class SessionSnapshot {
             String awayAt;
             String gear;
             boolean canEquip;
+            List<String> relations;
         }
     }
 
@@ -181,21 +185,43 @@ public final class SessionSnapshot {
         }
     }
 
-    /** A special expedition (rescue, relay install / repair). */
+    /** A special expedition (rescue, relay install / repair, personal mission). */
     public static final class MissionView {
         public final String type;
         public final String zoneId;
-        /** Survivor id for rescues, else null. */
+        /** Survivor id for rescues, personal mission id, else null. */
         public final String target;
         public final String label;
         public final String zoneName;
+        /** Only this scout can take it (personal missions), or null for anyone. */
+        public final String scoutId;
 
         MissionView(String type, String zoneId, String target, String label, String zoneName) {
+            this(type, zoneId, target, label, zoneName, null);
+        }
+
+        MissionView(String type, String zoneId, String target, String label, String zoneName, String scoutId) {
             this.type = type;
             this.zoneId = zoneId;
             this.target = target;
             this.label = label;
             this.zoneName = zoneName;
+            this.scoutId = scoutId;
+        }
+    }
+
+    /** A daily or weekly goal (GDD §9). */
+    public static final class GoalView {
+        public final String label;
+        public final int progress;
+        public final int target;
+        public final boolean weekly;
+
+        GoalView(String label, int progress, int target, boolean weekly) {
+            this.label = label;
+            this.progress = progress;
+            this.target = target;
+            this.weekly = weekly;
         }
     }
 
@@ -289,8 +315,9 @@ public final class SessionSnapshot {
         public final List<ItemView> gearStock;
         public final int scouts;
         public final int bunks;
+        public final List<GoalView> goals;
 
-        BaseView(int watts, int available, int used, boolean blackout, boolean night, boolean filtersShort,
+        BaseView(List<GoalView> goals, int watts, int available, int used, boolean blackout, boolean night, boolean filtersShort,
                  List<ConsumerView> consumers, int reserve, int reserveCapacity, boolean canRecharge,
                  List<ModuleView> modules, int slots, List<JobView> jobs, List<RecipeView> recipes,
                  List<String> guards, int defense, List<ItemView> gearStock, int scouts, int bunks) {
@@ -313,6 +340,7 @@ public final class SessionSnapshot {
             this.gearStock = Collections.unmodifiableList(gearStock);
             this.scouts = scouts;
             this.bunks = bunks;
+            this.goals = Collections.unmodifiableList(goals);
         }
     }
 
@@ -415,21 +443,34 @@ public final class SessionSnapshot {
         }
     }
 
-    /** One fallen scout in the Diary (GDD §5.5, §6.6). */
+    /**
+     * A Diary row (GDD §6.6): a section title ({@link #section}) or an entry: a fallen scout,
+     * a La Voz fragment, a decoded transmission, a known zone.
+     */
     public static final class DiaryEntry {
+        public final boolean section;
         public final String name;
-        /** "Sin señal desde el … · zone". */
+        /** Second line ("Sin señal desde el … · zone", band, source…), or null. */
         public final String header;
         public final String bio;
         public final List<String> memories;
         public final String lastWords;
 
         DiaryEntry(String name, String header, String bio, List<String> memories, String lastWords) {
+            this(false, name, header, bio, memories, lastWords);
+        }
+
+        DiaryEntry(boolean section, String name, String header, String bio, List<String> memories, String lastWords) {
+            this.section = section;
             this.name = name;
             this.header = header;
             this.bio = bio;
             this.memories = Collections.unmodifiableList(memories);
             this.lastWords = lastWords;
+        }
+
+        static DiaryEntry section(String title) {
+            return new DiaryEntry(true, title, null, null, List.of(), null);
         }
     }
 }

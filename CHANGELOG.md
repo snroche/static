@@ -10,6 +10,42 @@ Cada entrada indica, si cambian, las tres versiones independientes:
 
 _Nada todavía._
 
+## [0.6.0] — Fase 5: Contenido y pulido — en verificación
+
+App 0.6.0 (versionCode 600) · DB 5 (sin cambios) · **Contenido 5 → 6**
+
+Sin fecha de release: falta probarla en un dispositivo.
+
+### Agregado
+- **Banda larga:** Aeropuerto regional, La represa y Antena del norte, con expediciones de 2 a 6 h. Supervivientes nuevos: Nilda (enfermera jubilada, voz nueva "abuela") y La Rusa (camionera).
+- **40 eventos** (antes 15), repartidos en todas las bandas. Incluyen los 5 de las misiones personales y el relé de La Voz.
+- **Misiones personales** (GDD §5.2): Mara, Tano, Irene, Beto y Lucho tienen la suya.
+  - Con vínculo nivel 4 la piden en una conversación y aparece como misión al despachar, solo para ese explorador.
+  - Juegan su situación propia. Al completarla dan +15 de vínculo, −30 de estrés, el rasgo *En paz*, un recuerdo y unas palabras en su voz.
+- **Relaciones entre exploradores** (GDD §5.3): la afinidad ahora puede ser negativa.
+  - Los rasgos que chocan (Imprudencia contra Método, Desconfianza contra Lealtad) generan roces al compartir tarea.
+  - Con afinidad ≥ 50 son amigos, ≥ 80 inseparables, ≤ −40 hay roces.
+  - Compartir tarea con un amigo calma; con un rival, estresa. La ficha muestra las relaciones.
+- **La Voz, capítulo 1** (GDD §8) — **BORRADOR para revisar** (`story.json`, marcado `_draft`):
+  - Cinco fragmentos: tres transmisiones cifradas (banda corta, media y larga), el archivo de la comisaría o el laboratorio de Irene, y el relé ECO-7 en la Antena del norte.
+  - Con los cinco, La Voz le habla al operador y cierra el capítulo.
+  - La historia en una línea: el Silencio empezó a las 3:10 con la activación de una red de alerta llamada Proyecto Eco; alguien mantiene la estación Eco-7 y sabe que el búnker escucha.
+- **Diario completo** (GDD §6.6): caídos (con su historia y última transmisión), La Voz (fragmentos encontrados y los que faltan, con el final), transmisiones descifradas y zonas conocidas.
+- **Sonido sintetizado en código**, sin archivos ni dependencias: estática al mover el dial (más fuerte lejos de una señal), click al fijar, tecleo del teletipo y pitido en los mensajes urgentes. Más adelante se puede reemplazar por grabaciones.
+- **Háptica** en los mensajes urgentes, además de la vibración del dial.
+- **Ajustes** (GDD §9): los comandos `sonido` y `notificaciones` los activan o desactivan. Se guardan en el dispositivo y no forman parte de la partida.
+- **Objetivos diarios** (descifrar 1 transmisión, completar 2 expediciones, fijar 5 señales) y **semanal** (10 expediciones). Se reinician a la medianoche local, dan recursos y se ven en [BÚNKER].
+- Tests: 111 en total. Incluyen misiones personales, fragmentos alcanzables, el fragmento del laboratorio y rivalidades por rasgos.
+
+### Cambiado
+- La validación de contenido exige al menos 40 eventos y que todos se puedan alcanzar desde una zona o una misión personal.
+- El test de catch-up cubre 12 h, para incluir expediciones de la banda larga.
+
+### Notas
+- Sin probar en dispositivo.
+- APK release sin firmar: ~1,1 MB.
+- Los objetivos diarios y semanales se resuelven en `GameSession` (capa de datos) y todavía no tienen tests unitarios propios.
+
 ## [0.5.0] — Fase 4: Búnker — en verificación
 
 App 0.5.0 (versionCode 500) · **DB 4 → 5** · **Contenido 4 → 5**
@@ -275,6 +311,7 @@ Sin fecha de release todavía: falta probarla en un dispositivo o emulador. Cuan
 - Lint muestra versiones más nuevas de AGP, Room y Lifecycle. Se usan las que ya estaban en la caché local; actualizar es una decisión aparte.
 
 [Unreleased]: #unreleased
+[0.6.0]: #060--fase-5-contenido-y-pulido--en-verificación
 [0.5.0]: #050--fase-4-búnker--en-verificación
 [0.4.0]: #040--fase-3-radio-activa-y-distancia--en-verificación
 [0.3.0]: #030--fase-2-vida-en-el-búnker--en-verificación

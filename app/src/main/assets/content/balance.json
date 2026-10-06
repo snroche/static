@@ -1,5 +1,5 @@
 {
-  "contentVersion": 5,
+  "contentVersion": 6,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
@@ -69,7 +69,11 @@
   "affinity": {
     "trainingPerHour": 2,
     "sameTaskPerHour": 0.5,
-    "max": 100
+    "max": 100,
+    "friendAt": 50,
+    "inseparableAt": 80,
+    "rivalAt": -40,
+    "sharedTaskEffect": 0.5
   },
   "bands": [
     {

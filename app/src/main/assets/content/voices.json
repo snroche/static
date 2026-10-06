@@ -449,5 +449,79 @@
         "¡Volví! ¿Me guardaste algo?"
       ]
     }
+  },
+  {
+    "id": "abuela",
+    "transform": "NONE",
+    "replacements": {},
+    "phrases": {
+      "departure": [
+        "Ya salgo, querido. Abrigate vos.",
+        "Voy, voy. No te preocupes por esta vieja."
+      ],
+      "arrival": [
+        "Volví, querido. Poné el agua."
+      ],
+      "oddsGood": [
+        "Esto lo hice mil veces.",
+        "Tranquilo, nene."
+      ],
+      "oddsUnsure": [
+        "Mirá, no sé. Puede salir.",
+        "Habrá que ver."
+      ],
+      "oddsBad": [
+        "Esto me da mala espina, querido.",
+        "No me gusta nada, nene."
+      ],
+      "disobey": [
+        "Perdoname, pero no. Lo hago a mi manera."
+      ],
+      "autoDecide": [
+        "No me contestás. Bueno, decido yo."
+      ],
+      "injured": [
+        "Ay. Me lastimé. No es nada, no es nada."
+      ],
+      "find": [
+        "Encontré {amount} de {resource}. Algo es algo."
+      ],
+      "lastWords": [
+        "Querido... está oscureciendo... cuidate, ¿eh?"
+      ],
+      "lastMemory": [
+        "Me acuerdo de {memory}... qué cosa linda."
+      ],
+      "lastOrder": [
+        "Me dijiste \"{memory}\"... está bien, nene. Está bien."
+      ],
+      "initiate": [
+        "Querido, ¿tenés un minutito?"
+      ],
+      "askReturn": [
+        "Nene, quiero volver. Por favor."
+      ],
+      "goingHome": [
+        "Gracias, querido. Ya vuelvo."
+      ],
+      "findItem": [
+        "Mirá qué encontré: {item}."
+      ],
+      "lastGift": [
+        "Tengo {gift} acá, en el delantal."
+      ],
+      "lastCompanion": [
+        "Decile a {companion} que lo quiero mucho."
+      ],
+      "giftLiked": [
+        "¡{item}! Ay, querido, no tenías que molestarte."
+      ],
+      "giftDisliked": [
+        "{item}... bueno, gracias igual, nene."
+      ],
+      "giftNeutral": [
+        "{item}. Gracias, querido."
+      ]
+    }
   }
 ]

@@ -781,5 +781,234 @@
         "bond": -1
       }
     ]
+  },
+  {
+    "id": "mara_pide_mision",
+    "scout": "mara",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "priority": 7,
+    "forbidsFlags": [
+      "personal:mara_ruta:offered"
+    ],
+    "lines": [
+      "¿Puedo pedirte algo?",
+      "Quiero ir hasta la panadería de Olazábal. Solo una vez. Para saber."
+    ],
+    "choices": [
+      {
+        "label": "Sí. Cuando quieras.",
+        "reply": [
+          "Gracias. De verdad."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:mara_ruta:offered"
+        ]
+      },
+      {
+        "label": "Ahora no podemos.",
+        "reply": [
+          "Entiendo. Pero no me lo saques de la cabeza."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "tano_pide_mision",
+    "scout": "tano",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "priority": 7,
+    "forbidsFlags": [
+      "personal:tano_obra:offered"
+    ],
+    "lines": [
+      "Jefe, una cosa.",
+      "El anexo de la escuela lo levanté yo. Quiero ver si sigue en pie."
+    ],
+    "choices": [
+      {
+        "label": "Sí. Cuando quieras.",
+        "reply": [
+          "Gracias. De verdad."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:tano_obra:offered"
+        ]
+      },
+      {
+        "label": "Ahora no podemos.",
+        "reply": [
+          "Entiendo. Pero no me lo saques de la cabeza."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "irene_pide_mision",
+    "scout": "irene",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "priority": 7,
+    "forbidsFlags": [
+      "personal:irene_lab:offered"
+    ],
+    "lines": [
+      "Operador, necesito pedirle algo personal.",
+      "Quiero volver a mi laboratorio. En el hospital."
+    ],
+    "choices": [
+      {
+        "label": "Sí. Cuando quieras.",
+        "reply": [
+          "Gracias. De verdad."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:irene_lab:offered"
+        ]
+      },
+      {
+        "label": "Ahora no podemos.",
+        "reply": [
+          "Entiendo. Pero no me lo saques de la cabeza."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "beto_pide_mision",
+    "scout": "beto",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "priority": 7,
+    "forbidsFlags": [
+      "personal:beto_casilla:offered"
+    ],
+    "lines": [
+      "Operador. Pedido personal. Cambio.",
+      "Quiero volver a la casilla de señales. Una vez."
+    ],
+    "choices": [
+      {
+        "label": "Sí. Cuando quieras.",
+        "reply": [
+          "Gracias. De verdad."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:beto_casilla:offered"
+        ]
+      },
+      {
+        "label": "Ahora no podemos.",
+        "reply": [
+          "Entiendo. Pero no me lo saques de la cabeza."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "lucho_pide_mision",
+    "scout": "lucho",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "priority": 7,
+    "forbidsFlags": [
+      "personal:lucho_casa:offered"
+    ],
+    "lines": [
+      "Che... ¿me dejás ir a un lugar?",
+      "A la casa del barrio. Donde esperaba a mi vieja."
+    ],
+    "choices": [
+      {
+        "label": "Sí. Cuando quieras.",
+        "reply": [
+          "Gracias. De verdad."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:lucho_casa:offered"
+        ]
+      },
+      {
+        "label": "Ahora no podemos.",
+        "reply": [
+          "Entiendo. Pero no me lo saques de la cabeza."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "nilda_charla",
+    "scout": "nilda",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 5,
+    "lines": [
+      "Atendí en el hospital hasta el último día, ¿sabés?",
+      "Cuando se cortó todo, seguimos con velas."
+    ],
+    "choices": [
+      {
+        "label": "Contame más.",
+        "reply": [
+          "Otro día, con un mate de por medio."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "likes:mate"
+        ],
+        "memory": "la charla del primer día"
+      },
+      {
+        "label": "Acá vas a estar bien.",
+        "reply": [
+          "Ojalá. Ojalá."
+        ],
+        "bond": 3,
+        "trust": 3
+      }
+    ]
+  },
+  {
+    "id": "rusa_charla",
+    "scout": "rusa",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 5,
+    "lines": [
+      "Tres veces crucé el país, jefe.",
+      "Y en todos lados la misma estática."
+    ],
+    "choices": [
+      {
+        "label": "Contame más.",
+        "reply": [
+          "Otro día, con un mate de por medio."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "likes:mate"
+        ],
+        "memory": "la charla del primer día"
+      },
+      {
+        "label": "Acá vas a estar bien.",
+        "reply": [
+          "Ojalá. Ojalá."
+        ],
+        "bond": 3,
+        "trust": 3
+      }
+    ]
   }
 ]
