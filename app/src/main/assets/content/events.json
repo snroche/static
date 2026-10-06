@@ -59,6 +59,29 @@
           ],
           "stress": 5
         }
+      },
+      {
+        "id": "calmar",
+        "label": "Let them calm it down",
+        "stat": "nerve",
+        "difficulty": 3,
+        "requiresTrait": [
+          "gentil"
+        ],
+        "success": {
+          "text": [
+            "It let me pet it.",
+            "Walked with me to the corner, then left."
+          ],
+          "stress": -5,
+          "memory": "the skinny dog that walked me to the corner"
+        },
+        "failure": {
+          "text": [
+            "It growled. I backed off."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -196,6 +219,61 @@
           "injury": "light",
           "stress": 5
         }
+      },
+      {
+        "id": "curiosear",
+        "label": "Let them find out what it is",
+        "stat": "wits",
+        "difficulty": 4,
+        "requiresTrait": [
+          "curiosa"
+        ],
+        "success": {
+          "text": [
+            "A boiler, ticking as it cools. And a shelf nobody emptied."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Nothing but noise and rust."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "a_oscuras",
+        "label": "Go down without a light",
+        "stat": "nerve",
+        "difficulty": 4,
+        "requiresTrait": [
+          "sangre_fria"
+        ],
+        "success": {
+          "text": [
+            "Dark is fine. I listen better. Two cans behind the boiler."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Tripped on the stairs."
+          ],
+          "stress": 8,
+          "injury": "light"
+        }
       }
     ]
   },
@@ -252,6 +330,36 @@
             "The shop's empty. Not even batteries."
           ],
           "stress": 3
+        }
+      },
+      {
+        "id": "drenar",
+        "label": "Drain it the right way",
+        "stat": "craft",
+        "difficulty": 3,
+        "requiresBackground": "mechanic",
+        "success": {
+          "text": [
+            "Old pumps keep a reserve cell. Got it out clean."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Stripped the screw. Useless."
+          ],
+          "stress": 8
         }
       }
     ]
@@ -334,6 +442,56 @@
           ],
           "stress": 3
         }
+      },
+      {
+        "id": "puentear",
+        "label": "Pull the battery out",
+        "stat": "craft",
+        "difficulty": 3,
+        "requiresBackground": "mechanic",
+        "success": {
+          "text": [
+            "Battery's still holding a charge. Taking it."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Acid everywhere. Nearly burned my hand."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "amarres",
+        "label": "Check the cargo straps",
+        "stat": "endurance",
+        "difficulty": 3,
+        "requiresBackground": "trucker",
+        "success": {
+          "text": [
+            "Whoever drove this tied the load like a pro. Still sealed."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Straps rusted solid."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -396,6 +554,45 @@
         "failure": {
           "text": [
             "Just static. It gave me chills."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "ritmo",
+        "label": "Listen for the rhythm under the static",
+        "stat": "wits",
+        "difficulty": 4,
+        "requiresBackground": "musician",
+        "success": {
+          "text": [
+            "There's a beat in it. Someone's keying it by hand. Noted the pattern."
+          ],
+          "stress": -5,
+          "memory": "the rhythm under the static"
+        },
+        "failure": {
+          "text": [
+            "Just noise. Pretty noise, though."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "senal",
+        "label": "Read it like a railway signal",
+        "stat": "wits",
+        "difficulty": 3,
+        "requiresBackground": "railway",
+        "success": {
+          "text": [
+            "Short, long, short. It's a call sign. Somebody nearby is alive."
+          ],
+          "memory": "the call sign in the static"
+        },
+        "failure": {
+          "text": [
+            "Can't make it out."
           ],
           "stress": 8
         }
@@ -536,6 +733,60 @@
           "stress": 20,
           "lethal": true
         }
+      },
+      {
+        "id": "chiste",
+        "label": "Break the ice with a joke",
+        "stat": "nerve",
+        "difficulty": 3,
+        "requiresTrait": [
+          "sociable"
+        ],
+        "success": {
+          "text": [
+            "They laughed. First laugh in weeks, they said.",
+            "Gave me some food for the road."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "memory": "the stranger who laughed at my joke"
+        },
+        "failure": {
+          "text": [
+            "Tough crowd. They left."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "curar",
+        "label": "Ask if they're hurt",
+        "stat": "wits",
+        "difficulty": 3,
+        "requiresBackground": "nurse",
+        "success": {
+          "text": [
+            "Infected cut. Cleaned it. They gave me what medicine they had left."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "They didn't trust me near them."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -667,6 +918,26 @@
           "stress": 25,
           "lethal": true
         }
+      },
+      {
+        "id": "colarse",
+        "label": "Slip past between the cars",
+        "stat": "stealth",
+        "difficulty": 5,
+        "requiresTrait": [
+          "pies_ligeros"
+        ],
+        "success": {
+          "text": [
+            "They never even lifted their heads."
+          ]
+        },
+        "failure": {
+          "text": [
+            "One saw me. Ran for it."
+          ],
+          "stress": 12
+        }
       }
     ]
   },
@@ -751,6 +1022,55 @@
           "stress": 25,
           "lethal": true
         }
+      },
+      {
+        "id": "emboscada",
+        "label": "Look for the ambush first",
+        "stat": "wits",
+        "difficulty": 5,
+        "requiresTrait": [
+          "desconfianza"
+        ],
+        "success": {
+          "text": [
+            "Two more on the roof. Went around all of them."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Didn't spot them in time. Had to hide for an hour."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "encarar",
+        "label": "Stare them down",
+        "stat": "nerve",
+        "difficulty": 6,
+        "requiresTrait": [
+          "calentona"
+        ],
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "They blinked first. Left me a bag of something to make me go away."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Bad idea. Very bad idea."
+          ],
+          "stress": 15,
+          "injury": "serious"
+        }
       }
     ]
   },
@@ -827,6 +1147,42 @@
             "No other way in. Lost time."
           ],
           "stress": 5
+        }
+      },
+      {
+        "id": "pano",
+        "label": "Wet cloth, slow breaths",
+        "stat": "endurance",
+        "difficulty": 4,
+        "requiresBackground": "nurse",
+        "success": {
+          "text": [
+            "Old trick from the ward. Through in under a minute."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Coughing. Got out, but dizzy."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "valvula_principal",
+        "label": "Go for the main valve",
+        "stat": "craft",
+        "difficulty": 4,
+        "requiresBackground": "mechanic",
+        "success": {
+          "text": [
+            "Main valve, quarter turn. Gas stopped. Easy."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Valve's seized."
+          ],
+          "stress": 8
         }
       }
     ]
@@ -914,6 +1270,36 @@
           ],
           "stress": 3
         }
+      },
+      {
+        "id": "palanca",
+        "label": "Use the release lever",
+        "stat": "craft",
+        "difficulty": 2,
+        "requiresBackground": "railway",
+        "success": {
+          "text": [
+            "Every freight car has one. Nobody ever knows. Clack."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Lever's welded shut."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -965,6 +1351,26 @@
             "The box split on the stairs."
           ],
           "stress": 5
+        }
+      },
+      {
+        "id": "ordenar",
+        "label": "Sort it like a library",
+        "stat": "wits",
+        "difficulty": 4,
+        "requiresBackground": "teacher",
+        "success": {
+          "text": [
+            "Dewey decimal, more or less. One folder says \"Project Echo\". Keeping it."
+          ],
+          "memory": "the archive I sorted like a library",
+          "plot": "c1_3"
+        },
+        "failure": {
+          "text": [
+            "Too much paper, too little time."
+          ],
+          "stress": 8
         }
       }
     ]
@@ -1044,6 +1450,60 @@
             "Moving on. I can hear him calling after me for a long time."
           ],
           "stress": 15
+        }
+      },
+      {
+        "id": "tratar",
+        "label": "Treat him properly",
+        "stat": "wits",
+        "difficulty": 3,
+        "requiresBackground": "nurse",
+        "success": {
+          "text": [
+            "Splinted the leg, cleaned the wound. He'll walk.",
+            "He told me where his group keeps supplies."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "memory": "the man whose leg I splinted"
+        },
+        "failure": {
+          "text": [
+            "Too far gone. I did what I could."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "quedarse",
+        "label": "Stay with him a while",
+        "stat": "nerve",
+        "difficulty": 3,
+        "requiresTrait": [
+          "gentil"
+        ],
+        "success": {
+          "text": [
+            "Held his hand until he slept. He was smiling."
+          ],
+          "stress": -3,
+          "memory": "holding a stranger's hand until he slept"
+        },
+        "failure": {
+          "text": [
+            "He didn't want company."
+          ],
+          "stress": 8
         }
       }
     ]
@@ -1179,6 +1639,32 @@
           "stress": 8
         },
         "risk": "RISKY"
+      },
+      {
+        "id": "leer",
+        "label": "Read the wiring",
+        "stat": "craft",
+        "difficulty": 4,
+        "requiresBackground": "mechanic",
+        "success": {
+          "text": [
+            "Mains feed from a battery bank. Disconnected it and kept the good bits."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Got a shock. Nothing serious."
+          ],
+          "stress": 8,
+          "injury": "light"
+        }
       }
     ]
   },
@@ -1292,6 +1778,38 @@
           "stress": 6
         },
         "risk": "RISKY"
+      },
+      {
+        "id": "escuchar",
+        "label": "Listen to the lock",
+        "stat": "wits",
+        "difficulty": 5,
+        "requiresTrait": [
+          "curiosa"
+        ],
+        "success": {
+          "text": [
+            "Old tumbler lock. You can hear it if you're patient. Open."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Too stiff to hear anything."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -1343,6 +1861,25 @@
             "It crumbled in my hands."
           ],
           "stress": 3
+        }
+      },
+      {
+        "id": "leyenda",
+        "label": "Read the legend",
+        "stat": "wits",
+        "difficulty": 2,
+        "requiresBackground": "teacher",
+        "success": {
+          "text": [
+            "The red marks are water. Someone mapped every working tap."
+          ],
+          "memory": "the map of working taps"
+        },
+        "failure": {
+          "text": [
+            "Faded past reading."
+          ],
+          "stress": 8
         }
       }
     ]
@@ -1408,6 +1945,26 @@
           ],
           "injury": "light",
           "stress": 20
+        }
+      },
+      {
+        "id": "contar",
+        "label": "Count the shots, then move",
+        "stat": "nerve",
+        "difficulty": 5,
+        "requiresTrait": [
+          "sangre_fria"
+        ],
+        "success": {
+          "text": [
+            "Bolt action. Four seconds between shots. Plenty."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Lost count. Stayed down."
+          ],
+          "stress": 12
         }
       }
     ]
@@ -1559,6 +2116,31 @@
           ],
           "stress": 12
         }
+      },
+      {
+        "id": "pestillo",
+        "label": "They know how these latch",
+        "stat": "craft",
+        "difficulty": 3,
+        "requiresBackground": "cook",
+        "success": {
+          "text": [
+            "Walk-ins open from outside with a knife in the latch. Full of preserves."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Latch is bent."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -1612,6 +2194,26 @@
           "injury": "light",
           "stress": 10
         }
+      },
+      {
+        "id": "rastrear",
+        "label": "Trace every wire first",
+        "stat": "craft",
+        "difficulty": 4,
+        "requiresTrait": [
+          "metodo"
+        ],
+        "success": {
+          "text": [
+            "Three wires, not one. Cut them in the right order."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Lost track of the third wire. Backed off."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -1657,6 +2259,24 @@
           "stress": 20
         },
         "risk": "RISKY"
+      },
+      {
+        "id": "de_memoria",
+        "label": "Go by memory: they know this road",
+        "stat": "wits",
+        "difficulty": 4,
+        "requiresBackground": "trucker",
+        "success": {
+          "text": [
+            "I've driven this in fog worse than this. Out in twenty minutes."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Got turned around. Waited it out."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -1765,6 +2385,36 @@
             "Nothing useful. And a smell I won't describe."
           ],
           "stress": 10
+        }
+      },
+      {
+        "id": "avionica",
+        "label": "Strip the avionics",
+        "stat": "craft",
+        "difficulty": 5,
+        "requiresBackground": "mechanic",
+        "success": {
+          "text": [
+            "Aircraft-grade parts. Worth the trip alone."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Everything's corroded."
+          ],
+          "stress": 8
         }
       }
     ]
@@ -1941,6 +2591,29 @@
           ],
           "stress": 5
         }
+      },
+      {
+        "id": "rapido",
+        "label": "Climb fast, don't look down",
+        "stat": "endurance",
+        "difficulty": 5,
+        "requiresTrait": [
+          "imprudencia"
+        ],
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Top in four minutes. Could see three towns."
+          ],
+          "memory": "the view from the top of the tower"
+        },
+        "failure": {
+          "text": [
+            "Slipped on the rungs."
+          ],
+          "stress": 8,
+          "injury": "serious"
+        }
       }
     ]
   },
@@ -2025,6 +2698,59 @@
           "lethal": true
         },
         "risk": "RISKY"
+      },
+      {
+        "id": "amigo",
+        "label": "Walk in like an old friend",
+        "stat": "nerve",
+        "difficulty": 5,
+        "requiresTrait": [
+          "sociable"
+        ],
+        "success": {
+          "text": [
+            "Shook hands, shared a cigarette. Traded for food."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "They didn't buy it. Left fast."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "tocar",
+        "label": "Play them a song",
+        "stat": "nerve",
+        "difficulty": 5,
+        "requiresBackground": "musician",
+        "success": {
+          "text": [
+            "Borrowed a guitar from them. Played three songs. They paid in food."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ],
+          "memory": "the song I played at the camp"
+        },
+        "failure": {
+          "text": [
+            "They told me to shut up."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -2364,6 +3090,25 @@
           "injury": "serious",
           "stress": 15
         }
+      },
+      {
+        "id": "caliente",
+        "label": "Cook something hot",
+        "stat": "craft",
+        "difficulty": 3,
+        "requiresBackground": "cook",
+        "success": {
+          "text": [
+            "Soup from a can and a bit of fire. Everyone should have soup."
+          ],
+          "stress": -6
+        },
+        "failure": {
+          "text": [
+            "Couldn't get the fire going."
+          ],
+          "stress": 8
+        }
       }
     ]
   },
@@ -2663,6 +3408,690 @@
             "Couldn't make a sound. Not here."
           ],
           "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "escotilla",
+    "requiresTrait": [
+      "curiosa"
+    ],
+    "intro": [
+      "There's a hatch under the rug. Nobody else would have looked.",
+      "I have to know."
+    ],
+    "options": [
+      {
+        "id": "abrir",
+        "label": "Open it",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "A prepper's stash. Batteries, wire, a whole box."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Empty. Of course it's empty."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "marcar",
+        "label": "Mark it and move on",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Marked it. It'll bother me all night."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Marked it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "llanto",
+    "requiresTrait": [
+      "miedo"
+    ],
+    "intro": [
+      "I hear crying. A child?",
+      "I don't want to look. I don't want to look."
+    ],
+    "options": [
+      {
+        "id": "mirar",
+        "label": "Go look",
+        "stat": "nerve",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "It was a cat. A cat.",
+            "I laughed until I cried."
+          ],
+          "stress": -8,
+          "memory": "the crying that turned out to be a cat"
+        },
+        "failure": {
+          "text": [
+            "I couldn't. I ran."
+          ],
+          "stress": 15
+        }
+      },
+      {
+        "id": "irse",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Walked away. It'll stay with me."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Walked away fast."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "carro_emergencias",
+    "requiresBackground": "nurse",
+    "intro": [
+      "An abandoned crash cart.",
+      "I know exactly what's worth taking."
+    ],
+    "options": [
+      {
+        "id": "lo_bueno",
+        "label": "Take the good stuff",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Antibiotics, sutures, saline. The good stuff."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Already picked over."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "todo",
+        "label": "Take everything",
+        "stat": "endurance",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Heavy, but it's all useful."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The cart tipped. Lost half."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "semi",
+    "requiresBackground": "trucker",
+    "intro": [
+      "A jackknifed semi across the road.",
+      "I know how they load these."
+    ],
+    "options": [
+      {
+        "id": "carga",
+        "label": "Get into the cargo",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Pallets at the back, untouched. Canned food."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Doors are jammed."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "cabina",
+        "label": "Check the cab",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Driver kept a spare battery under the seat. We all do."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Someone got here first."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "generador_viejo",
+    "requiresBackground": "mechanic",
+    "intro": [
+      "An old diesel generator. Seized.",
+      "I know this model."
+    ],
+    "options": [
+      {
+        "id": "reparar",
+        "label": "Fix it enough to strip it",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Freed the shaft. Got the good parts off."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Snapped a bolt. Done."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "cobre",
+        "label": "Take the copper",
+        "stat": "endurance",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Pulled the windings. Heavy, but worth it."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Couldn't get the casing off."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "piano",
+    "requiresBackground": "musician",
+    "intro": [
+      "A piano in the gym. Out of tune.",
+      "Still a piano."
+    ],
+    "options": [
+      {
+        "id": "tocar",
+        "label": "Play one song",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Played the whole thing. Echoed off everything. Worth it."
+          ],
+          "stress": -10,
+          "memory": "the song on the school piano"
+        },
+        "failure": {
+          "text": [
+            "Couldn't. Too loud. Too risky."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "cuerdas",
+        "label": "Take the strings",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Good steel wire. Sorry, piano."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Couldn't get them off."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "cambio_vias",
+    "requiresBackground": "railway",
+    "intro": [
+      "The switch yard. I could throw the points blind.",
+      "There's a supply car on the wrong track."
+    ],
+    "options": [
+      {
+        "id": "desviar",
+        "label": "Route the car in",
+        "stat": "craft",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Points thrown, car rolled in by itself. Gravity's free."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Points are rusted."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "mirar",
+        "label": "Just look at the yard a while",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Thirty years. Every track still where I left it."
+          ],
+          "stress": -6,
+          "memory": "the switch yard where I worked"
+        },
+        "failure": {
+          "text": [
+            "Can't stay."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "hueco",
+    "requiresTrait": [
+      "solitaria",
+      "pies_ligeros"
+    ],
+    "intro": [
+      "A crawlspace only one person fits through.",
+      "Good. Just me."
+    ],
+    "options": [
+      {
+        "id": "pasar",
+        "label": "Squeeze through",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Nobody's been back here in years. Found a toolbox."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Got stuck for a while. Backed out."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Not worth it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Not worth it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "despensa_hospital",
+    "requiresBackground": "cook",
+    "intro": [
+      "The hospital kitchen.",
+      "The walk-in's locked, but kitchens always hide a key."
+    ],
+    "options": [
+      {
+        "id": "llave",
+        "label": "Find the key",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Taped under the prep table. Every kitchen in the world."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Not where it should be."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "forzar",
+        "label": "Force the door",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Took the hinges off. Still got food."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Door won't budge."
+          ],
+          "stress": 8,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "biblioteca",
+    "requiresBackground": "teacher",
+    "intro": [
+      "The school library.",
+      "I know where they kept the good books."
+    ],
+    "options": [
+      {
+        "id": "buscar",
+        "label": "Find the reference shelf",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "First-aid manual, a mechanics guide. Real knowledge."
+          ],
+          "stress": -4,
+          "memory": "the books I saved from the library"
+        },
+        "failure": {
+          "text": [
+            "Water got to everything."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "leer",
+        "label": "Sit and read for ten minutes",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Ten minutes of quiet. Nobody needs to know."
+          ],
+          "stress": -8
+        },
+        "failure": {
+          "text": [
+            "Too nervous to read."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "escalada",
+    "requiresTrait": [
+      "imprudencia",
+      "curiosa"
+    ],
+    "intro": [
+      "There's a loading crane. I could reach the top floor from it.",
+      "Probably."
+    ],
+    "options": [
+      {
+        "id": "trepar",
+        "label": "Climb the crane",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Made it. Top floor is untouched."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The arm swung. I fell."
+          ],
+          "stress": 8,
+          "injury": "serious"
+        }
+      },
+      {
+        "id": "bajar",
+        "label": "Think better of it",
+        "stat": "wits",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Fine. Fine. Next time."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Fine."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "pelea_amigos",
+    "requiresTrait": [
+      "sociable",
+      "gentil"
+    ],
+    "intro": [
+      "Two survivors arguing over a can of beans.",
+      "This is going to get ugly."
+    ],
+    "options": [
+      {
+        "id": "mediar",
+        "label": "Talk them down",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Split it, shook hands.",
+            "One of them gave me a battery for the trouble."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            }
+          ],
+          "memory": "the two I talked out of a fight"
+        },
+        "failure": {
+          "text": [
+            "They told me to mind my business."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "seguir",
+        "label": "Keep walking",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Not my fight."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Not my fight."
+          ],
+          "stress": 4
         }
       }
     ]

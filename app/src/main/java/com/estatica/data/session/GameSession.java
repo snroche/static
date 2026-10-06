@@ -1799,7 +1799,7 @@ public final class GameSession {
             if (at >= 0 && (nextWake < 0 || at < nextWake)) {
                 nextWake = at;
             }
-            List<String> labels = engine.pendingOptions(e);
+            List<String> labels = engine.pendingOptions(e, scouts.get(e.getScoutId()));
             if (!labels.isEmpty()) {
                 orders.add(new SessionSnapshot.PendingDecision(SessionSnapshot.PendingDecision.Kind.ORDER,
                         e.getId(), scouts.get(e.getScoutId()).getName(), labels, engine.deadline(e)));

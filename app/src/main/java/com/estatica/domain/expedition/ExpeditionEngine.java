@@ -89,7 +89,8 @@ public final class ExpeditionEngine {
             throw new IllegalStateException(scout.getName() + " can't be dispatched");
         }
         GameRandom rng = GameRandom.fromSeed(seed);
-        List<Segment> segments = TimelineGenerator.generate(zone, rules.durationMultiplier(scout), rng);
+        List<Segment> segments = TimelineGenerator.generate(zone, rules.durationMultiplier(scout), rng,
+                id -> fits(scout, content.event(id)));
         if (mission.getType() == Mission.Type.PERSONAL) {
             forceEvent(segments, content.getStory().personalMission(mission.getTarget()).getEvent());
         }
@@ -144,15 +145,28 @@ public final class ExpeditionEngine {
                 : null;
     }
 
-    /** Button labels for the pending situation, including "come home" when offered. */
-    public List<String> pendingOptions(Expedition expedition) {
+    /** Whether the situation can come up for this scout (event requirements). */
+    public boolean fits(Scout scout, EventDef event) {
+        return rules.fits(scout, event.getRequiresTrait(), event.getRequiresBackground());
+    }
+
+    /** Whether this scout can take an option: some only exist for certain people. */
+    public boolean isAvailable(Scout scout, EventDef.Option option) {
+        return rules.fits(scout, option.getRequiresTrait(), option.getRequiresBackground());
+    }
+
+    /**
+     * Button labels for the pending situation, including "come home" when offered. Indexes
+     * match the event's options; options this scout can't take are null (skip them).
+     */
+    public List<String> pendingOptions(Expedition expedition, Scout scout) {
         EventDef event = pendingEvent(expedition);
         if (event == null) {
             return List.of();
         }
         List<String> labels = new ArrayList<>();
         for (EventDef.Option option : event.getOptions()) {
-            labels.add(option.getLabel());
+            labels.add(isAvailable(scout, option) ? option.getLabel() : null);
         }
         if (expedition.isRetreatOffered()) {
             labels.add(content.getTerminal().getBunker().getRetreatLabel());
@@ -359,11 +373,15 @@ public final class ExpeditionEngine {
         List<EventDef.Option> options = event.getOptions();
         double noise = expedition.getMission().getNoise();
         double hintLoss = Math.min(0.8, noise * content.getBalance().getRadio().getHintLossPerNoise());
+        int shown = 0;
         for (int i = 0; i < options.size(); i++) {
             EventDef.Option option = options.get(i);
+            if (!isAvailable(scout, option)) {
+                continue;
+            }
             OddsHint hint = checks.hint(chanceFor(expedition, scout, option, zone));
             Map<String, String> optionVars = new HashMap<>(vars);
-            optionVars.put("n", String.valueOf(i + 1));
+            optionVars.put("n", String.valueOf(++shown));
             optionVars.put("label", option.getLabel());
             if (noise > 0 && rng.chance(hintLoss)) {
                 // GDD §4.4: less information from far away.
@@ -402,7 +420,7 @@ public final class ExpeditionEngine {
             choice = expedition.getChosenOption();
             if (scout.getTrust() < rules.disobeyThreshold(scout)
                     && rng.chance(expeditionBalance.getDisobeyChance())) {
-                int own = decider.pick(event, scout, zone, rules.bias(scout), rng);
+                int own = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, o));
                 if (own != choice) {
                     choice = own;
                     byOrder = false;
@@ -410,7 +428,7 @@ public final class ExpeditionEngine {
                 }
             }
         } else {
-            choice = decider.pick(event, scout, zone, rules.bias(scout), rng);
+            choice = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, o));
             out.line(radio(at, scout, say(voice, scout, "autoDecide", rng, vars)));
         }
 

@@ -10,6 +10,19 @@ public final class EventDef {
     private List<String> intro;
     private List<Option> options;
 
+    /** Only for someone with any of these traits (visible ones). */
+    private List<String> requiresTrait;
+    /** Only for someone with this background (people.json). */
+    private String requiresBackground;
+
+    public List<String> getRequiresTrait() {
+        return requiresTrait != null ? requiresTrait : List.of();
+    }
+
+    public String getRequiresBackground() {
+        return requiresBackground;
+    }
+
     public String getId() {
         return id;
     }
@@ -33,6 +46,19 @@ public final class EventDef {
         private Risk risk = Risk.SAFE;
         private Outcome success;
         private Outcome failure;
+
+        /** Only for someone with any of these traits (visible ones). */
+        private List<String> requiresTrait;
+        /** Only for someone with this background (people.json). */
+        private String requiresBackground;
+
+        public List<String> getRequiresTrait() {
+            return requiresTrait != null ? requiresTrait : List.of();
+        }
+
+        public String getRequiresBackground() {
+            return requiresBackground;
+        }
 
         public String getId() {
             return id;

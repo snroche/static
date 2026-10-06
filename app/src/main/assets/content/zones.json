@@ -5,15 +5,25 @@
     "band": "short",
     "description": "Two blocks away. Already looted, but there's always something left.",
     "danger": 1,
-    "durationMinutes": [1, 3],
-    "situations": [1, 1],
-    "finds": [1, 2],
+    "durationMinutes": [
+      1,
+      3
+    ],
+    "situations": [
+      1,
+      1
+    ],
+    "finds": [
+      1,
+      2
+    ],
     "events": [
       "perro",
       "estanteria",
       "ruido_sotano",
       "inundacion",
-      "mapa"
+      "mapa",
+      "escotilla"
     ],
     "loot": [
       {
@@ -56,16 +66,26 @@
     "band": "short",
     "description": "Out on the highway. The pumps have been dry for years.",
     "danger": 1,
-    "durationMinutes": [2, 4],
-    "situations": [1, 2],
-    "finds": [1, 2],
+    "durationMinutes": [
+      2,
+      4
+    ],
+    "situations": [
+      1,
+      2
+    ],
+    "finds": [
+      1,
+      2
+    ],
     "events": [
       "surtidor",
       "auto_volcado",
       "perro",
       "radio_encendida",
       "cables",
-      "avispas"
+      "avispas",
+      "semi"
     ],
     "loot": [
       {
@@ -114,16 +134,27 @@
     "band": "short",
     "description": "The green cross still hangs. Inside, a disaster.",
     "danger": 2,
-    "durationMinutes": [2, 5],
-    "situations": [1, 2],
-    "finds": [1, 2],
+    "durationMinutes": [
+      2,
+      5
+    ],
+    "situations": [
+      1,
+      2
+    ],
+    "finds": [
+      1,
+      2
+    ],
     "events": [
       "ruido_sotano",
       "persiana",
       "otro_superviviente",
       "estanteria",
       "cables",
-      "ratas"
+      "ratas",
+      "llanto",
+      "carro_emergencias"
     ],
     "loot": [
       {
@@ -166,9 +197,18 @@
     "band": "short",
     "description": "Three floors. The gym roof caved in.",
     "danger": 2,
-    "durationMinutes": [3, 5],
-    "situations": [2, 2],
-    "finds": [1, 3],
+    "durationMinutes": [
+      3,
+      5
+    ],
+    "situations": [
+      2,
+      2
+    ],
+    "finds": [
+      1,
+      3
+    ],
     "events": [
       "techo",
       "radio_encendida",
@@ -177,7 +217,9 @@
       "auto_volcado",
       "mapa",
       "avispas",
-      "radioaficionado"
+      "radioaficionado",
+      "piano",
+      "biblioteca"
     ],
     "loot": [
       {
@@ -230,15 +272,26 @@
     "band": "short",
     "description": "A shed full of giant washing machines. Smells of old soap and damp.",
     "danger": 1,
-    "durationMinutes": [2, 4],
-    "situations": [1, 2],
-    "finds": [1, 2],
+    "durationMinutes": [
+      2,
+      4
+    ],
+    "situations": [
+      1,
+      2
+    ],
+    "finds": [
+      1,
+      2
+    ],
     "events": [
       "estanteria",
       "perro",
       "persiana",
       "inundacion",
-      "cables"
+      "cables",
+      "escotilla",
+      "generador_viejo"
     ],
     "loot": [
       {
@@ -277,9 +330,18 @@
     "band": "medium",
     "description": "Six floors. The ambulances are still on the ramp.",
     "danger": 2,
-    "durationMinutes": [20, 40],
-    "situations": [2, 3],
-    "finds": [2, 3],
+    "durationMinutes": [
+      20,
+      40
+    ],
+    "situations": [
+      2,
+      3
+    ],
+    "finds": [
+      2,
+      3
+    ],
     "events": [
       "gas",
       "herido",
@@ -288,7 +350,10 @@
       "saqueadores",
       "derrumbe",
       "ratas",
-      "francotirador"
+      "francotirador",
+      "llanto",
+      "carro_emergencias",
+      "despensa_hospital"
     ],
     "loot": [
       {
@@ -331,16 +396,27 @@
     "band": "medium",
     "description": "The last train is still on platform 3, doors open.",
     "danger": 2,
-    "durationMinutes": [15, 30],
-    "situations": [2, 2],
-    "finds": [2, 3],
+    "durationMinutes": [
+      15,
+      30
+    ],
+    "situations": [
+      2,
+      2
+    ],
+    "finds": [
+      2,
+      3
+    ],
     "events": [
       "vagon",
       "jauria",
       "saqueadores",
       "radio_encendida",
       "trampa",
-      "derrumbe"
+      "derrumbe",
+      "cambio_vias",
+      "escalada"
     ],
     "loot": [
       {
@@ -383,9 +459,18 @@
     "band": "medium",
     "description": "Cells, files, and an evidence locker nobody opened.",
     "danger": 3,
-    "durationMinutes": [25, 50],
-    "situations": [2, 3],
-    "finds": [2, 3],
+    "durationMinutes": [
+      25,
+      50
+    ],
+    "situations": [
+      2,
+      3
+    ],
+    "finds": [
+      2,
+      3
+    ],
     "events": [
       "archivo",
       "saqueadores",
@@ -394,7 +479,9 @@
       "jauria",
       "puerta_blindada",
       "francotirador",
-      "radioaficionado"
+      "radioaficionado",
+      "hueco",
+      "pelea_amigos"
     ],
     "loot": [
       {
@@ -439,9 +526,18 @@
     "band": "medium",
     "description": "Big houses behind a wall. Some have generators.",
     "danger": 3,
-    "durationMinutes": [30, 60],
-    "situations": [2, 3],
-    "finds": [2, 3],
+    "durationMinutes": [
+      30,
+      60
+    ],
+    "situations": [
+      2,
+      3
+    ],
+    "finds": [
+      2,
+      3
+    ],
     "events": [
       "herido",
       "jauria",
@@ -451,7 +547,9 @@
       "deposito_frio",
       "trampa",
       "puerta_blindada",
-      "helada"
+      "helada",
+      "piano",
+      "pelea_amigos"
     ],
     "loot": [
       {
@@ -500,9 +598,18 @@
     "band": "long",
     "description": "An open runway, hangars, a cargo plane split in half.",
     "danger": 3,
-    "durationMinutes": [120, 240],
-    "situations": [3, 4],
-    "finds": [3, 4],
+    "durationMinutes": [
+      120,
+      240
+    ],
+    "situations": [
+      3,
+      4
+    ],
+    "finds": [
+      3,
+      4
+    ],
     "events": [
       "pista",
       "avion",
@@ -510,7 +617,10 @@
       "campamento",
       "saqueadores",
       "cables",
-      "helada"
+      "helada",
+      "semi",
+      "hueco",
+      "escalada"
     ],
     "loot": [
       {
@@ -559,9 +669,18 @@
     "band": "long",
     "description": "Concrete and water. The turbines stopped with the Silence. Almost all of them.",
     "danger": 4,
-    "durationMinutes": [180, 300],
-    "situations": [3, 4],
-    "finds": [3, 4],
+    "durationMinutes": [
+      180,
+      300
+    ],
+    "situations": [
+      3,
+      4
+    ],
+    "finds": [
+      3,
+      4
+    ],
     "events": [
       "compuertas",
       "turbinas",
@@ -569,7 +688,9 @@
       "inundacion",
       "trampa",
       "campamento",
-      "helada"
+      "helada",
+      "generador_viejo",
+      "escalada"
     ],
     "loot": [
       {
@@ -614,9 +735,18 @@
     "band": "long",
     "description": "A transmission tower on a hill. Someone keeps it running.",
     "danger": 4,
-    "durationMinutes": [240, 360],
-    "situations": [3, 4],
-    "finds": [2, 3],
+    "durationMinutes": [
+      240,
+      360
+    ],
+    "situations": [
+      3,
+      4
+    ],
+    "finds": [
+      2,
+      3
+    ],
     "events": [
       "la_voz_rele",
       "torre",

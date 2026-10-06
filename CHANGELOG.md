@@ -9,6 +9,17 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Added
+- **Situations react to who's there** (GDD §4.2):
+  - 31 options exist only for certain people:
+    - A nurse treats the wounded stranger properly.
+    - A mechanic pulls the battery from the overturned car.
+    - A Cold-blooded scout counts the sniper's shots.
+    - A musician plays for the camp.
+  - Options requiring a trait only show when that trait is visible, so they never give away a hidden one. Authored starters only get trait options.
+  - 12 new situations only happen to some people: a Curious scout finds the hatch under the rug, a Fearful one hears crying, a trucker finds a jackknifed semi.
+  - The log and the buttons only number the options that person can take. Saved choices keep working.
+  - Content 8 → 9: events and options can have `requiresTrait` / `requiresBackground`. Validation now allows 2–4 options anyone can take and 6 at most in all.
+- Tests: 130 in total (5 new for who-gets-what).
 - **A generated third starter:** new games start with Mara, Irene and one generated person (`balance.json → people.generatedStarters`). It comes from the game seed, so each game starts with someone different. Existing saves are untouched.
 
 ## [0.6.3] — Tano removed — in verification

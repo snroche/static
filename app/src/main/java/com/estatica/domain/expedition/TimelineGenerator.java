@@ -22,11 +22,22 @@ public final class TimelineGenerator {
      * @param durationMultiplier from the scout's traits (e.g. Corredor &lt; 1)
      */
     public static List<Segment> generate(ZoneDef zone, double durationMultiplier, GameRandom rng) {
+        return generate(zone, durationMultiplier, rng, id -> true);
+    }
+
+    /** @param eventFits filters the zone's situations by who is going (event requirements) */
+    public static List<Segment> generate(ZoneDef zone, double durationMultiplier, GameRandom rng,
+                                         java.util.function.Predicate<String> eventFits) {
         int[] range = zone.getDurationMinutes();
         long total = Math.max(MIN_TOTAL_MILLIS, Math.round(
                 rng.nextIntInclusive(range[0], range[1]) * MINUTE * durationMultiplier));
 
-        List<String> eventPool = new ArrayList<>(zone.getEvents());
+        List<String> eventPool = new ArrayList<>();
+        for (String id : zone.getEvents()) {
+            if (eventFits.test(id)) {
+                eventPool.add(id);
+            }
+        }
         shuffle(eventPool, rng);
         int situations = Math.min(eventPool.size(),
                 rng.nextIntInclusive(zone.getSituations()[0], zone.getSituations()[1]));

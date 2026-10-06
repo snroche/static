@@ -310,7 +310,7 @@ public class ExpeditionEngineTest {
         Run run = new Run(engine, close, content.zone("almacen"), 7);
         untilSituation(run);
         assertTrue(run.expedition.isRetreatOffered());
-        List<String> options = engine.pendingOptions(run.expedition);
+        List<String> options = engine.pendingOptions(run.expedition, run.scout);
         assertEquals("Come back to the bunker", options.get(options.size() - 1));
 
         long now = run.expedition.getPendingSinceMillis() + 1_000;
@@ -327,7 +327,7 @@ public class ExpeditionEngineTest {
         untilSituation(run);
         assertFalse(run.expedition.isRetreatOffered());
         assertEquals(content.event(run.expedition.currentSegment().getEventId()).getOptions().size(),
-                engine.pendingOptions(run.expedition).size());
+                engine.pendingOptions(run.expedition, run.scout).size());
     }
 
     @Test
@@ -364,7 +364,7 @@ public class ExpeditionEngineTest {
                 t += 5_000;
                 ExpeditionResult r = engine.advance(d.expedition, s, memories, death, t);
                 memories.addAll(r.getMemories());
-                List<String> options = engine.pendingOptions(d.expedition);
+                List<String> options = engine.pendingOptions(d.expedition, s);
                 if (!options.isEmpty()) {
                     engine.choose(d.expedition, 0, t);
                 }

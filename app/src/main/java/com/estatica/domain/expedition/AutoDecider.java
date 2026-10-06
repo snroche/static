@@ -21,11 +21,20 @@ public final class AutoDecider {
     }
 
     public int pick(EventDef event, Scout scout, ZoneDef zone, TraitDef.Bias bias, GameRandom rng) {
+        return pick(event, scout, zone, bias, rng, o -> true);
+    }
+
+    /** @param available options this scout can take (see ExpeditionEngine#isAvailable) */
+    public int pick(EventDef event, Scout scout, ZoneDef zone, TraitDef.Bias bias, GameRandom rng,
+                    java.util.function.Predicate<EventDef.Option> available) {
         List<EventDef.Option> options = event.getOptions();
         int best = 0;
         double bestScore = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < options.size(); i++) {
             EventDef.Option option = options.get(i);
+            if (!available.test(option)) {
+                continue;
+            }
             double score = checks.chance(scout, option, zone) + rng.nextDouble() * JITTER;
             boolean risky = option.getRisk() == EventDef.Option.Risk.RISKY;
             if ((bias == TraitDef.Bias.RISKY && risky) || (bias == TraitDef.Bias.CAUTIOUS && !risky)) {

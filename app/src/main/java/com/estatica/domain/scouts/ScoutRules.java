@@ -132,6 +132,27 @@ public final class ScoutRules {
         return scout.stat(type).gainXp(xp, balance.getXpPerLevel());
     }
 
+    /**
+     * Whether someone fits a requirement: any of the traits (visible ones only, so a choice
+     * never gives away a hidden trait) and the background. Empty requirements always fit.
+     */
+    public boolean fits(Scout scout, java.util.List<String> anyTrait, String background) {
+        if (!anyTrait.isEmpty()) {
+            boolean any = false;
+            for (ScoutTrait t : scout.getTraits()) {
+                any |= t.isVisible() && anyTrait.contains(t.getTraitId());
+            }
+            if (!any) {
+                return false;
+            }
+        }
+        if (background != null) {
+            com.estatica.domain.content.ScoutTemplate persona = content.persona(scout);
+            return persona != null && background.equals(persona.getBackground());
+        }
+        return true;
+    }
+
     /** How they are doing, at a glance: content, steady, tense or breaking. */
     public String mood(Scout scout) {
         if (scout.getStress() >= 75) {

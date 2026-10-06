@@ -39,6 +39,15 @@ public final class ContentValidator {
         }
     }
 
+    /** Event and option requirements must point at real traits and backgrounds. */
+    private void checkRequirements(java.util.List<String> traits, String background, String where) {
+        for (String t : traits) {
+            checkTrait(t, where);
+        }
+        check(background == null || content.getPeople().background(background) != null,
+                where + ": unknown background " + background);
+    }
+
     /** Generated people: every part must exist, and every part must have something to say. */
     private void checkPeople() {
         PeopleDef people = content.getPeople();
@@ -160,6 +169,16 @@ public final class ContentValidator {
         }
 
         checkPeople();
+        for (EventDef e : content.getEvents().values()) {
+            checkRequirements(e.getRequiresTrait(), e.getRequiresBackground(), "event " + e.getId());
+            boolean open = false;
+            for (EventDef.Option o : e.getOptions()) {
+                checkRequirements(o.getRequiresTrait(), o.getRequiresBackground(),
+                        "event " + e.getId() + " option " + o.getId());
+                open |= o.getRequiresTrait().isEmpty() && o.getRequiresBackground() == null;
+            }
+            check(open, "event " + e.getId() + ": needs at least one option anyone can take");
+        }
 
         for (TaskDef task : content.getTasks().values()) {
             String where = "task " + task.getId();
@@ -360,7 +379,11 @@ public final class ContentValidator {
             String where = "event " + e.getId();
             check(e.getIntro() != null && !e.getIntro().isEmpty(), where + ": intro");
             List<EventDef.Option> options = e.getOptions();
-            check(options != null && options.size() >= 2 && options.size() <= 4, where + ": needs 2–4 options");
+            // Anyone sees the open options plus the ones that fit them: 2–4 open, 6 at most in all.
+            long open = options == null ? 0 : options.stream()
+                    .filter(o -> o.getRequiresTrait().isEmpty() && o.getRequiresBackground() == null).count();
+            check(options != null && open >= 2 && open <= 4 && options.size() <= 6,
+                    where + ": needs 2–4 options anyone can take, 6 at most in all");
             if (options == null) {
                 continue;
             }

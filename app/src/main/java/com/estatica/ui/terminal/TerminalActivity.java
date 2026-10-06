@@ -377,10 +377,14 @@ public final class TerminalActivity extends ComponentActivity {
         binding.decisionHeader.setText(decisionHeader(decision));
         binding.decisionOptions.removeAllViews();
         LayoutInflater inflater = getLayoutInflater();
+        int shown = 0;
         for (int i = 0; i < decision.options.size(); i++) {
+            if (decision.options.get(i) == null) {
+                continue; // Not for this scout: indexes still match the event's options.
+            }
             TextView button = (TextView) inflater.inflate(
                     R.layout.item_decision_option, binding.decisionOptions, false);
-            button.setText(getString(R.string.decision_option, i + 1, decision.options.get(i)));
+            button.setText(getString(R.string.decision_option, ++shown, decision.options.get(i)));
             int option = i;
             button.setOnClickListener(v -> {
                 binding.decisionOptions.removeAllViews();
