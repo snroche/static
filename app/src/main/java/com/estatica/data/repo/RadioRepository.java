@@ -5,6 +5,7 @@ import androidx.annotation.WorkerThread;
 import com.estatica.core.Ids;
 import com.estatica.data.db.RadioDao;
 import com.estatica.data.db.RadioEntities;
+import com.estatica.domain.content.ScoutTemplate;
 import com.estatica.domain.radio.Relay;
 import com.estatica.domain.radio.Transmission;
 
@@ -173,12 +174,26 @@ public final class RadioRepository {
         return out;
     }
 
+    /** Who each waiting survivor is; absent for hand-made ones from older saves. */
     @WorkerThread
-    public void addRescueTarget(String survivorId, String zoneId, long now) {
+    public Map<String, ScoutTemplate> rescuePersonas() {
+        Map<String, ScoutTemplate> out = new HashMap<>();
+        for (RadioEntities.RescueTarget t : dao.rescueTargets()) {
+            ScoutTemplate persona = PersonaJson.read(t.persona);
+            if (persona != null) {
+                out.put(t.survivorId, persona);
+            }
+        }
+        return out;
+    }
+
+    @WorkerThread
+    public void addRescueTarget(ScoutTemplate persona, String zoneId, long now) {
         RadioEntities.RescueTarget t = new RadioEntities.RescueTarget();
-        t.survivorId = survivorId;
+        t.survivorId = persona.getId();
         t.zoneId = zoneId;
         t.foundAtMillis = now;
+        t.persona = PersonaJson.write(persona);
         dao.upsertRescueTarget(t);
     }
 

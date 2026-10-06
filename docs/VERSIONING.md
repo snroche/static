@@ -59,6 +59,7 @@ Rules:
 | 3 | 0.3.0 | Bond, tasks, flags, conversations, personal items, affinity; `expeditions.retreat_offered` |
 | 4 | 0.4.0 | Radio: known zones, caught signals, transmissions, intel, relays, rescues, lore, modules; missions in `expeditions` |
 | 5 | 0.5.0 | Power (`power`, `bunker_state`), workshop (`craft_jobs`), `scouts.gear_id` |
+| 6 | 0.6.2 | Generated people: `scouts.persona`, `rescue_targets.persona` |
 
 `MigrationsTest` (JVM) compares each migration's SQL against the exported schemas. When adding a migration, extend that test.
 
@@ -69,7 +70,7 @@ Rules:
 - It **does not go up** when numbers or texts change: a balance tweak breaks nothing.
 - It **goes up** when a JSON file's structure changes, or when an ID a save can reference (event, item, trait, zone) is renamed or deleted. In that case, add a mapping from old IDs to new ones, or a fallback for existing saves.
 - Since DB v2, `game_state.content_version` stores the content version the save was last written with, and `GameSession.start()` updates it on load. That's where adapting old saves will go: read the stored version, map IDs, and only then update it.
-- Saves reference IDs of scouts (`template_id`), traits, zones, events, resources and voices. Renaming or deleting any of them requires bumping `contentVersion` and adding a mapping.
+- Saves reference IDs of scouts (`template_id`), traits, zones, events, resources, voices and backgrounds (inside generated personas). Renaming or deleting any of them requires bumping `contentVersion` and adding a mapping.
 
 ## 4. Changelog
 

@@ -25,13 +25,14 @@ public final class GameContent {
     private final Map<String, GearDef> gear;
     private final Map<String, RecipeDef> recipes;
     private final StoryDef story;
+    private final PeopleDef people;
 
     public GameContent(Balance balance, TerminalText terminal, List<ScoutTemplate> starters,
                        List<TraitDef> traits, List<ZoneDef> zones, List<EventDef> events,
                        List<VoiceDef> voices, List<ResourceDef> resources, List<ItemDef> items,
                        List<TaskDef> tasks, List<DialogueDef> dialogues,
                        List<ScoutTemplate> survivors, SignalsDef signals, List<GearDef> gear,
-                       List<RecipeDef> recipes, StoryDef story) {
+                       List<RecipeDef> recipes, StoryDef story, PeopleDef people) {
         this.balance = Objects.requireNonNull(balance);
         this.terminal = Objects.requireNonNull(terminal);
         this.starters = Collections.unmodifiableList(starters);
@@ -48,6 +49,7 @@ public final class GameContent {
         this.gear = index(gear, GearDef::getId);
         this.recipes = index(recipes, RecipeDef::getId);
         this.story = Objects.requireNonNull(story);
+        this.people = Objects.requireNonNull(people);
     }
 
     private interface IdOf<T> {
@@ -120,7 +122,16 @@ public final class GameContent {
         return dialogues;
     }
 
-    /** Template by id (starter or survivor), or null. */
+    public PeopleDef getPeople() {
+        return people;
+    }
+
+    /** Who a scout is: their generated persona, else their authored template, else null. */
+    public ScoutTemplate persona(com.estatica.domain.scouts.Scout scout) {
+        return scout.getPersona() != null ? scout.getPersona() : starter(scout.getTemplateId());
+    }
+
+    /** Template by id (starter or legacy survivor), or null. */
     public ScoutTemplate starter(String templateId) {
         for (ScoutTemplate template : starters) {
             if (template.getId().equals(templateId)) {
@@ -135,7 +146,7 @@ public final class GameContent {
         return null;
     }
 
-    /** Recruitable survivors (GDD §4.4: farther = stronger). */
+    /** Hand-made survivors from before generated people; kept so older saves still load. */
     public List<ScoutTemplate> getSurvivors() {
         return survivors;
     }

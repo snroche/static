@@ -134,31 +134,31 @@ public class RadioTest {
         GameRandom rng = GameRandom.fromSeed(1);
         Set<String> known = new HashSet<>(Set.of("almacen", "estacion", "farmacia", "escuela"));
 
-        RadioRules.Outcome zone = rules.resolve(spotOf(SignalField.Kind.ZONE, "short"), known, Set.of(), Set.of(), rng);
+        RadioRules.Outcome zone = rules.resolve(spotOf(SignalField.Kind.ZONE, "short"), known, true, Set.of(), rng);
         assertEquals(SignalField.Kind.ZONE, zone.kind);
         assertEquals("lavadero", zone.zoneId);
         known.add("lavadero");
-        RadioRules.Outcome nothingLeft = rules.resolve(spotOf(SignalField.Kind.ZONE, "short"), known, Set.of(), Set.of(), rng);
+        RadioRules.Outcome nothingLeft = rules.resolve(spotOf(SignalField.Kind.ZONE, "short"), known, true, Set.of(), rng);
         assertEquals(SignalField.Kind.RARE, nothingLeft.kind);
 
-        RadioRules.Outcome survivor = rules.resolve(spotOf(SignalField.Kind.SURVIVOR, "medium"), known, Set.of(), Set.of(), rng);
+        RadioRules.Outcome survivor = rules.resolve(spotOf(SignalField.Kind.SURVIVOR, "medium"), known, true, Set.of(), rng);
         assertEquals(SignalField.Kind.SURVIVOR, survivor.kind);
         assertEquals("medium", content.zone(survivor.zoneId).getBand());
-        RadioRules.Outcome allFound = rules.resolve(spotOf(SignalField.Kind.SURVIVOR, "medium"), known,
-                Set.of("beto", "lucho"), Set.of(), rng);
-        assertEquals(SignalField.Kind.RARE, allFound.kind);
+        RadioRules.Outcome enoughWaiting = rules.resolve(spotOf(SignalField.Kind.SURVIVOR, "medium"), known,
+                false, Set.of(), rng);
+        assertEquals(SignalField.Kind.RARE, enoughWaiting.kind);
     }
 
     @Test
     public void theFirstTransmissionIsTheMorseManual() {
         GameRandom rng = GameRandom.fromSeed(2);
         Set<String> known = Set.of("almacen", "estacion");
-        RadioRules.Outcome first = rules.resolve(spotOf(SignalField.Kind.TRANSMISSION, "short"), known, Set.of(), Set.of(), rng);
+        RadioRules.Outcome first = rules.resolve(spotOf(SignalField.Kind.TRANSMISSION, "short"), known, true, Set.of(), rng);
         assertEquals(SignalsDef.Transmission.Reward.MORSE_TABLE, first.transmission.getReward());
         Transmission manual = rules.encrypt(first.transmission, "short", null, first.transmission.getText(), rng, 0);
         assertEquals("the manual is always Caesar", Transmission.Kind.CAESAR, manual.getKind());
 
-        RadioRules.Outcome next = rules.resolve(spotOf(SignalField.Kind.TRANSMISSION, "short"), known, Set.of(),
+        RadioRules.Outcome next = rules.resolve(spotOf(SignalField.Kind.TRANSMISSION, "short"), known, true,
                 Set.of("manual_morse"), rng);
         assertNotEquals("manual_morse", next.transmission.getId());
         if (next.transmission.needsZone()) {

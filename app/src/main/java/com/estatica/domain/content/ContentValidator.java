@@ -39,6 +39,75 @@ public final class ContentValidator {
         }
     }
 
+    /** Generated people: every part must exist, and every part must have something to say. */
+    private void checkPeople() {
+        PeopleDef people = content.getPeople();
+        Balance.People gen = content.getBalance().getPeople();
+        check(gen != null, "balance: people");
+        if (gen != null) {
+            check(gen.getStatBase() != null && gen.getStatBase().length == 2 && gen.getStatBase()[0] >= 1
+                            && gen.getStatBase()[0] <= gen.getStatBase()[1],
+                    "balance.people: statBase [min, max]");
+            check(gen.getCeilingGain() != null && gen.getCeilingGain().length == 2 && gen.getCeilingGain()[0] >= 1
+                            && gen.getCeilingGain()[0] <= gen.getCeilingGain()[1],
+                    "balance.people: ceilingGain [min, max]");
+            check(gen.getMaxPendingRescues() >= 1, "balance.people: maxPendingRescues ≥ 1");
+        }
+        check(people.getNames().size() >= 30, "people: at least 30 names");
+        check(new java.util.HashSet<>(people.getNames()).size() == people.getNames().size(), "people: duplicate names");
+        check(people.getBackgrounds().size() >= 6, "people: at least 6 backgrounds");
+        java.util.Set<String> backgroundIds = new java.util.HashSet<>();
+        for (PeopleDef.Background b : people.getBackgrounds()) {
+            String where = "background " + b.getId();
+            check(backgroundIds.add(b.getId()), where + ": duplicate id");
+            check(b.getName() != null && !b.getBios().isEmpty(), where + ": name, bios");
+            check(StatType.fromKey(b.getPrimaryStat()) != null, where + ": unknown primaryStat");
+            check(b.getSecondaryStat() == null || StatType.fromKey(b.getSecondaryStat()) != null,
+                    where + ": unknown secondaryStat");
+            check(!b.getVoices().isEmpty(), where + ": voices");
+            for (String v : b.getVoices()) {
+                check(content.getVoices().containsKey(v), where + ": unknown voice " + v);
+            }
+            for (String taste : b.getLikes()) {
+                checkTaste(taste, where + ": likes");
+            }
+            for (String taste : b.getDislikes()) {
+                checkTaste(taste, where + ": dislikes");
+            }
+            check(b.getHabits().size() >= 2, where + ": at least 2 habits");
+            check(!b.getRescueLines().isEmpty(), where + ": rescueLines");
+            long talks = content.getDialogues().values().stream()
+                    .filter(d -> b.getId().equals(d.getRequiresBackground())).count();
+            check(talks >= 2, where + ": needs at least 2 dialogues");
+            check(content.getStory().getPersonalMissions().stream().anyMatch(m -> b.getId().equals(m.getBackground())),
+                    where + ": needs a personal mission");
+        }
+        for (TraitDef t : content.getTraits().values()) {
+            String where = "trait " + t.getId();
+            for (String v : t.getVoices()) {
+                check(content.getVoices().containsKey(v), where + ": unknown voice " + v);
+            }
+            for (String taste : t.getLikes()) {
+                checkTaste(taste, where + ": likes");
+            }
+            for (String taste : t.getDislikes()) {
+                checkTaste(taste, where + ": dislikes");
+            }
+            if (t.getKind() != TraitDef.Kind.PERSONALITY) {
+                continue;
+            }
+            check(content.getDialogues().values().stream().anyMatch(d -> d.getRequiresTrait().contains(t.getId())),
+                    where + ": needs a personality dialogue");
+            if (t.isHideable()) {
+                boolean confession = content.getDialogues().values().stream()
+                        .filter(d -> t.getId().equals(d.getRequiresHiddenTrait()))
+                        .anyMatch(d -> d.getChoices() != null
+                                && d.getChoices().stream().allMatch(DialogueDef.Choice::isRevealHidden));
+                check(confession, where + ": hideable, needs a confession whose every answer reveals it");
+            }
+        }
+    }
+
     private void run() {
         int statMax = content.getBalance().getScouts().getStatMax();
 
@@ -54,7 +123,8 @@ public final class ContentValidator {
         List<ScoutTemplate> templates = new ArrayList<>(content.getStarters());
         templates.addAll(content.getSurvivors());
         for (ScoutTemplate s : content.getSurvivors()) {
-            checkBand(s.getBand(), "survivor " + s.getId());
+            check(s.getBackground() == null || content.getPeople().background(s.getBackground()) != null,
+                    "survivor " + s.getId() + ": unknown background " + s.getBackground());
             check(content.getStarters().stream().noneMatch(t -> t.getId().equals(s.getId())),
                     "survivor " + s.getId() + ": id clashes with a starter");
         }
@@ -89,6 +159,8 @@ public final class ContentValidator {
             }
         }
 
+        checkPeople();
+
         for (TaskDef task : content.getTasks().values()) {
             String where = "task " + task.getId();
             check(task.getName() != null, where + ": name");
@@ -106,6 +178,15 @@ public final class ContentValidator {
             String where = "dialogue " + d.getId();
             check(d.getScout() == null || content.starter(d.getScout()) != null,
                     where + ": unknown scout " + d.getScout());
+            for (String t : d.getRequiresTrait()) {
+                checkTrait(t, where);
+            }
+            if (d.getRequiresHiddenTrait() != null) {
+                TraitDef hidden = content.getTraits().get(d.getRequiresHiddenTrait());
+                check(hidden != null && hidden.isHideable(), where + ": requiresHiddenTrait must be a hideable trait");
+            }
+            check(d.getRequiresBackground() == null || content.getPeople().background(d.getRequiresBackground()) != null,
+                    where + ": unknown background " + d.getRequiresBackground());
             check(d.getLines() != null && !d.getLines().isEmpty(), where + ": lines");
             check(d.getChoices() != null && !d.getChoices().isEmpty() && d.getChoices().size() <= 4,
                     where + ": needs 1–4 choices");
@@ -189,7 +270,10 @@ public final class ContentValidator {
         }
         for (StoryDef.PersonalMission m : story.getPersonalMissions()) {
             String where = "personal " + m.getId();
-            check(content.starter(m.getScout()) != null, where + ": unknown scout " + m.getScout());
+            check((m.getScout() == null) != (m.getBackground() == null), where + ": needs a scout or a background");
+            check(m.getScout() == null || content.starter(m.getScout()) != null, where + ": unknown scout " + m.getScout());
+            check(m.getBackground() == null || content.getPeople().background(m.getBackground()) != null,
+                    where + ": unknown background " + m.getBackground());
             check(content.getZones().containsKey(m.getZone()), where + ": unknown zone " + m.getZone());
             check(content.getEvents().containsKey(m.getEvent()), where + ": unknown event " + m.getEvent());
             if (m.getRewardTrait() != null) {

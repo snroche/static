@@ -85,7 +85,6 @@
     },
     {
       "id": "beto_casilla",
-      "scout": "beto",
       "title": "The signal box",
       "zone": "estacion_tren",
       "event": "beto_cuadrilla",
@@ -95,11 +94,11 @@
       "memory": "the day I went back to the signal box",
       "doneLines": [
         "Mission accomplished. Thanks. Over and out."
-      ]
+      ],
+      "background": "railway"
     },
     {
       "id": "lucho_casa",
-      "scout": "lucho",
       "title": "The house",
       "zone": "barrio_privado",
       "event": "lucho_vieja",
@@ -109,6 +108,91 @@
       "memory": "the day I went back home",
       "doneLines": [
         "Thanks. Really. I don't know what else to say."
+      ],
+      "background": "teen"
+    },
+    {
+      "id": "nurse_sala",
+      "background": "nurse",
+      "title": "The old ward",
+      "zone": "hospital",
+      "event": "enfermera_sala",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "the day I went back to my ward",
+      "doneLines": [
+        "Thank you, dear. Now I can stop counting the beds."
+      ]
+    },
+    {
+      "id": "trucker_surtidor",
+      "background": "trucker",
+      "title": "The truck at the pump",
+      "zone": "estacion",
+      "event": "camionero_surtidor",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "the day I found my truck again",
+      "doneLines": [
+        "Thanks, boss. Needed to say goodbye properly."
+      ]
+    },
+    {
+      "id": "teacher_aula",
+      "background": "teacher",
+      "title": "The classroom",
+      "zone": "escuela",
+      "event": "maestra_aula",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "the day I went back to my classroom",
+      "doneLines": [
+        "Thank you. The lesson is finally over."
+      ]
+    },
+    {
+      "id": "mechanic_maquinas",
+      "background": "mechanic",
+      "title": "The machines",
+      "zone": "lavadero",
+      "event": "mecanico_maquinas",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "the day I went back to my machines",
+      "doneLines": [
+        "Thanks. They were still there. So am I."
+      ]
+    },
+    {
+      "id": "cook_comedor",
+      "background": "cook",
+      "title": "The canteen",
+      "zone": "represa",
+      "event": "cocinero_comedor",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "the day I went back to my canteen",
+      "doneLines": [
+        "Thank you. I cooked one last meal there, in my head."
+      ]
+    },
+    {
+      "id": "musician_guitarra",
+      "background": "musician",
+      "title": "The guitar",
+      "zone": "comisaria",
+      "event": "musico_guitarra",
+      "rewardBond": 15,
+      "rewardStressRelief": 30,
+      "rewardTrait": "en_paz",
+      "memory": "the day I went looking for my guitar",
+      "doneLines": [
+        "Thanks. Whatever happened in there, I needed to try."
       ]
     }
   ],

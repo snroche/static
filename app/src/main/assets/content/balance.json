@@ -1,5 +1,5 @@
 {
-  "contentVersion": 7,
+  "contentVersion": 8,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
@@ -379,6 +379,17 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "people": {
+    "_comment": "Generated survivors. [placeholder]",
+    "statBase": [2, 5],
+    "ceilingGain": [3, 4],
+    "primaryBonus": 2,
+    "secondaryBonus": 1,
+    "bandCeilingBonus": 1,
+    "nicknameChance": 0.15,
+    "recentToAvoid": 3,
+    "maxPendingRescues": 2
   },
   "barks": {
     "intervalMinutes": 40,

@@ -1,5 +1,7 @@
 package com.estatica.domain.scouts;
 
+import com.estatica.domain.content.ScoutTemplate;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -28,6 +30,8 @@ public final class Scout {
     /** Leftover healing progress (hours) toward the next injury level. */
     private double healProgressHours;
     private final ScoutLife life;
+    /** Generated people carry who they are; authored ones resolve it from content. */
+    private ScoutTemplate persona;
 
     public Scout(String id, String templateId, String name, String voiceId,
                  Map<StatType, Stat> stats, List<ScoutTrait> traits, int stress, int trust,
@@ -63,6 +67,15 @@ public final class Scout {
 
     public String getId() {
         return id;
+    }
+
+    /** Nullable: only generated people have one (see {@code GameContent.persona}). */
+    public ScoutTemplate getPersona() {
+        return persona;
+    }
+
+    public void setPersona(ScoutTemplate persona) {
+        this.persona = persona;
     }
 
     public String getTemplateId() {

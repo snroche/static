@@ -4,6 +4,7 @@ import com.estatica.core.GameRandom;
 import com.estatica.core.TextTemplate;
 import com.estatica.domain.content.DialogueDef;
 import com.estatica.domain.content.GameContent;
+import com.estatica.domain.content.ScoutTemplate;
 import com.estatica.domain.content.TerminalText;
 import com.estatica.domain.content.VoiceDef;
 import com.estatica.domain.log.LogChannel;
@@ -12,6 +13,7 @@ import com.estatica.domain.scouts.DialogueOutcomes;
 import com.estatica.domain.scouts.Memory;
 import com.estatica.domain.scouts.Scout;
 import com.estatica.domain.scouts.ScoutRules;
+import com.estatica.domain.scouts.ScoutTrait;
 import com.estatica.domain.scouts.ScoutStatus;
 import com.estatica.domain.scouts.StatType;
 import com.estatica.domain.scouts.VoiceRenderer;
@@ -82,6 +84,9 @@ public final class DialogueEngine {
         if (d.getScout() != null && !d.getScout().equals(s.getTemplateId())) {
             return false;
         }
+        if (!fitsPersonality(s, d)) {
+            return false;
+        }
         if (rules.bondLevel(s) < d.getMinBondLevel()) {
             return false;
         }
@@ -109,6 +114,33 @@ public final class DialogueEngine {
             return false;
         }
         return d.isRepeatable() || !s.getLife().hasFlag(doneFlag(d, other));
+    }
+
+    /** Trait and background requirements: who they are, not which template they came from. */
+    private boolean fitsPersonality(Scout s, DialogueDef d) {
+        if (!d.getRequiresTrait().isEmpty()) {
+            boolean any = false;
+            for (ScoutTrait t : s.getTraits()) {
+                any |= t.isVisible() && d.getRequiresTrait().contains(t.getTraitId());
+            }
+            if (!any) {
+                return false;
+            }
+        }
+        if (d.getRequiresHiddenTrait() != null) {
+            boolean hidden = false;
+            for (ScoutTrait t : s.getTraits()) {
+                hidden |= t.isHidden() && !t.isRevealed() && d.getRequiresHiddenTrait().equals(t.getTraitId());
+            }
+            if (!hidden) {
+                return false;
+            }
+        }
+        if (d.getRequiresBackground() != null) {
+            ScoutTemplate persona = content.persona(s);
+            return persona != null && d.getRequiresBackground().equals(persona.getBackground());
+        }
+        return true;
     }
 
     /**

@@ -32,6 +32,14 @@ public final class TraitDef {
     private double healOthersMultiplier = 1.0;
     /** Traits that rub this one the wrong way: sharing a task builds friction. */
     private java.util.List<String> clashes;
+    /** Generation: can be someone's hidden trait (has a confession dialogue). */
+    private boolean hideable;
+    /** Generation: voices this trait leans toward. */
+    private java.util.List<String> voices;
+    /** Generation: tastes and habits this trait brings. */
+    private java.util.List<String> likes;
+    private java.util.List<String> dislikes;
+    private java.util.List<ScoutTemplate.Habit> habits;
 
     public String getId() {
         return id;
@@ -91,5 +99,30 @@ public final class TraitDef {
 
     public java.util.List<String> getClashes() {
         return clashes != null ? clashes : java.util.List.of();
+    }
+
+    public boolean isHideable() {
+        return hideable;
+    }
+
+    public java.util.List<String> getVoices() {
+        return voices != null ? voices : java.util.List.of();
+    }
+
+    public java.util.List<String> getLikes() {
+        return likes != null ? likes : java.util.List.of();
+    }
+
+    public java.util.List<String> getDislikes() {
+        return dislikes != null ? dislikes : java.util.List.of();
+    }
+
+    public java.util.List<ScoutTemplate.Habit> getHabits() {
+        return habits != null ? habits : java.util.List.of();
+    }
+
+    /** True if either trait lists the other as a clash. */
+    public boolean clashesWith(TraitDef other) {
+        return getClashes().contains(other.getId()) || other.getClashes().contains(getId());
     }
 }

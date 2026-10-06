@@ -6,11 +6,26 @@
     "band": "medium",
     "bio": "Railway signalman. Talks as if every word cost money.",
     "stats": {
-      "endurance": [6, 9],
-      "stealth": [3, 6],
-      "wits": [5, 8],
-      "nerve": [6, 9],
-      "craft": [4, 7]
+      "endurance": [
+        6,
+        9
+      ],
+      "stealth": [
+        3,
+        6
+      ],
+      "wits": [
+        5,
+        8
+      ],
+      "nerve": [
+        6,
+        9
+      ],
+      "craft": [
+        4,
+        7
+      ]
     },
     "traits": [
       "sangre_fria",
@@ -41,7 +56,8 @@
         "text": "Whistles the 2:55 departure signal when he's happy.",
         "minBondLevel": 3
       }
-    ]
+    ],
+    "background": "railway"
   },
   {
     "id": "lucho",
@@ -50,11 +66,26 @@
     "band": "medium",
     "bio": "Seventeen. Survived alone in a gated community. Won't say how.",
     "stats": {
-      "endurance": [4, 8],
-      "stealth": [6, 10],
-      "wits": [4, 8],
-      "nerve": [2, 8],
-      "craft": [2, 6]
+      "endurance": [
+        4,
+        8
+      ],
+      "stealth": [
+        6,
+        10
+      ],
+      "wits": [
+        4,
+        8
+      ],
+      "nerve": [
+        2,
+        8
+      ],
+      "craft": [
+        2,
+        6
+      ]
     },
     "traits": [
       "imprudencia",
@@ -85,7 +116,8 @@
         "text": "Sleeps facing the door.",
         "minBondLevel": 3
       }
-    ]
+    ],
+    "background": "teen"
   },
   {
     "id": "nilda",
@@ -94,11 +126,26 @@
     "band": "long",
     "bio": "Retired nurse. Worked at the hospital to the very last day. Calls everyone \"dear\".",
     "stats": {
-      "endurance": [3, 6],
-      "stealth": [3, 6],
-      "wits": [7, 10],
-      "nerve": [6, 10],
-      "craft": [5, 8]
+      "endurance": [
+        3,
+        6
+      ],
+      "stealth": [
+        3,
+        6
+      ],
+      "wits": [
+        7,
+        10
+      ],
+      "nerve": [
+        6,
+        10
+      ],
+      "craft": [
+        5,
+        8
+      ]
     },
     "traits": [
       "metodo",
@@ -129,7 +176,8 @@
         "text": "Keeps a list of birthdays. Including yours, somehow.",
         "minBondLevel": 3
       }
-    ]
+    ],
+    "background": "nurse"
   },
   {
     "id": "rusa",
@@ -138,11 +186,26 @@
     "band": "long",
     "bio": "Truck driver. Crossed the country three times after the Silence. Won't give her real name.",
     "stats": {
-      "endurance": [7, 10],
-      "stealth": [4, 7],
-      "wits": [4, 7],
-      "nerve": [7, 10],
-      "craft": [6, 9]
+      "endurance": [
+        7,
+        10
+      ],
+      "stealth": [
+        4,
+        7
+      ],
+      "wits": [
+        4,
+        7
+      ],
+      "nerve": [
+        7,
+        10
+      ],
+      "craft": [
+        6,
+        9
+      ]
     },
     "traits": [
       "sangre_fria",
@@ -173,6 +236,7 @@
         "text": "Sings old truck-stop songs off key at night.",
         "minBondLevel": 3
       }
-    ]
+    ],
+    "background": "trucker"
   }
 ]

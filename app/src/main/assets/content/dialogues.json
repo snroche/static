@@ -694,12 +694,12 @@
   },
   {
     "id": "beto_senales",
-    "scout": "beto",
     "kind": "TALK",
+    "requiresBackground": "railway",
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "Thirty years as a signalman.",
+      "Years and years as a signalman.",
       "Red, yellow, green. Now everything's static."
     ],
     "choices": [
@@ -726,8 +726,8 @@
   },
   {
     "id": "beto_foto",
-    "scout": "beto",
     "kind": "TALK",
+    "requiresBackground": "railway",
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
@@ -756,8 +756,8 @@
   },
   {
     "id": "beto_silencio",
-    "scout": "beto",
     "kind": "TALK",
+    "requiresBackground": "railway",
     "minBondLevel": 2,
     "priority": 5,
     "lines": [
@@ -784,8 +784,8 @@
   },
   {
     "id": "beto_ultimo",
-    "scout": "beto",
     "kind": "TALK",
+    "requiresBackground": "railway",
     "minBondLevel": 3,
     "priority": 4,
     "lines": [
@@ -812,8 +812,8 @@
   },
   {
     "id": "lucho_barrio",
-    "scout": "lucho",
     "kind": "TALK",
+    "requiresBackground": "teen",
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
@@ -844,12 +844,12 @@
   },
   {
     "id": "lucho_cartas",
-    "scout": "lucho",
     "kind": "TALK",
+    "requiresBackground": "teen",
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "Tano wants to teach me truco. You know how to play?"
+      "Somebody here wants to teach me truco. You know how to play?"
     ],
     "choices": [
       {
@@ -874,8 +874,8 @@
   },
   {
     "id": "lucho_banda",
-    "scout": "lucho",
     "kind": "TALK",
+    "requiresBackground": "teen",
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
@@ -902,13 +902,13 @@
   },
   {
     "id": "lucho_pesadillas",
-    "scout": "lucho",
     "kind": "TALK",
+    "requiresBackground": "teen",
     "minBondLevel": 3,
     "priority": 5,
     "lines": [
       "Can I tell you something? Don't laugh.",
-      "I dream the door opens and it's her. Every night. And then it isn't."
+      "I dream the door opens and it's them. Every night. And then it isn't."
     ],
     "choices": [
       {
@@ -917,7 +917,6 @@
           "...Ok. Thanks."
         ],
         "bond": 6,
-        "revealHidden": true,
         "memory": "you listened to my nightmares"
       },
       {
@@ -925,15 +924,14 @@
         "reply": [
           "Easy for you to say."
         ],
-        "bond": 1,
-        "revealHidden": true
+        "bond": 1
       }
     ]
   },
   {
     "id": "nilda_charla",
-    "scout": "nilda",
     "kind": "TALK",
+    "requiresBackground": "nurse",
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
@@ -964,13 +962,13 @@
   },
   {
     "id": "nilda_pastafrola",
-    "scout": "nilda",
     "kind": "TALK",
+    "requiresBackground": "nurse",
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
       "If I had flour and quince jam, I'd make you a pastafrola.",
-      "My grandson's favorite. Sticky fingers for a week."
+      "The whole ward's favorite. Sticky fingers for a week."
     ],
     "choices": [
       {
@@ -995,8 +993,8 @@
   },
   {
     "id": "nilda_santos",
-    "scout": "nilda",
     "kind": "TALK",
+    "requiresBackground": "nurse",
     "minBondLevel": 3,
     "priority": 4,
     "lines": [
@@ -1026,8 +1024,8 @@
   },
   {
     "id": "rusa_charla",
-    "scout": "rusa",
     "kind": "TALK",
+    "requiresBackground": "trucker",
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
@@ -1058,8 +1056,8 @@
   },
   {
     "id": "rusa_rutas",
-    "scout": "rusa",
     "kind": "TALK",
+    "requiresBackground": "trucker",
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
@@ -1085,32 +1083,30 @@
     ]
   },
   {
-    "id": "rusa_nombre",
-    "scout": "rusa",
+    "id": "trucker_camion",
     "kind": "TALK",
+    "requiresBackground": "trucker",
     "minBondLevel": 3,
     "priority": 5,
     "lines": [
-      "You want to know my real name? Nobody does anymore.",
-      "It's Ludmila. My grandmother's. Don't spread it around."
+      "My truck had a name, you know. La Tortuga.",
+      "Slow as anything. Never once broke down on me."
     ],
     "choices": [
       {
-        "label": "Thank you for telling me, Ludmila.",
+        "label": "Maybe we'll find her someday.",
         "reply": [
-          "Huh. Sounds strange out loud. Good strange."
+          "Ha. She'd be proud of me. Maybe."
         ],
-        "bond": 6,
-        "revealHidden": true,
-        "memory": "the day I told you my real name"
+        "bond": 5,
+        "memory": "La Tortuga, my old truck"
       },
       {
-        "label": "La Rusa suits you better.",
+        "label": "A truck's a truck.",
         "reply": [
-          "Ha! It does, doesn't it."
+          "Spoken like someone who never slept in one."
         ],
-        "bond": 3,
-        "revealHidden": true
+        "bond": 1
       }
     ]
   },
@@ -1468,8 +1464,8 @@
   },
   {
     "id": "beto_pide_mision",
-    "scout": "beto",
     "kind": "INITIATED",
+    "requiresBackground": "railway",
     "minBondLevel": 4,
     "forbidsFlags": [
       "personal:beto_casilla:offered"
@@ -1501,8 +1497,8 @@
   },
   {
     "id": "lucho_pide_mision",
-    "scout": "lucho",
     "kind": "INITIATED",
+    "requiresBackground": "teen",
     "minBondLevel": 4,
     "forbidsFlags": [
       "personal:lucho_casa:offered"
@@ -1529,6 +1525,1453 @@
           "I understand. But it won't leave my head."
         ],
         "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "nurse_pide_mision",
+    "kind": "INITIATED",
+    "requiresBackground": "nurse",
+    "forbidsFlags": [
+      "personal:nurse_sala:offered"
+    ],
+    "minBondLevel": 4,
+    "priority": 7,
+    "lines": [
+      "Can I ask you something, dear?",
+      "My ward at the hospital. I want to see it once more."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:nurse_sala:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "trucker_pide_mision",
+    "kind": "INITIATED",
+    "requiresBackground": "trucker",
+    "forbidsFlags": [
+      "personal:trucker_surtidor:offered"
+    ],
+    "minBondLevel": 4,
+    "priority": 7,
+    "lines": [
+      "Boss. Favor to ask.",
+      "My truck's still at the gas station pump. I want to see it."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:trucker_surtidor:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "teacher_clase",
+    "kind": "TALK",
+    "requiresBackground": "teacher",
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "I used to have thirty kids in a room built for twenty.",
+      "I still count heads when we eat. Habit."
+    ],
+    "choices": [
+      {
+        "label": "Count us. We're your class now.",
+        "reply": [
+          "Then behave, all of you."
+        ],
+        "bond": 5,
+        "memory": "that the bunker is my class now"
+      },
+      {
+        "label": "Do you miss them?",
+        "reply": [
+          "Every single one. Even the noisy ones."
+        ],
+        "bond": 3,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "teacher_cuaderno",
+    "kind": "TALK",
+    "requiresBackground": "teacher",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "If you find a notebook, I'd like it.",
+      "Someone should write down what's happening. For later."
+    ],
+    "choices": [
+      {
+        "label": "I'll keep an eye out.",
+        "reply": [
+          "Thank you. History needs a secretary."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:cuaderno"
+        ]
+      },
+      {
+        "label": "There may not be a later.",
+        "reply": [
+          "Then it'll be the last thing anyone wrote. Still matters."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "teacher_pide_mision",
+    "kind": "INITIATED",
+    "requiresBackground": "teacher",
+    "forbidsFlags": [
+      "personal:teacher_aula:offered"
+    ],
+    "minBondLevel": 4,
+    "priority": 7,
+    "lines": [
+      "May I request something?",
+      "School No. 14. My classroom. I'd like to see it once more."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:teacher_aula:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "mechanic_generador",
+    "kind": "TALK",
+    "requiresBackground": "mechanic",
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Your generator's got a bad bearing. I can hear it.",
+      "Give me a day and it'll purr."
+    ],
+    "choices": [
+      {
+        "label": "Do it.",
+        "reply": [
+          "Already started. Didn't wait for permission."
+        ],
+        "bond": 4,
+        "trust": 2
+      },
+      {
+        "label": "It works. Leave it.",
+        "reply": [
+          "Works today. We'll talk tomorrow."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "mechanic_padre",
+    "kind": "TALK",
+    "requiresBackground": "mechanic",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "My old man taught me everything with a wrench in one hand and mate in the other.",
+      "Never said he was proud. Didn't have to."
+    ],
+    "choices": [
+      {
+        "label": "He'd be proud now.",
+        "reply": [
+          "...Yeah. Maybe."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "likes:mate"
+        ],
+        "memory": "my old man and his wrench"
+      },
+      {
+        "label": "Did you get along?",
+        "reply": [
+          "Like two gears. Noisy, but it worked."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "mechanic_pide_mision",
+    "kind": "INITIATED",
+    "requiresBackground": "mechanic",
+    "forbidsFlags": [
+      "personal:mechanic_maquinas:offered"
+    ],
+    "minBondLevel": 4,
+    "priority": 7,
+    "lines": [
+      "Hey. The industrial laundry.",
+      "I serviced those machines for years. I want to see if they're still there."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:mechanic_maquinas:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "cook_receta",
+    "kind": "TALK",
+    "requiresBackground": "cook",
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "You know what I'd give for an onion? One onion.",
+      "Everything tastes like the can it came from."
+    ],
+    "choices": [
+      {
+        "label": "Next onion is yours.",
+        "reply": [
+          "I'll hold you to that."
+        ],
+        "bond": 4,
+        "memory": "the onion you promised me"
+      },
+      {
+        "label": "You make it work anyway.",
+        "reply": [
+          "Salt and stubbornness. That's the secret."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "cook_dulce",
+    "kind": "TALK",
+    "requiresBackground": "cook",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Before all this I made the best flan in the province.",
+      "Now I'd settle for a piece of candy."
+    ],
+    "choices": [
+      {
+        "label": "I'll find you something sweet.",
+        "reply": [
+          "Then I'll find you something sweeter. Deal?"
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:caramelos"
+        ]
+      },
+      {
+        "label": "Sugar's not a priority.",
+        "reply": [
+          "Spoken like someone who never had good flan."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "cook_pide_mision",
+    "kind": "INITIATED",
+    "requiresBackground": "cook",
+    "forbidsFlags": [
+      "personal:cook_comedor:offered"
+    ],
+    "minBondLevel": 4,
+    "priority": 7,
+    "lines": [
+      "The dam. The canteen.",
+      "I left everything there. I'd like to go back once."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:cook_comedor:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "musician_guitarra",
+    "kind": "TALK",
+    "requiresBackground": "musician",
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "They took my guitar the night before the Silence. Busking without a permit.",
+      "Police Station 3. It's probably still in an evidence locker."
+    ],
+    "choices": [
+      {
+        "label": "Maybe we'll get it back.",
+        "reply": [
+          "Don't say that if you don't mean it."
+        ],
+        "bond": 4,
+        "memory": "the guitar they took from me"
+      },
+      {
+        "label": "A guitar won't feed anyone.",
+        "reply": [
+          "It fed me for ten years."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "musician_cancion",
+    "kind": "TALK",
+    "requiresBackground": "musician",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "I'm writing a song about the bunker.",
+      "Doesn't rhyme yet. Nothing rhymes with 'static'."
+    ],
+    "choices": [
+      {
+        "label": "'Ecstatic'.",
+        "reply": [
+          "...That's terrible. I'm using it."
+        ],
+        "bond": 5,
+        "memory": "the song about the bunker"
+      },
+      {
+        "label": "Sing me what you've got.",
+        "reply": [
+          "Not yet. When it's ready."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "musician_pide_mision",
+    "kind": "INITIATED",
+    "requiresBackground": "musician",
+    "forbidsFlags": [
+      "personal:musician_guitarra:offered"
+    ],
+    "minBondLevel": 4,
+    "priority": 7,
+    "lines": [
+      "Can I go to the police station?",
+      "If my guitar's still there, I want it back."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:musician_guitarra:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "imprudencia_salto",
+    "kind": "TALK",
+    "requiresTrait": [
+      "imprudencia"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Next time, send me first. I'm faster when I don't think."
+    ],
+    "choices": [
+      {
+        "label": "Thinking keeps you alive.",
+        "reply": [
+          "So does luck. So far."
+        ],
+        "bond": 2,
+        "stress": -2
+      },
+      {
+        "label": "You'll go first.",
+        "reply": [
+          "That's what I like to hear."
+        ],
+        "bond": 4
+      }
+    ]
+  },
+  {
+    "id": "imprudencia_cicatriz",
+    "kind": "TALK",
+    "requiresTrait": [
+      "imprudencia"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "See this scar? Jumped a fence I shouldn't have.",
+      "Would do it again."
+    ],
+    "choices": [
+      {
+        "label": "Please don't.",
+        "reply": [
+          "No promises."
+        ],
+        "bond": 3,
+        "memory": "the scar from the fence"
+      },
+      {
+        "label": "Tell me the story.",
+        "reply": [
+          "There was a dog. And a very small fence. Mostly the dog."
+        ],
+        "bond": 4
+      }
+    ]
+  },
+  {
+    "id": "desconfianza_puerta",
+    "kind": "TALK",
+    "requiresTrait": [
+      "desconfianza"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Who checked the door last night?",
+      "I did. Twice. Just making sure someone did."
+    ],
+    "choices": [
+      {
+        "label": "Thanks for watching our backs.",
+        "reply": [
+          "Someone has to."
+        ],
+        "bond": 4,
+        "trust": 2
+      },
+      {
+        "label": "You can rest. It's locked.",
+        "reply": [
+          "Locks are just suggestions."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "desconfianza_voz",
+    "kind": "TALK",
+    "requiresTrait": [
+      "desconfianza"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "That voice on the radio. The numbers.",
+      "Nobody broadcasts for free. They want something."
+    ],
+    "choices": [
+      {
+        "label": "We'll be careful.",
+        "reply": [
+          "Good. Careful is good."
+        ],
+        "bond": 3
+      },
+      {
+        "label": "Maybe they just want company.",
+        "reply": [
+          "Then they can say so."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "pies_ligeros_ruido",
+    "kind": "TALK",
+    "requiresTrait": [
+      "pies_ligeros"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "You hear how loud everyone walks in here?",
+      "Out there, that gets you found."
+    ],
+    "choices": [
+      {
+        "label": "Teach them.",
+        "reply": [
+          "I'll try. They stomp like cows."
+        ],
+        "bond": 4
+      },
+      {
+        "label": "In here we're safe.",
+        "reply": [
+          "In here. For now."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "pies_ligeros_correr",
+    "kind": "TALK",
+    "requiresTrait": [
+      "pies_ligeros"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "I used to run every morning. Before.",
+      "Now I run when something's chasing me. Same thing, really."
+    ],
+    "choices": [
+      {
+        "label": "Keep running. Out there, it saves you.",
+        "reply": [
+          "That's the plan."
+        ],
+        "bond": 3
+      },
+      {
+        "label": "Do you miss it?",
+        "reply": [
+          "The quiet in my head while running. Yeah."
+        ],
+        "bond": 4,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "metodo_lista",
+    "kind": "TALK",
+    "requiresTrait": [
+      "metodo"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "I made a list of everything in the bunker.",
+      "We have eleven screws. Nobody believes me."
+    ],
+    "choices": [
+      {
+        "label": "I believe you. Keep the list.",
+        "reply": [
+          "Updated every evening."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:cuaderno"
+        ]
+      },
+      {
+        "label": "We don't need to count screws.",
+        "reply": [
+          "Until we need the twelfth."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "metodo_plan",
+    "kind": "TALK",
+    "requiresTrait": [
+      "metodo"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Before I go out, I plan three ways back.",
+      "Usually I need the second one."
+    ],
+    "choices": [
+      {
+        "label": "Good. Never change.",
+        "reply": [
+          "Wasn't planning to."
+        ],
+        "bond": 4
+      },
+      {
+        "label": "Sometimes you have to improvise.",
+        "reply": [
+          "Improvising is a plan with less sleep."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "miedo_noche",
+    "kind": "TALK",
+    "requiresTrait": [
+      "miedo"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Do you hear things at night? Or is it just me?"
+    ],
+    "choices": [
+      {
+        "label": "I hear them too. They're just pipes.",
+        "reply": [
+          "Pipes. Ok. Pipes."
+        ],
+        "bond": 4,
+        "stress": -5
+      },
+      {
+        "label": "Try to sleep.",
+        "reply": [
+          "I try every night."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "miedo_valiente",
+    "kind": "TALK",
+    "requiresTrait": [
+      "miedo"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Everyone thinks I'm a coward.",
+      "I go out anyway. Doesn't that count for something?"
+    ],
+    "choices": [
+      {
+        "label": "That's what courage is.",
+        "reply": [
+          "Doesn't feel like it."
+        ],
+        "bond": 5,
+        "memory": "that you called me brave"
+      },
+      {
+        "label": "Nobody thinks that.",
+        "reply": [
+          "You don't hear them."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "lealtad_promesa",
+    "kind": "TALK",
+    "requiresTrait": [
+      "lealtad"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Whatever happens, I'm not leaving the bunker.",
+      "Just so you know."
+    ],
+    "choices": [
+      {
+        "label": "I'm counting on it.",
+        "reply": [
+          "Good."
+        ],
+        "bond": 4,
+        "trust": 3
+      },
+      {
+        "label": "You can leave whenever you want.",
+        "reply": [
+          "I know. That's why it counts."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "lealtad_espera",
+    "kind": "TALK",
+    "requiresTrait": [
+      "lealtad"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "When someone's out, I can't sleep until they're back.",
+      "Is that strange?"
+    ],
+    "choices": [
+      {
+        "label": "That's what family does.",
+        "reply": [
+          "Family. Yeah."
+        ],
+        "bond": 5,
+        "memory": "that you called us family"
+      },
+      {
+        "label": "Get some rest. I'm listening for them.",
+        "reply": [
+          "Then I'll listen with you."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "sangre_fria_calma",
+    "kind": "TALK",
+    "requiresTrait": [
+      "sangre_fria"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "People ask why I don't panic.",
+      "Panic doesn't open doors."
+    ],
+    "choices": [
+      {
+        "label": "It's why I trust you out there.",
+        "reply": [
+          "Then trust me more."
+        ],
+        "bond": 3,
+        "trust": 3
+      },
+      {
+        "label": "It's ok to be scared sometimes.",
+        "reply": [
+          "Maybe. Not today."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "sangre_fria_pulso",
+    "kind": "TALK",
+    "requiresTrait": [
+      "sangre_fria"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Want to know a trick? Count to four breathing in. Four out.",
+      "Works with bullets flying."
+    ],
+    "choices": [
+      {
+        "label": "I'll remember that.",
+        "reply": [
+          "You'll need it."
+        ],
+        "bond": 4,
+        "memory": "the four-count breathing"
+      },
+      {
+        "label": "I hope I never need it.",
+        "reply": [
+          "Hope's fine. Breathing's better."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "solitaria_rincon",
+    "kind": "TALK",
+    "requiresTrait": [
+      "solitaria"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Don't take it personally if I eat alone.",
+      "It's not you. It's everyone."
+    ],
+    "choices": [
+      {
+        "label": "Take all the space you need.",
+        "reply": [
+          "...Thanks. Really."
+        ],
+        "bond": 5,
+        "stress": -4
+      },
+      {
+        "label": "We're a team. Eat with us.",
+        "reply": [
+          "I'll try. Tomorrow."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "solitaria_silencio",
+    "kind": "TALK",
+    "requiresTrait": [
+      "solitaria"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Out there, alone, the silence is almost nice.",
+      "Is that terrible to say?"
+    ],
+    "choices": [
+      {
+        "label": "Not terrible. Honest.",
+        "reply": [
+          "Honest's all I've got."
+        ],
+        "bond": 4
+      },
+      {
+        "label": "Just come back.",
+        "reply": [
+          "I always do."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "sociable_cena",
+    "kind": "TALK",
+    "requiresTrait": [
+      "sociable"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "We should all eat together tonight. Like a real dinner.",
+      "I'll set the table. With what, I don't know."
+    ],
+    "choices": [
+      {
+        "label": "Great idea.",
+        "reply": [
+          "I'll make it nice. You'll see."
+        ],
+        "bond": 4,
+        "stress": -3
+      },
+      {
+        "label": "Rations aren't a dinner.",
+        "reply": [
+          "They are if we say so."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "sociable_historias",
+    "kind": "TALK",
+    "requiresTrait": [
+      "sociable"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "I collect everyone's stories. The good ones.",
+      "Want to hear what someone told me last night?"
+    ],
+    "choices": [
+      {
+        "label": "Tell me.",
+        "reply": [
+          "Can't. Promised. But it was a good one."
+        ],
+        "bond": 4,
+        "memory": "the stories I collect"
+      },
+      {
+        "label": "Keep their secrets.",
+        "reply": [
+          "Always."
+        ],
+        "bond": 3,
+        "trust": 2
+      }
+    ]
+  },
+  {
+    "id": "curiosa_mapa",
+    "kind": "TALK",
+    "requiresTrait": [
+      "curiosa"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "What's past the long band? Has anyone gone farther?"
+    ],
+    "choices": [
+      {
+        "label": "Not yet. Maybe you will.",
+        "reply": [
+          "I'd like that. A lot."
+        ],
+        "bond": 4
+      },
+      {
+        "label": "Nothing good.",
+        "reply": [
+          "You don't know that."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "curiosa_libro",
+    "kind": "TALK",
+    "requiresTrait": [
+      "curiosa"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "Found an encyclopedia once. Letter M only.",
+      "I know everything about mollusks now."
+    ],
+    "choices": [
+      {
+        "label": "Tell me something about mollusks.",
+        "reply": [
+          "Some octopuses can taste with their arms."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "likes:libro"
+        ],
+        "memory": "the mollusk encyclopedia"
+      },
+      {
+        "label": "Useful.",
+        "reply": [
+          "More than you'd think."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "terca_orden",
+    "kind": "TALK",
+    "requiresTrait": [
+      "terca"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "That order last time. I'd have done it differently.",
+      "Not saying you were wrong. Just saying."
+    ],
+    "choices": [
+      {
+        "label": "Next time, tell me before.",
+        "reply": [
+          "I will. You might not listen."
+        ],
+        "bond": 4,
+        "trust": 2
+      },
+      {
+        "label": "Orders are orders.",
+        "reply": [
+          "We'll see."
+        ],
+        "bond": 0
+      }
+    ]
+  },
+  {
+    "id": "terca_nunca",
+    "kind": "TALK",
+    "requiresTrait": [
+      "terca"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "I never gave up on anything in my life.",
+      "Not going to start now."
+    ],
+    "choices": [
+      {
+        "label": "That's why you're still here.",
+        "reply": [
+          "Exactly."
+        ],
+        "bond": 4,
+        "memory": "that I never gave up"
+      },
+      {
+        "label": "Sometimes letting go is smart.",
+        "reply": [
+          "Smart is overrated."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "calentona_pared",
+    "kind": "TALK",
+    "requiresTrait": [
+      "calentona"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Sorry about the wall. It started it."
+    ],
+    "choices": [
+      {
+        "label": "The wall had it coming.",
+        "reply": [
+          "Thank you. Finally someone understands."
+        ],
+        "bond": 4,
+        "stress": -4
+      },
+      {
+        "label": "Take it out on something else.",
+        "reply": [
+          "Like what? You?"
+        ],
+        "bond": 0
+      }
+    ]
+  },
+  {
+    "id": "calentona_perdon",
+    "kind": "TALK",
+    "requiresTrait": [
+      "calentona"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "I yelled at someone yesterday. Didn't mean it.",
+      "Don't know how to say sorry."
+    ],
+    "choices": [
+      {
+        "label": "Just say it. It's enough.",
+        "reply": [
+          "...Ok. Ok, I'll say it."
+        ],
+        "bond": 5,
+        "memory": "that sorry is enough"
+      },
+      {
+        "label": "They'll get over it.",
+        "reply": [
+          "Hope so."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "optimista_dia",
+    "kind": "TALK",
+    "requiresTrait": [
+      "optimista"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Good news: we're alive.",
+      "Bad news: none, if you think about it."
+    ],
+    "choices": [
+      {
+        "label": "I like the way you think.",
+        "reply": [
+          "Somebody has to."
+        ],
+        "bond": 4,
+        "stress": -3
+      },
+      {
+        "label": "There's plenty of bad news.",
+        "reply": [
+          "Not today. Today's a good one."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "optimista_despues",
+    "kind": "TALK",
+    "requiresTrait": [
+      "optimista"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "When this is over, I'm opening a café. Right on the corner.",
+      "You'll come, right? First coffee's free."
+    ],
+    "choices": [
+      {
+        "label": "I'll be your first customer.",
+        "reply": [
+          "Deal. Black, no sugar, I bet."
+        ],
+        "bond": 5,
+        "memory": "the café on the corner"
+      },
+      {
+        "label": "When this is over.",
+        "reply": [
+          "It will be. You'll see."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "gentil_herido",
+    "kind": "TALK",
+    "requiresTrait": [
+      "gentil"
+    ],
+    "minBondLevel": 1,
+    "priority": 4,
+    "lines": [
+      "Whoever comes back hurt next, send them to me first.",
+      "I'm not a doctor. But I'm patient."
+    ],
+    "choices": [
+      {
+        "label": "I will.",
+        "reply": [
+          "Good. I'll keep the water warm."
+        ],
+        "bond": 4
+      },
+      {
+        "label": "You need rest too.",
+        "reply": [
+          "After. Always after."
+        ],
+        "bond": 3,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "gentil_manos",
+    "kind": "TALK",
+    "requiresTrait": [
+      "gentil"
+    ],
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "My grandmother said gentle hands are worth more than strong ones.",
+      "I believed her. Still do."
+    ],
+    "choices": [
+      {
+        "label": "She was right.",
+        "reply": [
+          "She usually was."
+        ],
+        "bond": 5,
+        "memory": "what my grandmother said about gentle hands"
+      },
+      {
+        "label": "Out there, strong hands help too.",
+        "reply": [
+          "Sure. But they don't heal anything."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "confiesa_desconfianza",
+    "kind": "TALK",
+    "requiresHiddenTrait": "desconfianza",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "I don't tell anyone this.",
+      "I don't trust people. Not really. Not even here."
+    ],
+    "choices": [
+      {
+        "label": "You can trust me.",
+        "reply": [
+          "...I'm trying. That's new for me."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "you told me I could trust you"
+      },
+      {
+        "label": "Smart, out here.",
+        "reply": [
+          "Smart and lonely."
+        ],
+        "bond": 2,
+        "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "confiesa_miedo",
+    "kind": "TALK",
+    "requiresHiddenTrait": "miedo",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "Can I tell you something? Don't laugh.",
+      "I'm scared all the time. Every time I go out. Every time."
+    ],
+    "choices": [
+      {
+        "label": "I'm not laughing. Thank you for telling me.",
+        "reply": [
+          "...Ok. It helps that you know."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "you didn't laugh when I told you I was scared"
+      },
+      {
+        "label": "Everyone's scared.",
+        "reply": [
+          "Not like this."
+        ],
+        "bond": 2,
+        "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "confiesa_lealtad",
+    "kind": "TALK",
+    "requiresHiddenTrait": "lealtad",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "I've never said this out loud.",
+      "If you asked me to, I'd go anywhere. Anywhere. That scares me a little."
+    ],
+    "choices": [
+      {
+        "label": "I'll never ask for more than I'd do myself.",
+        "reply": [
+          "I know. That's why."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "that you'd never ask more than you'd do"
+      },
+      {
+        "label": "Good to know.",
+        "reply": [
+          "...Right. Good to know."
+        ],
+        "bond": 2,
+        "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "confiesa_solitaria",
+    "kind": "TALK",
+    "requiresHiddenTrait": "solitaria",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "Truth is, I'd rather be alone out there.",
+      "People slow me down. Even the ones I like."
+    ],
+    "choices": [
+      {
+        "label": "Then I'll send you alone when I can.",
+        "reply": [
+          "That's... thank you. Really."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "that you'd let me go alone"
+      },
+      {
+        "label": "We're stronger together.",
+        "reply": [
+          "Maybe you are."
+        ],
+        "bond": 2,
+        "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "confiesa_calentona",
+    "kind": "TALK",
+    "requiresHiddenTrait": "calentona",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "I've got a temper. You'll see it eventually.",
+      "Better you hear it from me first."
+    ],
+    "choices": [
+      {
+        "label": "Thanks for warning me. We'll handle it.",
+        "reply": [
+          "We. Ok. I like that."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "that we'd handle my temper together"
+      },
+      {
+        "label": "Keep it under control.",
+        "reply": [
+          "Easy to say."
+        ],
+        "bond": 2,
+        "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "confiesa_sangre_fria",
+    "kind": "TALK",
+    "requiresHiddenTrait": "sangre_fria",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "Something's wrong with me. When things go bad, I feel nothing.",
+      "Nothing at all. Is that normal?"
+    ],
+    "choices": [
+      {
+        "label": "It's how you survive. It's ok.",
+        "reply": [
+          "Ok. If you say so."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "that it was ok to feel nothing"
+      },
+      {
+        "label": "It'll catch up with you.",
+        "reply": [
+          "Maybe. Not yet."
+        ],
+        "bond": 2,
+        "revealHidden": true
       }
     ]
   }

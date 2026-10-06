@@ -91,8 +91,14 @@ public final class Migrations {
             "CREATE TABLE IF NOT EXISTS `craft_jobs` (`id` TEXT NOT NULL, `recipe_id` TEXT NOT NULL, `progress_minutes` REAL NOT NULL, `started_at_millis` INTEGER NOT NULL, PRIMARY KEY(`id`))"
     );
 
+    /** Generated people: who a scout or a waiting survivor is, as JSON. */
+    static final List<String> MIGRATION_5_6_SQL = List.of(
+            "ALTER TABLE `scouts` ADD COLUMN `persona` TEXT",
+            "ALTER TABLE `rescue_targets` ADD COLUMN `persona` TEXT"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL);
 
     public static final Migration[] ALL = build();
 

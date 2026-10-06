@@ -22,7 +22,7 @@ import androidx.room.RoomDatabase;
                 RadioEntities.RescueTarget.class, RadioEntities.Lore.class,
                 RadioEntities.Module.class,
                 BaseEntities.Power.class, BaseEntities.Value.class, BaseEntities.CraftJobRow.class},
-        version = 5,
+        version = 6,
         exportSchema = true)
 public abstract class EstaticaDatabase extends RoomDatabase {
 

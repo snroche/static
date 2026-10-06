@@ -127,6 +127,10 @@ public final class RadioEntities {
 
         @ColumnInfo(name = "found_at_millis")
         public long foundAtMillis;
+
+        /** DB v6: who they are (JSON); null for hand-made survivors from older saves. */
+        @androidx.annotation.Nullable
+        public String persona;
     }
 
     /** Lore fragments for the Diary. */

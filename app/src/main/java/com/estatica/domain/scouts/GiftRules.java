@@ -35,7 +35,7 @@ public final class GiftRules {
     }
 
     public Reaction reactionTo(Scout scout, ItemDef item) {
-        ScoutTemplate template = content.starter(scout.getTemplateId());
+        ScoutTemplate template = content.persona(scout);
         if (template == null) {
             return Reaction.NEUTRAL;
         }

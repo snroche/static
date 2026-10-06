@@ -101,6 +101,8 @@ public final class StoryDef {
     public static final class PersonalMission {
         private String id;
         private String scout;
+        /** Alternative to {@code scout}: anyone with this background. */
+        private String background;
         private String title;
         private String zone;
         /** Situation that replaces the first one of the expedition. */
@@ -118,6 +120,18 @@ public final class StoryDef {
 
         public String getScout() {
             return scout;
+        }
+
+        public String getBackground() {
+            return background;
+        }
+
+        /** Whether this mission belongs to that person (by template or by background). */
+        public boolean isFor(String templateId, ScoutTemplate persona) {
+            if (scout != null) {
+                return scout.equals(templateId);
+            }
+            return persona != null && background != null && background.equals(persona.getBackground());
         }
 
         public String getTitle() {

@@ -8,6 +8,26 @@
     "bias": "RISKY",
     "clashes": [
       "metodo"
+    ],
+    "voices": [
+      "jerga",
+      "pibe"
+    ],
+    "likes": [
+      "juego"
+    ],
+    "dislikes": [
+      "lectura"
+    ],
+    "habits": [
+      {
+        "text": "Volunteers before the question is finished.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Jumps the last three steps of every ladder.",
+        "minBondLevel": 1
+      }
     ]
   },
   {
@@ -17,6 +37,27 @@
     "disobeyBelowTrust": 40,
     "clashes": [
       "lealtad"
+    ],
+    "hideable": true,
+    "voices": [
+      "minusculas",
+      "telegrafico"
+    ],
+    "likes": [
+      "recuerdo"
+    ],
+    "dislikes": [
+      "fe"
+    ],
+    "habits": [
+      {
+        "text": "Sits facing the door. Always.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Counts the supplies twice when nobody's looking.",
+        "minBondLevel": 1
+      }
     ]
   },
   {
@@ -26,7 +67,25 @@
     "durationMultiplier": 0.8,
     "statBonus": {
       "stealth": 1
-    }
+    },
+    "voices": [
+      "minusculas",
+      "pibe"
+    ],
+    "likes": [
+      "musica"
+    ],
+    "dislikes": [],
+    "habits": [
+      {
+        "text": "Never makes a sound walking. It's unnerving.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Can't sit still for long.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "metodo",
@@ -35,14 +94,55 @@
     "statBonus": {
       "wits": 1
     },
-    "bias": "CAUTIOUS"
+    "bias": "CAUTIOUS",
+    "voices": [
+      "formal",
+      "telegrafico"
+    ],
+    "likes": [
+      "escritura",
+      "lectura"
+    ],
+    "dislikes": [
+      "juego"
+    ],
+    "habits": [
+      {
+        "text": "Labels every shelf in the bunker.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Checks gear in the same order every time.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "miedo",
     "name": "Fearful",
     "description": "Bad things hit twice as hard. Can appear after a loss.",
     "stressMultiplier": 1.4,
-    "bias": "CAUTIOUS"
+    "bias": "CAUTIOUS",
+    "hideable": true,
+    "voices": [
+      "minusculas",
+      "abuela"
+    ],
+    "likes": [
+      "fe",
+      "dulce"
+    ],
+    "dislikes": [],
+    "habits": [
+      {
+        "text": "Keeps the radio volume on, even at night.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Jumps at the sound of the door.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "lealtad",
@@ -50,13 +150,54 @@
     "description": "Follows the Operator even when things go wrong.",
     "statBonus": {
       "nerve": 1
-    }
+    },
+    "hideable": true,
+    "voices": [
+      "telegrafico",
+      "jerga"
+    ],
+    "likes": [
+      "recuerdo",
+      "mate"
+    ],
+    "dislikes": [],
+    "habits": [
+      {
+        "text": "Saves the last of anything for someone else.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Waits by the radio when someone's out.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "sangre_fria",
     "name": "Cold-blooded",
     "description": "Stress barely touches them.",
-    "stressMultiplier": 0.7
+    "stressMultiplier": 0.7,
+    "hideable": true,
+    "voices": [
+      "telegrafico",
+      "formal"
+    ],
+    "likes": [
+      "mate"
+    ],
+    "dislikes": [
+      "dulce"
+    ],
+    "habits": [
+      {
+        "text": "Eats the same way every day. Same pace, same order.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Doesn't flinch at loud noises.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "sombra",
@@ -132,13 +273,54 @@
     },
     "clashes": [
       "sociable"
+    ],
+    "hideable": true,
+    "voices": [
+      "minusculas"
+    ],
+    "likes": [
+      "lectura",
+      "musica"
+    ],
+    "dislikes": [
+      "juego"
+    ],
+    "habits": [
+      {
+        "text": "Takes meals in the far corner.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Leaves the room when it gets crowded.",
+        "minBondLevel": 1
+      }
     ]
   },
   {
     "id": "sociable",
     "name": "Sociable",
     "description": "Lifts the mood of whoever works beside them.",
-    "stressMultiplier": 0.9
+    "stressMultiplier": 0.9,
+    "voices": [
+      "jerga",
+      "abuela",
+      "pibe"
+    ],
+    "likes": [
+      "mate",
+      "juego"
+    ],
+    "dislikes": [],
+    "habits": [
+      {
+        "text": "Knows everyone's favorite food by the second day.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Starts every meal with a toast, even with water.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "curiosa",
@@ -147,7 +329,26 @@
     "statBonus": {
       "wits": 1
     },
-    "bias": "RISKY"
+    "bias": "RISKY",
+    "voices": [
+      "pibe",
+      "formal"
+    ],
+    "likes": [
+      "lectura",
+      "escritura"
+    ],
+    "dislikes": [],
+    "habits": [
+      {
+        "text": "Asks the operator what every switch does.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Brings back useless things from every trip, just to look at them.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "terca",
@@ -156,7 +357,27 @@
     "statBonus": {
       "nerve": 1
     },
-    "disobeyBelowTrust": 25
+    "disobeyBelowTrust": 25,
+    "voices": [
+      "telegrafico",
+      "jerga"
+    ],
+    "likes": [
+      "mate"
+    ],
+    "dislikes": [
+      "dulce"
+    ],
+    "habits": [
+      {
+        "text": "Finishes every argument with \"we'll see\".",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Redoes other people's knots.",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "calentona",
@@ -168,18 +389,79 @@
     "stressMultiplier": 1.15,
     "clashes": [
       "metodo"
+    ],
+    "hideable": true,
+    "voices": [
+      "jerga",
+      "pibe"
+    ],
+    "likes": [
+      "juego"
+    ],
+    "dislikes": [
+      "lectura"
+    ],
+    "habits": [
+      {
+        "text": "Punches the wall, then apologizes to it.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Talks louder when tired.",
+        "minBondLevel": 1
+      }
     ]
   },
   {
     "id": "optimista",
     "name": "Optimist",
     "description": "Always sees a way out. Recovers from bad news faster.",
-    "stressMultiplier": 0.85
+    "stressMultiplier": 0.85,
+    "voices": [
+      "abuela",
+      "pibe",
+      "jerga"
+    ],
+    "likes": [
+      "dulce",
+      "musica"
+    ],
+    "dislikes": [],
+    "habits": [
+      {
+        "text": "Whistles while cleaning.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Calls every bad day \"almost over\".",
+        "minBondLevel": 1
+      }
+    ]
   },
   {
     "id": "gentil",
     "name": "Gentle",
     "description": "Calms the wounded. Better at caring for others.",
-    "healOthersMultiplier": 1.25
+    "healOthersMultiplier": 1.25,
+    "voices": [
+      "abuela",
+      "formal",
+      "minusculas"
+    ],
+    "likes": [
+      "fe",
+      "dulce"
+    ],
+    "dislikes": [],
+    "habits": [
+      {
+        "text": "Tucks blankets around whoever falls asleep first.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Speaks softer to the wounded.",
+        "minBondLevel": 1
+      }
+    ]
   }
 ]

@@ -1,0 +1,448 @@
+{
+  "names": [
+    "Gustavo",
+    "Marcela",
+    "Ramiro",
+    "Florencia",
+    "Diego",
+    "Silvina",
+    "Hernán",
+    "Paula",
+    "Sergio",
+    "Valeria",
+    "Claudio",
+    "Romina",
+    "Walter",
+    "Daniela",
+    "Pablo",
+    "Carolina",
+    "Fernando",
+    "Lorena",
+    "Matías",
+    "Natalia",
+    "Jorge",
+    "Gabriela",
+    "Néstor",
+    "Verónica",
+    "Alejandro",
+    "Cecilia",
+    "Ricardo",
+    "Mariela",
+    "Leandro",
+    "Soledad",
+    "Facundo",
+    "Julieta",
+    "Osvaldo",
+    "Mónica",
+    "Ezequiel",
+    "Agustina",
+    "Raúl",
+    "Graciela",
+    "Damián",
+    "Analía",
+    "Emiliano",
+    "Rocío",
+    "Hugo",
+    "Patricia",
+    "Germán",
+    "Luciana",
+    "Darío",
+    "Belén",
+    "Marcos",
+    "Vanesa",
+    "Rubén",
+    "Noelia",
+    "Tomás",
+    "Elena",
+    "Iván",
+    "Carla",
+    "Ernesto",
+    "Milagros",
+    "Franco",
+    "Teresa"
+  ],
+  "nicknames": [
+    "Flaco",
+    "Turca",
+    "Chino",
+    "Colo",
+    "Gringa",
+    "Pelado",
+    "Mono",
+    "Tucu",
+    "Pato",
+    "Vasca",
+    "Rulo",
+    "Polaco"
+  ],
+  "backgrounds": [
+    {
+      "id": "railway",
+      "name": "Railway signalman",
+      "bios": [
+        "Spent decades in a signal box at the train station. Still keeps railway time.",
+        "Railway signalman. Was on shift the night the Silence began."
+      ],
+      "primaryStat": "nerve",
+      "secondaryStat": "wits",
+      "voices": [
+        "telegrafico",
+        "formal",
+        "jerga"
+      ],
+      "likes": [
+        "mate",
+        "recuerdo"
+      ],
+      "dislikes": [
+        "dulce"
+      ],
+      "habits": [
+        {
+          "text": "Checks a stopped wristwatch every few minutes.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Sorts the bunker's chores into a strict timetable.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Whistles the old departure signal on good days.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "Thought nobody was listening anymore.",
+          "Thanks. Over."
+        ],
+        [
+          "Signal received. Coming in.",
+          "Keep the line open for me."
+        ]
+      ]
+    },
+    {
+      "id": "teen",
+      "name": "Teenager on their own",
+      "bios": [
+        "Seventeen. Survived alone in an empty neighborhood. Won't say how.",
+        "A teenager who waited for family that never came back."
+      ],
+      "primaryStat": "stealth",
+      "secondaryStat": "endurance",
+      "voices": [
+        "pibe",
+        "minusculas",
+        "jerga"
+      ],
+      "likes": [
+        "musica",
+        "juego"
+      ],
+      "dislikes": [
+        "lectura"
+      ],
+      "habits": [
+        {
+          "text": "Drums on every surface. Constantly.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Sleeps with shoes on, ready to run.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Asks the same question twice to make sure the answer holds.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "Wait, there's really a bunker? With food?",
+          "Ok. I'm coming. Don't ask about my family."
+        ],
+        [
+          "Is this real? Someone's actually there?",
+          "Don't hang up. Please."
+        ]
+      ]
+    },
+    {
+      "id": "nurse",
+      "name": "Nurse",
+      "bios": [
+        "Worked at the Municipal Hospital until the very last day, by candlelight at the end.",
+        "A nurse who kept the ward running for weeks after the Silence."
+      ],
+      "primaryStat": "wits",
+      "secondaryStat": "craft",
+      "voices": [
+        "abuela",
+        "formal",
+        "minusculas"
+      ],
+      "likes": [
+        "mate",
+        "fe"
+      ],
+      "dislikes": [
+        "juego"
+      ],
+      "habits": [
+        {
+          "text": "Checks everyone's forehead for fever, uninvited.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Keeps a tally of who ate and who didn't.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Hums old boleros while folding bandages.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "Oh, thank goodness. Is anyone hurt over there?",
+          "I'm coming. Put the water on."
+        ],
+        [
+          "A bunker. With people. I'll bring what's left of my kit.",
+          "Hold on, I'm on my way."
+        ]
+      ]
+    },
+    {
+      "id": "trucker",
+      "name": "Trucker",
+      "bios": [
+        "Crossed the country three times in a truck. Has every road memorized.",
+        "Long-haul trucker. Was halfway to Córdoba when the radio went quiet."
+      ],
+      "primaryStat": "endurance",
+      "secondaryStat": "wits",
+      "voices": [
+        "jerga",
+        "telegrafico",
+        "minusculas"
+      ],
+      "likes": [
+        "mate",
+        "musica"
+      ],
+      "dislikes": [
+        "lectura"
+      ],
+      "habits": [
+        {
+          "text": "Sleeps sitting up, like in a cab.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Draws road maps on any flat surface.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Taps the steering-wheel rhythm on the table while thinking.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "Bunker? Never heard of you. Fine. Where do I park?",
+          "Coming in."
+        ],
+        [
+          "Been driving in circles for weeks. Give me a direction.",
+          "Got it. On my way."
+        ]
+      ]
+    },
+    {
+      "id": "teacher",
+      "name": "Schoolteacher",
+      "bios": [
+        "Taught third grade at School No. 14 for twenty years.",
+        "A schoolteacher who still corrects everyone's grammar out of habit."
+      ],
+      "primaryStat": "wits",
+      "secondaryStat": "nerve",
+      "voices": [
+        "formal",
+        "abuela",
+        "minusculas"
+      ],
+      "likes": [
+        "lectura",
+        "escritura"
+      ],
+      "dislikes": [
+        "juego"
+      ],
+      "habits": [
+        {
+          "text": "Writes the date on the wall every morning.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Claps twice to get attention. It works.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Keeps a list of everyone's birthdays.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "Good afternoon. I hope I'm not interrupting.",
+          "I'll be there shortly."
+        ],
+        [
+          "Finally, an adult voice. I'm coming.",
+          "Please be patient, I walk slowly."
+        ]
+      ]
+    },
+    {
+      "id": "mechanic",
+      "name": "Mechanic",
+      "bios": [
+        "Fixed industrial machines for a living. Hands always black with grease.",
+        "A mechanic who kept a generator running alone for months."
+      ],
+      "primaryStat": "craft",
+      "secondaryStat": "endurance",
+      "voices": [
+        "jerga",
+        "telegrafico",
+        "pibe"
+      ],
+      "likes": [
+        "mate",
+        "juego"
+      ],
+      "dislikes": [
+        "fe"
+      ],
+      "habits": [
+        {
+          "text": "Takes things apart just to see how they work.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Keeps a screw in each pocket. Just in case.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Listens to the generator like a doctor with a stethoscope.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "You've got a generator? Is it making a rattling noise?",
+          "Never mind. I'm coming."
+        ],
+        [
+          "Took me a week to rig this radio. Glad it worked.",
+          "Heading your way."
+        ]
+      ]
+    },
+    {
+      "id": "cook",
+      "name": "Cook",
+      "bios": [
+        "Ran the canteen at the dam. Fed two hundred workers a day.",
+        "A cook who can make a meal out of three cans and a prayer."
+      ],
+      "primaryStat": "craft",
+      "secondaryStat": "nerve",
+      "voices": [
+        "abuela",
+        "jerga",
+        "minusculas"
+      ],
+      "likes": [
+        "dulce",
+        "mate"
+      ],
+      "dislikes": [
+        "lectura"
+      ],
+      "habits": [
+        {
+          "text": "Smells every can before opening it.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Saves the best portion for whoever's been out longest.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Talks to the stove. Says it helps.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "Do you have a kitchen? Any kitchen?",
+          "Good. I'm coming."
+        ],
+        [
+          "I'm hungry and I'm tired, but I can cook.",
+          "Wait for me."
+        ]
+      ]
+    },
+    {
+      "id": "musician",
+      "name": "Street musician",
+      "bios": [
+        "Played guitar on the train lines for spare change. Knows a song for everything.",
+        "A street musician whose guitar was confiscated the night before the Silence."
+      ],
+      "primaryStat": "stealth",
+      "secondaryStat": "nerve",
+      "voices": [
+        "minusculas",
+        "pibe",
+        "jerga"
+      ],
+      "likes": [
+        "musica",
+        "recuerdo"
+      ],
+      "dislikes": [
+        "fe"
+      ],
+      "habits": [
+        {
+          "text": "Hums the same four notes while working.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Taps rhythms on pipes to hear how the bunker sounds.",
+          "minBondLevel": 1
+        },
+        {
+          "text": "Writes lyrics on the back of ration labels.",
+          "minBondLevel": 1
+        }
+      ],
+      "rescueLines": [
+        [
+          "A human voice. You don't know how good that sounds.",
+          "I'm coming. I'll bring a song."
+        ],
+        [
+          "Static, static, static, and then you.",
+          "On my way."
+        ]
+      ]
+    }
+  ]
+}

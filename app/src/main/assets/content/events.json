@@ -2411,5 +2411,305 @@
         }
       }
     ]
+  },
+  {
+    "id": "enfermera_sala",
+    "intro": [
+      "The third-floor ward. My ward.",
+      "The beds are still made. I made them."
+    ],
+    "options": [
+      {
+        "id": "revisar",
+        "label": "Check the supply room",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "The emergency kit I hid behind the lockers is still there.",
+            "Nobody found it. Good."
+          ],
+          "memory": "the kit I hid in my old ward",
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Empty. Someone knew where to look."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "quedarse",
+        "label": "Sit on the nurses' bench",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Sat where I took my breaks for years.",
+            "I said goodbye to every bed."
+          ],
+          "memory": "saying goodbye to every bed"
+        },
+        "failure": {
+          "text": [
+            "Couldn't stay. Too many faces."
+          ],
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "camionero_surtidor",
+    "intro": [
+      "There she is. Still at pump four.",
+      "Somebody tried to siphon the tank. Amateurs."
+    ],
+    "options": [
+      {
+        "id": "cabina",
+        "label": "Climb into the cab",
+        "stat": "endurance",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "The photos on the visor are still there.",
+            "Taking them. Leaving her the keys."
+          ],
+          "memory": "the photos on the visor"
+        },
+        "failure": {
+          "text": [
+            "The door's rusted shut."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "motor",
+        "label": "Try the engine",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "She turned over. Once. Then nothing.",
+            "That's enough. She heard me."
+          ],
+          "memory": "the engine turning over one last time"
+        },
+        "failure": {
+          "text": [
+            "Dead. Completely dead."
+          ],
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "maestra_aula",
+    "intro": [
+      "Classroom 3B. Thirty little chairs.",
+      "The drawings are still on the wall."
+    ],
+    "options": [
+      {
+        "id": "dibujos",
+        "label": "Take down the drawings",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Every name is there. I'll keep them safe.",
+            "Someone should remember them."
+          ],
+          "memory": "the drawings from 3B"
+        },
+        "failure": {
+          "text": [
+            "They crumbled when I touched them."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "pizarron",
+        "label": "Write on the blackboard",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Wrote: 'Class dismissed. Be good.'",
+            "Then I closed the door."
+          ],
+          "memory": "the last thing I wrote on the blackboard"
+        },
+        "failure": {
+          "text": [
+            "Couldn't find any chalk. Not even a stub."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "mecanico_maquinas",
+    "intro": [
+      "The big press. I rebuilt it twice.",
+      "Still bolted down. Still mine."
+    ],
+    "options": [
+      {
+        "id": "arreglar",
+        "label": "Strip it for parts",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Knew exactly which bolts to pull. Like riding a bike."
+          ],
+          "memory": "stripping my old press",
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "My hands shook. Couldn't do it."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "firmar",
+        "label": "Scratch your name inside the panel",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Next to the old marks. Everyone who ever fixed it."
+          ],
+          "memory": "my name inside the panel"
+        },
+        "failure": {
+          "text": [
+            "The panel's welded shut now."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "cocinero_comedor",
+    "intro": [
+      "The dam canteen. Two hundred chairs.",
+      "The big pot is still on the stove."
+    ],
+    "options": [
+      {
+        "id": "despensa",
+        "label": "Check the pantry",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "My secret shelf. Behind the flour. Still full."
+          ],
+          "memory": "my secret shelf at the canteen",
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Rats got to it first."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "cocinar",
+        "label": "Light the stove one more time",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Boiled water in the big pot. Just to hear it.",
+            "Sounded like a full house."
+          ],
+          "memory": "the big pot boiling one last time"
+        },
+        "failure": {
+          "text": [
+            "No gas. Of course."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "musico_guitarra",
+    "intro": [
+      "Evidence room. Shelves and shelves of bags.",
+      "Somewhere in here, my guitar."
+    ],
+    "options": [
+      {
+        "id": "buscar",
+        "label": "Search the shelves",
+        "stat": "stealth",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Found it. Bag 4417. Two strings left.",
+            "Two strings is a song."
+          ],
+          "memory": "finding my guitar in bag 4417"
+        },
+        "failure": {
+          "text": [
+            "Searched for hours. Nothing."
+          ],
+          "stress": 15
+        }
+      },
+      {
+        "id": "tocar",
+        "label": "Play whatever's there",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Found a cheap ukulele in a bag. Played it right there.",
+            "Best acoustics in the city."
+          ],
+          "memory": "the ukulele concert in the evidence room"
+        },
+        "failure": {
+          "text": [
+            "Couldn't make a sound. Not here."
+          ],
+          "stress": 10
+        }
+      }
+    ]
   }
 ]

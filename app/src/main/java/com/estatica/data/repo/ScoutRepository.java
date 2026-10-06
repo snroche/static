@@ -59,11 +59,13 @@ public final class ScoutRepository {
             ScoutLife life = new ScoutLife(e.bond, e.taskId, flags.getOrDefault(e.id, Set.of()),
                     e.lastTalkAtMillis, e.lastInitiatedAtMillis, e.lastDecayAtMillis,
                     e.taskXpCarry, e.taskOutputCarry, e.diedAtMillis, e.diedZoneId, e.stressCarry, e.gearId);
-            scouts.add(new Scout(e.id, e.templateId, e.name, e.voiceId,
+            Scout scout = new Scout(e.id, e.templateId, e.name, e.voiceId,
                     stats.getOrDefault(e.id, Map.of()),
                     traits.getOrDefault(e.id, List.of()),
                     e.stress, e.trust, Injury.valueOf(e.injury), ScoutStatus.valueOf(e.status),
-                    e.recoveredAtMillis, e.healProgressHours, life));
+                    e.recoveredAtMillis, e.healProgressHours, life);
+            scout.setPersona(PersonaJson.read(e.persona));
+            scouts.add(scout);
         }
         return scouts;
     }
@@ -75,6 +77,7 @@ public final class ScoutRepository {
         e.templateId = scout.getTemplateId();
         e.name = scout.getName();
         e.voiceId = scout.getVoiceId();
+        e.persona = PersonaJson.write(scout.getPersona());
         e.sortOrder = dao.maxSortOrder() + 1;
         e.stress = scout.getStress();
         e.trust = scout.getTrust();

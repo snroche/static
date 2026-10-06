@@ -7,6 +7,7 @@ import com.estatica.domain.content.GearDef;
 import com.estatica.domain.content.RecipeDef;
 import com.estatica.domain.content.ItemDef;
 import com.estatica.domain.content.TaskDef;
+import com.estatica.domain.content.PeopleDef;
 import com.estatica.domain.content.ResourceDef;
 import com.estatica.domain.content.ScoutTemplate;
 import com.estatica.domain.content.SignalsDef;
@@ -134,6 +135,12 @@ public final class ContentParser {
 
     public List<RecipeDef> parseRecipes(Reader reader) {
         return parseArray(reader, RecipeDef[].class, "recipes.json");
+    }
+
+    public PeopleDef parsePeople(Reader reader) {
+        PeopleDef people = parse(reader, PeopleDef.class, "people.json");
+        require(!people.getNames().isEmpty() && !people.getBackgrounds().isEmpty(), "people.json: names, backgrounds");
+        return people;
     }
 
     public List<ScoutTemplate> parseSurvivors(Reader reader) {

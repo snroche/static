@@ -32,6 +32,12 @@ public final class DialogueDef {
     private Map<String, Integer> requiresStats;
     /** GRIEF: hours since the most recent death. */
     private double minHoursSinceDeath;
+    /** Any of these traits, visible or revealed (personality dialogues). */
+    private List<String> requiresTrait;
+    /** This trait, still hidden: the confession that reveals it. */
+    private String requiresHiddenTrait;
+    /** Background id from people.json. */
+    private String requiresBackground;
     /** "friend", "inseparable" or "rival": needs such a companion ({other}). Null for none. */
     private String requiresRelation;
     private boolean repeatable;
@@ -76,6 +82,18 @@ public final class DialogueDef {
 
     public double getMinHoursSinceDeath() {
         return minHoursSinceDeath;
+    }
+
+    public List<String> getRequiresTrait() {
+        return requiresTrait != null ? requiresTrait : List.of();
+    }
+
+    public String getRequiresHiddenTrait() {
+        return requiresHiddenTrait;
+    }
+
+    public String getRequiresBackground() {
+        return requiresBackground;
     }
 
     public String getRequiresRelation() {

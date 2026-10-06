@@ -19,9 +19,63 @@ public final class Balance {
     private java.util.List<ModuleDef> modules;
     private EnergyDef energy;
     private Barks barks;
+    private People people;
 
     public Barks getBarks() {
         return barks;
+    }
+
+    public People getPeople() {
+        return people;
+    }
+
+    /** Generated survivors (GDD §4.4: farther = stronger). [placeholder] */
+    public static final class People {
+        /** Starting stat value, {@code [min, max]}. */
+        private int[] statBase;
+        /** Ceiling above the starting value, {@code [min, max]}. */
+        private int[] ceilingGain;
+        private int primaryBonus;
+        private int secondaryBonus;
+        /** Extra ceiling per band index (short 0, medium 1…). */
+        private int bandCeilingBonus;
+        private double nicknameChance;
+        /** How many recent recruits a new person must not resemble. */
+        private int recentToAvoid;
+        /** Survivors heard on the dial waiting for rescue, at most. */
+        private int maxPendingRescues;
+
+        public int[] getStatBase() {
+            return statBase;
+        }
+
+        public int[] getCeilingGain() {
+            return ceilingGain;
+        }
+
+        public int getPrimaryBonus() {
+            return primaryBonus;
+        }
+
+        public int getSecondaryBonus() {
+            return secondaryBonus;
+        }
+
+        public int getBandCeilingBonus() {
+            return bandCeilingBonus;
+        }
+
+        public double getNicknameChance() {
+            return nicknameChance;
+        }
+
+        public int getRecentToAvoid() {
+            return recentToAvoid;
+        }
+
+        public int getMaxPendingRescues() {
+            return maxPendingRescues;
+        }
     }
 
     /** Ambient chatter in the bunker. */

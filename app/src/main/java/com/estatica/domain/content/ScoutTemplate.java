@@ -3,7 +3,11 @@ package com.estatica.domain.content;
 import java.util.List;
 import java.util.Map;
 
-/** A scout definition from {@code scouts.json}. Filled by Gson. */
+/**
+ * Who a scout is: name, voice, stats, traits, tastes, story. Authored ones come from
+ * {@code scouts.json} (starters) and {@code survivors.json} (legacy saves); generated ones
+ * are built by {@code PersonaGenerator} and stored in the save. Filled by Gson.
+ */
 public final class ScoutTemplate {
 
     private String id;
@@ -26,6 +30,32 @@ public final class ScoutTemplate {
     private List<String> rescueLines;
     /** Little things the operator notices as the bond grows. */
     private List<Habit> habits;
+    /** Background id from {@code people.json} (nullable for starters). */
+    private String background;
+
+    public ScoutTemplate() {
+    }
+
+    /** A generated person. Its id is the rescue key, not a content id. */
+    public static ScoutTemplate generated(String id, String name, String voice, String bio, String background,
+                                          Map<String, int[]> stats, List<String> traits, String hiddenTrait,
+                                          List<String> likes, List<String> dislikes,
+                                          List<String> rescueLines, List<Habit> habits) {
+        ScoutTemplate t = new ScoutTemplate();
+        t.id = id;
+        t.name = name;
+        t.voice = voice;
+        t.bio = bio;
+        t.background = background;
+        t.stats = stats;
+        t.traits = traits;
+        t.hiddenTrait = hiddenTrait;
+        t.likes = likes;
+        t.dislikes = dislikes;
+        t.rescueLines = rescueLines;
+        t.habits = habits;
+        return t;
+    }
 
     public String getId() {
         return id;
@@ -81,9 +111,21 @@ public final class ScoutTemplate {
         return habits != null ? habits : List.of();
     }
 
+    public String getBackground() {
+        return background;
+    }
+
     public static final class Habit {
         private String text;
         private int minBondLevel = 1;
+
+        public Habit() {
+        }
+
+        public Habit(String text, int minBondLevel) {
+            this.text = text;
+            this.minBondLevel = minBondLevel;
+        }
 
         public String getText() {
             return text;

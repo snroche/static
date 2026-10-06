@@ -23,7 +23,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-/** Phase 5: personal missions, La Voz fragments, relationships. */
+/** Phase 5: personal missions, the Voice's fragments, relationships. */
 public class StoryTest {
 
     private static final long T0 = 1_000_000_000_000L;
@@ -46,7 +46,9 @@ public class StoryTest {
     public void personalMissionsPlayTheirOwnSituation() {
         for (StoryDef.PersonalMission m : content.getStory().getPersonalMissions()) {
             for (long seed = 0; seed < 20; seed++) {
-                Scout s = TestScouts.custom(m.getScout(), 6, 0, 60, T0);
+                Scout s = m.getScout() != null
+                        ? TestScouts.custom(m.getScout(), 6, 0, 60, T0)
+                        : TestScouts.person(m.getBackground(), 6, 0, 60, T0);
                 Expedition e = engine.dispatch(s, content.zone(m.getZone()), seed, personal(m.getId()), T0).expedition;
                 long forced = e.getSegments().stream()
                         .filter(seg -> seg.getType() == Segment.Type.SITUATION && m.getEvent().equals(seg.getEventId()))

@@ -10,6 +10,45 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.6.2] — Generated survivors — in verification
+
+App 0.6.2 (versionCode 602) · **DB 5 → 6** · **Content 7 → 8**
+
+No release date: still needs testing on a device, including the upgrade from 0.6.1.
+
+### Changed
+- **Survivors are generated people, not named characters.** Anyone can die at any time, so nobody heard on the dial is hand-made anymore. Each new person is built from parts:
+  - **Name:** a random Argentine first name, or now and then a nickname ("Flaco", "Turca"). Never one the bunker has already known.
+  - **Background:** one of 8 (railway signalman, teenager on their own, nurse, trucker, schoolteacher, mechanic, cook, street musician). It sets the bio, which stats are stronger, which voices fit, some tastes and habits, and the rescue lines.
+  - **Traits:** two visible ones that don't clash, plus a hidden one.
+  - **Voice:** one that fits the background, leaning toward the traits.
+  - **Tastes and habits:** drawn from the background and the traits.
+  - Farther bands still mean stronger people: higher stat ceilings.
+- **Nobody is like the last one:** a new person never repeats the background or trait pair of the crew or the latest recruits, the voice of the last recruit, or any name.
+- **Dialogues follow traits and backgrounds instead of specific people:**
+  - Each of the 14 personality traits has two conversations.
+  - Six traits can be hidden, and each of those has a confession that reveals it.
+  - Each background has two to four conversations and asks for its own personal mission at bond level 4.
+  - Starters keep their own hand-written dialogues and also get the trait ones.
+- Beto, Lucho, Nilda and La Rusa were folded into the railway, teen, nurse and trucker backgrounds. Their conversations and missions now belong to anyone with that background.
+- At most 2 survivors wait for rescue at a time (`balance.json → people`).
+
+### Added
+- **Six personal missions**, one per new background: the nurse's ward, the trucker's truck at the pump, the teacher's classroom, the mechanic's machines, the cook's canteen at the dam, the musician's confiscated guitar. Each has its own situation.
+- `people.json` (names, nicknames, backgrounds). `traits.json` adds generation pools: voices, likes, dislikes, habits and `hideable`.
+- Content validation: every personality trait must have a dialogue, and every hideable trait a confession. Every background must have at least 2 dialogues and a personal mission.
+- Tests: 125 in total (10 new):
+  - Generator: same seed gives the same person; everyone is well formed; nobody repeats the crew; the voice changes from the last recruit; farther is stronger.
+  - Recruits keep who they are, and every background has talk and a mission.
+  - Trait dialogues and confessions, and the save round-trip.
+
+### DB 5 → 6
+- `scouts.persona` and `rescue_targets.persona`: who a generated person is, stored as JSON.
+- Existing saves keep their scouts as they are. Survivors recruited from the old named list still load from `survivors.json`, now kept only for that.
+
+### Notes
+- Not tested on a device. Unsigned release APK: ~1.1 MB.
+
 ## [0.6.1] — English, personalities and interface — in verification
 
 App 0.6.1 (versionCode 601) · DB 5 (unchanged) · **Content 6 → 7**
@@ -438,6 +477,7 @@ No release date yet: it still needs testing on a device or emulator. Once approv
 - Lint reports newer versions of AGP, Room and Lifecycle. The project uses the ones already in the local cache; upgrading is a separate decision.
 
 [Unreleased]: #unreleased
+[0.6.2]: #062--generated-survivors--in-verification
 [0.6.1]: #061--english-personalities-and-interface--in-verification
 [0.6.0]: #060--phase-5-content-and-polish--in-verification
 [0.5.0]: #050--phase-4-bunker--in-verification

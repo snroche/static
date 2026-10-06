@@ -4,6 +4,7 @@ import androidx.annotation.WorkerThread;
 
 import com.estatica.core.GameClock;
 import com.estatica.core.GameRandom;
+import com.estatica.core.Ids;
 import com.estatica.core.TextTemplate;
 import com.estatica.data.content.ContentRepository;
 import com.estatica.data.db.EstaticaDatabase;
@@ -115,6 +116,7 @@ public final class GameSession {
     private GiftRules gifts;
     private GriefRules grief;
     private com.estatica.domain.scouts.BarkRules barks;
+    private com.estatica.domain.scouts.PersonaGenerator personas;
     private com.estatica.domain.state.GameState state;
     private GameRandom random;
     private long lastSeenAtMillis;
@@ -137,6 +139,8 @@ public final class GameSession {
     private final Map<String, Map<String, String>> intel = new HashMap<>();
     private final Map<String, Relay> relays = new TreeMap<>();
     private final Map<String, String> rescueTargets = new TreeMap<>();
+    /** Who each waiting survivor is (generated people). */
+    private final Map<String, ScoutTemplate> rescuePersonas = new HashMap<>();
     private final Map<String, String> lore = new LinkedHashMap<>();
     private final Map<String, Integer> moduleLevels = new HashMap<>();
 
@@ -214,6 +218,7 @@ public final class GameSession {
             }
         });
         barks = new com.estatica.domain.scouts.BarkRules(content, rules);
+        personas = new com.estatica.domain.scouts.PersonaGenerator(content);
         gifts = new GiftRules(content, rules);
         grief = new GriefRules(content, rules);
         state = gameStateRepository.loadOrCreate();
@@ -234,7 +239,7 @@ public final class GameSession {
         }
         for (Scout scout : loaded) {
             scouts.put(scout.getId(), scout);
-            ScoutTemplate template = content.starter(scout.getTemplateId());
+            ScoutTemplate template = scout.getPersona() == null ? content.starter(scout.getTemplateId()) : null;
             if (template != null) {
                 // Content updates may give a template new traits: older saves catch up.
                 for (String trait : template.getTraits()) {
@@ -266,6 +271,7 @@ public final class GameSession {
         intel.putAll(radioRepository.intel());
         relays.putAll(radioRepository.relays());
         rescueTargets.putAll(radioRepository.rescueTargets());
+        rescuePersonas.putAll(radioRepository.rescuePersonas());
         lore.putAll(radioRepository.lore());
         moduleLevels.putAll(radioRepository.moduleLevels());
         long now = clock.nowMillis();
@@ -831,13 +837,8 @@ public final class GameSession {
     private void receive(SignalField.Spot spot, Step step) {
         caughtSignals.add(spot.key());
         step.radioWrites.add(() -> radioRepository.addCaughtSignal(spot.key(), step.now));
-        Set<String> taken = new java.util.HashSet<>(rescueTargets.keySet());
-        for (Scout s : scouts.values()) {
-            if (s.getTemplateId() != null) {
-                taken.add(s.getTemplateId());
-            }
-        }
-        RadioRules.Outcome outcome = radio.resolve(spot, knownZones, taken, receivedTransmissions, random);
+        boolean roomForSurvivor = rescueTargets.size() < content.getBalance().getPeople().getMaxPendingRescues();
+        RadioRules.Outcome outcome = radio.resolve(spot, knownZones, roomForSurvivor, receivedTransmissions, random);
         TerminalText.RadioText text = content.getTerminal().getRadio();
         Map<String, String> vars = new HashMap<>();
         switch (outcome.kind) {
@@ -851,9 +852,11 @@ public final class GameSession {
             }
             case SURVIVOR: {
                 discover(outcome.zoneId, step);
-                rescueTargets.put(outcome.survivorId, outcome.zoneId);
-                step.radioWrites.add(() -> radioRepository.addRescueTarget(outcome.survivorId, outcome.zoneId, step.now));
-                vars.put("name", content.starter(outcome.survivorId).getName());
+                ScoutTemplate person = newPerson(outcome.zoneId);
+                rescueTargets.put(person.getId(), outcome.zoneId);
+                rescuePersonas.put(person.getId(), person);
+                step.radioWrites.add(() -> radioRepository.addRescueTarget(person, outcome.zoneId, step.now));
+                vars.put("name", person.getName());
                 vars.put("zone", content.zone(outcome.zoneId).getName());
                 step.system(text.getSurvivorFound(), vars, null);
                 break;
@@ -1073,8 +1076,41 @@ public final class GameSession {
         }
     }
 
+    /** Someone new on the dial, unlike anyone in the bunker (see PersonaGenerator). */
+    private ScoutTemplate newPerson(String zoneId) {
+        List<ScoutTemplate> crew = new ArrayList<>();
+        List<ScoutTemplate> recent = new ArrayList<>();
+        Set<String> names = new java.util.HashSet<>();
+        for (Scout s : scouts.values()) {
+            names.add(s.getName());
+            ScoutTemplate persona = content.persona(s);
+            if (persona != null) {
+                recent.add(0, persona); // roster order: newest last
+                if (s.isAlive()) {
+                    crew.add(persona);
+                }
+            }
+        }
+        for (String id : rescueTargets.keySet()) {
+            ScoutTemplate waiting = rescuePersona(id);
+            if (waiting != null) {
+                crew.add(waiting);
+                names.add(waiting.getName());
+            }
+        }
+        int band = content.getBalance().bandIndex(content.zone(zoneId).getBand());
+        return personas.generate(com.estatica.domain.scouts.PersonaGenerator.ID_PREFIX + Ids.newId(), band,
+                crew, recent, names, random);
+    }
+
+    /** A waiting survivor: generated, or hand-made from an older save. */
+    private ScoutTemplate rescuePersona(String survivorId) {
+        ScoutTemplate persona = rescuePersonas.get(survivorId);
+        return persona != null ? persona : content.starter(survivorId);
+    }
+
     private void rescueFailed(String survivorId, Step step) {
-        ScoutTemplate template = content.starter(survivorId);
+        ScoutTemplate template = rescuePersona(survivorId);
         if (template != null) {
             Map<String, String> vars = new HashMap<>();
             vars.put("name", template.getName());
@@ -1098,7 +1134,7 @@ public final class GameSession {
     }
 
     private void recruit(String survivorId, Step step) {
-        ScoutTemplate template = content.starter(survivorId);
+        ScoutTemplate template = rescuePersona(survivorId);
         if (template == null) {
             return;
         }
@@ -1110,6 +1146,7 @@ public final class GameSession {
                 ? template.getInitialTrust() : content.getBalance().getRadio().getSurvivorTrust();
         Scout recruit = ScoutFactory.fromTemplate(template, content.getBalance().getScouts(), step.now, trust);
         rescueTargets.remove(survivorId);
+        rescuePersonas.remove(survivorId);
         step.radioWrites.add(() -> radioRepository.removeRescueTarget(survivorId));
         step.newScouts.add(recruit);
         scouts.put(recruit.getId(), recruit);
@@ -1387,7 +1424,7 @@ public final class GameSession {
     // ---- Story: personal missions, La Voz, goals (GDD §5.2, §8, §9) ----
 
     private boolean personalAvailable(StoryDef.PersonalMission m, Scout s) {
-        return s.isAlive() && m.getScout().equals(s.getTemplateId())
+        return s.isAlive() && m.isFor(s.getTemplateId(), content.persona(s))
                 && s.getLife().hasFlag(m.offeredFlag()) && !s.getLife().hasFlag(m.doneFlag());
     }
 
@@ -1663,7 +1700,7 @@ public final class GameSession {
             SessionSnapshot.ScoutView.Builder b = new SessionSnapshot.ScoutView.Builder();
             b.id = s.getId();
             b.name = s.getName();
-            ScoutTemplate template = content.starter(s.getTemplateId());
+            ScoutTemplate template = content.persona(s);
             b.bio = template != null ? template.getBio() : null;
             b.status = content.getTerminal().getScoutStatus().get(s.getStatus().name());
             b.injury = content.getTerminal().getInjuries().get(s.getInjury().name());
@@ -1790,7 +1827,8 @@ public final class GameSession {
             ZoneDef z = content.zone(target.getValue());
             if (canReach(z)) {
                 Map<String, String> vars = new HashMap<>();
-                vars.put("name", content.starter(target.getKey()).getName());
+                ScoutTemplate waiting = rescuePersona(target.getKey());
+                vars.put("name", waiting != null ? waiting.getName() : "?");
                 missions.add(new SessionSnapshot.MissionView(Mission.Type.RESCUE.name(), z.getId(),
                         target.getKey(), TextTemplate.format(radioText.getMissionRescue(), vars), z.getName()));
             }
@@ -1907,7 +1945,7 @@ public final class GameSession {
                     memories.add(m.getText());
                 }
             }
-            ScoutTemplate template = content.starter(s.getTemplateId());
+            ScoutTemplate template = content.persona(s);
             fallen.add(new SessionSnapshot.DiaryEntry(s.getName(), TextTemplate.format(text.getDiaryFell(), vars),
                     template != null ? template.getBio() : null, memories, lastWords));
         }

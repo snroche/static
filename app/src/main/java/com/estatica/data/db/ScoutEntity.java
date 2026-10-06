@@ -82,4 +82,8 @@ public class ScoutEntity {
     @Nullable
     @ColumnInfo(name = "gear_id")
     public String gearId;
+
+    /** DB v6: generated person (JSON of a ScoutTemplate); null for authored scouts. */
+    @Nullable
+    public String persona;
 }
