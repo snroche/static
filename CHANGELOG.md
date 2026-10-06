@@ -18,7 +18,7 @@ No release date: still needs testing on a device, including the upgrade from 0.6
 
 ### Changed
 - **Survivors are generated people, not named characters.** Anyone can die at any time, so nobody heard on the dial is hand-made anymore. Each new person is built from parts:
-  - **Name:** a random Argentine first name, or now and then a nickname ("Flaco", "Turca"). Never one the bunker has already known.
+  - **Name:** a random first name from a countryless pool, or now and then a nickname ("Sparrow", "Patch"). Never one the bunker has already known.
   - **Background:** one of 8 (railway signalman, teenager on their own, nurse, trucker, schoolteacher, mechanic, cook, street musician). It sets the bio, which stats are stronger, which voices fit, some tastes and habits, and the rescue lines.
   - **Traits:** two visible ones that don't clash, plus a hidden one.
   - **Voice:** one that fits the background, leaning toward the traits.
