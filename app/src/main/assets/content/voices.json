@@ -4,99 +4,141 @@
     "transform": "LOWER",
     "phrases": {
       "departure": [
-        "salgo. no me esperes despierto.",
-        "voy. después te cuento."
-      ],
-      "arrival": [
-        "ya estoy adentro. cerrá.",
-        "volví. todo bien. más o menos."
-      ],
-      "oddsGood": [
-        "eso lo hago fácil.",
-        "tranqui, sale."
-      ],
-      "oddsUnsure": [
-        "no sé. puede salir.",
-        "mitad y mitad."
-      ],
-      "oddsBad": [
-        "esto me da mala espina.",
-        "no me gusta nada."
-      ],
-      "disobey": [
-        "no. lo hago a mi manera.",
-        "perdón, pero no."
-      ],
-      "autoDecide": [
-        "no contestás. decido yo.",
-        "sigo sin respuesta. me arreglo."
-      ],
-      "injured": [
-        "me lastimé. sigo.",
-        "duele. pero puedo caminar."
-      ],
-      "find": [
-        "encontré {amount} de {resource}.",
-        "{amount} de {resource}. algo es algo."
-      ],
-      "lastWords": [
-        "no veo nada. hay mucho ruido acá.",
-        "creo que no vuelvo. perdón."
-      ],
-      "lastMemory": [
-        "me acuerdo de {memory}.",
-        "pensaba en {memory}."
-      ],
-      "lastOrder": [
-        "vos me dijiste \"{memory}\". no es tu culpa."
-      ],
-      "initiate": [
-        "¿tenés un minuto?",
-        "ey. ¿estás?"
-      ],
-      "initiate@close": [
-        "¿tenés un minuto? es importante."
-      ],
-      "askReturn": [
-        "quiero volver a casa, por favor.",
-        "no doy más. ¿puedo volver?"
-      ],
-      "goingHome": [
-        "gracias. vuelvo.",
-        "vuelvo. gracias por entender."
-      ],
-      "findItem": [
-        "encontré algo: {item}. me lo guardo.",
-        "mirá, {item}. lo llevo."
-      ],
-      "lastGift": [
-        "todavía tengo {gift}. acá, en el bolsillo.",
-        "tengo {gift} conmigo."
-      ],
-      "lastCompanion": [
-        "decile a {companion} que no se preocupe.",
-        "cuidá a {companion}."
-      ],
-      "giftLiked": [
-        "¿{item}? no puedo creer. gracias.",
-        "esto... gracias. en serio."
-      ],
-      "giftDisliked": [
-        "ah. {item}. bueno... gracias igual.",
-        "no es lo mío, pero bueno."
-      ],
-      "giftNeutral": [
-        "{item}. gracias.",
-        "lo guardo. gracias."
+        "heading out. don't wait up.",
+        "going. i'll tell you about it later.",
+        "out the door. same as always."
       ],
       "departure@close": [
-        "salgo. guardame un lugar cerca de la radio."
+        "heading out. save me a spot by the radio.",
+        "going. talk to me while i walk, ok?"
+      ],
+      "arrival": [
+        "i'm in. lock it.",
+        "back. all good. mostly.",
+        "home. or whatever this is."
       ],
       "arrival@close": [
-        "volví. te extrañé un poco. no le digas a nadie."
+        "back. missed you a little. don't tell anyone.",
+        "home. you kept the kettle on?"
+      ],
+      "oddsGood": [
+        "easy.",
+        "relax, i've got this.",
+        "done this a hundred times."
+      ],
+      "oddsUnsure": [
+        "dunno. might work.",
+        "coin toss.",
+        "could go either way."
+      ],
+      "oddsBad": [
+        "this gives me a bad feeling.",
+        "i really don't like this.",
+        "nope. bad feeling."
+      ],
+      "disobey": [
+        "no. doing it my way.",
+        "sorry, but no.",
+        "not that. something else."
+      ],
+      "autoDecide": [
+        "you're not answering. my call.",
+        "still nothing on the radio. i'll manage.",
+        "silence. fine. deciding myself."
+      ],
+      "injured": [
+        "got hurt. still moving.",
+        "it hurts. i can walk.",
+        "bleeding a bit. it's fine. it's fine."
+      ],
+      "find": [
+        "found {amount} {resource}.",
+        "{amount} {resource}. better than nothing.",
+        "{amount} {resource}. bagged."
+      ],
+      "lastWords": [
+        "can't see anything. so much noise here.",
+        "i don't think i'm coming back. sorry."
       ],
       "lastWords@close": [
-        "no cortes. quedate un rato más en el canal."
+        "don't hang up. stay on the channel a little longer."
+      ],
+      "lastMemory": [
+        "i keep thinking about {memory}.",
+        "remember {memory}?"
+      ],
+      "lastOrder": [
+        "you said \"{memory}\". it's not your fault."
+      ],
+      "initiate": [
+        "got a minute?",
+        "hey. you there?"
+      ],
+      "initiate@close": [
+        "got a minute? it's important."
+      ],
+      "askReturn": [
+        "i want to go home. please.",
+        "i can't do this. can i come back?"
+      ],
+      "goingHome": [
+        "thanks. coming back.",
+        "on my way. thanks for getting it."
+      ],
+      "findItem": [
+        "found something: {item}. keeping it.",
+        "look, {item}. bringing it."
+      ],
+      "lastGift": [
+        "i still have {gift}. right here in my pocket.",
+        "{gift} is with me."
+      ],
+      "lastCompanion": [
+        "tell {companion} not to worry.",
+        "look after {companion}."
+      ],
+      "giftLiked": [
+        "{item}? i can't believe it. thank you.",
+        "this... thanks. really."
+      ],
+      "giftDisliked": [
+        "oh. {item}. well... thanks anyway.",
+        "not my thing, but ok."
+      ],
+      "giftNeutral": [
+        "{item}. thanks.",
+        "i'll keep it. thanks."
+      ],
+      "idle": [
+        "mapping routes in my head again. old habit.",
+        "it's too quiet in here.",
+        "anyone seen my good socks?",
+        "i counted the ceiling bolts. forty-two."
+      ],
+      "idleClose": [
+        "you know, this place isn't so bad. with you on the radio.",
+        "i saved you the last cracker. don't make it weird."
+      ],
+      "idleTense": [
+        "can't sit still. my legs want to run.",
+        "everything's too loud today. or too quiet.",
+        "don't talk to me for a bit, ok?"
+      ],
+      "aboutFriend": [
+        "{other} is all right. don't tell them i said so.",
+        "{other} and i stayed up talking. first time in ages."
+      ],
+      "aboutRival": [
+        "if {other} touches my stuff again...",
+        "{other} talks too much. way too much."
+      ],
+      "task:descanso": [
+        "sleeping. or trying to.",
+        "staring at the ceiling counts as rest, right?"
+      ],
+      "task:guardia": [
+        "nothing at the door. nothing yet.",
+        "i hear everything from here. everything."
       ]
     }
   },
@@ -104,99 +146,139 @@
     "id": "jerga",
     "transform": "NONE",
     "replacements": {
-      "muy": "re",
-      "problema": "quilombo",
-      "trabajo": "laburo",
-      "dinero": "guita"
+      "very": "real",
+      "problem": "mess",
+      "money": "dough"
     },
     "phrases": {
       "departure": [
-        "Me voy al toque, jefe.",
-        "Salgo. Poneme la pava que vuelvo."
-      ],
-      "arrival": [
-        "Llegué, jefe. Entero, eh.",
-        "Ya estoy. Qué día, che."
-      ],
-      "oddsGood": [
-        "Esto es pan comido.",
-        "Posta, esto sale."
-      ],
-      "oddsUnsure": [
-        "Ni idea, jefe. Puede ser.",
-        "Es una moneda al aire."
-      ],
-      "oddsBad": [
-        "Esto me da mala espina, jefe.",
-        "Uh, esto no me cierra."
-      ],
-      "disobey": [
-        "Ni loco, jefe. Hago otra cosa.",
-        "No, no, no. Yo sé lo que hago."
-      ],
-      "autoDecide": [
-        "¿Jefe? Nada. Bueno, me la juego solo.",
-        "Nadie contesta. Le mando nomás."
-      ],
-      "injured": [
-        "Me dieron, jefe. Duele en serio.",
-        "Estoy sangrando un poco. Nada grave. Creo."
-      ],
-      "find": [
-        "Encontré {amount} de {resource}. Para la olla.",
-        "Mirá vos: {amount} de {resource}."
-      ],
-      "lastWords": [
-        "Jefe... no me siento las piernas.",
-        "Che, decile a los pibes que... que..."
-      ],
-      "lastMemory": [
-        "Me acuerdo de {memory}, jefe.",
-        "Qué cosa {memory}, ¿no?"
-      ],
-      "lastOrder": [
-        "Vos me dijiste \"{memory}\". Estuvo bien igual, jefe."
-      ],
-      "initiate": [
-        "Jefe, ¿tenés un minuto?",
-        "Che, jefe. ¿Charlamos?"
-      ],
-      "askReturn": [
-        "Jefe, quiero volver a casa. Por favor.",
-        "No doy más, jefe. ¿Me vuelvo?"
-      ],
-      "goingHome": [
-        "Gracias, jefe. Vuelvo al toque."
-      ],
-      "findItem": [
-        "Mirá lo que encontré: {item}.",
-        "Me llevo {item}, jefe. Nunca se sabe."
-      ],
-      "lastGift": [
-        "Tengo {gift} en el bolsillo, jefe. No lo suelto."
-      ],
-      "lastCompanion": [
-        "Decile a {companion} que le debo un truco.",
-        "Cuidame a {companion}, jefe."
-      ],
-      "giftLiked": [
-        "¡{item}! Sos grande, jefe.",
-        "Esto sí que es un regalo, jefe."
-      ],
-      "giftDisliked": [
-        "¿{item}? Bueno... gracias, jefe. Supongo."
-      ],
-      "giftNeutral": [
-        "{item}. Gracias, jefe."
+        "Off I go, boss.",
+        "Heading out. Put the kettle on, I'll be right back.",
+        "Right, boss. Wish me luck."
       ],
       "departure@close": [
-        "Me voy, hermano. Poneme la pava."
+        "Off I go, brother. Put the kettle on.",
+        "Back before you miss me, brother."
+      ],
+      "arrival": [
+        "Made it, boss. In one piece, too.",
+        "I'm back. What a day, eh.",
+        "Home sweet bunker, boss."
       ],
       "arrival@close": [
-        "¡Volví, hermano! ¿Me extrañaste?"
+        "I'm back, brother! Did you miss me?"
+      ],
+      "oddsGood": [
+        "Piece of cake.",
+        "No worries, this one's easy.",
+        "Done it a thousand times, boss."
+      ],
+      "oddsUnsure": [
+        "No idea, boss. Maybe.",
+        "Flip a coin.",
+        "Could go either way, honestly."
+      ],
+      "oddsBad": [
+        "Got a bad feeling about this, boss.",
+        "Ugh, this doesn't sit right with me.",
+        "Boss, this smells wrong."
+      ],
+      "disobey": [
+        "No way, boss. Doing something else.",
+        "No, no, no. I know what I'm doing.",
+        "Sorry, boss. Not that."
+      ],
+      "autoDecide": [
+        "Boss? Nothing. Right, I'll wing it.",
+        "Nobody's answering. Going for it.",
+        "Silence on the line. My call, then."
+      ],
+      "injured": [
+        "They got me, boss. It really hurts.",
+        "Bleeding a bit. Nothing serious. I think.",
+        "Ow. Ow. I'm fine. Mostly."
+      ],
+      "find": [
+        "Found {amount} {resource}. For the pot.",
+        "Look at that: {amount} {resource}.",
+        "{amount} {resource}, boss. Not bad."
+      ],
+      "lastWords": [
+        "Boss... I can't feel my legs.",
+        "Hey, tell the others that... that..."
       ],
       "lastWords@close": [
-        "Hermano... no me sueltes."
+        "Brother... don't let go."
+      ],
+      "lastMemory": [
+        "I keep thinking of {memory}, boss.",
+        "Funny, {memory}, eh?"
+      ],
+      "lastOrder": [
+        "You told me \"{memory}\". Still the right call, boss."
+      ],
+      "initiate": [
+        "Boss, got a minute?",
+        "Hey, boss. Fancy a chat?"
+      ],
+      "askReturn": [
+        "Boss, I want to come home. Please.",
+        "I can't take any more, boss. Can I come back?"
+      ],
+      "goingHome": [
+        "Thanks, boss. Back in a flash."
+      ],
+      "findItem": [
+        "Look what I found: {item}.",
+        "I'm taking {item}, boss. You never know."
+      ],
+      "lastGift": [
+        "I've got {gift} in my pocket, boss. Not letting go of it."
+      ],
+      "lastCompanion": [
+        "Tell {companion} I owe them a game.",
+        "Look after {companion} for me, boss."
+      ],
+      "giftLiked": [
+        "{item}! You're the best, boss.",
+        "Now that's a present, boss."
+      ],
+      "giftDisliked": [
+        "{item}? Well... thanks, boss. I suppose."
+      ],
+      "giftNeutral": [
+        "{item}. Thanks, boss."
+      ],
+      "idle": [
+        "Who wants to hear a joke? Nobody? Tough.",
+        "This wall's crooked, you know. Drives me nuts.",
+        "I'd kill for a barbecue. A real one.",
+        "Boss, you eating enough? You look thin on the radio."
+      ],
+      "idleClose": [
+        "When this is over, you and me, a proper barbecue. Deal?",
+        "You're all right, boss. Really."
+      ],
+      "idleTense": [
+        "I'm fine. I'm fine! Stop asking.",
+        "Can't laugh today, boss. Not today.",
+        "Need to hit something. A wall. Anything."
+      ],
+      "aboutFriend": [
+        "{other}'s a good one. Gold, really.",
+        "Me and {other}, we're a team now."
+      ],
+      "aboutRival": [
+        "One more word from {other} and I swear...",
+        "{other} thinks they know everything. Ha."
+      ],
+      "task:taller": [
+        "Give me a hammer and a reason, boss.",
+        "Fixed the bench. And the other bench. And the door."
+      ],
+      "task:cocina": [
+        "Today's special: whatever's left!",
+        "Taste this, boss. Tell me it's not good."
       ]
     }
   },
@@ -205,93 +287,131 @@
     "transform": "NONE",
     "phrases": {
       "departure": [
-        "Operador, inicio el recorrido.",
-        "Salgo. Reporto en cuanto tenga novedades."
-      ],
-      "arrival": [
-        "Operador, estoy de regreso en el búnker.",
-        "Regreso completado. Sin novedades graves."
-      ],
-      "oddsGood": [
-        "Lo considero viable.",
-        "Puedo hacerlo con seguridad."
-      ],
-      "oddsUnsure": [
-        "El resultado es incierto.",
-        "No puedo garantizarlo."
-      ],
-      "oddsBad": [
-        "Le advierto: esto me da mala espina.",
-        "No lo recomiendo, operador."
-      ],
-      "disobey": [
-        "Con respeto, operador, voy a proceder de otra manera.",
-        "No voy a hacer eso. Tomo otra opción."
-      ],
-      "autoDecide": [
-        "Sin respuesta del búnker. Procedo según mi criterio.",
-        "No recibo instrucciones. Decido yo."
-      ],
-      "injured": [
-        "Tengo una herida. Puedo continuar.",
-        "Sufrí un golpe. Lo registro y sigo."
-      ],
-      "find": [
-        "Registro: {amount} unidades de {resource}.",
-        "Hallazgo: {amount} de {resource}."
-      ],
-      "lastWords": [
-        "Operador... la señal... se corta.",
-        "Dejo constancia: hice lo que pude."
-      ],
-      "lastMemory": [
-        "Quiero que quede registrado: {memory}.",
-        "Recuerdo {memory}. Es extraño lo que uno recuerda."
-      ],
-      "lastOrder": [
-        "Usted me dijo \"{memory}\". No se culpe."
-      ],
-      "initiate": [
-        "Operador, ¿tiene un momento?"
-      ],
-      "initiate@close": [
-        "¿Tenés un momento? Necesito hablar."
-      ],
-      "askReturn": [
-        "Operador, solicito regresar. Por favor.",
-        "Quiero volver a casa. Por favor."
-      ],
-      "goingHome": [
-        "Entendido. Regreso. Gracias."
-      ],
-      "findItem": [
-        "Hallazgo personal: {item}. Lo traigo.",
-        "Registro un objeto: {item}."
-      ],
-      "lastGift": [
-        "Llevo {gift} conmigo. Que conste."
-      ],
-      "lastCompanion": [
-        "Dígale a {companion} que lo siento."
-      ],
-      "giftLiked": [
-        "{item}... No sé qué decir. Gracias.",
-        "Es justo lo que necesitaba. Gracias, de verdad."
-      ],
-      "giftDisliked": [
-        "{item}. Gracias. No es de mi agrado, pero lo valoro."
-      ],
-      "giftNeutral": [
-        "{item}. Gracias, operador."
+        "Operator, beginning the route.",
+        "Heading out. I'll report as soon as I have news.",
+        "Leaving now. Procedure as usual."
       ],
       "departure@close": [
-        "Salgo. Te aviso apenas llegue."
+        "Heading out. I'll call you as soon as I arrive.",
+        "I'm off. Stay close to the radio, will you?"
+      ],
+      "arrival": [
+        "Operator, I'm back at the bunker.",
+        "Return complete. Nothing serious to report.",
+        "Back inside. Logging the trip now."
       ],
       "arrival@close": [
-        "Volví. Me alegra escucharte."
+        "I'm back. It's good to hear you."
+      ],
+      "oddsGood": [
+        "I consider it viable.",
+        "I can do this safely.",
+        "Low risk. Proceeding is reasonable."
+      ],
+      "oddsUnsure": [
+        "The outcome is uncertain.",
+        "I can't guarantee it.",
+        "Insufficient data, Operator."
+      ],
+      "oddsBad": [
+        "I must warn you: this gives me a bad feeling.",
+        "I don't recommend it, Operator.",
+        "The odds are poor. Please consider it."
+      ],
+      "disobey": [
+        "With respect, Operator, I'll proceed differently.",
+        "I won't do that. Taking another option."
+      ],
+      "autoDecide": [
+        "No reply from the bunker. Proceeding at my discretion.",
+        "I'm not receiving instructions. I'll decide."
+      ],
+      "injured": [
+        "I'm injured. I can continue.",
+        "I took a blow. Noting it and moving on.",
+        "Wound sustained. Not critical."
+      ],
+      "find": [
+        "Logged: {amount} units of {resource}.",
+        "Recovered: {amount} {resource}."
+      ],
+      "lastWords": [
+        "Operator... the signal... it's breaking up.",
+        "For the record: I did what I could."
       ],
       "lastWords@close": [
-        "No te culpes. Por favor, no te culpes."
+        "Don't blame yourself. Please, don't blame yourself."
+      ],
+      "lastMemory": [
+        "I want it on the record: {memory}.",
+        "I remember {memory}. Strange, what one remembers."
+      ],
+      "lastOrder": [
+        "You told me \"{memory}\". Don't blame yourself."
+      ],
+      "initiate": [
+        "Operator, do you have a moment?"
+      ],
+      "initiate@close": [
+        "Do you have a moment? I need to talk."
+      ],
+      "askReturn": [
+        "Operator, requesting to return. Please.",
+        "I want to come home. Please."
+      ],
+      "goingHome": [
+        "Understood. Returning. Thank you."
+      ],
+      "findItem": [
+        "Personal item found: {item}. Bringing it.",
+        "Logging an object: {item}."
+      ],
+      "lastGift": [
+        "I'm carrying {gift}. For the record."
+      ],
+      "lastCompanion": [
+        "Tell {companion} I'm sorry."
+      ],
+      "giftLiked": [
+        "{item}... I don't know what to say. Thank you.",
+        "It's exactly what I needed. Truly, thank you."
+      ],
+      "giftDisliked": [
+        "{item}. Thank you. It isn't to my taste, but I appreciate it."
+      ],
+      "giftNeutral": [
+        "{item}. Thank you, Operator."
+      ],
+      "idle": [
+        "I've reorganized the medicine shelf. Alphabetically, this time.",
+        "Note to self: the filters hum a semitone flat.",
+        "I'm writing down everything that happened today.",
+        "Has anyone seen my pencil? The good one."
+      ],
+      "idleClose": [
+        "You're the first person since all this who listens. I wanted you to know.",
+        "I made tea. Yours is on the console."
+      ],
+      "idleTense": [
+        "I'm fine. My hands won't stop shaking, that's all.",
+        "Please don't ask me to go out today.",
+        "I keep checking the door. I know it's locked."
+      ],
+      "aboutFriend": [
+        "{other} is good company. I didn't expect that.",
+        "{other} makes me laugh. It's been a long time."
+      ],
+      "aboutRival": [
+        "{other} has no method at all. None.",
+        "I'd rather not share a room with {other} today."
+      ],
+      "task:enfermeria": [
+        "Bandages counted, boiled and rolled.",
+        "Everyone's temperature is normal. For now."
+      ],
+      "task:radio": [
+        "Logging every crackle. Some of them repeat.",
+        "There's a pattern in the static. I'm almost sure."
       ]
     }
   },
@@ -300,74 +420,103 @@
     "transform": "UPPER",
     "phrases": {
       "departure": [
-        "Salgo. Cambio.",
-        "En marcha. Cambio."
+        "Heading out. Over.",
+        "Moving. Over.",
+        "Departing. Keep the line open."
       ],
       "arrival": [
-        "Llegué. Todo en orden. Cambio."
+        "Back. All in order. Over.",
+        "Home. Over and out."
+      ],
+      "arrival@close": [
+        "Back. Good to hear you. Over."
       ],
       "oddsGood": [
         "Viable.",
-        "Sin problema."
+        "No problem.",
+        "Clear track."
       ],
       "oddsUnsure": [
-        "Dudoso.",
-        "Cincuenta y cincuenta."
+        "Doubtful.",
+        "Fifty-fifty."
       ],
       "oddsBad": [
-        "Mala espina. Repito: mala espina.",
-        "No recomendable."
+        "Bad feeling. Repeat: bad feeling.",
+        "Not advisable.",
+        "Red signal, Operator."
       ],
       "disobey": [
-        "Negativo. Procedo distinto."
+        "Negative. Proceeding differently."
       ],
       "autoDecide": [
-        "Sin respuesta. Decido yo. Cambio."
+        "No reply. Deciding myself. Over."
       ],
       "injured": [
-        "Herido. Sigo operativo."
+        "Injured. Still operational.",
+        "Hit. Continuing."
       ],
       "find": [
-        "{amount} de {resource}. Cambio."
+        "{amount} {resource}. Over."
       ],
       "lastWords": [
-        "Señal débil... {name} fuera... cambio..."
+        "Weak signal... {name} out... over..."
       ],
       "lastMemory": [
-        "Recuerdo {memory}. Cambio."
+        "Remembering {memory}. Over."
       ],
       "lastOrder": [
-        "Orden recibida: \"{memory}\". Sin rencor."
+        "Order received: \"{memory}\". No hard feelings."
       ],
       "initiate": [
-        "Operador. Un minuto. Cambio."
+        "Operator. One minute. Over."
       ],
       "askReturn": [
-        "Solicito regreso. Por favor."
+        "Requesting return. Please."
       ],
       "goingHome": [
-        "Regreso. Gracias."
+        "Returning. Thanks."
       ],
       "findItem": [
-        "Objeto: {item}. Lo llevo."
+        "Item: {item}. Bringing it."
       ],
       "lastGift": [
-        "Tengo {gift}. Conmigo."
+        "Have {gift}. With me."
       ],
       "lastCompanion": [
-        "Avisar a {companion}. Cambio."
+        "Tell {companion}. Over."
       ],
       "giftLiked": [
-        "{item}. Gracias. De verdad."
+        "{item}. Thanks. Truly."
       ],
       "giftDisliked": [
-        "{item}. No es lo mío. Gracias."
+        "{item}. Not my thing. Thanks."
       ],
       "giftNeutral": [
-        "{item}. Recibido."
+        "{item}. Received."
       ],
-      "arrival@close": [
-        "Volví. Me alegra oírte. Cambio."
+      "idle": [
+        "Checking the clock. Trains were never late with me.",
+        "Quiet line. Quiet bunker.",
+        "Coffee. Need coffee. Over."
+      ],
+      "idleClose": [
+        "Thirty years on the tracks. This is the best crew since. Over."
+      ],
+      "idleTense": [
+        "Signals all red today. Leave me be.",
+        "Too much noise in my head. Over."
+      ],
+      "aboutFriend": [
+        "{other}. Reliable. Like a good switch."
+      ],
+      "aboutRival": [
+        "{other}. Off schedule. Always."
+      ],
+      "task:guardia": [
+        "Watching the door. Nobody gets through. Over."
+      ],
+      "task:radio": [
+        "Monitoring. The band is busy tonight."
       ]
     }
   },
@@ -375,78 +524,112 @@
     "id": "pibe",
     "transform": "NONE",
     "replacements": {
-      "muy": "re",
-      "verdad": "posta",
-      "dinero": "guita"
+      "very": "super",
+      "really": "for real"
     },
     "phrases": {
       "departure": [
-        "Voy, voy. Tranqui.",
-        "Salgo. No me esperen con la luz prendida."
+        "Going, going. Chill.",
+        "Heading out. Don't leave the light on for me.",
+        "Easy run. Back in a sec."
       ],
       "arrival": [
-        "Llegué. ¿Hay algo para comer?"
-      ],
-      "oddsGood": [
-        "Fácil, eso lo hago con los ojos cerrados."
-      ],
-      "oddsUnsure": [
-        "Ni idea. Capaz sale."
-      ],
-      "oddsBad": [
-        "Nah, esto me da mala espina.",
-        "Esto pinta horrible."
-      ],
-      "disobey": [
-        "Nah, no hago eso. Hago otra cosa."
-      ],
-      "autoDecide": [
-        "¿Hola? ¿Nadie? Bueno, decido yo."
-      ],
-      "injured": [
-        "Ay. Me hice mal. Pero estoy."
-      ],
-      "find": [
-        "Encontré {amount} de {resource}. De nada."
-      ],
-      "lastWords": [
-        "Che... tengo frío... no me dejen solo..."
-      ],
-      "lastMemory": [
-        "Me acuerdo de {memory}... estuvo bueno eso."
-      ],
-      "lastOrder": [
-        "Me dijiste \"{memory}\"... está bien... está bien."
-      ],
-      "initiate": [
-        "Che, ¿tenés un toque?"
-      ],
-      "askReturn": [
-        "Quiero volver. Por favor. En serio."
-      ],
-      "goingHome": [
-        "Gracias. Vuelvo."
-      ],
-      "findItem": [
-        "Mirá: {item}. Me lo quedo, ¿no?"
-      ],
-      "lastGift": [
-        "Tengo {gift} acá... no lo perdí..."
-      ],
-      "lastCompanion": [
-        "Decile a {companion} que... que gracias."
-      ],
-      "giftLiked": [
-        "¡¿{item}?! Posta, gracias."
-      ],
-      "giftDisliked": [
-        "¿{item}? Ah... bueno."
-      ],
-      "giftNeutral": [
-        "{item}. Gracias, supongo."
+        "I'm back. Is there food?",
+        "Made it. Did I miss anything?"
       ],
       "arrival@close": [
-        "¡Volví! ¿Me guardaste algo?"
+        "I'm back! Did you save me something?"
+      ],
+      "oddsGood": [
+        "Easy, I could do it with my eyes closed.",
+        "Pfft. Easy."
+      ],
+      "oddsUnsure": [
+        "No clue. Might work.",
+        "Maybe? Maybe not."
+      ],
+      "oddsBad": [
+        "Nah, bad feeling about this.",
+        "This looks awful.",
+        "Dude. No."
+      ],
+      "disobey": [
+        "Nah, not doing that. Doing something else.",
+        "Nope. My way."
+      ],
+      "autoDecide": [
+        "Hello? Anyone? Fine, I'll decide.",
+        "Nobody's there. Whatever, going."
+      ],
+      "injured": [
+        "Ow. I hurt myself. But I'm ok.",
+        "That's gonna leave a mark."
+      ],
+      "find": [
+        "Found {amount} {resource}. You're welcome.",
+        "{amount} {resource}. Nice."
+      ],
+      "lastWords": [
+        "Hey... I'm cold... don't leave me alone..."
+      ],
+      "lastMemory": [
+        "I remember {memory}... that was nice."
+      ],
+      "lastOrder": [
+        "You said \"{memory}\"... it's ok... it's ok."
+      ],
+      "initiate": [
+        "Hey, got a sec?"
+      ],
+      "askReturn": [
+        "I want to come back. Please. For real."
+      ],
+      "goingHome": [
+        "Thanks. Coming back."
+      ],
+      "findItem": [
+        "Look: {item}. I'm keeping it, right?"
+      ],
+      "lastGift": [
+        "I've got {gift} here... didn't lose it..."
+      ],
+      "lastCompanion": [
+        "Tell {companion} that... that thanks."
+      ],
+      "giftLiked": [
+        "{item}?! For real, thanks."
+      ],
+      "giftDisliked": [
+        "{item}? Oh... ok."
+      ],
+      "giftNeutral": [
+        "{item}. Thanks, I guess."
+      ],
+      "idle": [
+        "Bored. So bored.",
+        "Who wants to play cards? Anyone? No?",
+        "I'm gonna learn guitar. Somehow.",
+        "Is it day or night? I can't tell in here."
+      ],
+      "idleClose": [
+        "You're kinda like... I dunno. Family. Whatever. Forget it."
+      ],
+      "idleTense": [
+        "Leave me alone, ok?",
+        "I didn't sleep. Again.",
+        "Everything's fine. Stop looking at me."
+      ],
+      "aboutFriend": [
+        "{other} taught me something today. Don't tell them I said it was cool.",
+        "{other}'s ok. Like, really ok."
+      ],
+      "aboutRival": [
+        "{other} treats me like a kid. I'm not a kid.",
+        "Ugh. {other}."
+      ],
+      "task:entrenamiento": [
+        "Push-ups! Count for me!",
+        "I'm getting stronger. Look. Look!"
       ]
     }
   },
@@ -456,71 +639,99 @@
     "replacements": {},
     "phrases": {
       "departure": [
-        "Ya salgo, querido. Abrigate vos.",
-        "Voy, voy. No te preocupes por esta vieja."
+        "Off I go, dear. Wrap up warm.",
+        "Going, going. Don't you worry about this old woman."
+      ],
+      "departure@close": [
+        "Off I go, sweetheart. Eat something while I'm out."
       ],
       "arrival": [
-        "Volví, querido. Poné el agua."
+        "I'm back, dear. Put the water on.",
+        "Home again. My knees are not happy."
       ],
       "oddsGood": [
-        "Esto lo hice mil veces.",
-        "Tranquilo, nene."
+        "I've done this a thousand times.",
+        "Easy, dear."
       ],
       "oddsUnsure": [
-        "Mirá, no sé. Puede salir.",
-        "Habrá que ver."
+        "Well, I don't know. It might work.",
+        "We'll see, dear. We'll see."
       ],
       "oddsBad": [
-        "Esto me da mala espina, querido.",
-        "No me gusta nada, nene."
+        "This gives me a bad feeling, dear.",
+        "I don't like this one bit, sweetheart."
       ],
       "disobey": [
-        "Perdoname, pero no. Lo hago a mi manera."
+        "Forgive me, dear, but no. I'll do it my way."
       ],
       "autoDecide": [
-        "No me contestás. Bueno, decido yo."
+        "You're not answering. Well, I'll decide."
       ],
       "injured": [
-        "Ay. Me lastimé. No es nada, no es nada."
+        "Oh. I hurt myself. It's nothing, it's nothing."
       ],
       "find": [
-        "Encontré {amount} de {resource}. Algo es algo."
+        "Found {amount} {resource}. Every little bit helps."
       ],
       "lastWords": [
-        "Querido... está oscureciendo... cuidate, ¿eh?"
+        "Dear... it's getting dark... take care of yourself, won't you?"
       ],
       "lastMemory": [
-        "Me acuerdo de {memory}... qué cosa linda."
+        "I remember {memory}... what a lovely thing."
       ],
       "lastOrder": [
-        "Me dijiste \"{memory}\"... está bien, nene. Está bien."
+        "You told me \"{memory}\"... that's all right, dear. That's all right."
       ],
       "initiate": [
-        "Querido, ¿tenés un minutito?"
+        "Dear, do you have a little minute?"
       ],
       "askReturn": [
-        "Nene, quiero volver. Por favor."
+        "Sweetheart, I want to come back. Please."
       ],
       "goingHome": [
-        "Gracias, querido. Ya vuelvo."
+        "Thank you, dear. Coming home."
       ],
       "findItem": [
-        "Mirá qué encontré: {item}."
+        "Look what I found: {item}."
       ],
       "lastGift": [
-        "Tengo {gift} acá, en el delantal."
+        "I've got {gift} here, in my apron."
       ],
       "lastCompanion": [
-        "Decile a {companion} que lo quiero mucho."
+        "Tell {companion} I love them very much."
       ],
       "giftLiked": [
-        "¡{item}! Ay, querido, no tenías que molestarte."
+        "{item}! Oh, dear, you shouldn't have."
       ],
       "giftDisliked": [
-        "{item}... bueno, gracias igual, nene."
+        "{item}... well, thank you anyway, dear."
       ],
       "giftNeutral": [
-        "{item}. Gracias, querido."
+        "{item}. Thank you, dear."
+      ],
+      "idle": [
+        "Who wants mate? I'm making some anyway.",
+        "In my day we fixed things with a hairpin and patience.",
+        "Somebody here needs a haircut. Several somebodies."
+      ],
+      "idleClose": [
+        "You remind me of my grandson. He'd talk my ear off too."
+      ],
+      "idleTense": [
+        "Leave me be a moment, dear. Just a moment.",
+        "Old bones don't like this cold."
+      ],
+      "aboutFriend": [
+        "{other} is a good egg. Make sure they eat.",
+        "{other} brought me tea. Isn't that sweet?"
+      ],
+      "aboutRival": [
+        "{other} has no manners at all.",
+        "Someone should teach {other} to knock."
+      ],
+      "task:enfermeria": [
+        "Hold still, this will sting. There. Brave.",
+        "Thirty years of nursing. Still the same bandages."
       ]
     }
   }

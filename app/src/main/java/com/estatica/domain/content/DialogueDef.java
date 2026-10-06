@@ -13,7 +13,7 @@ public final class DialogueDef {
     public enum Kind {
         /** Started by the operator ([HABLAR]). */
         TALK,
-        /** Started by the scout ("¿tenés un minuto?"). */
+        /** Started by the scout ("got a minute?"). */
         INITIATED,
         /** The scout asks for advice; answers grant a specialization. Scout-initiated. */
         GUIDANCE,
@@ -32,6 +32,8 @@ public final class DialogueDef {
     private Map<String, Integer> requiresStats;
     /** GRIEF: hours since the most recent death. */
     private double minHoursSinceDeath;
+    /** "friend", "inseparable" or "rival": needs such a companion ({other}). Null for none. */
+    private String requiresRelation;
     private boolean repeatable;
     /** Higher goes first among eligible dialogues. */
     private int priority;
@@ -76,6 +78,10 @@ public final class DialogueDef {
         return minHoursSinceDeath;
     }
 
+    public String getRequiresRelation() {
+        return requiresRelation;
+    }
+
     public boolean isRepeatable() {
         return repeatable;
     }
@@ -100,6 +106,8 @@ public final class DialogueDef {
         private int bond;
         private int trust;
         private int stress;
+        /** Affinity change with {other} (relationship dialogues). */
+        private int affinity;
         private List<String> setFlags;
         /** Nullable: what the scout keeps from this answer. */
         private String memory;
@@ -117,6 +125,10 @@ public final class DialogueDef {
 
         public int getBond() {
             return bond;
+        }
+
+        public int getAffinity() {
+            return affinity;
         }
 
         public int getTrust() {

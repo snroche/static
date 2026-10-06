@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class SignalDegraderTest {
 
-    private static final String TEXT = "no hay salida por el sótano, volvé al búnker";
+    private static final String TEXT = "there is no way out through the basement, come back to the bunker";
 
     @Test
     public void zeroIntensityIsClean() {

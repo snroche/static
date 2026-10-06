@@ -290,12 +290,12 @@ public final class TerminalViewModel extends ViewModel {
     /** Device settings typed in the terminal (GDD §9). Returns what changed, or null. */
     private String applySetting(String command) {
         String normalized = command.toLowerCase(Locale.ROOT).trim();
-        if (normalized.equals("sonido")) {
+        if (normalized.equals("sound")) {
             boolean on = settings.toggleSound();
             soundOn.setValue(on);
             return on ? "sound:on" : "sound:off";
         }
-        if (normalized.equals("notificaciones")) {
+        if (normalized.equals("notifications")) {
             boolean on = settings.toggleNotifications();
             if (!on) {
                 notifications.cancelAll();

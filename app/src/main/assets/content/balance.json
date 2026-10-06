@@ -1,11 +1,11 @@
 {
-  "contentVersion": 6,
+  "contentVersion": 7,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
     "logPageSize": 100
   },
-  "_comment": "Todo lo de abajo es [placeholder] (GDD o propio), sin testear. Ajustar con playtesting.",
+  "_comment": "Everything below is a [placeholder] (from the GDD or our own), untested. Tune with playtesting.",
   "expedition": {
     "situationTimeoutMinutes": 15,
     "disobeyChance": 0.5
@@ -78,7 +78,7 @@
   "bands": [
     {
       "id": "short",
-      "name": "Banda corta",
+      "name": "Short band",
       "minMinutes": 1,
       "maxMinutes": 5,
       "unlockAntennaLevel": 1,
@@ -96,7 +96,7 @@
     },
     {
       "id": "medium",
-      "name": "Banda media",
+      "name": "Medium band",
       "minMinutes": 15,
       "maxMinutes": 60,
       "unlockAntennaLevel": 2,
@@ -114,7 +114,7 @@
     },
     {
       "id": "long",
-      "name": "Banda larga",
+      "name": "Long band",
       "minMinutes": 120,
       "maxMinutes": 360,
       "unlockAntennaLevel": 4,
@@ -132,7 +132,7 @@
     },
     {
       "id": "deep",
-      "name": "Banda profunda",
+      "name": "Deep band",
       "minMinutes": 480,
       "maxMinutes": 720,
       "unlockAntennaLevel": 6,
@@ -174,8 +174,8 @@
   "modules": [
     {
       "id": "antenna",
-      "name": "Antena",
-      "description": "Alcance de la radio: cada nivel abre bandas más lejanas.",
+      "name": "Antenna",
+      "description": "Radio range: each level opens farther bands.",
       "startLevel": 1,
       "upgradeCosts": [
         {
@@ -203,8 +203,8 @@
     },
     {
       "id": "generator",
-      "name": "Generador",
-      "description": "Más watts para repartir.",
+      "name": "Generator",
+      "description": "More watts to share out.",
       "startLevel": 1,
       "upgradeCosts": [
         {
@@ -231,7 +231,7 @@
     {
       "id": "radio",
       "name": "Radio",
-      "description": "Señal más limpia y órdenes más rápidas con todos.",
+      "description": "Cleaner signal and faster orders with everyone.",
       "startLevel": 1,
       "upgradeCosts": [
         {
@@ -252,8 +252,8 @@
     },
     {
       "id": "workshop",
-      "name": "Taller",
-      "description": "Un puesto de trabajo más por nivel y recetas nuevas.",
+      "name": "Workshop",
+      "description": "One more workbench per level, and new recipes.",
       "startLevel": 1,
       "upgradeCosts": [
         {
@@ -269,8 +269,8 @@
     },
     {
       "id": "infirmary",
-      "name": "Enfermería",
-      "description": "Curación más rápida.",
+      "name": "Infirmary",
+      "description": "Faster healing.",
       "startLevel": 1,
       "upgradeCosts": [
         {
@@ -287,8 +287,8 @@
     },
     {
       "id": "bunks",
-      "name": "Literas",
-      "description": "Lugar para un explorador más por nivel.",
+      "name": "Bunks",
+      "description": "Room for one more scout per level.",
       "startLevel": 1,
       "upgradeCosts": [
         {
@@ -313,8 +313,8 @@
     "consumers": [
       {
         "id": "filters",
-        "name": "Filtros de aire",
-        "description": "Obligatorios. De noche piden un watt más.",
+        "name": "Air filters",
+        "description": "Required. They need one more watt at night.",
         "min": 2,
         "max": 3,
         "nightExtra": 1,
@@ -324,7 +324,7 @@
       {
         "id": "radio",
         "name": "Radio",
-        "description": "Más potencia, señal más limpia con los exploradores.",
+        "description": "More power, cleaner signal with the scouts.",
         "min": 0,
         "max": 3,
         "priority": 3,
@@ -332,8 +332,8 @@
       },
       {
         "id": "antenna",
-        "name": "Antena",
-        "description": "Sin potencia solo alcanza la banda corta.",
+        "name": "Antenna",
+        "description": "Without power it only reaches the short band.",
         "min": 0,
         "max": 2,
         "priority": 2,
@@ -341,8 +341,8 @@
       },
       {
         "id": "workshop",
-        "name": "Taller",
-        "description": "Sin potencia no se fabrica nada. Más potencia, más rápido.",
+        "name": "Workshop",
+        "description": "Without power nothing gets made. More power, faster.",
         "min": 0,
         "max": 3,
         "priority": 1,
@@ -350,8 +350,8 @@
       },
       {
         "id": "infirmary",
-        "name": "Enfermería",
-        "description": "Curación más rápida y menos estrés.",
+        "name": "Infirmary",
+        "description": "Faster healing and less stress.",
         "min": 0,
         "max": 3,
         "priority": 4,
@@ -379,5 +379,9 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "barks": {
+    "intervalMinutes": 40,
+    "chance": 0.6
   }
 }

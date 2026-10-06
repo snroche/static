@@ -92,7 +92,7 @@ public class DialogueEngineTest {
         assertTrue(mara.getTraits().stream().anyMatch(t -> !t.isVisible()));
         DialogueEngine.Answer answer = engine.answer(mara, content.dialogue("mara_confianza"), 1, List.of(mara), T0);
         assertTrue(mara.getTraits().stream().allMatch(ScoutTrait::isVisible));
-        assertTrue(answer.lines.stream().anyMatch(l -> l.getText().contains("Desconfianza")));
+        assertTrue(answer.lines.stream().anyMatch(l -> l.getText().contains("Distrustful")));
     }
 
     @Test

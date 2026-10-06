@@ -18,12 +18,16 @@ public final class SessionSnapshot {
     public final List<MissionView> missions;
     public final RadioView radio;
     public final BaseView base;
+    /** Scouts out right now, for the expedition strip. */
+    public final List<ExpeditionView> expeditions;
     /** Next moment the game state changes on its own, or -1. */
     public final long nextWakeAtMillis;
 
     SessionSnapshot(List<ScoutView> scouts, List<PendingDecision> pending, List<ZoneView> zones,
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
-                    List<MissionView> missions, RadioView radio, BaseView base, long nextWakeAtMillis) {
+                    List<MissionView> missions, RadioView radio, BaseView base,
+                    List<ExpeditionView> expeditions, long nextWakeAtMillis) {
+        this.expeditions = Collections.unmodifiableList(expeditions);
         this.base = base;
         this.missions = Collections.unmodifiableList(missions);
         this.radio = radio;
@@ -68,10 +72,19 @@ public final class SessionSnapshot {
         /** Equipped gear name, or null. */
         public final String gear;
         public final boolean canEquip;
-        /** "Amistad con Tano", "Roces con Irene"… */
+        /** "Friends with Tano", "Friction with Irene"… */
         public final List<String> relations;
+        /** Mood label. */
+        public final String mood;
+        /** Mood key: content, steady, tense, breaking. */
+        public final String moodKey;
+        /** Habits revealed so far. */
+        public final List<String> habits;
 
         ScoutView(Builder b) {
+            this.mood = b.mood;
+            this.moodKey = b.moodKey;
+            this.habits = Collections.unmodifiableList(b.habits);
             this.relations = Collections.unmodifiableList(b.relations);
             this.gear = b.gear;
             this.canEquip = b.canEquip;
@@ -123,6 +136,9 @@ public final class SessionSnapshot {
             String gear;
             boolean canEquip;
             List<String> relations;
+            String mood;
+            String moodKey;
+            List<String> habits;
         }
     }
 
@@ -316,8 +332,10 @@ public final class SessionSnapshot {
         public final int scouts;
         public final int bunks;
         public final List<GoalView> goals;
+        /** Some consumer gets less power than asked for. */
+        public final boolean powerCut;
 
-        BaseView(List<GoalView> goals, int watts, int available, int used, boolean blackout, boolean night, boolean filtersShort,
+        BaseView(List<GoalView> goals, boolean powerCut, int watts, int available, int used, boolean blackout, boolean night, boolean filtersShort,
                  List<ConsumerView> consumers, int reserve, int reserveCapacity, boolean canRecharge,
                  List<ModuleView> modules, int slots, List<JobView> jobs, List<RecipeView> recipes,
                  List<String> guards, int defense, List<ItemView> gearStock, int scouts, int bunks) {
@@ -341,6 +359,7 @@ public final class SessionSnapshot {
             this.scouts = scouts;
             this.bunks = bunks;
             this.goals = Collections.unmodifiableList(goals);
+            this.powerCut = powerCut;
         }
     }
 
@@ -410,10 +429,35 @@ public final class SessionSnapshot {
     public static final class ResourceView {
         public final String name;
         public final int amount;
+        /** Three-letter label for the status bar, or null. */
+        public final String shortName;
 
-        ResourceView(String name, int amount) {
+        ResourceView(String name, int amount, String shortName) {
             this.name = name;
             this.amount = amount;
+            this.shortName = shortName;
+        }
+    }
+
+    /** One expedition in progress. */
+    public static final class ExpeditionView {
+        public final String scoutName;
+        public final String zoneName;
+        /** 0–100, by planned time. */
+        public final int percent;
+        /** Estimated return (absolute time), so the UI needs no ticking. */
+        public final long returnAtMillis;
+        public final boolean waitingForOrders;
+        public final boolean orderOnItsWay;
+
+        ExpeditionView(String scoutName, String zoneName, int percent, long returnAtMillis,
+                       boolean waitingForOrders, boolean orderOnItsWay) {
+            this.scoutName = scoutName;
+            this.zoneName = zoneName;
+            this.percent = percent;
+            this.returnAtMillis = returnAtMillis;
+            this.waitingForOrders = waitingForOrders;
+            this.orderOnItsWay = orderOnItsWay;
         }
     }
 
@@ -450,7 +494,7 @@ public final class SessionSnapshot {
     public static final class DiaryEntry {
         public final boolean section;
         public final String name;
-        /** Second line ("Sin señal desde el … · zone", band, source…), or null. */
+        /** Second line ("No signal since … · zone", band, source…), or null. */
         public final String header;
         public final String bio;
         public final List<String> memories;

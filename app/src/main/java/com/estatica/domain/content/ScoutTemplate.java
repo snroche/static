@@ -24,6 +24,8 @@ public final class ScoutTemplate {
     private Integer initialTrust;
     /** Survivors only: what they say when rescued. */
     private List<String> rescueLines;
+    /** Little things the operator notices as the bond grows. */
+    private List<Habit> habits;
 
     public String getId() {
         return id;
@@ -73,5 +75,22 @@ public final class ScoutTemplate {
 
     public List<String> getRescueLines() {
         return rescueLines != null ? rescueLines : List.of();
+    }
+
+    public List<Habit> getHabits() {
+        return habits != null ? habits : List.of();
+    }
+
+    public static final class Habit {
+        private String text;
+        private int minBondLevel = 1;
+
+        public String getText() {
+            return text;
+        }
+
+        public int getMinBondLevel() {
+            return minBondLevel;
+        }
     }
 }

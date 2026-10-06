@@ -1,319 +1,447 @@
 # Changelog
 
-Todos los cambios relevantes de Estática se registran acá.
-Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/); versionado según [docs/VERSIONING.md](docs/VERSIONING.md).
+All notable changes to Static are recorded here.
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows [docs/VERSIONING.md](docs/VERSIONING.md).
 
-Cada entrada indica, si cambian, las tres versiones independientes:
-**App** (`version.properties`) · **DB** (esquema Room) · **Contenido** (`balance.json → contentVersion`).
+When they change, each entry lists the three independent versions:
+**App** (`version.properties`) · **DB** (Room schema) · **Content** (`balance.json → contentVersion`).
 
 ## [Unreleased]
 
-_Nada todavía._
+_Nothing yet._
 
-## [0.6.0] — Fase 5: Contenido y pulido — en verificación
+## [0.6.1] — English, personalities and interface — in verification
 
-App 0.6.0 (versionCode 600) · DB 5 (sin cambios) · **Contenido 5 → 6**
+App 0.6.1 (versionCode 601) · DB 5 (unchanged) · **Content 6 → 7**
 
-Sin fecha de release: falta probarla en un dispositivo.
+No release date: still needs testing on a device.
 
-### Agregado
-- **Banda larga:** Aeropuerto regional, La represa y Antena del norte, con expediciones de 2 a 6 h. Supervivientes nuevos: Nilda (enfermera jubilada, voz nueva "abuela") y La Rusa (camionera).
-- **40 eventos** (antes 15), repartidos en todas las bandas. Incluyen los 5 de las misiones personales y el relé de La Voz.
-- **Misiones personales** (GDD §5.2): Mara, Tano, Irene, Beto y Lucho tienen la suya.
-  - Con vínculo nivel 4 la piden en una conversación y aparece como misión al despachar, solo para ese explorador.
-  - Juegan su situación propia. Al completarla dan +15 de vínculo, −30 de estrés, el rasgo *En paz*, un recuerdo y unas palabras en su voz.
-- **Relaciones entre exploradores** (GDD §5.3): la afinidad ahora puede ser negativa.
-  - Los rasgos que chocan (Imprudencia contra Método, Desconfianza contra Lealtad) generan roces al compartir tarea.
-  - Con afinidad ≥ 50 son amigos, ≥ 80 inseparables, ≤ −40 hay roces.
-  - Compartir tarea con un amigo calma; con un rival, estresa. La ficha muestra las relaciones.
-- **La Voz, capítulo 1** (GDD §8) — **BORRADOR para revisar** (`story.json`, marcado `_draft`):
-  - Cinco fragmentos: tres transmisiones cifradas (banda corta, media y larga), el archivo de la comisaría o el laboratorio de Irene, y el relé ECO-7 en la Antena del norte.
-  - Con los cinco, La Voz le habla al operador y cierra el capítulo.
-  - La historia en una línea: el Silencio empezó a las 3:10 con la activación de una red de alerta llamada Proyecto Eco; alguien mantiene la estación Eco-7 y sabe que el búnker escucha.
-- **Diario completo** (GDD §6.6): caídos (con su historia y última transmisión), La Voz (fragmentos encontrados y los que faltan, con el final), transmisiones descifradas y zonas conocidas.
-- **Sonido sintetizado en código**, sin archivos ni dependencias: estática al mover el dial (más fuerte lejos de una señal), click al fijar, tecleo del teletipo y pitido en los mensajes urgentes. Más adelante se puede reemplazar por grabaciones.
-- **Háptica** en los mensajes urgentes, además de la vibración del dial.
-- **Ajustes** (GDD §9): los comandos `sonido` y `notificaciones` los activan o desactivan. Se guardan en el dispositivo y no forman parte de la partida.
-- **Objetivos diarios** (descifrar 1 transmisión, completar 2 expediciones, fijar 5 señales) y **semanal** (10 expediciones). Se reinician a la medianoche local, dan recursos y se ven en [BÚNKER].
-- Tests: 111 en total. Incluyen misiones personales, fragmentos alcanzables, el fragmento del laboratorio y rivalidades por rasgos.
+### Changed
+- **All game text is now in English:** terminal, events, dialogues, voices, bios, signals, the Voice's story, the Journal and the Android strings. The setting stays in Argentina (Mara, Tano, Olazábal, Lanús, Córdoba).
+  - "La Voz" is now **the Voice**, and the app is called **Static**.
+  - Terminal commands are now `help`, `status`, `sound` and `notifications`.
+  - The six voice styles were rewritten for English (lowercase, slang, formal, telegraph, kid, grandma), with their word swaps adapted.
+- This changelog and `docs/VERSIONING.md` are in English. `docs/GDD.md` stays as written.
 
-### Cambiado
-- La validación de contenido exige al menos 40 eventos y que todos se puedan alcanzar desde una zona o una misión personal.
-- El test de catch-up cubre 12 h, para incluir expediciones de la banda larga.
+### Added
+- **Personalities:**
+  - Seven new traits:
+    - *Loner*: Stealth +1; clashes with *Sociable*.
+    - *Sociable*: less stress.
+    - *Curious*: Wits +1; prefers the risky option.
+    - *Stubborn*: Nerve +1; may disobey at low trust.
+    - *Hothead*: Endurance +1; more stress; clashes with *Methodical*.
+    - *Optimist*: much less stress.
+    - *Gentle*: heals others faster.
+  - Each scout and survivor now has a second visible trait. Existing saves receive it on load.
+  - **Mood** at a glance (content, steady, tense, breaking), from stress and bond.
+  - **Habits:** small details about each scout, revealed as the bond grows ("Noticed: …").
+  - **Bunker chatter:** every ~40 min, someone at home says something in their own voice. It depends on their mood, their task, and their friends or rivals.
+  - **Conversations:** 14 new per-scout ones, plus 4 about relationships:
+    - Friends talk about each other.
+    - Inseparables open up.
+    - Rivals complain.
+    - What you answer moves their affinity.
+  - Every voice has new phrase banks: tense, about a friend, about a rival, and per task.
+- **Interface:**
+  - **Status bar** under the top buttons: power used/available (or blackout), reserve, night, and supplies by short name (SCR, CMP, RAT…).
+  - **Expedition strip:** one line per scout out. It shows the zone, a progress bar and the estimated return time, or "waiting for orders" / "order on its way". The strip shows absolute times, so nothing ticks.
+  - **Badges** on the top buttons: [ RADIO •n ] with transmissions to decode, [ BUNKER ! ] on blackout, power cut or short filters, and [ CREW home/alive ].
+  - **Collapsible crew cards:**
+    - Collapsed: name, where they are, mood, stress and bond mini-bars.
+    - Expanded: stats, relations, habits and the rest. The actions are always visible.
+  - Subtle **phosphor glow** on the terminal text (a static text shadow, no animation).
+- Tests: 115 in total (4 new): mood, chatter (silence with nobody home, rivals named), and friend conversations with their affinity effect.
 
-### Notas
-- Sin probar en dispositivo.
-- APK release sin firmar: ~1,1 MB.
-- Los objetivos diarios y semanales se resuelven en `GameSession` (capa de datos) y todavía no tienen tests unitarios propios.
+### Content 6 → 7
+- Texts, trait names and voice phrases changed. Every ID stays the same, so saves remain compatible.
+- Format changes:
+  - `resources.json`: `shortName`.
+  - `scouts.json` / `survivors.json`: `habits`.
+  - `dialogues.json`: `requiresRelation` and the choice field `affinity`.
+  - `terminal.json`: `moods`.
+  - `balance.json`: `barks`.
 
-## [0.5.0] — Fase 4: Búnker — en verificación
+### Notes
+- Log lines already saved before this version stay in Spanish.
+- The Voice's story is still a **draft for review**.
+- Not tested on a device. Unsigned release APK: ~1.1 MB.
 
-App 0.5.0 (versionCode 500) · **DB 4 → 5** · **Contenido 4 → 5**
+## [0.6.0] — Phase 5: Content and polish — in verification
 
-Sin fecha de release: falta probarla en un dispositivo, incluida la actualización desde 0.4.0.
+App 0.6.0 (versionCode 600) · DB 5 (unchanged) · **Content 5 → 6**
 
-### Agregado
-- **Energía** (GDD §6.4): el generador da watts (7 en nivel 1, 17 en nivel 5) que se reparten con [−] [+] entre cinco consumidores:
-  - Filtros de aire: obligatorios, piden un watt más de noche según la hora del dispositivo. Si les falta, todos se estresan.
-  - Radio: menos ruido con los exploradores.
-  - Antena: sin potencia solo se alcanza la banda corta.
-  - Taller: velocidad de fabricación; sin potencia se pausa.
-  - Enfermería: curación y alivio de estrés.
-  - Si falta energía se corta primero lo de menor prioridad, y se avisa en el log.
-- **Reserva de energía:** se carga con los watts libres y fijar una señal en el dial la usa. Se puede recargar gastando una batería.
-- **Apagones:** se programan por día a partir de la seed. Bajan el generador 4 W durante 1 a 3 h.
-- **Incursiones** (GDD §5.3, versión "real" elegida):
-  - También se programan por día a partir de la seed. Su fuerza crece con el nivel de la antena: mientras más lejos se escucha, más llamás la atención.
-  - Los que están de guardia defienden con Aguante y Nervio.
-  - Si fallan o no hay guardia: roban el 30 % de dos materiales y lastiman a alguien (grave si la diferencia es grande). Nunca matan: la muerte requiere una orden del operador.
-- **Módulos** (GDD §7): generador, radio, taller (un puesto más por nivel y recetas nuevas), enfermería y literas (un explorador más por nivel), además de la antena. Los niveles altos piden piezas.
-- **Taller** (GDD §6.5): recetas de 2 a 10 min (`recipes.json`), en paralelo, una por puesto.
-  - Velocidad = potencia × (1 + 5 % del mejor Oficio de quien esté en la tarea Taller).
-  - Fabrica kits de repetidora (pasan de la radio al taller), piezas y equipo.
-- **Equipo** (`gear.json`), uno por explorador, que se pone o se saca con [EQUIPO]. Si el explorador muere, el equipo se pierde.
-  - Linterna: Ingenio +1.
-  - Mochila reforzada: +25 % de botín.
-  - Botiquín: la primera herida es un nivel menos grave, y se gasta.
-  - Chaleco acolchado: Aguante +2.
-  - Radio portátil: −40 % de ruido.
-- **Interfaz:** botón [ BÚNKER ] con energía, reserva, taller, módulos y defensa. Selector de recetas, selector de equipo y botón [EQUIPO] en la ficha. La barra superior tiene tres botones más compactos.
-- Tests: 107 en total (11 nuevos): reparto y cortes de energía, filtros de noche, eventos programados (iguales sin importar cómo se divide el catch-up), incursiones, taller, equipo y botiquín.
+No release date: still needs testing on a device.
 
-### Cambiado
-- Los kits de repetidora ya no se arman desde la radio: son una receta del taller.
-- El panel de radio muestra solo las repetidoras; los módulos pasaron al panel del búnker.
-- Las mejoras de antena de los niveles 4 y 5 piden piezas.
+### Added
+- **Long band:** Regional airport, The dam and North antenna, with 2 to 6 h expeditions. New survivors: Nilda (retired nurse, new "grandma" voice) and La Rusa (trucker).
+- **40 events** (previously 15), spread across all bands. They include the 5 for personal missions and the Voice's relay.
+- **Personal missions** (GDD §5.2): Mara, Tano, Irene, Beto and Lucho each have one.
+  - At bond level 4 they ask for it in a conversation, and it appears as a mission when dispatching that scout only.
+  - Each plays its own situation. Completing it gives +15 bond, −30 stress, the *At peace* trait, a memory and a few words in their voice.
+- **Relationships between scouts** (GDD §5.3): affinity can now be negative.
+  - Clashing traits (Reckless vs Methodical, Distrustful vs Loyal) cause friction when sharing a task.
+  - Affinity ≥ 50 makes friends, ≥ 80 inseparables, ≤ −40 rivals.
+  - Sharing a task with a friend calms; with a rival, it stresses. The card shows relationships.
+- **The Voice, chapter 1** (GDD §8), a **DRAFT for review** (`story.json`, marked `_draft`):
+  - Five fragments: three ciphered transmissions (short, medium and long band), the police archive or Irene's lab, and the ECHO-7 relay at the North antenna.
+  - With all five, the Voice speaks to the operator and the chapter closes.
+  - The story in one line: the Silence began at 3:10 with the activation of an alert network called Project Echo; someone keeps the Echo-7 station running and knows the bunker is listening.
+- **Full Journal** (GDD §6.6): the fallen (with their story and last transmission), the Voice (found and missing fragments, with the ending), decoded transmissions and known zones.
+- **Sound synthesized in code**, with no files or dependencies:
+  - Static when moving the dial, louder far from a signal.
+  - A click when locking on.
+  - Teletype clatter.
+  - A beep on urgent messages.
 
-### Notas de diseño
-- Los efectos de la energía en un intervalo de catch-up usan el reparto vigente al final del intervalo. Es una aproximación: no se simula minuto a minuto.
+  Recordings can replace it later.
+- **Haptics** on urgent messages, in addition to the dial vibration.
+- **Settings** (GDD §9): the `sound` and `notifications` commands turn them on or off. They are stored on the device and are not part of the save.
+- **Goals:**
+  - Daily: decode 1 transmission, complete 2 expeditions, lock 5 signals.
+  - Weekly: 10 expeditions.
+  - They reset at local midnight, give resources and show in [BUNKER].
+- Tests: 111 in total. They include personal missions, reachable fragments, the lab fragment and trait rivalries.
+
+### Changed
+- Content validation requires at least 40 events, all reachable from a zone or a personal mission.
+- The catch-up test covers 12 h, to include long-band expeditions.
+
+### Notes
+- Not tested on a device.
+- Unsigned release APK: ~1.1 MB.
+- Daily and weekly goals are resolved in `GameSession` (data layer) and don't have their own unit tests yet.
+
+## [0.5.0] — Phase 4: Bunker — in verification
+
+App 0.5.0 (versionCode 500) · **DB 4 → 5** · **Content 4 → 5**
+
+No release date: still needs testing on a device, including the upgrade from 0.4.0.
+
+### Added
+- **Power** (GDD §6.4): the generator gives watts (7 at level 1, 17 at level 5), shared with [−] [+] among five consumers:
+  - Air filters: mandatory; they ask for one more watt at night, by device time. If they run short, everyone gets stressed.
+  - Radio: less noise with the scouts.
+  - Antenna: without power only the short band is reachable.
+  - Workshop: crafting speed; without power it pauses.
+  - Infirmary: healing and stress relief.
+  - When power runs short, the lowest priority is cut first, and the log says so.
+- **Power reserve:** charged by spare watts. Locking a signal on the dial uses it. It can be recharged by spending a battery.
+- **Blackouts:** scheduled per day from the seed. They lower the generator by 4 W for 1 to 3 h.
+- **Raids** (GDD §5.3, the "real" version was chosen):
+  - Also scheduled per day from the seed. Their strength grows with the antenna level: the farther you listen, the more attention you draw.
+  - Whoever is on guard defends with Endurance and Nerve.
+  - If they fail or nobody is on guard, raiders steal 30 % of two materials and hurt someone (badly if the gap is large). They never kill: death requires an order from the operator.
+- **Modules** (GDD §7):
+  - Generator.
+  - Radio.
+  - Workshop: one more station per level, and new recipes.
+  - Infirmary.
+  - Bunks: one more scout per level.
+  - The antenna.
+
+  Higher levels ask for parts.
+- **Workshop** (GDD §6.5): 2 to 10 min recipes (`recipes.json`), in parallel, one per station.
+  - Speed = power × (1 + 5 % of the best Craft among those on the Workshop task).
+  - It makes relay kits (moved from the radio to the workshop), parts and gear.
+- **Gear** (`gear.json`), one piece per scout, put on or taken off with [GEAR]. If the scout dies, the gear is lost.
+  - Flashlight: Wits +1.
+  - Reinforced backpack: +25 % loot.
+  - First-aid kit: the first wound is one level less severe, and the kit is used up.
+  - Padded vest: Endurance +2.
+  - Portable radio: −40 % noise.
+- **Interface:**
+  - [ BUNKER ] button with power, reserve, workshop, modules and defense.
+  - Recipe picker, gear picker, and a [GEAR] button on the card.
+  - The top bar has three more compact buttons.
+- Tests: 107 in total (11 new):
+  - Power sharing and cuts, and night filters.
+  - Scheduled events, the same however catch-up is split.
+  - Raids, the workshop, gear and the first-aid kit.
+
+### Changed
+- Relay kits are no longer built from the radio: they are a workshop recipe.
+- The radio panel shows only relays; modules moved to the bunker panel.
+- Antenna upgrades at levels 4 and 5 ask for parts.
+
+### Design notes
+- Power effects over a catch-up interval use the power split in place at the end of the interval. It's an approximation: nothing is simulated minute by minute.
 
 ### DB 4 → 5
 - `scouts.gear_id`.
-- Tablas nuevas: `power`, `bunker_state` (reserva, último chequeo de eventos) y `craft_jobs`.
-- En las partidas existentes no hay incursiones ni apagones retroactivos, y la reserva arranca llena.
+- New tables: `power`, `bunker_state` (reserve, last event check) and `craft_jobs`.
+- Existing saves get no retroactive raids or blackouts, and the reserve starts full.
 
-### Notas
-- Sin probar en dispositivo.
-- APK release sin firmar: ~1,1 MB.
+### Notes
+- Not tested on a device.
+- Unsigned release APK: ~1.1 MB.
 
-## [0.4.0] — Fase 3: Radio activa y distancia — en verificación
+## [0.4.0] — Phase 3: Active radio and distance — in verification
 
-App 0.4.0 (versionCode 400) · **DB 3 → 4** · **Contenido 3 → 4**
+App 0.4.0 (versionCode 400) · **DB 3 → 4** · **Content 3 → 4**
 
-Sin fecha de release: falta probarla en un dispositivo, incluida la actualización desde 0.3.0.
+No release date: still needs testing on a device, including the upgrade from 0.3.0.
 
-### Agregado
-- **Bandas y distancia** (GDD §4.4): corta, media, larga y profunda, cada una con su ruido, retraso de órdenes, precisión del dial y mezcla de señales. Todo **[placeholder]** en `balance.json → bands`.
-  - Los reportes de zonas lejanas llegan cortados y a veces el hint de probabilidad se pierde en la estática. Si no se escuchó el "mala espina", no cuenta como aviso para la regla de muerte.
-  - En las bandas lejanas las órdenes tardan en llegar: 1 min en la media, 5 min en la larga. Si llegan después del plazo, el explorador ya decidió solo.
-- **Antena:** primer módulo del búnker. Subirla de nivel cuesta recursos y abre bandas: la media en nivel 2, la larga en nivel 4.
-- **Barrido de frecuencias** (GDD §6.1): dial de 0 a 999 por banda.
-  - Las señales están en posiciones que se derivan de la seed y rotan cada 4 h. El texto se aclara al acercarse y hay vibración al cruzar umbrales; [SINTONIZAR] fija la señal.
-  - Cada señal puede ser una zona nueva, un superviviente, una transmisión cifrada o un hallazgo raro: música, números, balizas.
-- **Descifrado** (GDD §6.2) con controles en pantalla:
-  - César: un dial de corrimiento con vista previa.
-  - Morse: un teclado de punto y raya armando letra por letra, con la tabla de referencia que se desbloquea con la primera transmisión ("manual de radio").
-  - Las recompensas son datos sobre una zona (un escondite, que da botín extra, o sus peligros, que mejoran las tiradas), lore guardado para el Diario, o recursos.
-- **Repetidoras:** kits que se arman con recursos y se instalan mandando a un explorador.
-  - Reducen ruido y retraso en su zona (×0,3) y extienden el alcance a la banda siguiente con un nivel menos de antena.
-  - Se desgastan 10 % por día, dejan de andar por debajo de 30 % y se reparan con otra misión.
-- **Misiones:** rescatar a un superviviente, instalar una repetidora o repararla. Solo cuentan si el explorador vuelve sin abortar.
-- **Supervivientes:**
-  - Beto: ex señalero, voz telegráfica en mayúsculas.
-  - Lucho: diecisiete años, voz de pibe.
-  - Se unen con confianza baja y tienen techos de stats más altos. Cada uno trae 2 diálogos propios.
-  - Límite de 5 exploradores vivos; la Fase 4 lo amplía con las literas.
-- **Asistente de radio:** la tarea ahora barre el dial sola, con una señal cada 6 h de trabajo.
-- **Banda media:** Hospital Municipal, Estación de trenes, Comisaría 3.ª y Barrio privado, más una zona corta oculta (Lavadero industrial). Seis eventos nuevos: jauría, saqueadores, gas, vagón, archivo y herido.
-- **Interfaz:** botón [ RADIO ] con selector de banda, dial, lectura, medidor de señal, transmisiones pendientes, antena y repetidoras. Panel de descifrado. El panel de despacho muestra las misiones disponibles y la banda, repetidora y datos de cada zona.
-- Tests: 96 en total (18 nuevos): cifrados, campo de señales, alcance, calidad de señal, repetidoras, retraso de órdenes, ruido, avisos perdidos, datos de escondite y misiones.
+### Added
+- **Bands and distance** (GDD §4.4):
+  - Short, medium, long and deep.
+  - Each has its own noise, order delay, dial precision and signal mix.
+  - All **[placeholder]** in `balance.json → bands`.
+  - Reports from far zones arrive broken up, and sometimes the odds hint is lost in the static. If the "bad feeling" wasn't heard, it doesn't count as a warning for the death rule.
+  - On far bands, orders take time to arrive: 1 min on medium, 5 min on long. If they arrive after the deadline, the scout has already decided alone.
+- **Antenna:** the first bunker module. Upgrading it costs resources and opens bands: medium at level 2, long at level 4.
+- **Frequency sweep** (GDD §6.1): a 0–999 dial per band.
+  - Signals sit at positions derived from the seed and rotate every 4 h.
+  - The text clears up as you get closer, with a vibration when crossing thresholds. [LOCK ON] locks the signal.
+  - Each signal can be:
+    - a new zone;
+    - a survivor;
+    - a ciphered transmission;
+    - a rare find: music, numbers, beacons.
+- **Decoding** (GDD §6.2) with on-screen controls:
+  - Caesar: a shift dial with a preview.
+  - Morse: a dot/dash keypad that builds letter by letter. The reference table unlocks with the first transmission (the "radio manual").
+  - Rewards:
+    - Zone intel: a stash, which gives extra loot, or its dangers, which improve rolls.
+    - Lore, kept for the Journal.
+    - Resources.
+- **Relays:** kits built from resources and installed by sending a scout.
+  - They reduce noise and delay in their zone (×0.3), and extend reach to the next band with one less antenna level.
+  - They wear 10 % per day, stop working below 30 %, and are repaired with another mission.
+- **Missions:** rescue a survivor, install a relay or repair it. They only count if the scout returns without aborting.
+- **Survivors:**
+  - Beto: former signalman, telegraph voice in capitals.
+  - Lucho: seventeen, kid voice.
+  - They join with low trust and have higher stat ceilings. Each brings 2 dialogues of their own.
+  - Limit of 5 living scouts; Phase 4 raises it with the bunks.
+- **Radio assistant:** the task now sweeps the dial on its own, with one signal every 6 h of work.
+- **Medium band:**
+  - Zones: Municipal hospital, Train station, Police station No. 3 and Gated community, plus a hidden short-band zone (Industrial laundry).
+  - Six new events: pack, looters, gas, wagon, archive and wounded.
+- **Interface:**
+  - [ RADIO ] button with a band selector, dial, readout and signal meter.
+  - The radio panel also lists pending transmissions, the antenna and relays.
+  - Decoding panel.
+  - The dispatch panel shows available missions, and each zone's band, relay and intel.
+- Tests: 96 in total (18 new):
+  - Ciphers, the signal field, reach and signal quality.
+  - Relays, order delay and noise.
+  - Lost hints, stash intel and missions.
 
-### Cambiado
-- Solo se pueden despachar exploradores a zonas conocidas y dentro del alcance.
-- `GameContent.starter()` busca también entre los supervivientes.
-- El test de comandos ya no depende de qué secciones exige `terminal.json`.
-- La barra superior muestra [ RADIO ] y [ EXPLORADORES ]; se quitó el título para dejar lugar.
+### Changed
+- Scouts can only be dispatched to known zones within reach.
+- `GameContent.starter()` also searches survivors.
+- The command test no longer depends on which sections `terminal.json` requires.
+- The top bar shows [ RADIO ] and [ SCOUTS ]; the title was removed to make room.
 
 ### DB 3 → 4
-- Tablas nuevas: `game_flags`, `known_zones`, `caught_signals`, `transmissions`, `intel`, `relays`, `rescue_targets`, `lore` y `modules`.
-- `expeditions`: columnas nuevas `mission_type`, `mission_target`, `signal_noise`, `order_delay_millis`, `cache_intel`, `danger_intel`, `aborted` y `lost_hints`.
-- En las partidas existentes, las zonas iniciales quedan como conocidas y la antena arranca en nivel 1.
+- New tables: `game_flags`, `known_zones`, `caught_signals`, `transmissions`, `intel`, `relays`, `rescue_targets`, `lore` and `modules`.
+- `expeditions`: new columns `mission_type`, `mission_target`, `signal_noise`, `order_delay_millis`, `cache_intel`, `danger_intel`, `aborted` and `lost_hints`.
+- In existing saves, the starting zones are known and the antenna starts at level 1.
 
-### Notas
-- Sin probar en dispositivo.
-- APK release sin firmar: ~1,0 MB.
+### Notes
+- Not tested on a device.
+- Unsigned release APK: ~1.0 MB.
 
-## [0.3.0] — Fase 2: Vida en el búnker — en verificación
+## [0.3.0] — Phase 2: Life in the bunker — in verification
 
-App 0.3.0 (versionCode 300) · **DB 2 → 3** · **Contenido 2 → 3**
+App 0.3.0 (versionCode 300) · **DB 2 → 3** · **Content 2 → 3**
 
-Sin fecha de release: falta probarla en un dispositivo, incluida la actualización desde 0.2.0.
+No release date: still needs testing on a device, including the upgrade from 0.2.0.
 
-### Agregado
-- **Vínculo** (GDD §5.2): relación personal con el operador, aparte de la confianza. Va de 0 a 100 en 5 niveles.
-  - Sube conversando, con regalos y dejando volver a quien lo pide.
-  - Baja si se ignora al explorador más de 48 h (−3 por día) o si se lo manda a una opción riesgosa que le daba mala espina.
-  - Desde el nivel 3: se revela el rasgo oculto, la voz cambia ("hermano", Irene pasa de usted a vos) y, si está en peligro, puede pedir volver.
-- **Conversaciones** (`dialogues.json`, 22 diálogos) que se juegan en el log, con las respuestas como botones:
-  - Por explorador: su historia, sus gustos, una confesión que revela su rasgo oculto y un pedido de consejo.
-  - Compartidas: charla de rutina, "¿tenés un minuto?" y conversaciones de duelo.
-  - Lo que se elige queda como recuerdo. El operador puede iniciar una charla por explorador cada 4 h; las que inicia el explorador vencen a las 12 h.
-- **Regalos:** 9 objetos personales (`items.json`) que aparecen en las expediciones según la zona.
-  - Cada explorador tiene gustos y disgustos ocultos que se descubren conversando o regalando. Lo que gusta: +15 de vínculo; lo que disgusta: −6.
-  - El explorador lleva encima los regalos que recibió.
-- **Tareas del búnker** (`tasks.json`), calculadas por tiempo transcurrido:
-  - Descanso: el estrés propio baja ×2,5.
-  - Enfermería: los demás curan ×1,5 y se calma el grupo.
-  - Cocina: baja el estrés del grupo.
-  - Taller: 3 de chatarra → 1 componente cada 2 h.
-  - Guardia y Asistente de radio: por ahora solo entrenan su stat; la radio además calma un poco al grupo.
-  - Entrenamiento: el que sabe más enseña, ×1,5.
-  - Todas entrenan un stat.
-- **Guía y especialización:** cuando un explorador llega a cierto stat, pide consejo y la respuesta le da una especialización permanente. Las opciones son Sombra, Rastreo, Puntería, Mecánica y Primeros auxilios.
-- **Afinidad entre exploradores** (mínima, oculta): sube al entrenar o compartir tarea. Decide quién sufre más una pérdida y a quién nombra un explorador al morir.
-- **Muerte completa** (GDD §5.5):
-  - Con vínculo alto y en peligro, el explorador pide volver y aparece la opción [Volvé al búnker].
-  - La última transmisión menciona el regalo que lleva, al compañero más cercano y algo que el operador le dijo.
-  - Después, los demás reciben estrés de duelo según su cercanía y a veces una cicatriz nueva (*Rencor* o *Miedo*). Uno o dos días más tarde hablan del muerto.
-  - Su tarea queda sin cubrir y su ficha queda atenuada en la lista.
-  - Sus objetos quedan en la zona y se recuperan volviendo a ella.
-- **Diario:** una entrada por cada caído, con su historia, sus recuerdos y la última transmisión completa.
-- **Interfaz:**
-  - La ficha del explorador muestra vínculo (■■□□□), tarea, gustos descubiertos y regalos que lleva.
-  - Botones [HABLAR] [REGALAR] [TAREA], que pasan a la línea de abajo en pantallas angostas.
-  - Botón [DIARIO] en el panel de exploradores.
-- Tests: 78 en total (23 nuevos): diálogos, tareas, regalos, duelo, pedido de volver, objetos encontrados, últimas palabras y regresión del estrés.
+### Added
+- **Bond** (GDD §5.2): a personal relationship with the operator, separate from trust. It goes from 0 to 100 over 5 levels.
+  - It rises by talking, with gifts, and by letting someone come back when they ask.
+  - It drops if the scout is ignored for more than 48 h (−3 per day), or is sent into a risky option they had a bad feeling about.
+  - From level 3:
+    - the hidden trait is revealed;
+    - the voice changes ("brother", and Irene drops the formal address);
+    - when in danger, the scout can ask to come back.
+- **Conversations** (`dialogues.json`, 22 dialogues) played in the log, with answers as buttons:
+  - Per scout: their story, their tastes, a confession that reveals their hidden trait, and a request for advice.
+  - Shared: routine chat, "got a minute?" and grief conversations.
+  - What you choose stays as a memory. The operator can start one chat per scout every 4 h; the ones a scout starts expire after 12 h.
+- **Gifts:** 9 personal items (`items.json`) that turn up on expeditions depending on the zone.
+  - Each scout has hidden likes and dislikes, discovered by talking or giving gifts. A liked gift gives +15 bond; a disliked one, −6.
+  - The scout carries the gifts they received.
+- **Bunker tasks** (`tasks.json`), computed from elapsed time:
+  - Rest: own stress drops ×2.5.
+  - Infirmary: others heal ×1.5 and the group calms.
+  - Kitchen: lowers group stress.
+  - Workshop: 3 scrap → 1 component every 2 h.
+  - Guard and Radio assistant: for now they only train their stat; the radio also calms the group a little.
+  - Training: whoever knows more teaches, ×1.5.
+  - Every task trains a stat.
+- **Guidance and specialization:** when a scout reaches a certain stat, they ask for advice, and the answer gives a permanent specialization. The options are Shadow, Tracking, Marksman, Mechanics and First aid.
+- **Affinity between scouts** (minimal, hidden): it rises by training or sharing a task. It decides who suffers a loss more, and whom a scout names when dying.
+- **Full death** (GDD §5.5):
+  - With high bond and in danger, the scout asks to come back, and the [Come back to the bunker] option appears.
+  - The last transmission mentions the gift they carry, the closest companion and something the operator told them.
+  - Afterwards, the others get grief stress according to their closeness, and sometimes a new scar (*Grudge* or *Fear*). A day or two later they talk about the dead.
+  - Their task goes uncovered and their card stays dimmed in the list.
+  - Their items stay in the zone and are recovered by going back there.
+- **Journal:** one entry per fallen scout, with their story, memories and the full last transmission.
+- **Interface:**
+  - The scout card shows bond (■■□□□), task, discovered tastes and carried gifts.
+  - [TALK] [GIFT] [TASK] buttons, which wrap onto the next line on narrow screens.
+  - [JOURNAL] button in the scouts panel.
+- Tests: 78 in total (23 new):
+  - Dialogues, tasks and gifts.
+  - Grief, the request to come back and found items.
+  - Last words, and the stress regression.
 
-### Corregido
-- **El estrés no bajaba con la app abierta.** Cada catch-up redondeaba la recuperación hacia abajo, y con catch-ups cada pocos segundos (expediciones activas) se perdía toda. Ahora la fracción se acumula (`stress_carry`), igual que la XP de las tareas.
+### Fixed
+- **Stress didn't drop with the app open.** Each catch-up rounded the recovery down, and with catch-ups every few seconds (active expeditions) all of it was lost. The fraction now accumulates (`stress_carry`), like task XP.
 
-### Cambiado
-- `ZoneAdapter` fue reemplazado por un `PickerAdapter` genérico que se usa para zonas, regalos, tareas y el Diario.
-- El panel de decisiones muestra tanto órdenes de situaciones como respuestas de conversaciones; las situaciones van primero.
-- `Migrations` ahora es una lista de pasos (`STEPS`) y `MigrationsTest` verifica cada paso contra los esquemas exportados.
-- Contenido v3: archivos nuevos `items.json`, `tasks.json` y `dialogues.json`. Se agregaron frases nuevas a las voces, rasgos de especialización y cicatriz, y gustos a los exploradores. `balance.json` suma las secciones `bond`, `grief` y `affinity`.
+### Changed
+- `ZoneAdapter` was replaced by a generic `PickerAdapter`, used for zones, gifts, tasks and the Journal.
+- The decision panel shows both situation orders and conversation answers; situations go first.
+- `Migrations` is now a list of steps (`STEPS`), and `MigrationsTest` checks each step against the exported schemas.
+- Content v3:
+  - New files: `items.json`, `tasks.json` and `dialogues.json`.
+  - New voice phrases, specialization and scar traits, and scout tastes.
+  - `balance.json` adds the `bond`, `grief` and `affinity` sections.
 
 ### DB 2 → 3
-- `scouts`: columnas nuevas `bond`, `task_id`, `last_talk_at_millis`, `last_initiated_at_millis`, `last_decay_at_millis`, `task_xp_carry`, `task_output_carry`, `stress_carry`, `died_at_millis` y `died_zone_id`.
-- `expeditions`: columna nueva `retreat_offered`.
-- Tablas nuevas: `scout_flags`, `conversations`, `items`, `affinity` y `expedition_items`.
-- En las partidas existentes, los exploradores arrancan con vínculo 0 y sin tarea.
+- `scouts`: new columns `bond`, `task_id`, `last_talk_at_millis`, `last_initiated_at_millis`, `last_decay_at_millis`, `task_xp_carry`, `task_output_carry`, `stress_carry`, `died_at_millis` and `died_zone_id`.
+- `expeditions`: new column `retreat_offered`.
+- New tables: `scout_flags`, `conversations`, `items`, `affinity` and `expedition_items`.
+- In existing saves, scouts start with 0 bond and no task.
 
-### Notas
-- Sin probar en dispositivo.
-- APK release sin firmar: ~1,0 MB.
+### Notes
+- Not tested on a device.
+- Unsigned release APK: ~1.0 MB.
 
-## [0.2.0] — Fase 1: Expediciones — en verificación
+## [0.2.0] — Phase 1: Expeditions — in verification
 
-App 0.2.0 (versionCode 200) · **DB 1 → 2** · **Contenido 1 → 2**
+App 0.2.0 (versionCode 200) · **DB 1 → 2** · **Content 1 → 2**
 
-Sin fecha de release: falta probarla en un dispositivo, incluida la actualización desde 0.1.0 (migración de DB).
+No release date: still needs testing on a device, including the upgrade from 0.1.0 (DB migration).
 
-### Agregado
-- **Exploradores** (GDD §5.1): 3 iniciales (Mara, Tano, Irene) definidos en `scouts.json`. Cada uno tiene 5 stats con base y techo propios, rasgos visibles, un rasgo oculto que ya tiene efecto aunque no se vea, estrés, confianza y heridas.
-- **Crecimiento por uso:** cada tirada da XP al stat que se usó y los stats suben hasta su techo.
-- **Recuperación en el búnker** calculada por tiempo transcurrido, sin ticks: el estrés baja y las heridas curan un nivel cada 4 h.
-- **Rasgos** (`traits.json`): Imprudencia, Desconfianza, Pies ligeros, Método, Miedo, Lealtad, Sangre fría. Modifican stats, tiradas, botín, duración, estrés, obediencia y cómo decide el explorador cuando está solo.
-- **Estilos de voz** (`voices.json`): minúsculas, jerga y formal. Cada uno tiene su transformación de texto y sus bancos de frases.
-- **4 zonas de Banda Corta** (`zones.json`) y **9 situaciones** (`events.json`), con 2–3 opciones cada una.
-- **Expediciones** (GDD §4):
-  - El timeline se genera completo al despachar, con su propia seed. Las duraciones son relativas: esperar una decisión corre todo lo que viene después.
-  - Las probabilidades nunca se muestran: el explorador las dice en su voz, en tres niveles ("esto me da mala espina").
-  - Si el operador no responde en 15 min, el explorador decide según sus rasgos.
-  - Un explorador con poca confianza y un rasgo de desobediencia puede ignorar la orden.
-  - Una herida crítica lo manda de vuelta al búnker.
-  - El botín que trae se suma a las reservas del búnker al volver.
-- **Catch-up** (GDD §4.3): al abrir la app se resuelve todo lo vencido, en orden, y se vuelca al log sin efecto de tipeo. Con la app abierta, un único timer despierta el juego en el próximo evento, sin polling.
-- **Muerte simple** (anticipo de la Fase 2):
-  - Es permanente.
-  - La última transmisión sale con cortes de señal y menciona un recuerdo o la última orden. Después, "— señal perdida —".
-  - Se guarda como recuerdo `LAST_WORDS` para el futuro Diario.
-- **Recuerdos** (GDD §5.4): situaciones que marcaron al explorador, órdenes riesgosas o que salieron mal, y últimas palabras. Se conservan aunque el explorador muera.
-- **Interfaz:**
-  - Botón [ EXPLORADORES ] que abre el panel: ficha con stats en barras (■■■□□), estado, estrés, confianza, rasgos y bio.
-  - Desde la ficha se despacha y se elige la zona.
-  - Panel de decisión con las opciones como botones y la hora límite.
-  - El comando `estado` ahora lista exploradores y reservas.
-- **Notificaciones** (WorkManager 2.9.1):
-  - Al pasar la app a segundo plano se agenda, por expedición, el próximo momento notable (situación o regreso). Ese momento se calcula del timeline guardado, sin simular nada.
-  - El worker solo publica un texto ya armado en la voz del explorador. Al volver a la app se cancelan.
-  - El permiso se pide en el primer despacho.
-- `GameSession`: carga la partida una vez y aplica cada paso (catch-up, despacho, orden) en una sola transacción de Room.
-- `ContentValidator`: chequea las referencias entre archivos de contenido (rasgos, voces, eventos, recursos, stats) y lista todos los problemas juntos.
-- Tests: 55 en total. Incluyen:
-  - Catch-up de una vez = catch-up paso a paso, en todas las zonas y con muchas seeds.
-  - Ninguna muerte sin aviso.
-  - Los exploradores que deciden solos nunca mueren.
-  - Las notificaciones predicen exactamente cuándo pasa cada cosa.
-  - La migración 1→2 coincide con los esquemas exportados por Room.
+### Added
+- **Scouts** (GDD §5.1): 3 starters (Mara, Tano, Irene) defined in `scouts.json`. Each one has:
+  - 5 stats with their own base and ceiling;
+  - visible traits, and a hidden trait that already has an effect while unseen;
+  - stress, trust and wounds.
+- **Growth through use:** each roll gives XP to the stat used, and stats rise up to their ceiling.
+- **Recovery in the bunker**, computed from elapsed time with no ticks: stress drops and wounds heal one level every 4 h.
+- **Traits** (`traits.json`): Reckless, Distrustful, Light feet, Methodical, Fear, Loyalty, Cold blood. They modify:
+  - stats, rolls and loot;
+  - duration and stress;
+  - obedience, and how the scout decides alone.
+- **Voice styles** (`voices.json`): lowercase, slang and formal. Each has its own text transformation and phrase banks.
+- **4 Short Band zones** (`zones.json`) and **9 situations** (`events.json`), with 2–3 options each.
+- **Expeditions** (GDD §4):
+  - The whole timeline is generated at dispatch, with its own seed. Durations are relative: waiting for a decision pushes back everything after it.
+  - Odds are never shown: the scout says them in their own voice, at three levels ("I've got a bad feeling about this").
+  - If the operator doesn't answer within 15 min, the scout decides according to their traits.
+  - A scout with low trust and a disobedience trait may ignore the order.
+  - A critical wound sends them back to the bunker.
+  - The loot they bring is added to the bunker's stores on return.
+- **Catch-up** (GDD §4.3):
+  - On opening the app, everything due is resolved in order and dumped into the log, without the typing effect.
+  - With the app open, a single timer wakes the game at the next event, with no polling.
+- **Simple death** (a preview of Phase 2):
+  - It is permanent.
+  - The last transmission comes through with signal drops and mentions a memory or the last order, then "— signal lost —".
+  - It is kept as a `LAST_WORDS` memory for the future Journal.
+- **Memories** (GDD §5.4): situations that marked the scout, risky orders or ones that went wrong, and last words. They are kept even if the scout dies.
+- **Interface:**
+  - [ SCOUTS ] button that opens the panel: a card with stats as bars (■■■□□), status, stress, trust, traits and bio.
+  - From the card you dispatch and pick the zone.
+  - A decision panel with options as buttons and the deadline.
+  - The `status` command now lists scouts and stores.
+- **Notifications** (WorkManager 2.9.1):
+  - When the app goes to the background, the next notable moment (situation or return) is scheduled per expedition. That moment is computed from the saved timeline, without simulating anything.
+  - The worker only posts a ready-made text in the scout's voice. Notifications are cancelled when you return to the app.
+  - The permission is requested on the first dispatch.
+- `GameSession`: loads the save once and applies each step (catch-up, dispatch, order) in a single Room transaction.
+- `ContentValidator`: checks the references between content files (traits, voices, events, resources, stats) and lists all problems together.
+- Tests: 55 in total. They include:
+  - One-shot catch-up = step-by-step catch-up, in every zone and with many seeds.
+  - No death without a warning.
+  - Scouts who decide alone never die.
+  - Notifications predict exactly when each thing happens.
+  - The 1→2 migration matches the schemas exported by Room.
 
-### Reglas de muerte (decisión de diseño)
-- Para que un explorador muera hacen falta **aviso + orden del operador**.
-- Aviso: herida grave o más, estrés ≥ 70, o que el explorador haya dicho que la opción le daba mala espina.
-- Si el explorador decidió solo (timeout o desobediencia), puede herirse pero no morir (GDD §4.2: ausentarse no castiga duro).
-- Un fallo letal sin aviso deja la herida que indique el resultado, y esa herida es el aviso para la próxima.
+### Death rules (design decision)
+- A scout dying requires **a warning + an order from the operator**.
+- Warning: a severe wound or worse, stress ≥ 70, or the scout having said they had a bad feeling about the option.
+- If the scout decided alone (timeout or disobedience), they can be wounded but not die (GDD §4.2: being away doesn't punish hard).
+- A lethal failure without warning leaves the wound the outcome indicates, and that wound is the warning for next time.
 
-### Cambiado
-- `LogLine` ahora tiene `scoutId` (opcional), para filtrar el log por explorador más adelante.
-- Contenido v2: `terminal.json` suma `statNames`, `scoutStatus`, `injuries` y los textos de expedición. `balance.json` suma las secciones `scouts` y `checks`.
+### Changed
+- `LogLine` now has an optional `scoutId`, to filter the log by scout later.
+- Content v2:
+  - `terminal.json` adds `statNames`, `scoutStatus`, `injuries` and the expedition texts.
+  - `balance.json` adds the `scouts` and `checks` sections.
 
 ### DB 1 → 2
-- Tablas nuevas: `scouts`, `scout_stats`, `scout_traits`, `memories`, `expeditions`, `expedition_segments`, `expedition_loot`, `resources`.
-- Columnas nuevas: `log_lines.scout_id` y `game_state.content_version` (por defecto 1).
-- Las partidas existentes reciben los 3 exploradores iniciales al cargar.
+- New tables: `scouts`, `scout_stats`, `scout_traits`, `memories`, `expeditions`, `expedition_segments`, `expedition_loot`, `resources`.
+- New columns: `log_lines.scout_id` and `game_state.content_version` (default 1).
+- Existing saves receive the 3 starting scouts on load.
 
 ### Balance
-Todo es **[placeholder]** y está en `balance.json`. Resultado de 1000 simulaciones por explorador y zona, sin intervención del operador:
+Everything is **[placeholder]** and lives in `balance.json`. The table shows 1000 simulations per scout and zone, with no operator input:
 
-| | Almacén | Estación | Farmacia | Escuela |
+| | Warehouse | Station | Pharmacy | School |
 |---|---|---|---|---|
-| Mara (heridos / críticos) | 13% / 0% | 0% / 0% | 28% / 2% | 35% / 4% |
+| Mara (wounded / critical) | 13% / 0% | 0% / 0% | 28% / 2% | 35% / 4% |
 | Tano | 41% / 0% | 34% / 0% | 61% / 8% | 68% / 15% |
 | Irene | 0% / 0% | 8% / 0% | 20% / 0% | 22% / 0% |
 
-Muertes sin intervención: 0%. Botín: 3–5 unidades por expedición. Tano sale lastimado seguido porque es imprudente, a propósito.
+- Deaths without intervention: 0%.
+- Loot: 3–5 units per expedition.
+- Tano gets hurt often because he's reckless, on purpose.
 
-### Notas
-- Sin probar en dispositivo: no había emulador ni teléfono disponible.
-- La migración se verifica contra los esquemas exportados; un test instrumentado con `MigrationTestHelper` queda pendiente hasta tener dispositivo.
-- APK release sin firmar: ~0,9 MB.
+### Notes
+- Not tested on a device: no emulator or phone was available.
+- The migration is checked against the exported schemas. An instrumented test with `MigrationTestHelper` is pending until there is a device.
+- Unsigned release APK: ~0.9 MB.
 
-## [0.1.0] — Fase 0: Esqueleto — en verificación
+## [0.1.0] — Phase 0: Skeleton — in verification
 
-App 0.1.0 (versionCode 100) · DB 1 · Contenido 1
+App 0.1.0 (versionCode 100) · DB 1 · Content 1
 
-Sin fecha de release todavía: falta probarla en un dispositivo o emulador. Cuando se apruebe, se le pone fecha y se crea el tag `v0.1.0`.
+No release date yet: it still needs testing on a device or emulator. Once approved, it gets a date and the `v0.1.0` tag.
 
-### Agregado
-- Proyecto Android nativo: Java 17, Views + ViewBinding, minSdk 26, compile/targetSdk 35, Gradle 8.11.1, AGP 8.7.2.
-- Catálogo de versiones de dependencias en `gradle/libs.versions.toml`: Room 2.6.1, Hilt 2.52, Lifecycle 2.8.7, Gson 2.11.0, RecyclerView, ConstraintLayout.
-- Versión de la app centralizada en `version.properties`; el `versionCode` se calcula solo.
-- `core/GameClock` (interfaz inyectable) y `SystemGameClock`.
-- `core/GameRandom`: PRNG SplitMix64 determinista; todo su estado es un `long` que se persiste.
-- `core/TextTemplate` (placeholders `{clave}`) y `core/Ids` (UUID).
-- `domain/`: `LogLine`/`LogChannel`, modelos de contenido (`Balance`, `TerminalText`), `ElapsedFormatter`, `CommandInterpreter`, `GameState`.
-- Room v1: tablas `log_lines` (seq local + UUID global) y `game_state` (fila única: operador, seed y estado del RNG, timestamps). El esquema se exporta a `app/schemas/`; las migraciones van en `data/db/Migrations`, sin fallback destructivo.
-- Carga de contenido JSON (`assets/content/balance.json`, `terminal.json`): se parsea una vez, se valida y queda cacheada.
-- `balance.json` con todos los **[placeholder]** del GDD: timeout de situaciones, bandas, niveles de vínculo, rotación de señales, tiempos de taller, tope de anuncios.
-- Pantalla de terminal: log en `RecyclerView` (`ListAdapter` + `DiffUtil` + IDs estables), ventana de 200 líneas en memoria y paginado hacia atrás desde Room.
-- Efecto máquina de escribir: un solo `Handler` y solo para la línea activa; tocar el log completa la línea. Al pasar a segundo plano, la línea se completa.
-- Scanlines CRT estáticas (shader con bitmap repetido, sin animación), paleta ámbar `#FFB000`, ícono adaptativo.
-- Secuencia de arranque en la primera partida; al volver, mensaje de reconexión con el tiempo de ausencia, elegido con el RNG persistido (base del catch-up).
-- Comandos de terminal definidos en JSON: `ayuda` y `estado`.
-- Ejecutor de juego de un solo hilo: toda la lógica y el acceso a Room corren ahí, en orden.
-- Tests unitarios (23): `GameRandom`, `TextTemplate`, `ElapsedFormatter`, `CommandInterpreter`, validación de los JSON incluidos en la app.
+### Added
+- Native Android project: Java 17, Views + ViewBinding, minSdk 26, compile/targetSdk 35, Gradle 8.11.1, AGP 8.7.2.
+- Dependency version catalog in `gradle/libs.versions.toml`: Room 2.6.1, Hilt 2.52, Lifecycle 2.8.7, Gson 2.11.0, RecyclerView, ConstraintLayout.
+- App version centralized in `version.properties`; `versionCode` is computed automatically.
+- Core utilities:
+  - `core/GameClock` (injectable interface) and `SystemGameClock`.
+  - `core/GameRandom`: a deterministic SplitMix64 PRNG whose whole state is one persisted `long`.
+  - `core/TextTemplate` (`{key}` placeholders) and `core/Ids` (UUID).
+- `domain/`: `LogLine`/`LogChannel`, content models (`Balance`, `TerminalText`), `ElapsedFormatter`, `CommandInterpreter`, `GameState`.
+- Room v1:
+  - Tables `log_lines` (local seq + global UUID) and `game_state` (single row: operator, seed and RNG state, timestamps).
+  - The schema is exported to `app/schemas/`.
+  - Migrations go in `data/db/Migrations`, with no destructive fallback.
+- JSON content loading (`assets/content/balance.json`, `terminal.json`): parsed once, validated and cached.
+- `balance.json` with every **[placeholder]** from the GDD: situation timeout, bands, bond levels, signal rotation, workshop times, ad cap.
+- Terminal screen:
+  - The log is a `RecyclerView` (`ListAdapter` + `DiffUtil` + stable IDs).
+  - It keeps a 200-line window in memory and pages backwards from Room.
+- Typewriter effect: a single `Handler`, only for the active line. Tapping the log completes the line, and going to the background completes it too.
+- Static CRT scanlines (repeated bitmap shader, no animation), amber palette `#FFB000`, adaptive icon.
+- Boot sequence on the first game. On return, a reconnection message with the time away, chosen with the persisted RNG (the basis of catch-up).
+- Terminal commands defined in JSON: `help` and `status`.
+- Single-thread game executor: all logic and Room access run there, in order.
+- Unit tests (23): `GameRandom`, `TextTemplate`, `ElapsedFormatter`, `CommandInterpreter`, validation of the bundled JSON.
 
-### Cambiado
-- `GDD.md` se movió a `docs/GDD.md`.
+### Changed
+- `GDD.md` moved to `docs/GDD.md`.
 
-### Notas
-- APK release sin firmar: ~0,7 MB (objetivo < 15 MB).
-- Lint muestra versiones más nuevas de AGP, Room y Lifecycle. Se usan las que ya estaban en la caché local; actualizar es una decisión aparte.
+### Notes
+- Unsigned release APK: ~0.7 MB (target < 15 MB).
+- Lint reports newer versions of AGP, Room and Lifecycle. The project uses the ones already in the local cache; upgrading is a separate decision.
 
 [Unreleased]: #unreleased
-[0.6.0]: #060--fase-5-contenido-y-pulido--en-verificación
-[0.5.0]: #050--fase-4-búnker--en-verificación
-[0.4.0]: #040--fase-3-radio-activa-y-distancia--en-verificación
-[0.3.0]: #030--fase-2-vida-en-el-búnker--en-verificación
-[0.2.0]: #020--fase-1-expediciones--en-verificación
-[0.1.0]: #010--fase-0-esqueleto--en-verificación
+[0.6.1]: #061--english-personalities-and-interface--in-verification
+[0.6.0]: #060--phase-5-content-and-polish--in-verification
+[0.5.0]: #050--phase-4-bunker--in-verification
+[0.4.0]: #040--phase-3-active-radio-and-distance--in-verification
+[0.3.0]: #030--phase-2-life-in-the-bunker--in-verification
+[0.2.0]: #020--phase-1-expeditions--in-verification
+[0.1.0]: #010--phase-0-skeleton--in-verification

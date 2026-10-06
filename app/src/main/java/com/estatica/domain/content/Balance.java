@@ -18,6 +18,25 @@ public final class Balance {
     private Radio radio;
     private java.util.List<ModuleDef> modules;
     private EnergyDef energy;
+    private Barks barks;
+
+    public Barks getBarks() {
+        return barks;
+    }
+
+    /** Ambient chatter in the bunker. */
+    public static final class Barks {
+        private int intervalMinutes;
+        private double chance;
+
+        public int getIntervalMinutes() {
+            return intervalMinutes;
+        }
+
+        public double getChance() {
+            return chance;
+        }
+    }
 
     public int getContentVersion() {
         return contentVersion;

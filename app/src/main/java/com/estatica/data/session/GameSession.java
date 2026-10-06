@@ -114,6 +114,7 @@ public final class GameSession {
     private DialogueEngine dialogues;
     private GiftRules gifts;
     private GriefRules grief;
+    private com.estatica.domain.scouts.BarkRules barks;
     private com.estatica.domain.state.GameState state;
     private GameRandom random;
     private long lastSeenAtMillis;
@@ -188,7 +189,31 @@ public final class GameSession {
         engine = new ExpeditionEngine(content);
         rules = engine.rules();
         bunker = new BunkerRules(content, rules);
-        dialogues = new DialogueEngine(content, rules);
+        dialogues = new DialogueEngine(content, rules, new DialogueEngine.Relations() {
+            @Override
+            public Scout find(Scout scout, String kind) {
+                for (Scout other : scouts.values()) {
+                    if (other == scout || !other.isAlive()) {
+                        continue;
+                    }
+                    String relation = bunker.relationship(affinities, scout, other);
+                    boolean match = "friend".equals(kind)
+                            ? "friends".equals(relation) || "inseparable".equals(relation)
+                            : "inseparable".equals(kind) ? "inseparable".equals(relation)
+                            : "rivals".equals(relation);
+                    if (match) {
+                        return other;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public void adjust(Scout a, Scout b, double delta) {
+                affinities.add(a.getId(), b.getId(), delta);
+            }
+        });
+        barks = new com.estatica.domain.scouts.BarkRules(content, rules);
         gifts = new GiftRules(content, rules);
         grief = new GriefRules(content, rules);
         state = gameStateRepository.loadOrCreate();
@@ -209,6 +234,13 @@ public final class GameSession {
         }
         for (Scout scout : loaded) {
             scouts.put(scout.getId(), scout);
+            ScoutTemplate template = content.starter(scout.getTemplateId());
+            if (template != null) {
+                // Content updates may give a template new traits: older saves catch up.
+                for (String trait : template.getTraits()) {
+                    rules.addTrait(scout, trait);
+                }
+            }
         }
         for (Expedition expedition : expeditionRepository.loadActive()) {
             active.put(expedition.getId(), expedition);
@@ -301,7 +333,7 @@ public final class GameSession {
         return value;
     }
 
-    /** "Mara (en el búnker), Tano (afuera)…" for terminal texts. */
+    /** "Mara (in the bunker), Tano (out)…" for terminal texts. */
     public String describeScouts() {
         List<String> parts = new ArrayList<>();
         for (Scout s : scouts.values()) {
@@ -474,6 +506,7 @@ public final class GameSession {
 
         expireConversations(step);
         maybeStartConversation(step);
+        maybeBark(step);
     }
 
     /** GDD §5.5: what a dying scout can mention. */
@@ -494,7 +527,7 @@ public final class GameSession {
         return new ExpeditionEngine.DeathContext(carried, companion != null ? companion.getName() : null);
     }
 
-    /** GDD §5.5 "después": belongings stay in the zone, the others grieve, the task is left. */
+    /** GDD §5.5 "afterwards": belongings stay in the zone, the others grieve, the task is left. */
     private void afterDeath(Scout dead, String zoneId, Step step) {
         dead.getLife().setGearId(null);
         for (ItemInstance item : items.values()) {
@@ -529,7 +562,28 @@ public final class GameSession {
             vars.put("dead", owner != null ? owner.getName() : "?");
             step.system(content.getTerminal().getBunker().getItemRecovered(), vars, finder);
             step.memories.add(Memory.create(finder.getId(), Memory.Type.EVENT,
-                    TextTemplate.format("{item} de {dead}", vars), item.getItemId(), step.now));
+                    TextTemplate.format(content.getTerminal().getBunker().getRecoveredMemory(), vars),
+                    item.getItemId(), step.now));
+        }
+    }
+
+    /** Ambient chatter: now and then, someone in the bunker says something. */
+    private void maybeBark(Step step) {
+        Balance.Barks config = content.getBalance().getBarks();
+        double last = value("last_bark");
+        if (last <= 0) {
+            setValue("last_bark", step.now, step);
+            return;
+        }
+        if (step.now - last < config.getIntervalMinutes() * 60_000L) {
+            return;
+        }
+        setValue("last_bark", step.now, step);
+        if (random.chance(config.getChance())) {
+            LogLine line = barks.bark(scouts.values(), affinities, random, step.now);
+            if (line != null) {
+                step.lines.add(line);
+            }
         }
     }
 
@@ -549,7 +603,7 @@ public final class GameSession {
         }
     }
 
-    /** At most one scout starts a conversation per step ("¿tenés un minuto?"). */
+    /** At most one scout starts a conversation per step ("got a minute?"). */
     private void maybeStartConversation(Step step) {
         long cooldown = content.getBalance().getBond().getInitiatedCooldownHours() * HOUR;
         for (Scout scout : scouts.values()) {
@@ -854,7 +908,7 @@ public final class GameSession {
         step.system(content.getTerminal().getRadio().getResourcesFound(), vars, null);
     }
 
-    /** "3 de chatarra, 2 de componentes". */
+    /** "3 scrap, 2 components". */
     private String describe(Map<String, Integer> amounts) {
         List<String> parts = new ArrayList<>();
         for (Map.Entry<String, Integer> e : new TreeMap<>(amounts).entrySet()) {
@@ -1323,7 +1377,7 @@ public final class GameSession {
                         gear.getDescription()));
             }
         }
-        return new SessionSnapshot.BaseView(goalViews(now), energy.watts(moduleLevel("generator")), g.available, g.used,
+        return new SessionSnapshot.BaseView(goalViews(now), !g.cut.isEmpty(), energy.watts(moduleLevel("generator")), g.available, g.used,
                 events.blackoutWattsAt(now) > 0, g.night, g.filtersShort, consumers,
                 (int) Math.floor(reserve), (int) energy.batteryCapacity(moduleLevel("generator")),
                 resources.getOrDefault("batteries", 0) > 0, modules, moduleLevel("workshop"), jobs, recipes,
@@ -1648,6 +1702,16 @@ public final class GameSession {
             GearDef gear = rules.gearOf(s);
             b.gear = gear != null ? gear.getName() : null;
             b.canEquip = home;
+            b.moodKey = rules.mood(s);
+            b.mood = content.getTerminal().getMoods().get(b.moodKey);
+            b.habits = new ArrayList<>();
+            if (template != null) {
+                for (ScoutTemplate.Habit habit : template.getHabits()) {
+                    if (rules.bondLevel(s) >= habit.getMinBondLevel()) {
+                        b.habits.add(habit.getText());
+                    }
+                }
+            }
             b.relations = new ArrayList<>();
             for (Scout other : scouts.values()) {
                 String relation = other == s || !other.isAlive() || !s.isAlive()
@@ -1688,11 +1752,12 @@ public final class GameSession {
                 continue;
             }
             Scout scout = scouts.get(c.getScoutId());
-            Scout dead = DialogueEngine.lastDead(scout, scouts.values());
+            Scout subject = dialogues.subjectOf(scout, content.dialogue(c.getDialogueId()), scouts.values());
             Map<String, String> vars = new HashMap<>();
             vars.put("name", scout.getName());
-            if (dead != null) {
-                vars.put("dead", dead.getName());
+            if (subject != null) {
+                vars.put("dead", subject.getName());
+                vars.put("other", subject.getName());
             }
             List<String> labels = new ArrayList<>();
             for (DialogueDef.Choice choice : content.dialogue(c.getDialogueId()).getChoices()) {
@@ -1759,7 +1824,8 @@ public final class GameSession {
 
         List<SessionSnapshot.ResourceView> resourceViews = new ArrayList<>();
         for (ResourceDef r : content.getResources().values()) {
-            resourceViews.add(new SessionSnapshot.ResourceView(r.getName(), resources.getOrDefault(r.getId(), 0)));
+            resourceViews.add(new SessionSnapshot.ResourceView(r.getName(), resources.getOrDefault(r.getId(), 0),
+                    r.getShortName()));
         }
 
         List<SessionSnapshot.ItemView> inventory = new ArrayList<>();
@@ -1779,8 +1845,17 @@ public final class GameSession {
         if (baseWake >= 0 && (nextWake < 0 || baseWake < nextWake)) {
             nextWake = baseWake;
         }
+        List<SessionSnapshot.ExpeditionView> expeditionViews = new ArrayList<>();
+        for (Expedition e : active.values()) {
+            long end = engine.estimatedReturn(e, now);
+            long span = Math.max(1, end - e.getStartedAtMillis());
+            int percent = (int) Math.max(0, Math.min(99, 100 * (now - e.getStartedAtMillis()) / span));
+            expeditionViews.add(new SessionSnapshot.ExpeditionView(scouts.get(e.getScoutId()).getName(),
+                    content.zone(e.getZoneId()).getName(), percent, end, e.isAwaitingDecision(),
+                    e.getPendingSinceMillis() != Expedition.NONE && !e.isAwaitingDecision()));
+        }
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
-                radioView(), baseView(now), nextWake);
+                radioView(), baseView(now), expeditionViews, nextWake);
     }
 
     private SessionSnapshot.RadioView radioView() {
@@ -1810,7 +1885,7 @@ public final class GameSession {
     public List<SessionSnapshot.DiaryEntry> diary() {
         TerminalText.BunkerText text = content.getTerminal().getBunker();
         TerminalText.StoryText story = content.getTerminal().getStory();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy HH:mm", Locale.forLanguageTag("es"));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy HH:mm", Locale.ENGLISH);
         List<SessionSnapshot.DiaryEntry> out = new ArrayList<>();
 
         out.add(SessionSnapshot.DiaryEntry.section(story.getDiaryFallen()));

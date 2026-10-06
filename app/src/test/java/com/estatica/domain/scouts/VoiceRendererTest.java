@@ -14,14 +14,14 @@ public class VoiceRendererTest {
     @Test
     public void lowercaseVoice() {
         VoiceDef voice = TestContent.get().voice("minusculas");
-        assertEquals("encontré 3 latas. ¡Ñandú!".toLowerCase(),
-                VoiceRenderer.render(voice, "Encontré {n} latas. ¡ÑANDÚ!", Map.of("n", "3")));
+        assertEquals("found 3 cans. at olazábal's!",
+                VoiceRenderer.render(voice, "Found {n} cans. At OLAZÁBAL'S!", Map.of("n", "3")));
     }
 
     @Test
     public void slangReplacesWholeWordsOnly() {
         VoiceDef voice = TestContent.get().voice("jerga");
-        assertEquals("Es re fácil, pero el quilombo es otro. Muyyy.",
-                VoiceRenderer.render(voice, "Es muy fácil, pero el problema es otro. Muyyy.", Map.of()));
+        assertEquals("It's real easy, but the mess is elsewhere. Veryyy.",
+                VoiceRenderer.render(voice, "It's very easy, but the problem is elsewhere. Veryyy.", Map.of()));
     }
 }

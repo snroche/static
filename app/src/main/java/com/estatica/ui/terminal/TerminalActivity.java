@@ -266,6 +266,97 @@ public final class TerminalActivity extends ComponentActivity {
             renderPanel();
         }
         renderDecision(snapshot);
+        renderHud(snapshot);
+        renderExpeditions(snapshot);
+        renderBadges(snapshot);
+    }
+
+    // ---- Status bar, expedition strip and button badges ----
+
+    /** "⚡120/180W ◈40/100 ☾ · SCR 12 CMP 3 RAT 8 …" — static text, no ticking. */
+    private void renderHud(SessionSnapshot snapshot) {
+        SessionSnapshot.BaseView base = snapshot.base;
+        StringBuilder hud = new StringBuilder();
+        if (base.blackout) {
+            hud.append(getString(R.string.hud_blackout));
+        } else {
+            hud.append(getString(R.string.hud_power, base.used, base.available));
+        }
+        hud.append("  ").append(getString(R.string.hud_reserve, base.reserve, base.reserveCapacity));
+        if (base.night) {
+            hud.append("  ").append(getString(R.string.hud_night));
+        }
+        StringBuilder supplies = new StringBuilder();
+        for (SessionSnapshot.ResourceView r : snapshot.resources) {
+            if (r.shortName == null) {
+                continue;
+            }
+            if (supplies.length() > 0) {
+                supplies.append("  ");
+            }
+            supplies.append(getString(R.string.hud_resource, r.shortName, r.amount));
+        }
+        if (supplies.length() > 0) {
+            hud.append('\n').append(supplies);
+        }
+        binding.hud.setText(hud);
+        binding.hud.setContentDescription(getString(R.string.hud_description, hud));
+    }
+
+    /** One line per scout out: progress bar and estimated return, or the waiting state. */
+    private void renderExpeditions(SessionSnapshot snapshot) {
+        if (snapshot.expeditions.isEmpty()) {
+            binding.expeditionStrip.setVisibility(View.GONE);
+            return;
+        }
+        java.text.DateFormat time = DateFormat.getTimeFormat(this);
+        StringBuilder strip = new StringBuilder();
+        for (SessionSnapshot.ExpeditionView e : snapshot.expeditions) {
+            if (strip.length() > 0) {
+                strip.append('\n');
+            }
+            if (e.waitingForOrders) {
+                strip.append(getString(R.string.expedition_waiting, e.scoutName, e.zoneName));
+            } else if (e.orderOnItsWay) {
+                strip.append(getString(R.string.expedition_order_sent, e.scoutName, e.zoneName));
+            } else {
+                strip.append(getString(R.string.expedition_line, e.scoutName, e.zoneName,
+                        progressBar(e.percent), e.percent, time.format(new Date(e.returnAtMillis))));
+            }
+        }
+        binding.expeditionStrip.setText(strip);
+        binding.expeditionStrip.setVisibility(View.VISIBLE);
+    }
+
+    private static String progressBar(int percent) {
+        int cells = 8;
+        int filled = Math.min(cells, percent * cells / 100);
+        StringBuilder bar = new StringBuilder("[");
+        for (int i = 0; i < cells; i++) {
+            bar.append(i < filled ? '█' : '·');
+        }
+        return bar.append(']').toString();
+    }
+
+    private void renderBadges(SessionSnapshot snapshot) {
+        int waiting = snapshot.radio.transmissions.size();
+        binding.radioButton.setText(waiting > 0
+                ? getString(R.string.radio_button_count, waiting)
+                : getString(R.string.radio_button));
+        SessionSnapshot.BaseView base = snapshot.base;
+        boolean alert = base.blackout || base.powerCut || base.filtersShort;
+        binding.bunkerButton.setText(alert ? R.string.bunker_button_alert : R.string.bunker_button);
+        int alive = 0;
+        int home = 0;
+        for (SessionSnapshot.ScoutView scout : snapshot.scouts) {
+            if (!scout.dead) {
+                alive++;
+                if (scout.awayAt == null) {
+                    home++;
+                }
+            }
+        }
+        binding.scoutsButton.setText(getString(R.string.scouts_button_count, home, alive));
     }
 
     private void renderDecision(SessionSnapshot snapshot) {

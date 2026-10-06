@@ -132,6 +132,17 @@ public final class ScoutRules {
         return scout.stat(type).gainXp(xp, balance.getXpPerLevel());
     }
 
+    /** How they are doing, at a glance: content, steady, tense or breaking. */
+    public String mood(Scout scout) {
+        if (scout.getStress() >= 75) {
+            return "breaking";
+        }
+        if (scout.getStress() >= 45) {
+            return "tense";
+        }
+        return bondLevel(scout) >= 3 && scout.getStress() < 25 ? "content" : "steady";
+    }
+
     // ---- Bond (GDD §5.2) ----
 
     /** 1-based bond level from the thresholds in balance.json. */

@@ -6,22 +6,22 @@
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "¿Sabés qué extraño? La bici.",
-      "Antes del Silencio repartía por todo el barrio. Conocía cada atajo."
+      "you know what i miss? my bike.",
+      "before the Silence i delivered all over the neighborhood. knew every shortcut."
     ],
     "choices": [
       {
-        "label": "Contame de tus recorridos.",
+        "label": "Tell me about your routes.",
         "reply": [
-          "La panadería de Olazábal, a las seis. Siempre me daban una medialuna."
+          "olazábal's bakery, six a.m. they always gave me a croissant."
         ],
         "bond": 5,
-        "memory": "las medialunas de la panadería de Olazábal"
+        "memory": "the croissants at Olazábal's bakery"
       },
       {
-        "label": "Ahora tus atajos nos sirven acá.",
+        "label": "Your shortcuts help us now.",
         "reply": [
-          "Sí. Algo es algo."
+          "yeah. that's something."
         ],
         "bond": 2,
         "trust": 2
@@ -35,14 +35,14 @@
     "minBondLevel": 1,
     "priority": 4,
     "lines": [
-      "A veces tarareo para no escuchar la estática.",
-      "Mi viejo tocaba la armónica. Mal, pero tocaba."
+      "sometimes i hum so i don't have to hear the static.",
+      "my dad played the harmonica. badly, but he played."
     ],
     "choices": [
       {
-        "label": "¿Te gustaría tener una?",
+        "label": "Would you like one?",
         "reply": [
-          "Si encontrás una... no sé. Me haría bien."
+          "if you find one... i don't know. it'd help."
         ],
         "bond": 3,
         "setFlags": [
@@ -50,9 +50,9 @@
         ]
       },
       {
-        "label": "Tarareá algo, dale.",
+        "label": "Go on, hum something.",
         "reply": [
-          "No. Me da vergüenza. Otro día."
+          "no. too embarrassing. another day."
         ],
         "bond": 1
       }
@@ -65,13 +65,13 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "¿Te acordás del gusto del chocolate? Yo ya casi no."
+      "remember what chocolate tastes like? i barely do."
     ],
     "choices": [
       {
-        "label": "Si aparece uno, es tuyo.",
+        "label": "If one turns up, it's yours.",
         "reply": [
-          "Te lo voy a cobrar, eh."
+          "i'm holding you to that."
         ],
         "bond": 4,
         "setFlags": [
@@ -80,9 +80,9 @@
         ]
       },
       {
-        "label": "Hay cosas más importantes.",
+        "label": "There are more important things.",
         "reply": [
-          "Ya sé. Por eso lo extraño."
+          "i know. that's why i miss it."
         ],
         "bond": -1
       }
@@ -95,13 +95,13 @@
     "minBondLevel": 2,
     "priority": 3,
     "lines": [
-      "Hay gente que se aferra a estampitas. Yo no creo en nada de eso."
+      "some people cling to prayer cards. i don't believe in any of that."
     ],
     "choices": [
       {
-        "label": "Cada uno se agarra de lo que puede.",
+        "label": "Everyone holds on to something.",
         "reply": [
-          "Puede ser. Pero a mí no me regales una, eh."
+          "maybe. just don't give me one, ok?"
         ],
         "bond": 2,
         "setFlags": [
@@ -109,14 +109,42 @@
         ]
       },
       {
-        "label": "Yo tampoco.",
+        "label": "Me neither.",
         "reply": [
-          "Bien. Somos dos."
+          "good. that makes two of us."
         ],
         "bond": 3,
         "setFlags": [
           "dislikes:estampita"
         ]
+      }
+    ]
+  },
+  {
+    "id": "mara_noches",
+    "scout": "mara",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "i don't sleep much. i lie there and ride the old routes in my head.",
+      "left at the pharmacy, right at the school, cut through the square."
+    ],
+    "choices": [
+      {
+        "label": "Take me along sometime.",
+        "reply": [
+          "...ok. tonight. stay on the radio."
+        ],
+        "bond": 5,
+        "memory": "the night routes we rode on the radio"
+      },
+      {
+        "label": "You should rest.",
+        "reply": [
+          "everyone says that."
+        ],
+        "bond": 1
       }
     ]
   },
@@ -127,23 +155,23 @@
     "minBondLevel": 3,
     "priority": 6,
     "lines": [
-      "No le cuento esto a nadie.",
-      "Antes de llegar acá estuve sola mucho tiempo. Aprendí a no confiar en nadie."
+      "i don't tell anyone this.",
+      "before i got here i was alone a long time. learned not to trust anybody."
     ],
     "choices": [
       {
-        "label": "Conmigo podés.",
+        "label": "You can with me.",
         "reply": [
-          "Ya sé. Por eso te lo cuento."
+          "i know. that's why i'm telling you."
         ],
         "bond": 6,
         "revealHidden": true,
-        "memory": "que me dijiste que con vos podía"
+        "memory": "you told me i could trust you"
       },
       {
-        "label": "Hiciste bien en desconfiar.",
+        "label": "You were right not to.",
         "reply": [
-          "Sí. Pero cansa."
+          "yeah. it's exhausting, though."
         ],
         "bond": 3,
         "trust": 3,
@@ -152,45 +180,73 @@
     ]
   },
   {
+    "id": "mara_futuro",
+    "scout": "mara",
+    "kind": "TALK",
+    "minBondLevel": 4,
+    "priority": 5,
+    "lines": [
+      "what will you do when this is over? if it's ever over.",
+      "i'd get a bike. a red one. and never deliver anything again."
+    ],
+    "choices": [
+      {
+        "label": "I'll ride with you.",
+        "reply": [
+          "you? on a bike? i'd pay to see that."
+        ],
+        "bond": 6,
+        "memory": "the red bike we'll ride after all this"
+      },
+      {
+        "label": "I don't think about after.",
+        "reply": [
+          "you should. it helps."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
     "id": "mara_guia",
     "scout": "mara",
     "kind": "GUIDANCE",
     "minBondLevel": 2,
-    "priority": 8,
     "requiresStats": {
       "stealth": 7
     },
     "forbidsFlags": [
       "specialized"
     ],
+    "priority": 8,
     "lines": [
-      "Necesito que me digas algo.",
-      "¿Aprendo a moverme sin que me vean, o a leer el terreno para encontrar cosas?"
+      "i need you to tell me something.",
+      "do i learn to move without being seen, or to read the ground and find things?"
     ],
     "choices": [
       {
-        "label": "Que nadie te vea.",
+        "label": "Nobody sees you.",
         "reply": [
-          "Una sombra. Me gusta."
+          "a shadow. i like it."
         ],
         "bond": 3,
         "addTrait": "sombra",
         "setFlags": [
           "specialized"
         ],
-        "memory": "que me enseñaste a ser una sombra"
+        "memory": "you taught me to be a shadow"
       },
       {
-        "label": "Aprendé a leer el terreno.",
+        "label": "Learn to read the ground.",
         "reply": [
-          "Ojos abiertos, entonces."
+          "eyes open, then."
         ],
         "bond": 3,
         "addTrait": "rastreo",
         "setFlags": [
           "specialized"
         ],
-        "memory": "que me dijiste que mirara el terreno"
+        "memory": "you told me to read the ground"
       }
     ]
   },
@@ -201,25 +257,25 @@
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "¿Ves esta pared, jefe? Mal revocada. Si tuviera cal la dejaba como nueva.",
-      "Yo levanté medio barrio, ¿sabías?"
+      "See this wall, boss? Badly plastered. Give me some lime and I'd make it like new.",
+      "I built half the neighborhood, you know?"
     ],
     "choices": [
       {
-        "label": "Contame de tu primera obra.",
+        "label": "Tell me about your first job.",
         "reply": [
-          "Una casita en Lanús. La dueña me cebaba mate todas las tardes. Amargo, como debe ser."
+          "A little house in Lanús. The owner brewed me mate every afternoon. Bitter, the way it should be."
         ],
         "bond": 5,
         "setFlags": [
           "likes:mate"
         ],
-        "memory": "la casita de Lanús y el mate de la dueña"
+        "memory": "the little house in Lanús and the owner's mate"
       },
       {
-        "label": "¿Y después del Silencio?",
+        "label": "And after the Silence?",
         "reply": [
-          "Todo de nuevo, jefe. Todo."
+          "We build it all again, boss. All of it."
         ],
         "bond": 3,
         "trust": 2
@@ -233,13 +289,13 @@
     "minBondLevel": 1,
     "priority": 4,
     "lines": [
-      "¿Jugás al truco? Acá nadie sabe jugar. Una vergüenza."
+      "You play truco? Nobody here knows how. A disgrace."
     ],
     "choices": [
       {
-        "label": "Enseñame.",
+        "label": "Teach me.",
         "reply": [
-          "Primero hay que conseguir un mazo. Si ves uno por ahí, avisá."
+          "First we need a deck. If you see one out there, shout."
         ],
         "bond": 4,
         "setFlags": [
@@ -247,9 +303,38 @@
         ]
       },
       {
-        "label": "No tengo tiempo para juegos.",
+        "label": "No time for games.",
         "reply": [
-          "Mal, jefe. Sin un truco no se aguanta esto."
+          "Wrong, boss. Without a game of truco you can't survive this."
+        ],
+        "bond": -1
+      }
+    ]
+  },
+  {
+    "id": "tano_chistes",
+    "scout": "tano",
+    "kind": "TALK",
+    "minBondLevel": 1,
+    "priority": 3,
+    "lines": [
+      "Why did the scout cross the road? Because the Operator told him to! Ha!",
+      "...Come on, that one's good."
+    ],
+    "choices": [
+      {
+        "label": "It was terrible. Tell me another.",
+        "reply": [
+          "Ha! That's the spirit, boss. Here's one..."
+        ],
+        "bond": 4,
+        "stress": -5,
+        "memory": "the terrible jokes you asked me to keep telling"
+      },
+      {
+        "label": "Not now, Tano.",
+        "reply": [
+          "Right. Right. Sorry, boss."
         ],
         "bond": -1
       }
@@ -262,13 +347,13 @@
     "minBondLevel": 2,
     "priority": 3,
     "lines": [
-      "Hay gente que se pasa el día leyendo. Yo me duermo en la segunda página."
+      "Some people spend all day reading. I fall asleep on page two."
     ],
     "choices": [
       {
-        "label": "Cada uno con lo suyo.",
+        "label": "To each their own.",
         "reply": [
-          "Eso. A mí no me traigas libros, que los uso para calzar la mesa."
+          "Exactly. Don't bring me books, I use them to level the table."
         ],
         "bond": 2,
         "setFlags": [
@@ -276,13 +361,41 @@
         ]
       },
       {
-        "label": "Te haría bien leer.",
+        "label": "Reading would do you good.",
         "reply": [
-          "Ni loco, jefe."
+          "Not a chance, boss."
         ],
         "setFlags": [
           "dislikes:libro"
         ]
+      }
+    ]
+  },
+  {
+    "id": "tano_hija",
+    "scout": "tano",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 5,
+    "lines": [
+      "I've got a daughter, boss. In Córdoba. Or she was, before.",
+      "Haven't heard her voice since the Silence."
+    ],
+    "choices": [
+      {
+        "label": "We'll keep listening for her.",
+        "reply": [
+          "You'd do that? ...Thanks, boss. Really."
+        ],
+        "bond": 6,
+        "memory": "you promised to listen for my daughter"
+      },
+      {
+        "label": "I'm sorry, Tano.",
+        "reply": [
+          "Yeah. Me too. Let's not talk about it."
+        ],
+        "bond": 2
       }
     ]
   },
@@ -293,23 +406,23 @@
     "minBondLevel": 3,
     "priority": 6,
     "lines": [
-      "Te voy a decir algo, jefe, y no te rías.",
-      "Yo no me voy a ir nunca. Si vos decís, yo voy."
+      "I'll tell you something, boss, and don't laugh.",
+      "I'm never leaving. If you say go, I go."
     ],
     "choices": [
       {
-        "label": "Lo sé, Tano.",
+        "label": "I know, Tano.",
         "reply": [
-          "Así me gusta."
+          "That's what I like to hear."
         ],
         "bond": 6,
         "revealHidden": true,
-        "memory": "que me dijiste que sabías que no me iba a ir"
+        "memory": "you said you knew I'd never leave"
       },
       {
-        "label": "No hace falta que me sigas a todo.",
+        "label": "You don't have to follow me everywhere.",
         "reply": [
-          "Igual lo hago, jefe."
+          "I'll do it anyway, boss."
         ],
         "bond": 3,
         "revealHidden": true
@@ -321,41 +434,41 @@
     "scout": "tano",
     "kind": "GUIDANCE",
     "minBondLevel": 2,
-    "priority": 8,
     "requiresStats": {
       "endurance": 7
     },
     "forbidsFlags": [
       "specialized"
     ],
+    "priority": 8,
     "lines": [
-      "Jefe, una consulta.",
-      "¿Me pongo a practicar puntería, o le doy al oficio, a arreglar cosas?"
+      "Boss, a question.",
+      "Do I practice my aim, or stick to the trade, fixing things?"
     ],
     "choices": [
       {
-        "label": "Puntería.",
+        "label": "Your aim.",
         "reply": [
-          "Ojo de halcón, jefe. Ya vas a ver."
+          "Hawk eye, boss. You'll see."
         ],
         "bond": 3,
         "addTrait": "punteria",
         "setFlags": [
           "specialized"
         ],
-        "memory": "que me dijiste que practicara puntería"
+        "memory": "you told me to practice my aim"
       },
       {
-        "label": "El oficio.",
+        "label": "The trade.",
         "reply": [
-          "Lo mío, jefe. Lo mío."
+          "That's my thing, boss. My thing."
         ],
         "bond": 3,
         "addTrait": "mecanica",
         "setFlags": [
           "specialized"
         ],
-        "memory": "que me mandaste a darle al oficio"
+        "memory": "you sent me back to the trade"
       }
     ]
   },
@@ -366,27 +479,27 @@
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "Anoto todo, operador. Horarios, ruidos, quién dijo qué.",
-      "Es una costumbre del laboratorio. Me ordena."
+      "I write everything down, Operator. Times, noises, who said what.",
+      "A habit from the lab. It keeps me in order."
     ],
     "choices": [
       {
-        "label": "¿Puedo leerla?",
+        "label": "Can I read it?",
         "reply": [
-          "No. Todavía no."
+          "No. Not yet."
         ],
         "bond": 1
       },
       {
-        "label": "Seguí anotando. Nos sirve.",
+        "label": "Keep writing. It helps us.",
         "reply": [
-          "Gracias. Me alivia que alguien lo valore."
+          "Thank you. It's a relief that someone values it."
         ],
         "bond": 5,
         "setFlags": [
           "likes:cuaderno"
         ],
-        "memory": "que valoró mi libreta"
+        "memory": "you valued my notebook"
       }
     ]
   },
@@ -397,13 +510,13 @@
     "minBondLevel": 1,
     "priority": 4,
     "lines": [
-      "Terminé el último libro que había en el búnker. Por tercera vez."
+      "I finished the last book in the bunker. For the third time."
     ],
     "choices": [
       {
-        "label": "Voy a pedir que busquen libros.",
+        "label": "I'll ask the others to look for books.",
         "reply": [
-          "Le estaría muy agradecida."
+          "I'd be very grateful."
         ],
         "bond": 4,
         "setFlags": [
@@ -411,9 +524,9 @@
         ]
       },
       {
-        "label": "Leelo otra vez.",
+        "label": "Read it again.",
         "reply": [
-          "Supongo."
+          "I suppose."
         ]
       }
     ]
@@ -425,13 +538,13 @@
     "minBondLevel": 2,
     "priority": 3,
     "lines": [
-      "Me quieren enseñar a jugar a las cartas. No le veo el sentido."
+      "They want to teach me to play cards. I don't see the point."
     ],
     "choices": [
       {
-        "label": "Es para pasar el rato.",
+        "label": "It's just to pass the time.",
         "reply": [
-          "Prefiero no. Y no me regale naipes, por favor."
+          "I'd rather not. And please don't give me cards."
         ],
         "bond": 2,
         "setFlags": [
@@ -439,14 +552,42 @@
         ]
       },
       {
-        "label": "Dale una oportunidad.",
+        "label": "Give it a chance.",
         "reply": [
-          "Lo pensaré. No prometo nada."
+          "I'll think about it. No promises."
         ],
         "bond": 1,
         "setFlags": [
           "dislikes:naipes"
         ]
+      }
+    ]
+  },
+  {
+    "id": "irene_teoria",
+    "scout": "irene",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "I've been analyzing the static, Operator.",
+      "It isn't random. There's a structure underneath. Like a carrier wave."
+    ],
+    "choices": [
+      {
+        "label": "Keep at it. Tell me what you find.",
+        "reply": [
+          "I will. It's good to have a problem to solve."
+        ],
+        "bond": 5,
+        "memory": "you let me chase the pattern in the static"
+      },
+      {
+        "label": "Static is just static.",
+        "reply": [
+          "...Perhaps. Perhaps not."
+        ],
+        "bond": 0
       }
     ]
   },
@@ -457,26 +598,54 @@
     "minBondLevel": 3,
     "priority": 6,
     "lines": [
-      "Operador, tengo que admitir algo.",
-      "Cuando salgo, tengo miedo todo el tiempo. Lo disimulo con procedimientos."
+      "Operator, I have to admit something.",
+      "When I'm out there I'm afraid the whole time. I hide it behind procedures."
     ],
     "choices": [
       {
-        "label": "El miedo también te cuida.",
+        "label": "Fear keeps you careful.",
         "reply": [
-          "Nunca lo había pensado así."
+          "I never thought of it that way."
         ],
         "bond": 6,
         "revealHidden": true,
-        "memory": "que me dijo que el miedo también cuida"
+        "memory": "you told me fear keeps me careful"
       },
       {
-        "label": "Si no podés, no salgas.",
+        "label": "If you can't, don't go.",
         "reply": [
-          "Puedo. Solo quería que lo supiera."
+          "I can. I just wanted you to know."
         ],
         "bond": 3,
         "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "irene_nombre",
+    "scout": "irene",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "You can stop calling me by procedure, you know.",
+      "Just Irene. I think we're past formalities."
+    ],
+    "choices": [
+      {
+        "label": "Irene it is.",
+        "reply": [
+          "Good. That's... good."
+        ],
+        "bond": 5,
+        "memory": "the day we dropped the formalities"
+      },
+      {
+        "label": "I like the procedures.",
+        "reply": [
+          "Of course you do. So do I."
+        ],
+        "bond": 3
       }
     ]
   },
@@ -485,176 +654,41 @@
     "scout": "irene",
     "kind": "GUIDANCE",
     "minBondLevel": 2,
-    "priority": 8,
     "requiresStats": {
       "wits": 7
     },
     "forbidsFlags": [
       "specialized"
     ],
+    "priority": 8,
     "lines": [
-      "Necesito su opinión.",
-      "¿Me dedico a la enfermería o a la mecánica?"
+      "I need your opinion.",
+      "Should I devote myself to medicine or to mechanics?"
     ],
     "choices": [
       {
-        "label": "Enfermería.",
+        "label": "Medicine.",
         "reply": [
-          "Entonces voy a cuidarlos a todos."
+          "Then I'll look after all of you."
         ],
         "bond": 3,
         "addTrait": "primeros_auxilios",
         "setFlags": [
           "specialized"
         ],
-        "memory": "que me eligió para cuidar a los demás"
+        "memory": "you chose me to look after the others"
       },
       {
-        "label": "Mecánica.",
+        "label": "Mechanics.",
         "reply": [
-          "Lógico. Las máquinas no mienten."
+          "Logical. Machines don't lie."
         ],
         "bond": 3,
         "addTrait": "mecanica",
         "setFlags": [
           "specialized"
         ],
-        "memory": "que me mandó a la mecánica"
-      }
-    ]
-  },
-  {
-    "id": "charla_rutina",
-    "kind": "TALK",
-    "repeatable": true,
-    "priority": 0,
-    "lines": [
-      "Acá todo tranquilo. Raro, pero tranquilo."
-    ],
-    "choices": [
-      {
-        "label": "¿Necesitás algo?",
-        "reply": [
-          "Que esto se termine. Fuera de eso, nada."
-        ],
-        "bond": 2
-      },
-      {
-        "label": "Aprovechá para descansar.",
-        "reply": [
-          "Lo intento."
-        ],
-        "bond": 2
-      }
-    ]
-  },
-  {
-    "id": "charla_antes",
-    "kind": "TALK",
-    "repeatable": true,
-    "priority": 0,
-    "lines": [
-      "A veces pienso en cómo era todo antes."
-    ],
-    "choices": [
-      {
-        "label": "Yo también.",
-        "reply": [
-          "Mejor no pensar mucho."
-        ],
-        "bond": 2
-      },
-      {
-        "label": "Mejor mirar para adelante.",
-        "reply": [
-          "Puede ser."
-        ],
-        "bond": 2
-      }
-    ]
-  },
-  {
-    "id": "pedido_compania",
-    "kind": "INITIATED",
-    "minBondLevel": 2,
-    "repeatable": true,
-    "priority": 1,
-    "lines": [
-      "No pasa nada. Solo quería hablar con alguien que no sea la pared."
-    ],
-    "choices": [
-      {
-        "label": "Acá estoy.",
-        "reply": [
-          "Gracias."
-        ],
-        "bond": 4,
-        "stress": -5,
-        "memory": "que estuviste ahí cuando necesitaba hablar"
-      },
-      {
-        "label": "Ahora no puedo.",
-        "reply": [
-          "Bueno. Otro día."
-        ],
-        "bond": -2
-      }
-    ]
-  },
-  {
-    "id": "duelo_recuerdo",
-    "kind": "GRIEF",
-    "minHoursSinceDeath": 24,
-    "priority": 10,
-    "lines": [
-      "Estuve pensando en {dead}.",
-      "Todavía espero escuchar su voz en la radio."
-    ],
-    "choices": [
-      {
-        "label": "Yo también pienso en {dead}.",
-        "reply": [
-          "Gracias por decirlo."
-        ],
-        "bond": 5,
-        "stress": -10,
-        "memory": "que hablamos de {dead}"
-      },
-      {
-        "label": "Hay que seguir.",
-        "reply": [
-          "Ya sé. Pero no es fácil."
-        ],
-        "bond": 1,
-        "stress": -3
-      }
-    ]
-  },
-  {
-    "id": "duelo_culpa",
-    "kind": "GRIEF",
-    "minHoursSinceDeath": 48,
-    "minBondLevel": 2,
-    "priority": 9,
-    "lines": [
-      "¿Por qué mandaste a {dead} ahí?"
-    ],
-    "choices": [
-      {
-        "label": "Fue mi culpa.",
-        "reply": [
-          "...Por lo menos lo admitís."
-        ],
-        "bond": 3,
-        "trust": -3
-      },
-      {
-        "label": "Era necesario.",
-        "reply": [
-          "Para vos, tal vez."
-        ],
-        "bond": -3,
-        "trust": 2
+        "memory": "you sent me to mechanics"
       }
     ]
   },
@@ -665,25 +699,25 @@
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "Treinta años de señalero.",
-      "Rojo, amarillo, verde. Ahora todo es estática."
+      "Thirty years as a signalman.",
+      "Red, yellow, green. Now everything's static."
     ],
     "choices": [
       {
-        "label": "¿Extrañás los trenes?",
+        "label": "Do you miss the trains?",
         "reply": [
-          "El ruido. Extraño el ruido. Esto es demasiado callado."
+          "The noise. I miss the noise. This is too quiet."
         ],
         "bond": 5,
-        "memory": "el ruido de los trenes que extraño",
         "setFlags": [
           "likes:mate"
-        ]
+        ],
+        "memory": "the noise of the trains I miss"
       },
       {
-        "label": "Tu oído nos sirve en la radio.",
+        "label": "Your ear helps us on the radio.",
         "reply": [
-          "Afirmativo. Cuente conmigo."
+          "Affirmative. Count on me."
         ],
         "bond": 3,
         "trust": 3
@@ -697,14 +731,14 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "Tenía una foto de mi cuadrilla. La perdí en la estación.",
-      "Cualquier foto me haría bien. Aunque sea de desconocidos."
+      "Had a photo of my crew. Lost it at the station.",
+      "Any photo would do. Even of strangers."
     ],
     "choices": [
       {
-        "label": "Si aparece una, es tuya.",
+        "label": "If one turns up, it's yours.",
         "reply": [
-          "Gracias. Cambio."
+          "Thanks. Over."
         ],
         "bond": 4,
         "setFlags": [
@@ -712,11 +746,67 @@
         ]
       },
       {
-        "label": "Las fotos no sirven de nada acá.",
+        "label": "Photos are useless here.",
         "reply": [
-          "Para usted, tal vez."
+          "To you, maybe."
         ],
         "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "beto_silencio",
+    "scout": "beto",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 5,
+    "lines": [
+      "The night of the Silence I was on shift. 3:10.",
+      "Every signal on the board went dark at once. Then the trains stopped. All of them."
+    ],
+    "choices": [
+      {
+        "label": "What did you do?",
+        "reply": [
+          "Waited for orders. They never came. I'm still waiting, I think."
+        ],
+        "bond": 5,
+        "memory": "the board going dark at 3:10"
+      },
+      {
+        "label": "You don't have to talk about it.",
+        "reply": [
+          "I know. Thanks. Over."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "beto_ultimo",
+    "scout": "beto",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 4,
+    "lines": [
+      "The last train left at 2:55. The 2:55 to Temperley.",
+      "I waved at the driver. Never saw him again."
+    ],
+    "choices": [
+      {
+        "label": "Maybe he made it.",
+        "reply": [
+          "Maybe. I like that version. Over."
+        ],
+        "bond": 5,
+        "stress": -5
+      },
+      {
+        "label": "Plenty of people didn't.",
+        "reply": [
+          "Correct. Over and out."
+        ],
+        "bond": 0
       }
     ]
   },
@@ -727,23 +817,23 @@
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "¿Sabés cuánto tiempo estuve solo en ese barrio?",
-      "Yo tampoco. Dejé de contar."
+      "You know how long I was alone in that place?",
+      "Me neither. I stopped counting."
     ],
     "choices": [
       {
-        "label": "Ya no estás solo.",
+        "label": "You're not alone anymore.",
         "reply": [
-          "Sí. Ya sé. Gracias, che."
+          "Yeah. I know. Thanks, man."
         ],
         "bond": 5,
         "stress": -5,
-        "memory": "que me dijiste que ya no estaba solo"
+        "memory": "you told me I wasn't alone anymore"
       },
       {
-        "label": "¿Cómo hiciste para aguantar?",
+        "label": "How did you hold on?",
         "reply": [
-          "Escuchaba música en un celular hasta que se murió la batería."
+          "Listened to music on a phone till the battery died."
         ],
         "bond": 3,
         "setFlags": [
@@ -759,13 +849,13 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "Tano me quiere enseñar al truco. ¿Vos sabés jugar?"
+      "Tano wants to teach me truco. You know how to play?"
     ],
     "choices": [
       {
-        "label": "Un poco. Si conseguimos un mazo, jugamos.",
+        "label": "A bit. If we find a deck, we'll play.",
         "reply": [
-          "¡Dale! Y nada de libros, eh. Me aburren."
+          "Yes! And no books, ok? They're boring."
         ],
         "bond": 4,
         "setFlags": [
@@ -774,176 +864,69 @@
         ]
       },
       {
-        "label": "No es momento de jugar.",
+        "label": "It's not a time for games.",
         "reply": [
-          "Nunca es momento de nada acá."
+          "It's never a time for anything here."
         ],
         "bond": -1
       }
     ]
   },
   {
-    "id": "mara_pide_mision",
-    "scout": "mara",
-    "kind": "INITIATED",
-    "minBondLevel": 4,
-    "priority": 7,
-    "forbidsFlags": [
-      "personal:mara_ruta:offered"
-    ],
-    "lines": [
-      "¿Puedo pedirte algo?",
-      "Quiero ir hasta la panadería de Olazábal. Solo una vez. Para saber."
-    ],
-    "choices": [
-      {
-        "label": "Sí. Cuando quieras.",
-        "reply": [
-          "Gracias. De verdad."
-        ],
-        "bond": 5,
-        "setFlags": [
-          "personal:mara_ruta:offered"
-        ]
-      },
-      {
-        "label": "Ahora no podemos.",
-        "reply": [
-          "Entiendo. Pero no me lo saques de la cabeza."
-        ],
-        "bond": -2
-      }
-    ]
-  },
-  {
-    "id": "tano_pide_mision",
-    "scout": "tano",
-    "kind": "INITIATED",
-    "minBondLevel": 4,
-    "priority": 7,
-    "forbidsFlags": [
-      "personal:tano_obra:offered"
-    ],
-    "lines": [
-      "Jefe, una cosa.",
-      "El anexo de la escuela lo levanté yo. Quiero ver si sigue en pie."
-    ],
-    "choices": [
-      {
-        "label": "Sí. Cuando quieras.",
-        "reply": [
-          "Gracias. De verdad."
-        ],
-        "bond": 5,
-        "setFlags": [
-          "personal:tano_obra:offered"
-        ]
-      },
-      {
-        "label": "Ahora no podemos.",
-        "reply": [
-          "Entiendo. Pero no me lo saques de la cabeza."
-        ],
-        "bond": -2
-      }
-    ]
-  },
-  {
-    "id": "irene_pide_mision",
-    "scout": "irene",
-    "kind": "INITIATED",
-    "minBondLevel": 4,
-    "priority": 7,
-    "forbidsFlags": [
-      "personal:irene_lab:offered"
-    ],
-    "lines": [
-      "Operador, necesito pedirle algo personal.",
-      "Quiero volver a mi laboratorio. En el hospital."
-    ],
-    "choices": [
-      {
-        "label": "Sí. Cuando quieras.",
-        "reply": [
-          "Gracias. De verdad."
-        ],
-        "bond": 5,
-        "setFlags": [
-          "personal:irene_lab:offered"
-        ]
-      },
-      {
-        "label": "Ahora no podemos.",
-        "reply": [
-          "Entiendo. Pero no me lo saques de la cabeza."
-        ],
-        "bond": -2
-      }
-    ]
-  },
-  {
-    "id": "beto_pide_mision",
-    "scout": "beto",
-    "kind": "INITIATED",
-    "minBondLevel": 4,
-    "priority": 7,
-    "forbidsFlags": [
-      "personal:beto_casilla:offered"
-    ],
-    "lines": [
-      "Operador. Pedido personal. Cambio.",
-      "Quiero volver a la casilla de señales. Una vez."
-    ],
-    "choices": [
-      {
-        "label": "Sí. Cuando quieras.",
-        "reply": [
-          "Gracias. De verdad."
-        ],
-        "bond": 5,
-        "setFlags": [
-          "personal:beto_casilla:offered"
-        ]
-      },
-      {
-        "label": "Ahora no podemos.",
-        "reply": [
-          "Entiendo. Pero no me lo saques de la cabeza."
-        ],
-        "bond": -2
-      }
-    ]
-  },
-  {
-    "id": "lucho_pide_mision",
+    "id": "lucho_banda",
     "scout": "lucho",
-    "kind": "INITIATED",
-    "minBondLevel": 4,
-    "priority": 7,
-    "forbidsFlags": [
-      "personal:lucho_casa:offered"
-    ],
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
     "lines": [
-      "Che... ¿me dejás ir a un lugar?",
-      "A la casa del barrio. Donde esperaba a mi vieja."
+      "Did you ever hear of a band called Los Piojos?",
+      "My mom played them every Sunday. Loud. The neighbors hated it."
     ],
     "choices": [
       {
-        "label": "Sí. Cuando quieras.",
+        "label": "I love them.",
         "reply": [
-          "Gracias. De verdad."
+          "No way! You're old, but you're cool."
         ],
         "bond": 5,
-        "setFlags": [
-          "personal:lucho_casa:offered"
-        ]
+        "memory": "that you like Los Piojos too"
       },
       {
-        "label": "Ahora no podemos.",
+        "label": "Never heard of them.",
         "reply": [
-          "Entiendo. Pero no me lo saques de la cabeza."
+          "Seriously? Man. You missed out."
         ],
-        "bond": -2
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "lucho_pesadillas",
+    "scout": "lucho",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "Can I tell you something? Don't laugh.",
+      "I dream the door opens and it's her. Every night. And then it isn't."
+    ],
+    "choices": [
+      {
+        "label": "I'm not laughing. Talk to me any time.",
+        "reply": [
+          "...Ok. Thanks."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "you listened to my nightmares"
+      },
+      {
+        "label": "Dreams are just dreams.",
+        "reply": [
+          "Easy for you to say."
+        ],
+        "bond": 1,
+        "revealHidden": true
       }
     ]
   },
@@ -954,28 +937,90 @@
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "Atendí en el hospital hasta el último día, ¿sabés?",
-      "Cuando se cortó todo, seguimos con velas."
+      "I worked at the hospital until the very last day, you know?",
+      "When everything went dark, we carried on by candlelight."
     ],
     "choices": [
       {
-        "label": "Contame más.",
+        "label": "Tell me more.",
         "reply": [
-          "Otro día, con un mate de por medio."
+          "Another day, dear, over a mate."
         ],
         "bond": 5,
         "setFlags": [
           "likes:mate"
         ],
-        "memory": "la charla del primer día"
+        "memory": "our talk on the first day"
       },
       {
-        "label": "Acá vas a estar bien.",
+        "label": "You'll be safe here.",
         "reply": [
-          "Ojalá. Ojalá."
+          "Let's hope so. Let's hope so."
         ],
         "bond": 3,
         "trust": 3
+      }
+    ]
+  },
+  {
+    "id": "nilda_pastafrola",
+    "scout": "nilda",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "If I had flour and quince jam, I'd make you a pastafrola.",
+      "My grandson's favorite. Sticky fingers for a week."
+    ],
+    "choices": [
+      {
+        "label": "I'll find you something sweet.",
+        "reply": [
+          "Ay, you're a treasure."
+        ],
+        "bond": 4,
+        "setFlags": [
+          "likes:chocolate"
+        ],
+        "memory": "the pastafrola I promised to bake"
+      },
+      {
+        "label": "Sugar is a luxury now.",
+        "reply": [
+          "Everything is a luxury now, dear."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "nilda_santos",
+    "scout": "nilda",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 4,
+    "lines": [
+      "I talk to my saints at night, dear. Don't make that face.",
+      "Someone has to keep them informed."
+    ],
+    "choices": [
+      {
+        "label": "Say one for me too.",
+        "reply": [
+          "Already do, sweetheart. Every night."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "likes:estampita"
+        ],
+        "memory": "that I pray for you every night"
+      },
+      {
+        "label": "I don't believe in saints.",
+        "reply": [
+          "They believe in you. That's enough."
+        ],
+        "bond": 2
       }
     ]
   },
@@ -986,28 +1031,504 @@
     "minBondLevel": 1,
     "priority": 5,
     "lines": [
-      "Tres veces crucé el país, jefe.",
-      "Y en todos lados la misma estática."
+      "Crossed the country three times, boss.",
+      "Same static everywhere."
     ],
     "choices": [
       {
-        "label": "Contame más.",
+        "label": "Tell me more.",
         "reply": [
-          "Otro día, con un mate de por medio."
+          "Another day, over a mate."
         ],
         "bond": 5,
         "setFlags": [
           "likes:mate"
         ],
-        "memory": "la charla del primer día"
+        "memory": "our talk on the first day"
       },
       {
-        "label": "Acá vas a estar bien.",
+        "label": "You'll be safe here.",
         "reply": [
-          "Ojalá. Ojalá."
+          "We'll see. I don't stay anywhere long."
         ],
         "bond": 3,
         "trust": 3
+      }
+    ]
+  },
+  {
+    "id": "rusa_rutas",
+    "scout": "rusa",
+    "kind": "TALK",
+    "minBondLevel": 2,
+    "priority": 4,
+    "lines": [
+      "I've got every road in my head, boss. Which bridges are down, which towns have dogs.",
+      "Want me to draw you a map?"
+    ],
+    "choices": [
+      {
+        "label": "Draw it. All of it.",
+        "reply": [
+          "It'll take a week. You've got a week?"
+        ],
+        "bond": 5,
+        "memory": "the map of every road I drew for you"
+      },
+      {
+        "label": "We stay close to home.",
+        "reply": [
+          "Suit yourself. Small world you've got."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rusa_nombre",
+    "scout": "rusa",
+    "kind": "TALK",
+    "minBondLevel": 3,
+    "priority": 5,
+    "lines": [
+      "You want to know my real name? Nobody does anymore.",
+      "It's Ludmila. My grandmother's. Don't spread it around."
+    ],
+    "choices": [
+      {
+        "label": "Thank you for telling me, Ludmila.",
+        "reply": [
+          "Huh. Sounds strange out loud. Good strange."
+        ],
+        "bond": 6,
+        "revealHidden": true,
+        "memory": "the day I told you my real name"
+      },
+      {
+        "label": "La Rusa suits you better.",
+        "reply": [
+          "Ha! It does, doesn't it."
+        ],
+        "bond": 3,
+        "revealHidden": true
+      }
+    ]
+  },
+  {
+    "id": "charla_rutina",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "All quiet here. Weird, but quiet."
+    ],
+    "choices": [
+      {
+        "label": "Need anything?",
+        "reply": [
+          "For this to be over. Other than that, nothing."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Get some rest while you can.",
+        "reply": [
+          "Trying."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "charla_antes",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "Sometimes I think about how things were before."
+    ],
+    "choices": [
+      {
+        "label": "Me too.",
+        "reply": [
+          "Better not to think too much."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Better to look ahead.",
+        "reply": [
+          "Maybe."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "charla_ruido",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "Did you hear that? On the radio, last night. Like someone breathing."
+    ],
+    "choices": [
+      {
+        "label": "I heard it too.",
+        "reply": [
+          "So I'm not crazy. Good. Or bad."
+        ],
+        "bond": 2,
+        "stress": -2
+      },
+      {
+        "label": "Just interference.",
+        "reply": [
+          "Sure. Interference."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "pedido_compania",
+    "kind": "INITIATED",
+    "minBondLevel": 2,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "It's nothing. I just wanted to talk to someone who isn't a wall."
+    ],
+    "choices": [
+      {
+        "label": "I'm here.",
+        "reply": [
+          "Thanks."
+        ],
+        "bond": 4,
+        "stress": -5,
+        "memory": "you were there when I needed to talk"
+      },
+      {
+        "label": "I can't right now.",
+        "reply": [
+          "Ok. Another day."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "amigos_charla",
+    "kind": "TALK",
+    "requiresRelation": "friend",
+    "priority": 2,
+    "lines": [
+      "{other} and I talked half the night.",
+      "Feels like having family again, a little."
+    ],
+    "choices": [
+      {
+        "label": "Look after each other.",
+        "reply": [
+          "We will. Promise."
+        ],
+        "bond": 3,
+        "affinity": 5,
+        "memory": "you told me and {other} to look after each other"
+      },
+      {
+        "label": "Don't get too attached out here.",
+        "reply": [
+          "Too late for that."
+        ],
+        "bond": 0,
+        "affinity": -3
+      }
+    ]
+  },
+  {
+    "id": "inseparables_charla",
+    "kind": "INITIATED",
+    "requiresRelation": "inseparable",
+    "priority": 3,
+    "lines": [
+      "If anything happens to {other}... I don't know what I'd do.",
+      "Just so you know. Before you send either of us anywhere."
+    ],
+    "choices": [
+      {
+        "label": "I'll keep that in mind.",
+        "reply": [
+          "That's all I ask."
+        ],
+        "bond": 4,
+        "trust": 2
+      },
+      {
+        "label": "I can't promise anything.",
+        "reply": [
+          "I know. Still had to say it."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rivales_queja",
+    "kind": "INITIATED",
+    "requiresRelation": "rival",
+    "priority": 2,
+    "lines": [
+      "I can't stand working with {other}.",
+      "Everything I do, they do the opposite. On purpose."
+    ],
+    "choices": [
+      {
+        "label": "Work it out between you.",
+        "reply": [
+          "...Fine. I'll try. For you."
+        ],
+        "bond": 1,
+        "affinity": 8
+      },
+      {
+        "label": "I'll keep you apart.",
+        "reply": [
+          "Thank you. Seriously."
+        ],
+        "bond": 3,
+        "stress": -5
+      },
+      {
+        "label": "You're both being children.",
+        "reply": [
+          "Wow. Ok."
+        ],
+        "bond": -3,
+        "affinity": 3
+      }
+    ]
+  },
+  {
+    "id": "duelo_recuerdo",
+    "kind": "GRIEF",
+    "minHoursSinceDeath": 24,
+    "priority": 10,
+    "lines": [
+      "I've been thinking about {dead}.",
+      "I still expect to hear their voice on the radio."
+    ],
+    "choices": [
+      {
+        "label": "I think about {dead} too.",
+        "reply": [
+          "Thanks for saying it."
+        ],
+        "bond": 5,
+        "stress": -10,
+        "memory": "we talked about {dead}"
+      },
+      {
+        "label": "We have to keep going.",
+        "reply": [
+          "I know. It's not easy."
+        ],
+        "bond": 1,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "duelo_culpa",
+    "kind": "GRIEF",
+    "minBondLevel": 2,
+    "minHoursSinceDeath": 48,
+    "priority": 9,
+    "lines": [
+      "Why did you send {dead} out there?"
+    ],
+    "choices": [
+      {
+        "label": "It was my fault.",
+        "reply": [
+          "...At least you admit it."
+        ],
+        "bond": 3,
+        "trust": -3
+      },
+      {
+        "label": "It was necessary.",
+        "reply": [
+          "For you, maybe."
+        ],
+        "bond": -3,
+        "trust": 2
+      }
+    ]
+  },
+  {
+    "id": "mara_pide_mision",
+    "scout": "mara",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "forbidsFlags": [
+      "personal:mara_ruta:offered"
+    ],
+    "priority": 7,
+    "lines": [
+      "can i ask you something?",
+      "i want to go to olazábal's bakery. just once. to know."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:mara_ruta:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "tano_pide_mision",
+    "scout": "tano",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "forbidsFlags": [
+      "personal:tano_obra:offered"
+    ],
+    "priority": 7,
+    "lines": [
+      "Boss, one thing.",
+      "I built the school annex. I want to see if it's still standing."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:tano_obra:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "irene_pide_mision",
+    "scout": "irene",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "forbidsFlags": [
+      "personal:irene_lab:offered"
+    ],
+    "priority": 7,
+    "lines": [
+      "Operator, I need to ask you something personal.",
+      "I want to go back to my laboratory. At the hospital."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:irene_lab:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "beto_pide_mision",
+    "scout": "beto",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "forbidsFlags": [
+      "personal:beto_casilla:offered"
+    ],
+    "priority": 7,
+    "lines": [
+      "Operator. Personal request. Over.",
+      "Want to go back to the signal box. Once."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:beto_casilla:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "lucho_pide_mision",
+    "scout": "lucho",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "forbidsFlags": [
+      "personal:lucho_casa:offered"
+    ],
+    "priority": 7,
+    "lines": [
+      "Hey... can I go somewhere?",
+      "The house in the gated community. Where I waited for my mom."
+    ],
+    "choices": [
+      {
+        "label": "Yes. Whenever you're ready.",
+        "reply": [
+          "Thank you. Really."
+        ],
+        "bond": 5,
+        "setFlags": [
+          "personal:lucho_casa:offered"
+        ]
+      },
+      {
+        "label": "We can't right now.",
+        "reply": [
+          "I understand. But it won't leave my head."
+        ],
+        "bond": -2
       }
     ]
   }

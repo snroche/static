@@ -38,7 +38,7 @@ public final class CommandInterpreter {
         return out;
     }
 
-    /** Lowercase, trimmed, accents removed: "Ayúda " → "ayuda". */
+    /** Lowercase, trimmed, accents removed: " Hélp " → "help". */
     static String normalize(String input) {
         String decomposed = Normalizer.normalize(input.trim(), Normalizer.Form.NFD);
         return decomposed.replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT);

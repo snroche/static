@@ -195,7 +195,7 @@ public class BaseSystemsTest {
                 used++;
                 boolean announced = false;
                 for (LogLine line : r.getLines()) {
-                    announced |= line.getText().contains("botiquín");
+                    announced |= line.getText().contains("first-aid kit");
                 }
                 assertTrue(announced);
             }

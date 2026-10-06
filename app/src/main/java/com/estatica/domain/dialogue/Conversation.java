@@ -13,7 +13,7 @@ public final class Conversation {
     private final String scoutId;
     private final String dialogueId;
     private final long startedAtMillis;
-    /** Started by the scout ("¿tenés un minuto?"); these expire if ignored. */
+    /** Started by the scout ("got a minute?"); these expire if ignored. */
     private final boolean initiated;
     private Status status;
 

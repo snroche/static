@@ -198,6 +198,30 @@ public final class ExpeditionEngine {
         return true;
     }
 
+    /**
+     * Estimated return time: the rest of the timeline from now, counting a waiting situation
+     * as resolved at its deadline (or when the order arrives). An estimate for the UI.
+     */
+    public long estimatedReturn(Expedition expedition, long now) {
+        if (!expedition.isActive()) {
+            return now;
+        }
+        List<Segment> segments = expedition.getSegments();
+        long at;
+        int from;
+        if (expedition.getPendingSinceMillis() != Expedition.NONE) {
+            at = Math.max(now, orderArrivesInTime(expedition) ? expedition.getChosenAtMillis() : deadline(expedition));
+            from = expedition.getIndex() + 1;
+        } else {
+            at = expedition.getCursorAtMillis();
+            from = expedition.getIndex();
+        }
+        for (int i = from; i < segments.size(); i++) {
+            at += segments.get(i).getDurationMillis();
+        }
+        return Math.max(at, now);
+    }
+
     /** Next moment something happens without input, or {@link Expedition#NONE}. For notifications. */
     public long nextEventAt(Expedition expedition) {
         if (!expedition.isActive()) {

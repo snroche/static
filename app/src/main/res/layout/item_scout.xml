@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- A crew card: a compact header (tap to expand), details, then the actions. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingVertical="12dp">
+    android:paddingVertical="10dp">
 
-    <TextView
-        android:id="@+id/name"
-        style="@style/TerminalText.Bright"
+    <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="17sp" />
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="48dp"
+        android:orientation="vertical"
+        android:paddingVertical="4dp">
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/TerminalText.Bright"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/summary"
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/status"
@@ -35,6 +60,12 @@
 
     <TextView
         android:id="@+id/bond"
+        style="@style/TerminalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/mood"
         style="@style/TerminalText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -70,6 +101,12 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/habits"
+        style="@style/TerminalText.Dim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/gear"
         style="@style/TerminalText"
         android:layout_width="match_parent"
@@ -88,6 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:textSize="13sp" />
+    </LinearLayout>
 
     <!-- Actions wrap onto a second line on narrow screens. -->
     <androidx.constraintlayout.widget.ConstraintLayout

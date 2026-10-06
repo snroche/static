@@ -1,114 +1,114 @@
 {
-  "_draft": "BORRADOR de la trama (capítulo 1 de La Voz) para revisar y reescribir.",
+  "_draft": "DRAFT of the plot (chapter 1 of the Voice) for review and rewriting.",
   "chapters": [
     {
       "id": "c1",
-      "title": "Capítulo 1: Siete, tres, uno, nueve",
+      "title": "Chapter 1: Seven, three, one, nine",
       "fragments": [
         {
           "id": "c1_1",
-          "source": "Dial (banda corta)",
-          "text": "Los números de La Voz no son al azar: 7-3-1-9 se repite cada hora en punto, como un horario."
+          "source": "Dial (short band)",
+          "text": "The Voice's numbers aren't random: 7-3-1-9 repeats every hour on the hour, like a timetable."
         },
         {
           "id": "c1_2",
-          "source": "Dial (banda media)",
-          "text": "Una estación que se hace llamar Eco-7 contesta en la banda media. Dice su nombre y corta."
+          "source": "Dial (medium band)",
+          "text": "A station calling itself Echo-7 answers on the medium band. It says its name and cuts out."
         },
         {
           "id": "c1_3",
-          "source": "Comisaría (archivo) o laboratorio de Irene",
-          "text": "Una carpeta: «Proyecto Eco. Red de alerta temprana. Activación: 03:10». Es la hora en que empezó el Silencio."
+          "source": "Police station archive or Irene's lab",
+          "text": "A folder: \"Project Echo. Early warning network. Activation: 03:10\". The hour the Silence began."
         },
         {
           "id": "c1_4",
-          "source": "Antena del norte",
-          "text": "En la antena del norte hay un equipo instalado después del Silencio. Placa: ECO-7. Retransmite algo que viene de más lejos."
+          "source": "Northern antenna",
+          "text": "At the northern antenna there's equipment installed after the Silence. Plate: ECHO-7. It relays something from farther away."
         },
         {
           "id": "c1_5",
-          "source": "Dial (banda larga)",
-          "text": "Por primera vez, La Voz pregunta algo: «¿Quién más escucha?»."
+          "source": "Dial (long band)",
+          "text": "For the first time, the Voice asks something: \"Who else is listening?\""
         }
       ],
       "finale": [
-        "Operador del búnker. Siete, tres, uno, nueve. Sabemos que escuchás.",
-        "El Silencio no terminó. Solo se hizo más bajo.",
-        "Cuando estés listo, buscá la estación Eco-7. Fin de la transmisión."
+        "Bunker operator. Seven, three, one, nine. We know you're listening.",
+        "The Silence didn't end. It just got quieter.",
+        "When you're ready, find the Echo-7 station. End of transmission."
       ],
-      "closing": "Capítulo 1 completo. La Voz sabe que existís."
+      "closing": "Chapter 1 complete. The Voice knows you exist."
     }
   ],
   "personalMissions": [
     {
       "id": "mara_ruta",
       "scout": "mara",
-      "title": "La panadería de Olazábal",
+      "title": "Olazábal's bakery",
       "zone": "almacen",
       "event": "mara_olazabal",
       "rewardBond": 15,
       "rewardStressRelief": 30,
       "rewardTrait": "en_paz",
-      "memory": "el día que volví a la panadería de Olazábal",
+      "memory": "the day I went back to Olazábal's bakery",
       "doneLines": [
-        "gracias por dejarme ir.",
-        "no sabía que necesitaba esto."
+        "thanks for letting me go.",
+        "didn't know i needed that."
       ]
     },
     {
       "id": "tano_obra",
       "scout": "tano",
-      "title": "El anexo de la escuela",
+      "title": "The school annex",
       "zone": "escuela",
       "event": "tano_casita",
       "rewardBond": 15,
       "rewardStressRelief": 30,
       "rewardTrait": "en_paz",
-      "memory": "el día que vi que mi obra seguía en pie",
+      "memory": "the day I saw my work was still standing",
       "doneLines": [
-        "Gracias, jefe. Ahora sé que algo de lo que hice sigue en pie."
+        "Thanks, boss. Now I know something I built is still standing."
       ]
     },
     {
       "id": "irene_lab",
       "scout": "irene",
-      "title": "El laboratorio",
+      "title": "The laboratory",
       "zone": "hospital",
       "event": "irene_laboratorio",
       "rewardBond": 15,
       "rewardStressRelief": 30,
       "rewardTrait": "en_paz",
-      "memory": "el día que volví a mi laboratorio",
+      "memory": "the day I went back to my lab",
       "doneLines": [
-        "Gracias por esto, operador. Necesitaba cerrar esa puerta."
+        "Thank you for this. I needed to close that door."
       ]
     },
     {
       "id": "beto_casilla",
       "scout": "beto",
-      "title": "La casilla de señales",
+      "title": "The signal box",
       "zone": "estacion_tren",
       "event": "beto_cuadrilla",
       "rewardBond": 15,
       "rewardStressRelief": 30,
       "rewardTrait": "en_paz",
-      "memory": "el día que volví a la casilla",
+      "memory": "the day I went back to the signal box",
       "doneLines": [
-        "Misión cumplida. Gracias. Cambio y fuera."
+        "Mission accomplished. Thanks. Over and out."
       ]
     },
     {
       "id": "lucho_casa",
       "scout": "lucho",
-      "title": "La casa del barrio",
+      "title": "The house",
       "zone": "barrio_privado",
       "event": "lucho_vieja",
       "rewardBond": 15,
       "rewardStressRelief": 30,
       "rewardTrait": "en_paz",
-      "memory": "el día que volví a casa",
+      "memory": "the day I went back home",
       "doneLines": [
-        "Gracias. En serio. No sé qué más decir."
+        "Thanks. Really. I don't know what else to say."
       ]
     }
   ],
@@ -118,7 +118,7 @@
         "id": "d_decode",
         "counter": "decode",
         "target": 1,
-        "label": "Descifrar 1 transmisión",
+        "label": "Decode 1 transmission",
         "reward": {
           "batteries": 1
         }
@@ -127,7 +127,7 @@
         "id": "d_expeditions",
         "counter": "expeditions",
         "target": 2,
-        "label": "Completar 2 expediciones",
+        "label": "Complete 2 expeditions",
         "reward": {
           "rations": 2
         }
@@ -136,7 +136,7 @@
         "id": "d_sweeps",
         "counter": "sweeps",
         "target": 5,
-        "label": "Fijar 5 señales en el dial",
+        "label": "Lock onto 5 signals",
         "reward": {
           "components": 1
         }
@@ -146,7 +146,7 @@
       "id": "w_expeditions",
       "counter": "expeditions",
       "target": 10,
-      "label": "Completar 10 expediciones en la semana",
+      "label": "Complete 10 expeditions this week",
       "reward": {
         "parts": 2,
         "medicine": 2

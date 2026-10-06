@@ -34,12 +34,45 @@ public final class DialogueEngine {
 
     private static final double MILLIS_PER_HOUR = 3_600_000.0;
 
+    /** Who a scout gets along with (or doesn't). Provided by whoever owns affinities. */
+    public interface Relations {
+        Relations NONE = new Relations() {
+            @Override
+            public Scout find(Scout scout, String kind) {
+                return null;
+            }
+
+            @Override
+            public void adjust(Scout a, Scout b, double delta) {
+            }
+        };
+
+        /** An alive companion in that relation ("friend", "inseparable", "rival"), or null. */
+        Scout find(Scout scout, String kind);
+
+        void adjust(Scout a, Scout b, double delta);
+    }
+
     private final GameContent content;
     private final ScoutRules rules;
+    private final Relations relations;
 
     public DialogueEngine(GameContent content, ScoutRules rules) {
+        this(content, rules, Relations.NONE);
+    }
+
+    public DialogueEngine(GameContent content, ScoutRules rules, Relations relations) {
         this.content = content;
         this.rules = rules;
+        this.relations = relations;
+    }
+
+    /** The companion a dialogue is about: the dead (GRIEF) or a friend / rival. */
+    private Scout subject(Scout s, DialogueDef d, Collection<Scout> everyone) {
+        if (d.getKind() == DialogueDef.Kind.GRIEF) {
+            return lastDead(s, everyone);
+        }
+        return d.getRequiresRelation() != null ? relations.find(s, d.getRequiresRelation()) : null;
     }
 
     public boolean isEligible(Scout s, DialogueDef d, Collection<Scout> everyone, long now) {
@@ -67,15 +100,15 @@ public final class DialogueEngine {
                 return false;
             }
         }
-        Scout dead = null;
-        if (d.getKind() == DialogueDef.Kind.GRIEF) {
-            dead = lastDead(s, everyone);
-            if (dead == null
-                    || (now - dead.getLife().getDiedAtMillis()) / MILLIS_PER_HOUR < d.getMinHoursSinceDeath()) {
-                return false;
-            }
+        Scout other = subject(s, d, everyone);
+        if (d.getKind() == DialogueDef.Kind.GRIEF && (other == null
+                || (now - other.getLife().getDiedAtMillis()) / MILLIS_PER_HOUR < d.getMinHoursSinceDeath())) {
+            return false;
         }
-        return d.isRepeatable() || !s.getLife().hasFlag(doneFlag(d, dead));
+        if (d.getRequiresRelation() != null && other == null) {
+            return false;
+        }
+        return d.isRepeatable() || !s.getLife().hasFlag(doneFlag(d, other));
     }
 
     /**
@@ -104,7 +137,7 @@ public final class DialogueEngine {
     /** The scout's opening lines. Marks the dialogue as had. */
     public List<LogLine> open(Scout s, DialogueDef d, boolean initiated, Collection<Scout> everyone,
                               GameRandom rng, long now) {
-        Scout dead = d.getKind() == DialogueDef.Kind.GRIEF ? lastDead(s, everyone) : null;
+        Scout dead = subject(s, d, everyone);
         s.getLife().addFlag(doneFlag(d, dead));
         if (initiated) {
             s.getLife().setLastInitiatedAtMillis(now);
@@ -128,7 +161,10 @@ public final class DialogueEngine {
 
     public Answer answer(Scout s, DialogueDef d, int choiceIndex, Collection<Scout> everyone, long now) {
         DialogueDef.Choice choice = d.getChoices().get(choiceIndex);
-        Scout dead = d.getKind() == DialogueDef.Kind.GRIEF ? lastDead(s, everyone) : null;
+        Scout dead = subject(s, d, everyone);
+        if (dead != null && dead.isAlive() && choice.getAffinity() != 0) {
+            relations.adjust(s, dead, choice.getAffinity());
+        }
         Map<String, String> vars = vars(s, dead);
         VoiceDef voice = content.voice(s.getVoiceId());
         TerminalText.BunkerText text = content.getTerminal().getBunker();
@@ -177,13 +213,19 @@ public final class DialogueEngine {
         return dead == null ? DONE + d.getId() : DONE + d.getId() + ":" + dead.getId();
     }
 
-    private static Map<String, String> vars(Scout s, Scout dead) {
+    private static Map<String, String> vars(Scout s, Scout other) {
         Map<String, String> vars = new HashMap<>();
         vars.put("name", s.getName());
-        if (dead != null) {
-            vars.put("dead", dead.getName());
+        if (other != null) {
+            vars.put("dead", other.getName());
+            vars.put("other", other.getName());
         }
         return vars;
+    }
+
+    /** The companion this dialogue is about, for labels shown before answering. */
+    public Scout subjectOf(Scout s, DialogueDef d, Collection<Scout> everyone) {
+        return subject(s, d, everyone);
     }
 
     private static LogLine say(Scout s, String text, long now) {

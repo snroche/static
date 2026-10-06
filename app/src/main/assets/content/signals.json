@@ -1,14 +1,14 @@
 {
   "teasers": {
     "ZONE": [
-      "...coordenadas... cuarenta y dos... sur...",
-      "...un lugar con techo... repito... con techo...",
-      "...el depósito de la calle... ksshh..."
+      "...coordinates... forty-two... south...",
+      "...a place with a roof... repeat... a roof...",
+      "...the warehouse on... ksshh..."
     ],
     "SURVIVOR": [
-      "...¿hay alguien? ...por favor...",
-      "...estoy solo... respondan...",
-      "...si alguien escucha... estoy en..."
+      "...is anyone there? ...please...",
+      "...i'm alone... answer...",
+      "...if anyone hears this... i'm at..."
     ],
     "TRANSMISSION": [
       "· — — · · — · · — ·",
@@ -16,29 +16,29 @@
       "— · — · · — — · ·"
     ],
     "RARE": [
-      "...música... un tango, lejos...",
-      "...una voz cuenta números... siete... tres...",
-      "...un pronóstico del tiempo... soleado..."
+      "...music... a tango, far away...",
+      "...a voice counting numbers... seven... three...",
+      "...a weather report... sunny..."
     ]
   },
   "rare": [
     {
       "id": "tango",
       "text": [
-        "Un tango sale de la estática. Alguien tiene un tocadiscos andando."
+        "A tango drifts out of the static. Someone has a record player working."
       ]
     },
     {
       "id": "numeros",
       "text": [
-        "Una voz cuenta números. Siete, tres, uno, nueve. Después, nada."
+        "A voice counts numbers. Seven, three, one, nine. Then nothing."
       ],
-      "lore": "Alguien transmite números en la banda corta: 7-3-1-9. Siempre la misma voz."
+      "lore": "Someone broadcasts numbers on the short band: 7-3-1-9. Always the same voice."
     },
     {
       "id": "deposito",
       "text": [
-        "Una baliza automática repite la ubicación de un depósito de baterías. Tu asistente anota lo que alcanza."
+        "An automatic beacon repeats the location of a battery depot. Your assistant writes down what they can."
       ],
       "resources": {
         "batteries": 2
@@ -47,7 +47,7 @@
     {
       "id": "baliza",
       "text": [
-        "Una baliza de emergencia, todavía a pilas. La desarmás de oído: sirve para piezas."
+        "An emergency beacon, still on batteries. You take it apart by ear: good for parts."
       ],
       "resources": {
         "components": 2
@@ -56,16 +56,16 @@
     {
       "id": "pronostico",
       "text": [
-        "Un pronóstico del tiempo grabado, de hace años. Anuncia sol para todo el fin de semana."
+        "A recorded weather report from years ago. It promises sun all weekend."
       ]
     },
     {
       "id": "marta",
       "band": "medium",
       "text": [
-        "Alguien llama a una tal Marta. Llama y llama. Nadie contesta."
+        "Someone is calling for a woman named Marta. Calling and calling. Nobody answers."
       ],
-      "lore": "En la banda media, un hombre llama a Marta todos los días a la misma hora."
+      "lore": "On the medium band, a man calls for Marta every day at the same time."
     }
   ],
   "transmissions": [
@@ -74,19 +74,19 @@
       "band": "short",
       "unique": true,
       "reward": "MORSE_TABLE",
-      "text": "Manual de radio adjunto"
+      "text": "Radio manual attached"
     },
     {
       "id": "provisiones",
       "band": "short",
       "reward": "CACHE",
-      "text": "Dejamos provisiones en {zone}"
+      "text": "We left supplies at {zone}"
     },
     {
       "id": "perros_aviso",
       "band": "short",
       "reward": "DANGER",
-      "text": "Cuidado en {zone} hay perros"
+      "text": "Careful at {zone} there are dogs"
     },
     {
       "id": "baterias_tanque",
@@ -95,21 +95,21 @@
       "resources": {
         "batteries": 2
       },
-      "text": "Baterias enterradas junto al tanque"
+      "text": "Batteries buried next to the tank"
     },
     {
       "id": "alijo",
       "band": "medium",
       "difficulty": 2,
       "reward": "CACHE",
-      "text": "Hay un alijo debajo del piso en {zone}"
+      "text": "There is a stash under the floor at {zone}"
     },
     {
       "id": "frente",
       "band": "medium",
       "difficulty": 2,
       "reward": "DANGER",
-      "text": "No entren por el frente de {zone}"
+      "text": "Do not go in through the front of {zone}"
     },
     {
       "id": "ambulancia",
@@ -118,44 +118,44 @@
       "resources": {
         "medicine": 2
       },
-      "text": "Medicinas en la ambulancia volcada"
+      "text": "Medicine in the overturned ambulance"
     },
     {
       "id": "tres_y_diez",
       "band": "medium",
       "unique": true,
       "reward": "LORE",
-      "text": "El silencio empezo a las tres y diez",
-      "lore": "Una transmisión cifrada dice que el Silencio empezó a las 3:10."
+      "text": "The silence began at three ten",
+      "lore": "An encrypted transmission says the Silence began at 3:10."
     },
     {
       "id": "no_respondan",
       "band": "medium",
       "unique": true,
       "reward": "LORE",
-      "text": "No respondan a la voz",
-      "lore": "Alguien advierte, en clave: \"No respondan a La Voz\"."
+      "text": "Do not answer the voice",
+      "lore": "Someone warns, in code: \"Do not answer the Voice\"."
     },
     {
       "id": "sigan",
       "reward": "LORE",
       "unique": true,
-      "text": "Si escuchan esto sigan en contacto",
-      "lore": "Un mensaje sin firma pide a quien lo escuche que siga en contacto."
+      "text": "If you hear this stay in contact",
+      "lore": "An unsigned message asks whoever hears it to stay in contact."
     },
     {
       "id": "combustible",
       "band": "long",
       "difficulty": 3,
       "reward": "CACHE",
-      "text": "Combustible y piezas en {zone}"
+      "text": "Fuel and parts at {zone}"
     },
     {
       "id": "no_seguro",
       "band": "long",
       "difficulty": 3,
       "reward": "DANGER",
-      "text": "{zone} no es seguro"
+      "text": "{zone} is not safe"
     },
     {
       "id": "voz_horario",
@@ -163,7 +163,7 @@
       "unique": true,
       "reward": "PLOT",
       "plot": "c1_1",
-      "text": "Siete tres uno nueve cada hora en punto"
+      "text": "Seven three one nine every hour on the hour"
     },
     {
       "id": "voz_eco",
@@ -172,7 +172,7 @@
       "unique": true,
       "reward": "PLOT",
       "plot": "c1_2",
-      "text": "Aqui eco siete fin"
+      "text": "Echo seven here end"
     },
     {
       "id": "voz_pregunta",
@@ -181,7 +181,7 @@
       "unique": true,
       "reward": "PLOT",
       "plot": "c1_5",
-      "text": "Quien mas escucha"
+      "text": "Who else is listening"
     }
   ]
 }

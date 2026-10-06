@@ -22,6 +22,12 @@ public final class TerminalText {
     private RadioText radio;
     private BaseText base;
     private StoryText story;
+    /** Mood key (content, steady, tense, breaking) to label. */
+    private Map<String, String> moods;
+
+    public Map<String, String> getMoods() {
+        return moods;
+    }
 
     public StoryText getStory() {
         return story;
@@ -525,6 +531,12 @@ public final class TerminalText {
         private String itemFound;
         /** {name}, {item}, {dead}. */
         private String itemRecovered;
+        /** Memory text for a recovered belonging: {item}, {dead}. */
+        private String recoveredMemory;
+
+        public String getRecoveredMemory() {
+            return recoveredMemory;
+        }
         /** {name}, {item}. */
         private String giftGiven;
         /** {zone}, {date}. */

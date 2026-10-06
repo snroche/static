@@ -4,7 +4,7 @@
     "name": "Beto",
     "voice": "telegrafico",
     "band": "medium",
-    "bio": "Señalero del ferrocarril. Habla como si cada palabra costara plata.",
+    "bio": "Railway signalman. Talks as if every word cost money.",
     "stats": {
       "endurance": [6, 9],
       "stealth": [3, 6],
@@ -13,7 +13,8 @@
       "craft": [4, 7]
     },
     "traits": [
-      "sangre_fria"
+      "sangre_fria",
+      "terca"
     ],
     "hiddenTrait": "desconfianza",
     "likes": [
@@ -24,8 +25,22 @@
       "dulce"
     ],
     "rescueLines": [
-      "Aquí Beto. Creí que nadie escuchaba.",
-      "Gracias. Cambio."
+      "Beto here. Thought nobody was listening.",
+      "Thanks. Over."
+    ],
+    "habits": [
+      {
+        "text": "Checks his wristwatch every few minutes. It stopped years ago.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Sorts the bunker's chores into a strict schedule.",
+        "minBondLevel": 2
+      },
+      {
+        "text": "Whistles the 2:55 departure signal when he's happy.",
+        "minBondLevel": 3
+      }
     ]
   },
   {
@@ -33,7 +48,7 @@
     "name": "Lucho",
     "voice": "pibe",
     "band": "medium",
-    "bio": "Diecisiete años. Sobrevivió solo en un barrio cerrado. No quiere hablar de cómo.",
+    "bio": "Seventeen. Survived alone in a gated community. Won't say how.",
     "stats": {
       "endurance": [4, 8],
       "stealth": [6, 10],
@@ -42,7 +57,8 @@
       "craft": [2, 6]
     },
     "traits": [
-      "imprudencia"
+      "imprudencia",
+      "optimista"
     ],
     "hiddenTrait": "miedo",
     "likes": [
@@ -53,8 +69,22 @@
       "lectura"
     ],
     "rescueLines": [
-      "¿Posta que hay un búnker? ¿Con comida?",
-      "Bueno. Voy. Pero no me pidan que hable de mi vieja."
+      "Wait, there's really a bunker? With food?",
+      "Ok. I'm coming. But don't ask me about my mom."
+    ],
+    "habits": [
+      {
+        "text": "Drums on every surface. Constantly.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Pretends he isn't hungry. Always is.",
+        "minBondLevel": 2
+      },
+      {
+        "text": "Sleeps facing the door.",
+        "minBondLevel": 3
+      }
     ]
   },
   {
@@ -62,7 +92,7 @@
     "name": "Nilda",
     "voice": "abuela",
     "band": "long",
-    "bio": "Enfermera jubilada. Atendió en el hospital hasta el último día. Llama \"nene\" a todo el mundo.",
+    "bio": "Retired nurse. Worked at the hospital to the very last day. Calls everyone \"dear\".",
     "stats": {
       "endurance": [3, 6],
       "stealth": [3, 6],
@@ -71,7 +101,8 @@
       "craft": [5, 8]
     },
     "traits": [
-      "metodo"
+      "metodo",
+      "gentil"
     ],
     "hiddenTrait": "sangre_fria",
     "likes": [
@@ -82,8 +113,22 @@
       "juego"
     ],
     "rescueLines": [
-      "Ay, querido. Pensé que nadie iba a venir.",
-      "Llevame. Y que alguien me cebe un mate."
+      "Oh, dear. I thought nobody was coming.",
+      "Take me with you. And someone brew me a mate."
+    ],
+    "habits": [
+      {
+        "text": "Knits with whatever thread she finds.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Checks everyone's forehead for fever, uninvited.",
+        "minBondLevel": 2
+      },
+      {
+        "text": "Keeps a list of birthdays. Including yours, somehow.",
+        "minBondLevel": 3
+      }
     ]
   },
   {
@@ -91,7 +136,7 @@
     "name": "La Rusa",
     "voice": "jerga",
     "band": "long",
-    "bio": "Camionera. Cruzó el país tres veces después del Silencio. No dice su nombre de verdad.",
+    "bio": "Truck driver. Crossed the country three times after the Silence. Won't give her real name.",
     "stats": {
       "endurance": [7, 10],
       "stealth": [4, 7],
@@ -100,7 +145,8 @@
       "craft": [6, 9]
     },
     "traits": [
-      "sangre_fria"
+      "sangre_fria",
+      "solitaria"
     ],
     "hiddenTrait": "imprudencia",
     "likes": [
@@ -111,8 +157,22 @@
       "escritura"
     ],
     "rescueLines": [
-      "Bueno, jefe. Me convenciste. Pero manejo yo.",
-      "Tenés un búnker, me dijeron. Vamos a ver."
+      "All right, boss. You talked me into it. But I'm driving.",
+      "A bunker, they told me. We'll see."
+    ],
+    "habits": [
+      {
+        "text": "Sits with her back to the wall. Always.",
+        "minBondLevel": 1
+      },
+      {
+        "text": "Draws road maps on any flat surface.",
+        "minBondLevel": 2
+      },
+      {
+        "text": "Sings old truck-stop songs off key at night.",
+        "minBondLevel": 3
+      }
     ]
   }
 ]

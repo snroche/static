@@ -259,7 +259,7 @@ public class ExpeditionEngineTest {
                 assertEquals(Expedition.Status.LOST, run.expedition.getStatus());
                 assertTrue(run.delivered.isEmpty());
                 assertTrue(run.memories.stream().anyMatch(m -> m.getType() == Memory.Type.LAST_WORDS));
-                assertTrue(run.log.stream().anyMatch(l -> l.contains("señal perdida")));
+                assertTrue(run.log.stream().anyMatch(l -> l.contains("signal lost")));
             }
         }
         assertTrue(deaths > 0);
@@ -311,7 +311,7 @@ public class ExpeditionEngineTest {
         untilSituation(run);
         assertTrue(run.expedition.isRetreatOffered());
         List<String> options = engine.pendingOptions(run.expedition);
-        assertEquals("Volvé al búnker", options.get(options.size() - 1));
+        assertEquals("Come back to the bunker", options.get(options.size() - 1));
 
         long now = run.expedition.getPendingSinceMillis() + 1_000;
         assertTrue(engine.choose(run.expedition, options.size() - 1, now));
@@ -352,7 +352,7 @@ public class ExpeditionEngineTest {
     @Test
     public void lastWordsRememberTheGiftAndTheCompanion() {
         ExpeditionEngine.DeathContext death =
-                new ExpeditionEngine.DeathContext(List.of("armónica"), "Irene");
+                new ExpeditionEngine.DeathContext(List.of("harmonica"), "Irene");
         int deaths = 0;
         int mentions = 0;
         for (long seed = 0; seed < 400; seed++) {
@@ -372,7 +372,7 @@ public class ExpeditionEngineTest {
             for (Memory m : memories) {
                 if (m.getType() == Memory.Type.LAST_WORDS) {
                     deaths++;
-                    if (m.getText().contains("Irene") || m.getText().contains("armónica")) {
+                    if (m.getText().contains("Irene") || m.getText().contains("harmonica")) {
                         mentions++;
                     }
                 }
@@ -437,7 +437,7 @@ public class ExpeditionEngineTest {
                 t += 1_000;
                 for (LogLine line : engine.advance(e, s, List.of(), t).getLines()) {
                     broken += line.getText().contains("—") ? 1 : 0;
-                    lost += line.getText().contains("no se entiende") ? 1 : 0;
+                    lost += line.getText().contains("can't make it out") ? 1 : 0;
                 }
             }
             if (e.getLostHints() != 0) {

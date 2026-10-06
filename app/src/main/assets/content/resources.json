@@ -1,57 +1,64 @@
 [
   {
     "id": "scrap",
-    "name": "Chatarra"
+    "name": "Scrap",
+    "shortName": "SCR"
   },
   {
     "id": "components",
-    "name": "Componentes"
+    "name": "Components",
+    "shortName": "CMP"
   },
   {
     "id": "rations",
-    "name": "Raciones"
+    "name": "Rations",
+    "shortName": "RAT"
   },
   {
     "id": "batteries",
-    "name": "Baterías"
+    "name": "Batteries",
+    "shortName": "BAT"
   },
   {
     "id": "medicine",
-    "name": "Medicinas"
+    "name": "Medicine",
+    "shortName": "MED"
   },
   {
     "id": "relay_kit",
-    "name": "Kits de repetidora",
-    "kind": "KIT"
+    "name": "Relay kits",
+    "kind": "KIT",
+    "shortName": "KIT"
   },
   {
     "id": "parts",
-    "name": "Piezas",
-    "kind": "PART"
+    "name": "Parts",
+    "kind": "PART",
+    "shortName": "PRT"
   },
   {
     "id": "gear_linterna",
-    "name": "Linterna",
+    "name": "Flashlight",
     "kind": "GEAR"
   },
   {
     "id": "gear_mochila",
-    "name": "Mochila reforzada",
+    "name": "Reinforced backpack",
     "kind": "GEAR"
   },
   {
     "id": "gear_botiquin",
-    "name": "Botiquín",
+    "name": "First-aid kit",
     "kind": "GEAR"
   },
   {
     "id": "gear_chaleco",
-    "name": "Chaleco acolchado",
+    "name": "Padded vest",
     "kind": "GEAR"
   },
   {
     "id": "gear_radio",
-    "name": "Radio portátil",
+    "name": "Portable radio",
     "kind": "GEAR"
   }
 ]

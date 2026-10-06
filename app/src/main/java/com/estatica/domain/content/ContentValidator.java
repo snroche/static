@@ -20,7 +20,8 @@ public final class ContentValidator {
             "departure", "arrival", "oddsGood", "oddsUnsure", "oddsBad", "disobey",
             "autoDecide", "injured", "find", "lastWords", "lastMemory", "lastOrder",
             "initiate", "askReturn", "goingHome", "findItem", "lastGift", "lastCompanion",
-            "giftLiked", "giftDisliked", "giftNeutral");
+            "giftLiked", "giftDisliked", "giftNeutral",
+            "idle", "idleTense", "aboutFriend", "aboutRival");
 
     private final GameContent content;
     private final List<String> problems = new ArrayList<>();
@@ -300,6 +301,16 @@ public final class ContentValidator {
         for (StatType type : StatType.values()) {
             check(statNames.containsKey(type.key()), "terminal: statNames." + type.key());
         }
+        for (String mood : List.of("content", "steady", "tense", "breaking")) {
+            check(content.getTerminal().getMoods() != null && content.getTerminal().getMoods().containsKey(mood),
+                    "terminal: moods." + mood);
+        }
+        for (DialogueDef d : content.getDialogues().values()) {
+            check(d.getRequiresRelation() == null
+                            || List.of("friend", "inseparable", "rival").contains(d.getRequiresRelation()),
+                    "dialogue " + d.getId() + ": unknown relation " + d.getRequiresRelation());
+        }
+        check(content.getBalance().getBarks() != null, "balance: barks");
         Map<String, String> statusLabels = content.getTerminal().getScoutStatus();
         for (ScoutStatus status : ScoutStatus.values()) {
             check(statusLabels != null && statusLabels.containsKey(status.name()),

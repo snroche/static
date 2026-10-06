@@ -20,8 +20,8 @@ public class CommandInterpreterTest {
                 + "\"boot\":[\"x\"],"
                 + "\"reconnect\":[[\"y\"]],"
                 + "\"elapsedUnits\":{\"day\":\"d\",\"hour\":\"h\",\"minute\":\"min\",\"lessThanMinute\":\"-\"},"
-                + "\"unknownCommand\":\"No entiendo '{input}'\","
-                + "\"commands\":{\"ayuda\":[\"lista\"],\"estado\":[\"v{version}\"]},"
+                + "\"unknownCommand\":\"I don't understand '{input}'\","
+                + "\"commands\":{\"help\":[\"list\"],\"status\":[\"v{version}\"]},"
                 + "\"statNames\":{},\"expedition\":{},\"bunker\":{}"
                 + "}";
         // Plain Gson: this test is about commands, not about which sections terminal.json needs.
@@ -31,16 +31,16 @@ public class CommandInterpreterTest {
 
     @Test
     public void knownCommandIsFormatted() {
-        assertEquals(List.of("v1.2.3"), interpreter.respond("estado", Map.of("version", "1.2.3")));
+        assertEquals(List.of("v1.2.3"), interpreter.respond("status", Map.of("version", "1.2.3")));
     }
 
     @Test
     public void inputIsNormalized() {
-        assertEquals(List.of("lista"), interpreter.respond("  AYÚDA ", Map.of()));
+        assertEquals(List.of("list"), interpreter.respond("  HÉLP ", Map.of()));
     }
 
     @Test
     public void unknownCommandEchoesTrimmedInput() {
-        assertEquals(List.of("No entiendo 'bailar'"), interpreter.respond(" bailar ", Map.of()));
+        assertEquals(List.of("I don't understand 'dance'"), interpreter.respond(" dance ", Map.of()));
     }
 }

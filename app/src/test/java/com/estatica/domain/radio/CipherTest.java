@@ -11,14 +11,14 @@ public class CipherTest {
 
     @Test
     public void normalizeStripsAccentsSymbolsAndExtraSpaces() {
-        assertEquals("EL SILENCIO EMPEZO A LAS", Cipher.normalize("  El Silencio  empezó, a las 3:10 "));
-        assertEquals("ESCUELA N", Cipher.normalize("Escuela N.º 14"));
-        assertEquals("NANDU", Cipher.normalize("Ñandú"));
+        assertEquals("THE SILENCE BEGAN AT", Cipher.normalize("  The Silence  began, at 3:10 "));
+        assertEquals("SCHOOL NO", Cipher.normalize("School No. 14"));
+        assertEquals("OLAZABAL NANDU", Cipher.normalize("Olazábal Ñandú"));
     }
 
     @Test
     public void caesarRoundTripsForEveryShift() {
-        String plain = "DEJAMOS PROVISIONES EN EL HOSPITAL";
+        String plain = "WE LEFT SUPPLIES AT THE HOSPITAL";
         for (int shift = -30; shift <= 30; shift++) {
             assertEquals(plain, Cipher.caesar(Cipher.caesar(plain, shift), -shift));
         }
@@ -37,14 +37,14 @@ public class CipherTest {
 
     @Test
     public void answersMatchIgnoringCaseAccentsAndSpacing() {
-        assertTrue(Cipher.matches("  el silencio empezó a las tres y diez ", "EL SILENCIO EMPEZO A LAS TRES Y DIEZ"));
-        assertFalse(Cipher.matches("EL SILENCIO", "EL SILENCIO EMPEZO"));
+        assertTrue(Cipher.matches("  the silence began at three ten ", "THE SILENCE BEGAN AT THREE TEN"));
+        assertFalse(Cipher.matches("THE SILENCE", "THE SILENCE BEGAN"));
     }
 
     @Test
     public void transmissionChecksTheDecodedText() {
-        Transmission caesar = Transmission.create("t", Transmission.Kind.CAESAR, "No respondan a la voz", 7, "medium", null, 0);
-        assertEquals("UV YLZWVUKHU H SH CVG", caesar.cipherText());
+        Transmission caesar = Transmission.create("t", Transmission.Kind.CAESAR, "Do not answer the voice", 7, "medium", null, 0);
+        assertEquals("KV UVA HUZDLY AOL CVPJL", caesar.cipherText());
         assertTrue(caesar.check(Cipher.caesar(caesar.cipherText(), -7)));
         Transmission morse = Transmission.create("t", Transmission.Kind.MORSE, "SOS", 0, "short", null, 0);
         assertEquals("··· ——— ···", morse.cipherText());

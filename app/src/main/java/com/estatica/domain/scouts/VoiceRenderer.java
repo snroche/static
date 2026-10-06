@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /** Renders text in a scout's voice style: placeholders, slang replacements, case transform. */
 public final class VoiceRenderer {
 
-    private static final Locale SPANISH = Locale.forLanguageTag("es");
+    private static final Locale TEXT_LOCALE = Locale.ENGLISH;
 
     private VoiceRenderer() {
     }
@@ -29,9 +29,9 @@ public final class VoiceRenderer {
             }
         }
         if (voice.getTransform() == VoiceDef.Transform.LOWER) {
-            text = text.toLowerCase(SPANISH);
+            text = text.toLowerCase(TEXT_LOCALE);
         } else if (voice.getTransform() == VoiceDef.Transform.UPPER) {
-            text = text.toUpperCase(SPANISH);
+            text = text.toUpperCase(TEXT_LOCALE);
         }
         return text;
     }

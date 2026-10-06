@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * GDD §5.5 "después": the others react according to how close they were. Stress for
- * everyone, more for the closest; sometimes a scar (Rencor, Miedo). Conversations about the
+ * GDD §5.5 "afterwards": the others react according to how close they were. Stress for
+ * everyone, more for the closest; sometimes a scar (Grudge, Fearful). Conversations about the
  * dead come later, through GRIEF dialogues.
  */
 public final class GriefRules {

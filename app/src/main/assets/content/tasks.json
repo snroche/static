@@ -1,16 +1,16 @@
 [
   {
     "id": "descanso",
-    "name": "Descanso",
-    "description": "Duerme, lee, mira el techo. Se recupera del estrés mucho más rápido.",
+    "name": "Rest",
+    "description": "Sleeps, reads, stares at the ceiling. Recovers from stress much faster.",
     "stat": "nerve",
     "xpPerHour": 0.3,
     "selfStressRecoveryMultiplier": 2.5
   },
   {
     "id": "enfermeria",
-    "name": "Enfermería",
-    "description": "Cuida a los heridos: curan más rápido y el grupo se calma.",
+    "name": "Infirmary",
+    "description": "Tends the wounded: they heal faster and the group calms down.",
     "stat": "wits",
     "xpPerHour": 0.5,
     "groupHealMultiplier": 1.5,
@@ -18,16 +18,16 @@
   },
   {
     "id": "cocina",
-    "name": "Cocina",
-    "description": "Hace rendir lo que hay. Un plato caliente baja el estrés de todos.",
+    "name": "Kitchen",
+    "description": "Stretches what we have. A hot meal lowers everyone's stress.",
     "stat": "craft",
     "xpPerHour": 0.5,
     "groupStressReliefPerHour": 1.5
   },
   {
     "id": "taller",
-    "name": "Taller",
-    "description": "Desarma chatarra (3 → 1 componente cada 2 h) y acelera lo que se fabrica según su Oficio.",
+    "name": "Workshop",
+    "description": "Strips scrap (3 scrap → 1 component every 2 h) and speeds up crafting with their Craft.",
     "stat": "craft",
     "xpPerHour": 0.6,
     "conversion": {
@@ -39,16 +39,16 @@
   },
   {
     "id": "guardia",
-    "name": "Guardia",
-    "description": "Vigila la entrada. Si hay una incursión, defiende con Aguante y Nervio.",
+    "name": "Guard",
+    "description": "Watches the entrance. If there's a raid, defends with Endurance and Nerve.",
     "stat": "endurance",
     "xpPerHour": 0.6,
     "guards": true
   },
   {
     "id": "radio",
-    "name": "Asistente de radio",
-    "description": "Barre el dial mientras no estás: cada tanto capta una señal. La compañía calma a todos.",
+    "name": "Radio assistant",
+    "description": "Sweeps the dial while you're away: catches a signal now and then. The company calms everyone.",
     "stat": "wits",
     "xpPerHour": 0.5,
     "groupStressReliefPerHour": 0.5,
@@ -56,8 +56,8 @@
   },
   {
     "id": "entrenamiento",
-    "name": "Entrenamiento",
-    "description": "Entrena con los demás. Si alguien sabe más, le enseña.",
+    "name": "Training",
+    "description": "Trains with the others. Whoever knows more teaches.",
     "stat": "endurance",
     "xpPerHour": 0.8,
     "mentoring": true

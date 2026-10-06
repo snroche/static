@@ -1,9 +1,9 @@
 [
   {
     "id": "almacen",
-    "name": "Almacén de la esquina",
+    "name": "Corner store",
     "band": "short",
-    "description": "A dos cuadras. Ya lo saquearon, pero siempre queda algo.",
+    "description": "Two blocks away. Already looted, but there's always something left.",
     "danger": 1,
     "durationMinutes": [1, 3],
     "situations": [1, 1],
@@ -30,9 +30,9 @@
       }
     ],
     "transit": [
-      "Crucé la avenida. Sin novedad.",
-      "Paso por la plaza. Las hamacas se mueven solas con el viento.",
-      "Todo quieto por acá."
+      "Crossed the avenue. Nothing to report.",
+      "Passing the playground. The swings move on their own in the wind.",
+      "All quiet around here."
     ],
     "items": [
       {
@@ -52,9 +52,9 @@
   },
   {
     "id": "estacion",
-    "name": "Estación de servicio",
+    "name": "Gas station",
     "band": "short",
-    "description": "Sobre la ruta. Los surtidores están secos hace años.",
+    "description": "Out on the highway. The pumps have been dry for years.",
     "danger": 1,
     "durationMinutes": [2, 4],
     "situations": [1, 2],
@@ -88,9 +88,9 @@
       }
     ],
     "transit": [
-      "Voy por la banquina. La ruta está vacía hasta donde llego a ver.",
-      "Hay un cartel caído: \"Próxima estación 2 km\". Ya casi.",
-      "Pasé un colectivo abandonado. No me acerqué."
+      "Walking the shoulder. The highway's empty as far as I can see.",
+      "A fallen sign: \"Next station 2 km\". Almost there.",
+      "Passed an abandoned bus. Didn't go near it."
     ],
     "items": [
       {
@@ -110,9 +110,9 @@
   },
   {
     "id": "farmacia",
-    "name": "Farmacia saqueada",
+    "name": "Looted pharmacy",
     "band": "short",
-    "description": "La cruz verde todavía cuelga. Adentro, un desastre.",
+    "description": "The green cross still hangs. Inside, a disaster.",
     "danger": 2,
     "durationMinutes": [2, 5],
     "situations": [1, 2],
@@ -140,9 +140,9 @@
       }
     ],
     "transit": [
-      "Hay vidrios por toda la vereda. Voy despacio.",
-      "Escuché un ruido a lo lejos. Era una ventana golpeando.",
-      "Doblo por la diagonal. Nadie."
+      "There's glass all over the sidewalk. Going slow.",
+      "Heard a noise in the distance. A window banging.",
+      "Turning down the diagonal street. Nobody."
     ],
     "items": [
       {
@@ -162,9 +162,9 @@
   },
   {
     "id": "escuela",
-    "name": "Escuela N.º 14",
+    "name": "School No. 14",
     "band": "short",
-    "description": "Tres pisos. El techo del gimnasio se vino abajo.",
+    "description": "Three floors. The gym roof caved in.",
     "danger": 2,
     "durationMinutes": [3, 5],
     "situations": [2, 2],
@@ -200,9 +200,9 @@
       }
     ],
     "transit": [
-      "Paso por el patio. Todavía hay dibujos de tiza en el piso.",
-      "Los pasillos dan eco. Camino pegado a la pared.",
-      "Hay un pizarrón con la fecha de antes del Silencio."
+      "Crossing the yard. There are still chalk drawings on the ground.",
+      "The hallways echo. Keeping to the wall.",
+      "There's a blackboard with a date from before the Silence."
     ],
     "items": [
       {
@@ -226,9 +226,9 @@
   },
   {
     "id": "lavadero",
-    "name": "Lavadero industrial",
+    "name": "Industrial laundry",
     "band": "short",
-    "description": "Galpón de lavarropas gigantes. Huele a jabón viejo y a humedad.",
+    "description": "A shed full of giant washing machines. Smells of old soap and damp.",
     "danger": 1,
     "durationMinutes": [2, 4],
     "situations": [1, 2],
@@ -265,17 +265,17 @@
       }
     ],
     "transit": [
-      "Hay sábanas colgadas todavía. Se mueven solas.",
-      "El piso está mojado. No sé de dónde sale el agua.",
-      "Cruzo la playa de carga. Nadie."
+      "There are still sheets hanging. They move on their own.",
+      "The floor's wet. No idea where the water's coming from.",
+      "Crossing the loading yard. Nobody."
     ],
     "startKnown": false
   },
   {
     "id": "hospital",
-    "name": "Hospital Municipal",
+    "name": "Municipal Hospital",
     "band": "medium",
-    "description": "Seis pisos. Las ambulancias siguen en la rampa.",
+    "description": "Six floors. The ambulances are still on the ramp.",
     "danger": 2,
     "durationMinutes": [20, 40],
     "situations": [2, 3],
@@ -319,17 +319,17 @@
       }
     ],
     "transit": [
-      "La rampa de ambulancias está llena de hojas.",
-      "Pasillos largos. Las luces de emergencia todavía titilan.",
-      "Hay camillas cruzadas en el hall. Paso por arriba."
+      "The ambulance ramp is covered in leaves.",
+      "Long corridors. The emergency lights still flicker.",
+      "Stretchers crossed in the lobby. Climbing over them."
     ],
     "startKnown": false
   },
   {
     "id": "estacion_tren",
-    "name": "Estación de trenes",
+    "name": "Train station",
     "band": "medium",
-    "description": "La última formación quedó en el andén 3, con las puertas abiertas.",
+    "description": "The last train is still on platform 3, doors open.",
     "danger": 2,
     "durationMinutes": [15, 30],
     "situations": [2, 2],
@@ -371,17 +371,17 @@
       }
     ],
     "transit": [
-      "Camino por las vías. Los durmientes crujen.",
-      "El tablero de horarios marca un tren que nunca llegó.",
-      "Hay un perro mirándome desde el puente peatonal."
+      "Walking the tracks. The sleepers creak.",
+      "The departures board shows a train that never arrived.",
+      "There's a dog watching me from the footbridge."
     ],
     "startKnown": false
   },
   {
     "id": "comisaria",
-    "name": "Comisaría 3.ª",
+    "name": "Police Station 3",
     "band": "medium",
-    "description": "Rejas, archivos y un depósito de evidencias que nadie abrió.",
+    "description": "Cells, files, and an evidence locker nobody opened.",
     "danger": 3,
     "durationMinutes": [25, 50],
     "situations": [2, 3],
@@ -427,17 +427,17 @@
       }
     ],
     "transit": [
-      "Hay patrulleros quemados en la vereda.",
-      "Un cartel de \"Se busca\" con la cara borrada por la lluvia.",
-      "Escucho una radio policial. Solo estática."
+      "Burned-out patrol cars on the sidewalk.",
+      "A \"Wanted\" poster, the face washed away by rain.",
+      "I can hear a police radio. Only static."
     ],
     "startKnown": false
   },
   {
     "id": "barrio_privado",
-    "name": "Barrio privado",
+    "name": "Gated community",
     "band": "medium",
-    "description": "Casas grandes detrás de un paredón. Algunas tienen generador.",
+    "description": "Big houses behind a wall. Some have generators.",
     "danger": 3,
     "durationMinutes": [30, 60],
     "situations": [2, 3],
@@ -488,17 +488,17 @@
       }
     ],
     "transit": [
-      "La garita de seguridad tiene la barrera levantada.",
-      "Pileta verde. Algo se mueve abajo. No miro más.",
-      "Un perro de plástico en un jardín. Me asustó igual."
+      "The guard booth's barrier is up.",
+      "Green pool. Something moves at the bottom. Not looking again.",
+      "A plastic dog in a garden. Scared me anyway."
     ],
     "startKnown": false
   },
   {
     "id": "aeropuerto",
-    "name": "Aeropuerto regional",
+    "name": "Regional airport",
     "band": "long",
-    "description": "Una pista abierta, hangares, un avión de carga partido al medio.",
+    "description": "An open runway, hangars, a cargo plane split in half.",
     "danger": 3,
     "durationMinutes": [120, 240],
     "situations": [3, 4],
@@ -547,17 +547,17 @@
       }
     ],
     "transit": [
-      "La ruta al aeropuerto está llena de autos abandonados en fila.",
-      "Pasé por un peaje. Las barreras siguen bajas.",
-      "Se ve la torre de control. Ninguna luz."
+      "The airport road is lined with abandoned cars.",
+      "Passed a toll booth. The barriers are still down.",
+      "I can see the control tower. No lights."
     ],
     "startKnown": false
   },
   {
     "id": "represa",
-    "name": "La represa",
+    "name": "The dam",
     "band": "long",
-    "description": "Hormigón y agua. Las turbinas se detuvieron con el Silencio. Casi todas.",
+    "description": "Concrete and water. The turbines stopped with the Silence. Almost all of them.",
     "danger": 4,
     "durationMinutes": [180, 300],
     "situations": [3, 4],
@@ -602,17 +602,17 @@
       }
     ],
     "transit": [
-      "El lago está quieto como un espejo.",
-      "Un cartel: \"Peligro. Crecidas repentinas\".",
-      "Camino por la corona de la represa. Mucho viento."
+      "The lake is still as a mirror.",
+      "A sign: \"Danger. Sudden floods\".",
+      "Walking along the top of the dam. Lots of wind."
     ],
     "startKnown": false
   },
   {
     "id": "antena_norte",
-    "name": "Antena del norte",
+    "name": "Northern antenna",
     "band": "long",
-    "description": "Una torre de transmisión en un cerro. Alguien la mantiene encendida.",
+    "description": "A transmission tower on a hill. Someone keeps it running.",
     "danger": 4,
     "durationMinutes": [240, 360],
     "situations": [3, 4],
@@ -651,9 +651,9 @@
       }
     ],
     "transit": [
-      "El camino de ripio sube y sube.",
-      "Se escucha un zumbido eléctrico que viene de arriba.",
-      "En la radio portátil, los números de La Voz suenan más fuertes."
+      "The gravel road climbs and climbs.",
+      "There's an electric hum coming from above.",
+      "On the portable radio, the Voice's numbers are louder."
     ],
     "startKnown": false
   }

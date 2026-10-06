@@ -1,11 +1,74 @@
 [
-  { "id": "armonica",   "name": "Armónica",            "description": "Oxidada, pero suena.",                       "tags": ["musica"] },
-  { "id": "foto",       "name": "Foto vieja",          "description": "Una familia en la playa. Nadie sabe quiénes son.", "tags": ["recuerdo"] },
-  { "id": "chocolate",  "name": "Chocolate",           "description": "Una tableta entera, vencida hace años.",     "tags": ["dulce"] },
-  { "id": "caramelos",  "name": "Caramelos",           "description": "Media bolsa de caramelos de miel.",          "tags": ["dulce"] },
-  { "id": "libro",      "name": "Libro",               "description": "Una novela sin tapas. Faltan las últimas páginas.", "tags": ["lectura"] },
-  { "id": "cuaderno",   "name": "Cuaderno",            "description": "Tapa dura, casi sin usar.",                  "tags": ["escritura"] },
-  { "id": "mate",       "name": "Mate y yerba",        "description": "Un mate de calabaza y un paquete de yerba.", "tags": ["mate"] },
-  { "id": "naipes",     "name": "Mazo de cartas",      "description": "Españolas. Falta el cuatro de copas.",       "tags": ["juego"] },
-  { "id": "estampita",  "name": "Estampita",           "description": "Un santo gastado de tanto tocarlo.",          "tags": ["fe"] }
+  {
+    "id": "armonica",
+    "name": "Harmonica",
+    "description": "Rusty, but it plays.",
+    "tags": [
+      "musica"
+    ]
+  },
+  {
+    "id": "foto",
+    "name": "Old photo",
+    "description": "A family at the beach. Nobody knows who they are.",
+    "tags": [
+      "recuerdo"
+    ]
+  },
+  {
+    "id": "chocolate",
+    "name": "Chocolate",
+    "description": "A whole bar, years past its date.",
+    "tags": [
+      "dulce"
+    ]
+  },
+  {
+    "id": "caramelos",
+    "name": "Candy",
+    "description": "Half a bag of honey drops.",
+    "tags": [
+      "dulce"
+    ]
+  },
+  {
+    "id": "libro",
+    "name": "Book",
+    "description": "A novel with no cover. The last pages are missing.",
+    "tags": [
+      "lectura"
+    ]
+  },
+  {
+    "id": "cuaderno",
+    "name": "Notebook",
+    "description": "Hardcover, barely used.",
+    "tags": [
+      "escritura"
+    ]
+  },
+  {
+    "id": "mate",
+    "name": "Mate and yerba",
+    "description": "A gourd and a pack of yerba.",
+    "tags": [
+      "mate"
+    ]
+  },
+  {
+    "id": "naipes",
+    "name": "Deck of cards",
+    "description": "Spanish cards. The four of cups is missing.",
+    "tags": [
+      "juego"
+    ]
+  },
+  {
+    "id": "estampita",
+    "name": "Prayer card",
+    "description": "A saint worn smooth from handling.",
+    "tags": [
+      "fe"
+    ]
+  }
 ]

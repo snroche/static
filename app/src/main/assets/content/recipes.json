@@ -1,7 +1,7 @@
 [
   {
     "id": "relay_kit",
-    "name": "Kit de repetidora",
+    "name": "Relay kit",
     "inputs": {
       "components": 3,
       "batteries": 2
@@ -11,7 +11,7 @@
   },
   {
     "id": "parts",
-    "name": "Piezas",
+    "name": "Parts",
     "inputs": {
       "scrap": 4,
       "components": 2
@@ -21,7 +21,7 @@
   },
   {
     "id": "linterna",
-    "name": "Linterna",
+    "name": "Flashlight",
     "inputs": {
       "scrap": 2,
       "components": 1,
@@ -32,7 +32,7 @@
   },
   {
     "id": "mochila",
-    "name": "Mochila reforzada",
+    "name": "Reinforced backpack",
     "inputs": {
       "scrap": 4,
       "components": 1
@@ -42,7 +42,7 @@
   },
   {
     "id": "botiquin",
-    "name": "Botiquín",
+    "name": "First-aid kit",
     "inputs": {
       "medicine": 2,
       "scrap": 1
@@ -52,7 +52,7 @@
   },
   {
     "id": "chaleco",
-    "name": "Chaleco acolchado",
+    "name": "Padded vest",
     "inputs": {
       "scrap": 6,
       "components": 2,
@@ -64,7 +64,7 @@
   },
   {
     "id": "radio_portatil",
-    "name": "Radio portátil",
+    "name": "Portable radio",
     "inputs": {
       "components": 4,
       "batteries": 2,

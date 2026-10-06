@@ -2,24 +2,24 @@
   {
     "id": "perro",
     "intro": [
-      "Hay un perro flaco en la entrada. Me está mirando.",
-      "No ladra. Eso me preocupa más."
+      "There's a skinny dog at the entrance. It's watching me.",
+      "It isn't barking. That worries me more."
     ],
     "options": [
       {
         "id": "ahuyentar",
-        "label": "Ahuyentalo",
+        "label": "Scare it off",
         "stat": "endurance",
         "difficulty": 5,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Le grité y se fue corriendo. Paso."
+            "I yelled and it ran. I'm through."
           ]
         },
         "failure": {
           "text": [
-            "Me mordió el brazo. Lo pude sacar de encima."
+            "It bit my arm. I got it off me."
           ],
           "injury": "light",
           "stress": 10
@@ -27,35 +27,35 @@
       },
       {
         "id": "rodear",
-        "label": "Rodealo despacio",
+        "label": "Go around it slowly",
         "stat": "stealth",
         "difficulty": 5,
         "success": {
           "text": [
-            "Lo rodeé por el costado. Ni se movió."
+            "I went around the side. It didn't even move."
           ]
         },
         "failure": {
           "text": [
-            "Me vio. Tuve que volver y entrar por atrás. Perdí tiempo."
+            "It saw me. I had to go back and come in from behind. Lost time."
           ],
           "stress": 5
         }
       },
       {
         "id": "alimentar",
-        "label": "Dale algo de comida",
+        "label": "Give it some food",
         "stat": "wits",
         "difficulty": 4,
         "success": {
           "text": [
-            "Le tiré media galleta. Me siguió un rato y después se quedó."
+            "I tossed it half a cracker. It followed me a while, then stayed behind."
           ],
-          "memory": "el perro flaco que me siguió un rato"
+          "memory": "the skinny dog that followed me for a while"
         },
         "failure": {
           "text": [
-            "No quiso saber nada. Le gruñó a la galleta y a mí."
+            "It wanted nothing to do with it. Growled at the cracker and at me."
           ],
           "stress": 5
         }
@@ -65,18 +65,18 @@
   {
     "id": "estanteria",
     "intro": [
-      "Hay una estantería alta, llena arriba. Abajo ya está todo saqueado."
+      "A tall shelf, full at the top. Everything down low is already picked clean."
     ],
     "options": [
       {
         "id": "trepar",
-        "label": "Trepala",
+        "label": "Climb it",
         "stat": "endurance",
         "difficulty": 6,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Llegué arriba. Hay latas."
+            "Made it up. There are cans."
           ],
           "loot": [
             {
@@ -88,7 +88,7 @@
         },
         "failure": {
           "text": [
-            "Se vino abajo conmigo encima."
+            "It came down with me on it."
           ],
           "injury": "light",
           "stress": 10
@@ -96,12 +96,12 @@
       },
       {
         "id": "alcanzar",
-        "label": "Buscá algo para bajar las cosas",
+        "label": "Find something to reach with",
         "stat": "wits",
         "difficulty": 4,
         "success": {
           "text": [
-            "Con un palo de escoba bajé un par de cosas."
+            "Knocked a couple of things down with a broom handle."
           ],
           "loot": [
             {
@@ -113,7 +113,7 @@
         },
         "failure": {
           "text": [
-            "Nada que sirva. Lo dejo."
+            "Nothing that works. Leaving it."
           ],
           "stress": 3
         }
@@ -123,19 +123,19 @@
   {
     "id": "ruido_sotano",
     "intro": [
-      "Escucho algo en el sótano.",
-      "Puede ser agua. Puede ser alguien."
+      "I hear something in the basement.",
+      "Could be water. Could be someone."
     ],
     "options": [
       {
         "id": "bajar",
-        "label": "Bajá a mirar",
+        "label": "Go down and look",
         "stat": "nerve",
         "difficulty": 6,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Era agua goteando sobre una chapa. Y hay cajas acá abajo."
+            "It was water dripping on a metal sheet. And there are boxes down here."
           ],
           "loot": [
             {
@@ -144,11 +144,11 @@
               "max": 4
             }
           ],
-          "memory": "el sótano oscuro donde al final no había nadie"
+          "memory": "the dark basement where nobody was waiting after all"
         },
         "failure": {
           "text": [
-            "No era agua. Algo se me tiró encima en la oscuridad."
+            "It wasn't water. Something jumped me in the dark."
           ],
           "injury": "serious",
           "stress": 20,
@@ -157,12 +157,12 @@
       },
       {
         "id": "piedra",
-        "label": "Tirá algo y escuchá",
+        "label": "Throw something and listen",
         "stat": "wits",
         "difficulty": 5,
         "success": {
           "text": [
-            "Tiré una piedra. Nada se movió. Es agua, nomás."
+            "Threw a stone. Nothing moved. Just water."
           ],
           "loot": [
             {
@@ -174,24 +174,24 @@
         },
         "failure": {
           "text": [
-            "Tiré una piedra y algo se movió allá abajo. Me voy."
+            "Threw a stone and something moved down there. I'm leaving."
           ],
           "stress": 10
         }
       },
       {
         "id": "irse",
-        "label": "Salí de ahí",
+        "label": "Get out of there",
         "stat": "nerve",
         "difficulty": 2,
         "success": {
           "text": [
-            "Me voy. No vale la pena."
+            "Leaving. It's not worth it."
           ]
         },
         "failure": {
           "text": [
-            "Salí corriendo y me enganché con una puerta."
+            "Ran out and caught myself on a door."
           ],
           "injury": "light",
           "stress": 5
@@ -202,17 +202,17 @@
   {
     "id": "surtidor",
     "intro": [
-      "El surtidor tiene la tapa forzada. Abajo puede quedar algo."
+      "The fuel pump's cover has been pried open. There might be something left inside."
     ],
     "options": [
       {
         "id": "desarmar",
-        "label": "Desarmalo",
+        "label": "Take it apart",
         "stat": "craft",
         "difficulty": 5,
         "success": {
           "text": [
-            "Saqué un par de piezas que sirven."
+            "Got a couple of parts that work."
           ],
           "loot": [
             {
@@ -224,7 +224,7 @@
         },
         "failure": {
           "text": [
-            "Se me trabó todo. Me corté con la chapa."
+            "Everything jammed. Cut myself on the metal."
           ],
           "injury": "light",
           "stress": 5
@@ -232,12 +232,12 @@
       },
       {
         "id": "local",
-        "label": "Dejalo, revisá el local",
+        "label": "Leave it, check the shop",
         "stat": "stealth",
         "difficulty": 4,
         "success": {
           "text": [
-            "En el mostrador había pilas. Todavía andan, creo."
+            "There were batteries on the counter. Still good, I think."
           ],
           "loot": [
             {
@@ -249,7 +249,7 @@
         },
         "failure": {
           "text": [
-            "El local está vacío. Ni pilas."
+            "The shop's empty. Not even batteries."
           ],
           "stress": 3
         }
@@ -259,19 +259,19 @@
   {
     "id": "auto_volcado",
     "intro": [
-      "Hay un auto volcado en la mitad de la calle.",
-      "Adentro se ve una mochila."
+      "There's an overturned car in the middle of the street.",
+      "I can see a backpack inside."
     ],
     "options": [
       {
         "id": "ventanilla",
-        "label": "Metete por la ventanilla",
+        "label": "Crawl in through the window",
         "stat": "endurance",
         "difficulty": 6,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Me arrastré adentro y saqué la mochila. Tiene cosas."
+            "Dragged myself in and got the backpack. There's stuff in it."
           ],
           "loot": [
             {
@@ -288,7 +288,7 @@
         },
         "failure": {
           "text": [
-            "El auto se movió cuando entré. Me apretó la pierna."
+            "The car shifted when I got in. Pinned my leg."
           ],
           "injury": "serious",
           "stress": 15
@@ -296,12 +296,12 @@
       },
       {
         "id": "baul",
-        "label": "Rompé el baúl",
+        "label": "Break open the trunk",
         "stat": "craft",
         "difficulty": 5,
         "success": {
           "text": [
-            "Con la barreta abrí el baúl. Chatarra, pero sirve."
+            "Popped it with the crowbar. Scrap, but it's useful."
           ],
           "loot": [
             {
@@ -313,24 +313,24 @@
         },
         "failure": {
           "text": [
-            "Hice mucho ruido y no abrió."
+            "Made a lot of noise and it didn't open."
           ],
           "stress": 8
         }
       },
       {
         "id": "seguir",
-        "label": "Seguí de largo",
+        "label": "Keep going",
         "stat": "nerve",
         "difficulty": 1,
         "success": {
           "text": [
-            "Sigo. No me gusta esa mochila ahí sola."
+            "Moving on. I don't like that backpack sitting there alone."
           ]
         },
         "failure": {
           "text": [
-            "Sigo. Pero me quedo pensando en la mochila."
+            "Moving on. But I keep thinking about that backpack."
           ],
           "stress": 3
         }
@@ -340,18 +340,18 @@
   {
     "id": "radio_encendida",
     "intro": [
-      "Hay una radio encendida en una ventana. Transmite estática.",
-      "Alguien la dejó prendida. O la prendió hace poco."
+      "There's a radio on in a window. It's playing static.",
+      "Someone left it on. Or turned it on recently."
     ],
     "options": [
       {
         "id": "llevar",
-        "label": "Llevátela",
+        "label": "Take it",
         "stat": "stealth",
         "difficulty": 5,
         "success": {
           "text": [
-            "La desenchufé y me la llevo. Tiene pilas adentro."
+            "Unplugged it and I'm bringing it. It has batteries inside."
           ],
           "loot": [
             {
@@ -365,11 +365,11 @@
               "max": 1
             }
           ],
-          "memory": "la radio que transmitía estática en una ventana"
+          "memory": "the radio playing static in a window"
         },
         "failure": {
           "text": [
-            "Cuando la agarré se cayó y se rompió. Saqué las pilas igual."
+            "It fell and broke when I grabbed it. Got the batteries out anyway."
           ],
           "loot": [
             {
@@ -383,19 +383,19 @@
       },
       {
         "id": "escuchar",
-        "label": "Escuchá un rato",
+        "label": "Listen for a while",
         "stat": "wits",
         "difficulty": 6,
         "success": {
           "text": [
-            "Entre la estática hay números. Alguien está contando."
+            "There are numbers in the static. Someone is counting."
           ],
           "stress": 5,
-          "memory": "los números escondidos en la estática"
+          "memory": "the numbers hidden in the static"
         },
         "failure": {
           "text": [
-            "Solo estática. Me dio frío escucharla."
+            "Just static. It gave me chills."
           ],
           "stress": 8
         }
@@ -405,18 +405,18 @@
   {
     "id": "persiana",
     "intro": [
-      "Hay una persiana a medio bajar. Del otro lado está oscuro."
+      "There's a metal shutter halfway down. It's dark on the other side."
     ],
     "options": [
       {
         "id": "abajo",
-        "label": "Pasá por abajo",
+        "label": "Slide under it",
         "stat": "stealth",
         "difficulty": 5,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Pasé arrastrándome. Hay un botiquín en la pared."
+            "Crawled under. There's a first-aid box on the wall."
           ],
           "loot": [
             {
@@ -428,7 +428,7 @@
         },
         "failure": {
           "text": [
-            "La persiana bajó de golpe. Me agarró la espalda."
+            "The shutter slammed down. Caught my back."
           ],
           "injury": "serious",
           "stress": 15,
@@ -437,12 +437,12 @@
       },
       {
         "id": "levantar",
-        "label": "Levantala de una",
+        "label": "Yank it up",
         "stat": "endurance",
         "difficulty": 6,
         "success": {
           "text": [
-            "Hizo un ruido terrible pero subió. Adentro, poca cosa."
+            "Made a terrible noise but it went up. Not much inside."
           ],
           "loot": [
             {
@@ -454,7 +454,7 @@
         },
         "failure": {
           "text": [
-            "No sube. Me hice mal en el hombro."
+            "It won't budge. Hurt my shoulder."
           ],
           "injury": "light",
           "stress": 5
@@ -465,24 +465,24 @@
   {
     "id": "otro_superviviente",
     "intro": [
-      "Hay alguien más acá. Me vio.",
-      "Tiene un caño en la mano. No se mueve."
+      "There's someone else here. They saw me.",
+      "They've got a pipe in their hand. Not moving."
     ],
     "options": [
       {
         "id": "hablar",
-        "label": "Hablale",
+        "label": "Talk to them",
         "stat": "nerve",
         "difficulty": 5,
         "success": {
           "text": [
-            "Le hablé tranquilo. Me dijo que se iba al sur. Nos dejamos en paz."
+            "I talked calmly. They said they were heading south. We left each other alone."
           ],
-          "memory": "la persona del caño que se iba al sur"
+          "memory": "the stranger with the pipe heading south"
         },
         "failure": {
           "text": [
-            "No quiso hablar. Me tiró el caño y salió corriendo."
+            "They didn't want to talk. Threw the pipe at me and ran."
           ],
           "injury": "light",
           "stress": 15
@@ -490,30 +490,30 @@
       },
       {
         "id": "esconderse",
-        "label": "Escondete",
+        "label": "Hide",
         "stat": "stealth",
         "difficulty": 5,
         "success": {
           "text": [
-            "Me metí detrás de un mueble hasta que se fue."
+            "Got behind some furniture until they left."
           ]
         },
         "failure": {
           "text": [
-            "Me encontró. Nos miramos un rato largo. Después se fue."
+            "They found me. We stared at each other a long time. Then they left."
           ],
           "stress": 15
         }
       },
       {
         "id": "enfrentar",
-        "label": "Enfrentalo",
+        "label": "Face them",
         "stat": "endurance",
         "difficulty": 6,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Se fue corriendo y dejó su bolso."
+            "They ran off and left their bag."
           ],
           "loot": [
             {
@@ -530,7 +530,7 @@
         },
         "failure": {
           "text": [
-            "Me pegó con el caño. Se fue con lo que tenía."
+            "Hit me with the pipe. Took everything I had."
           ],
           "injury": "serious",
           "stress": 20,
@@ -542,18 +542,18 @@
   {
     "id": "techo",
     "intro": [
-      "Para seguir tengo que cruzar por el techo. Las chapas están flojas."
+      "To keep going I have to cross the roof. The metal sheets are loose."
     ],
     "options": [
       {
         "id": "cruzar",
-        "label": "Cruzá con cuidado",
+        "label": "Cross carefully",
         "stat": "stealth",
         "difficulty": 6,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Crucé. Del otro lado hay un depósito sin tocar."
+            "Made it across. There's an untouched storeroom on the other side."
           ],
           "loot": [
             {
@@ -562,11 +562,11 @@
               "max": 3
             }
           ],
-          "memory": "el techo de chapas flojas de la escuela"
+          "memory": "the loose roof of the school"
         },
         "failure": {
           "text": [
-            "Una chapa cedió. Caí al aula de abajo."
+            "A sheet gave way. I fell into the classroom below."
           ],
           "injury": "serious",
           "stress": 20,
@@ -575,12 +575,12 @@
       },
       {
         "id": "rodear",
-        "label": "Buscá otro camino",
+        "label": "Find another way",
         "stat": "wits",
         "difficulty": 5,
         "success": {
           "text": [
-            "Encontré una escalera de servicio. Tardé más, pero llegué."
+            "Found a service ladder. Took longer, but I made it."
           ],
           "loot": [
             {
@@ -592,7 +592,7 @@
         },
         "failure": {
           "text": [
-            "No hay otro camino. Me vuelvo."
+            "There's no other way. Turning back."
           ],
           "stress": 5
         }
@@ -602,22 +602,22 @@
   {
     "id": "jauria",
     "intro": [
-      "Una jauría. Seis, siete perros. Todavía no me vieron."
+      "A pack. Six, seven dogs. They haven't seen me yet."
     ],
     "options": [
       {
         "id": "trepar",
-        "label": "Subite a algo alto",
+        "label": "Get up somewhere high",
         "stat": "endurance",
         "difficulty": 6,
         "success": {
           "text": [
-            "Trepé a un contenedor. Esperé a que se fueran."
+            "Climbed a dumpster. Waited for them to leave."
           ]
         },
         "failure": {
           "text": [
-            "Me alcanzaron a morder antes de subir."
+            "They got a bite in before I made it up."
           ],
           "injury": "light",
           "stress": 15
@@ -625,31 +625,31 @@
       },
       {
         "id": "rodear",
-        "label": "Rodealos contra el viento",
+        "label": "Circle downwind",
         "stat": "stealth",
         "difficulty": 7,
         "success": {
           "text": [
-            "Ni me olieron. Paso."
+            "They didn't even smell me. I'm through."
           ],
-          "memory": "la jauría que me dejó pasar"
+          "memory": "the pack that let me pass"
         },
         "failure": {
           "text": [
-            "Me olieron. Corrí hasta que no pude más."
+            "They smelled me. I ran until I couldn't."
           ],
           "stress": 15
         }
       },
       {
         "id": "enfrentar",
-        "label": "Hacé ruido y enfrentalos",
+        "label": "Make noise and face them",
         "stat": "endurance",
         "difficulty": 8,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Grité, golpeé una chapa. Se dispersaron."
+            "I yelled, banged a sheet of metal. They scattered."
           ],
           "loot": [
             {
@@ -661,7 +661,7 @@
         },
         "failure": {
           "text": [
-            "Eran demasiados."
+            "There were too many."
           ],
           "injury": "serious",
           "stress": 25,
@@ -673,36 +673,36 @@
   {
     "id": "saqueadores",
     "intro": [
-      "Hay gente armada adelante. Tres, por lo menos.",
-      "Están revisando lo mismo que yo."
+      "Armed people ahead. Three, at least.",
+      "They're searching the same place I am."
     ],
     "options": [
       {
         "id": "negociar",
-        "label": "Hablales",
+        "label": "Talk to them",
         "stat": "nerve",
         "difficulty": 7,
         "success": {
           "text": [
-            "Les ofrecí información a cambio de pasar. Aceptaron."
+            "I offered information to get past. They took it."
           ],
-          "memory": "los saqueadores que me dejaron pasar por hablarles"
+          "memory": "the looters who let me pass because I talked"
         },
         "failure": {
           "text": [
-            "No quisieron saber nada. Me sacaron lo que llevaba."
+            "They wanted nothing to do with me. Took what I was carrying."
           ],
           "stress": 20
         }
       },
       {
         "id": "esconderse",
-        "label": "Esperá a que se vayan",
+        "label": "Wait for them to leave",
         "stat": "stealth",
         "difficulty": 6,
         "success": {
           "text": [
-            "Se fueron. Me quedo con lo que dejaron."
+            "They left. I'm keeping what they dropped."
           ],
           "loot": [
             {
@@ -714,7 +714,7 @@
         },
         "failure": {
           "text": [
-            "Me vieron. Tuve que salir corriendo."
+            "They saw me. I had to run."
           ],
           "injury": "light",
           "stress": 15
@@ -722,13 +722,13 @@
       },
       {
         "id": "robar",
-        "label": "Robales mientras no miran",
+        "label": "Rob them while they aren't looking",
         "stat": "stealth",
         "difficulty": 8,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Me llevé una mochila entera."
+            "Took a whole backpack."
           ],
           "loot": [
             {
@@ -745,7 +745,7 @@
         },
         "failure": {
           "text": [
-            "Uno se dio vuelta. Disparó."
+            "One of them turned around. Fired."
           ],
           "injury": "serious",
           "stress": 25,
@@ -757,19 +757,19 @@
   {
     "id": "gas",
     "intro": [
-      "Huele a gas. Fuerte.",
-      "Lo que busco está del otro lado."
+      "It smells of gas. Strong.",
+      "What I'm looking for is on the other side."
     ],
     "options": [
       {
         "id": "taparse",
-        "label": "Tapate la cara y pasá rápido",
+        "label": "Cover your face and run through",
         "stat": "endurance",
         "difficulty": 7,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Pasé. Me arde la garganta, pero pasé."
+            "Made it. My throat's burning, but I made it."
           ],
           "loot": [
             {
@@ -781,7 +781,7 @@
         },
         "failure": {
           "text": [
-            "Me mareé. Caí. Desperté afuera, no sé cómo."
+            "I got dizzy. Fell. Woke up outside, don't know how."
           ],
           "injury": "serious",
           "stress": 20,
@@ -790,12 +790,12 @@
       },
       {
         "id": "valvula",
-        "label": "Buscá la válvula y cerrala",
+        "label": "Find the valve and shut it",
         "stat": "craft",
         "difficulty": 6,
         "success": {
           "text": [
-            "Cerré la válvula. El aire se limpia de a poco."
+            "Shut the valve. The air's clearing slowly."
           ],
           "loot": [
             {
@@ -807,24 +807,24 @@
         },
         "failure": {
           "text": [
-            "La válvula está trabada. Mejor me voy."
+            "The valve's stuck. Better get out."
           ],
           "stress": 8
         }
       },
       {
         "id": "otra",
-        "label": "Buscá otra entrada",
+        "label": "Find another way in",
         "stat": "wits",
         "difficulty": 5,
         "success": {
           "text": [
-            "Hay una ventana del otro lado. Entré por ahí."
+            "There's a window on the far side. Went in that way."
           ]
         },
         "failure": {
           "text": [
-            "No hay otra entrada. Perdí tiempo."
+            "No other way in. Lost time."
           ],
           "stress": 5
         }
@@ -834,18 +834,18 @@
   {
     "id": "vagon",
     "intro": [
-      "Un vagón de carga cerrado con candado.",
-      "Adentro se escucha algo que rueda."
+      "A freight car with a padlock.",
+      "Something is rolling around inside."
     ],
     "options": [
       {
         "id": "forzar",
-        "label": "Forzá el candado",
+        "label": "Force the padlock",
         "stat": "craft",
         "difficulty": 6,
         "success": {
           "text": [
-            "Abrí. Cajas de herramientas."
+            "It's open. Toolboxes."
           ],
           "loot": [
             {
@@ -862,20 +862,20 @@
         },
         "failure": {
           "text": [
-            "Se me rompió la barreta. Y el ruido atrajo algo."
+            "Broke my crowbar. And the noise drew something in."
           ],
           "stress": 12
         }
       },
       {
         "id": "techo",
-        "label": "Entrá por el techo",
+        "label": "Go in through the roof",
         "stat": "endurance",
         "difficulty": 7,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Bajé por la escotilla. Hay de todo."
+            "Dropped through the hatch. There's a bit of everything."
           ],
           "loot": [
             {
@@ -892,7 +892,7 @@
         },
         "failure": {
           "text": [
-            "Me resbalé del techo."
+            "Slipped off the roof."
           ],
           "injury": "serious",
           "stress": 15
@@ -900,17 +900,17 @@
       },
       {
         "id": "dejar",
-        "label": "Dejalo",
+        "label": "Leave it",
         "stat": "nerve",
         "difficulty": 1,
         "success": {
           "text": [
-            "Lo dejo. Que ruede lo que sea."
+            "Leaving it. Whatever's rolling can keep rolling."
           ]
         },
         "failure": {
           "text": [
-            "Lo dejo. Pero me quedo con la intriga."
+            "Leaving it. But now I'll always wonder."
           ],
           "stress": 3
         }
@@ -920,37 +920,37 @@
   {
     "id": "archivo",
     "intro": [
-      "Un archivo entero. Carpetas, fichas, mapas.",
-      "Algunas dicen \"Silencio\" en la tapa."
+      "A whole archive. Folders, index cards, maps.",
+      "Some say \"Silence\" on the cover."
     ],
     "options": [
       {
         "id": "leer",
-        "label": "Leé lo que puedas",
+        "label": "Read what you can",
         "stat": "wits",
         "difficulty": 6,
         "success": {
           "text": [
-            "Hay informes de antes. Una carpeta dice \"Proyecto Eco\". Me guardo lo importante en la cabeza."
+            "Reports from before. One folder says \"Project Echo\". I'm keeping the important parts in my head."
           ],
-          "memory": "las carpetas que decían Silencio en la tapa",
+          "memory": "the folders that said Silence on the cover",
           "plot": "c1_3"
         },
         "failure": {
           "text": [
-            "No entiendo nada. Siglas, números."
+            "I don't understand any of it. Acronyms, numbers."
           ],
           "stress": 5
         }
       },
       {
         "id": "llevar",
-        "label": "Llevate todo el papel que puedas",
+        "label": "Take all the paper you can",
         "stat": "endurance",
         "difficulty": 5,
         "success": {
           "text": [
-            "Cargué una caja. Pesa, pero sirve para prender fuego si no sirve para otra cosa."
+            "Loaded a box. Heavy, but good for starting fires if nothing else."
           ],
           "loot": [
             {
@@ -962,7 +962,7 @@
         },
         "failure": {
           "text": [
-            "Se me rompió la caja en la escalera."
+            "The box split on the stairs."
           ],
           "stress": 5
         }
@@ -972,18 +972,18 @@
   {
     "id": "herido",
     "intro": [
-      "Hay un hombre herido contra una pared.",
-      "Me pide agua."
+      "There's a wounded man against a wall.",
+      "He's asking for water."
     ],
     "options": [
       {
         "id": "curar",
-        "label": "Ayudalo",
+        "label": "Help him",
         "stat": "wits",
         "difficulty": 5,
         "success": {
           "text": [
-            "Le vendé la pierna. Me dijo dónde había guardado provisiones."
+            "I bandaged his leg. He told me where he'd stashed supplies."
           ],
           "loot": [
             {
@@ -992,24 +992,24 @@
               "max": 4
             }
           ],
-          "memory": "el hombre herido que ayudé"
+          "memory": "the wounded man I helped"
         },
         "failure": {
           "text": [
-            "Hice lo que pude. No alcanzó."
+            "I did what I could. It wasn't enough."
           ],
           "stress": 20
         }
       },
       {
         "id": "mochila",
-        "label": "Revisale la mochila",
+        "label": "Check his backpack",
         "stat": "stealth",
         "difficulty": 6,
         "risk": "RISKY",
         "success": {
           "text": [
-            "Tenía medicinas. Me las llevo."
+            "He had medicine. I'm taking it."
           ],
           "loot": [
             {
@@ -1022,7 +1022,7 @@
         },
         "failure": {
           "text": [
-            "No estaba tan herido. Me clavó algo en el brazo."
+            "He wasn't that hurt. Stuck something in my arm."
           ],
           "injury": "serious",
           "stress": 20
@@ -1030,18 +1030,18 @@
       },
       {
         "id": "seguir",
-        "label": "Seguí de largo",
+        "label": "Keep walking",
         "stat": "nerve",
         "difficulty": 4,
         "success": {
           "text": [
-            "Sigo. No miro para atrás."
+            "Moving on. Not looking back."
           ],
           "stress": 5
         },
         "failure": {
           "text": [
-            "Sigo. Lo escucho llamarme un rato largo."
+            "Moving on. I can hear him calling after me for a long time."
           ],
           "stress": 15
         }
@@ -1051,18 +1051,18 @@
   {
     "id": "inundacion",
     "intro": [
-      "El sótano está inundado hasta la cintura.",
-      "Abajo flota algo que parece una caja."
+      "The basement is flooded waist-deep.",
+      "Something that looks like a box is floating down there."
     ],
     "options": [
       {
         "id": "nadar",
-        "label": "Metete y traela",
+        "label": "Wade in and get it",
         "stat": "endurance",
         "difficulty": 5,
         "success": {
           "text": [
-            "Fría como el demonio, pero la traje. Herramientas."
+            "Cold as hell, but I got it. Tools."
           ],
           "loot": [
             {
@@ -1074,7 +1074,7 @@
         },
         "failure": {
           "text": [
-            "Me resbalé en la escalera. Tragué agua."
+            "Slipped on the stairs. Swallowed water."
           ],
           "injury": "light",
           "stress": 10
@@ -1082,12 +1082,12 @@
       },
       {
         "id": "gancho",
-        "label": "Armá un gancho y pescala",
+        "label": "Rig a hook and fish it out",
         "stat": "craft",
         "difficulty": 5,
         "success": {
           "text": [
-            "Con un alambre la acerqué. Seca por dentro."
+            "Pulled it over with a wire. Dry inside."
           ],
           "loot": [
             {
@@ -1099,7 +1099,7 @@
         },
         "failure": {
           "text": [
-            "Se hundió más. Perdida."
+            "It sank deeper. Gone."
           ],
           "stress": 5
         }
@@ -1109,18 +1109,18 @@
   {
     "id": "cables",
     "intro": [
-      "Hay cables pelados en el piso. Escucho un zumbido.",
-      "Todavía hay corriente en algún lado."
+      "There are bare wires on the floor. I can hear a hum.",
+      "There's still power somewhere."
     ],
     "options": [
       {
         "id": "cortar",
-        "label": "Cortá la corriente",
+        "label": "Cut the power",
         "stat": "wits",
         "difficulty": 6,
         "success": {
           "text": [
-            "Encontré el tablero y bajé la llave. Me llevo los fusibles."
+            "Found the breaker box and flipped it. Taking the fuses."
           ],
           "loot": [
             {
@@ -1132,7 +1132,7 @@
         },
         "failure": {
           "text": [
-            "Me dio una patada eléctrica. Tengo la mano dormida."
+            "Got a jolt. My hand's numb."
           ],
           "injury": "light",
           "stress": 10
@@ -1140,29 +1140,29 @@
       },
       {
         "id": "saltar",
-        "label": "Pasá por encima con cuidado",
+        "label": "Step over them carefully",
         "stat": "stealth",
         "difficulty": 4,
         "success": {
           "text": [
-            "Paso por arriba, despacito."
+            "Stepping over, slow and easy."
           ]
         },
         "failure": {
           "text": [
-            "Pisé mal. Chispas. Salté justo."
+            "Bad step. Sparks. Jumped just in time."
           ],
           "stress": 12
         }
       },
       {
         "id": "bateria",
-        "label": "Buscá de dónde sale la corriente",
+        "label": "Find where the power comes from",
         "stat": "craft",
         "difficulty": 7,
         "success": {
           "text": [
-            "Un banco de baterías en el cuarto de máquinas. Todavía cargan algo."
+            "A battery bank in the machine room. Still holding some charge."
           ],
           "loot": [
             {
@@ -1174,7 +1174,7 @@
         },
         "failure": {
           "text": [
-            "No la encontré. Y el zumbido me pone nervioso."
+            "Couldn't find it. And the hum is getting to me."
           ],
           "stress": 8
         },
@@ -1185,23 +1185,23 @@
   {
     "id": "avispas",
     "intro": [
-      "Un panal enorme sobre la puerta que necesito.",
-      "El zumbido no para."
+      "A huge wasp nest over the door I need.",
+      "The buzzing never stops."
     ],
     "options": [
       {
         "id": "humo",
-        "label": "Hacé humo y pasá",
+        "label": "Smoke them out and go through",
         "stat": "wits",
         "difficulty": 5,
         "success": {
           "text": [
-            "Con trapos mojados y fuego las aturdí. Paso."
+            "Stunned them with wet rags and fire. I'm through."
           ]
         },
         "failure": {
           "text": [
-            "Se enojaron. Me picaron la cara."
+            "They got angry. Stung my face."
           ],
           "injury": "light",
           "stress": 10
@@ -1209,17 +1209,17 @@
       },
       {
         "id": "rodear",
-        "label": "Buscá otra entrada",
+        "label": "Find another way in",
         "stat": "stealth",
         "difficulty": 5,
         "success": {
           "text": [
-            "Por la ventana del baño. Más lento, pero entero."
+            "Through the bathroom window. Slower, but in one piece."
           ]
         },
         "failure": {
           "text": [
-            "No hay otra. Me vuelvo."
+            "There's no other way. Turning back."
           ],
           "stress": 4
         }
@@ -1229,18 +1229,18 @@
   {
     "id": "puerta_blindada",
     "intro": [
-      "Una puerta blindada. Del otro lado, silencio.",
-      "Tiene una cerradura de combinación."
+      "A reinforced door. Silence on the other side.",
+      "It has a combination lock."
     ],
     "options": [
       {
         "id": "combinacion",
-        "label": "Probá combinaciones",
+        "label": "Try combinations",
         "stat": "wits",
         "difficulty": 7,
         "success": {
           "text": [
-            "Siete, tres, uno, nueve. Abrió. No sé por qué probé esos números."
+            "Seven, three, one, nine. It opened. I don't know why I tried those numbers."
           ],
           "loot": [
             {
@@ -1254,23 +1254,23 @@
               "max": 3
             }
           ],
-          "memory": "la puerta que abrió con los números de La Voz"
+          "memory": "the door that opened with the Voice's numbers"
         },
         "failure": {
           "text": [
-            "Nada. Me cansé."
+            "Nothing. I gave up."
           ],
           "stress": 6
         }
       },
       {
         "id": "bisagras",
-        "label": "Atacá las bisagras",
+        "label": "Go for the hinges",
         "stat": "craft",
         "difficulty": 8,
         "success": {
           "text": [
-            "Saqué los pernos uno por uno. Adentro, un depósito."
+            "Knocked the pins out one by one. A storeroom inside."
           ],
           "loot": [
             {
@@ -1287,7 +1287,7 @@
         },
         "failure": {
           "text": [
-            "Me rompí una uña y nada más."
+            "Broke a fingernail and nothing else."
           ],
           "stress": 6
         },
@@ -1298,37 +1298,37 @@
   {
     "id": "mapa",
     "intro": [
-      "En la pared hay un mapa del barrio con marcas en rojo.",
-      "Alguien anotó cosas a mano."
+      "There's a map of the neighborhood on the wall with red marks.",
+      "Someone wrote notes by hand."
     ],
     "options": [
       {
         "id": "copiar",
-        "label": "Copiá las marcas",
+        "label": "Copy the marks",
         "stat": "wits",
         "difficulty": 4,
         "success": {
           "text": [
-            "Lo copié todo. Hay cruces sobre algunas calles: zonas a evitar, creo."
+            "Copied all of it. Some streets are crossed out: places to avoid, I think."
           ],
-          "memory": "el mapa con cruces rojas",
+          "memory": "the map with red crosses",
           "stress": -5
         },
         "failure": {
           "text": [
-            "No entiendo la letra. Me llevo lo que puedo."
+            "Can't read the handwriting. Taking what I can."
           ],
           "stress": 3
         }
       },
       {
         "id": "arrancar",
-        "label": "Arrancalo y traelo",
+        "label": "Tear it down and bring it",
         "stat": "stealth",
         "difficulty": 3,
         "success": {
           "text": [
-            "Lo traigo enrollado."
+            "Bringing it rolled up."
           ],
           "loot": [
             {
@@ -1340,7 +1340,7 @@
         },
         "failure": {
           "text": [
-            "Se deshizo en mis manos."
+            "It crumbled in my hands."
           ],
           "stress": 3
         }
@@ -1350,40 +1350,40 @@
   {
     "id": "francotirador",
     "intro": [
-      "Un disparo. Pegó en la pared, cerca.",
-      "Alguien tira desde un techo."
+      "A shot. Hit the wall, close.",
+      "Someone's shooting from a rooftop."
     ],
     "options": [
       {
         "id": "cubrirse",
-        "label": "Cubrite y esperá la noche",
+        "label": "Take cover and wait for night",
         "stat": "nerve",
         "difficulty": 6,
         "success": {
           "text": [
-            "Esperé horas. Se fue. Sigo."
+            "Waited hours. They left. Moving on."
           ]
         },
         "failure": {
           "text": [
-            "Me temblaron las piernas toda la espera."
+            "My legs shook the whole time."
           ],
           "stress": 20
         }
       },
       {
         "id": "correr",
-        "label": "Corré hasta el próximo edificio",
+        "label": "Run for the next building",
         "stat": "endurance",
         "difficulty": 7,
         "success": {
           "text": [
-            "Llegué. Respiro."
+            "Made it. Breathing."
           ]
         },
         "failure": {
           "text": [
-            "Me rozó la pierna."
+            "It grazed my leg."
           ],
           "injury": "serious",
           "stress": 20,
@@ -1393,18 +1393,18 @@
       },
       {
         "id": "hablar",
-        "label": "Gritale que no venís a robar",
+        "label": "Shout that you're not here to steal",
         "stat": "nerve",
         "difficulty": 8,
         "success": {
           "text": [
-            "Dejó de tirar. Me hizo señas para que siguiera."
+            "They stopped shooting. Waved me on."
           ],
-          "memory": "el tirador que me dejó pasar"
+          "memory": "the shooter who let me pass"
         },
         "failure": {
           "text": [
-            "No le importó. Tiró de nuevo."
+            "They didn't care. Fired again."
           ],
           "injury": "light",
           "stress": 20
@@ -1415,17 +1415,17 @@
   {
     "id": "derrumbe",
     "intro": [
-      "Se vino abajo parte del techo. Estoy del lado equivocado."
+      "Part of the ceiling came down. I'm on the wrong side."
     ],
     "options": [
       {
         "id": "escombros",
-        "label": "Mové los escombros",
+        "label": "Move the rubble",
         "stat": "endurance",
         "difficulty": 6,
         "success": {
           "text": [
-            "Abrí un hueco. Debajo había algo útil."
+            "Opened a gap. There was something useful underneath."
           ],
           "loot": [
             {
@@ -1437,7 +1437,7 @@
         },
         "failure": {
           "text": [
-            "Se movió todo de nuevo. Me golpeó el hombro."
+            "Everything shifted again. Hit my shoulder."
           ],
           "injury": "light",
           "stress": 12
@@ -1445,17 +1445,17 @@
       },
       {
         "id": "ventilacion",
-        "label": "Salí por la ventilación",
+        "label": "Get out through the vents",
         "stat": "stealth",
         "difficulty": 6,
         "success": {
           "text": [
-            "Por el ducto, arrastrándome. Salí."
+            "Crawled through the duct. I'm out."
           ]
         },
         "failure": {
           "text": [
-            "Me trabé un rato largo. Muy largo."
+            "Got stuck for a long time. A very long time."
           ],
           "stress": 18
         }
@@ -1465,17 +1465,17 @@
   {
     "id": "ratas",
     "intro": [
-      "Ratas. Cientos. Salen de las cloacas."
+      "Rats. Hundreds. Pouring out of the sewers."
     ],
     "options": [
       {
         "id": "fuego",
-        "label": "Ahuyentalas con fuego",
+        "label": "Drive them off with fire",
         "stat": "craft",
         "difficulty": 5,
         "success": {
           "text": [
-            "Se dispersaron. El depósito quedó libre."
+            "They scattered. The storeroom is clear."
           ],
           "loot": [
             {
@@ -1487,24 +1487,24 @@
         },
         "failure": {
           "text": [
-            "Casi prendo fuego todo."
+            "Nearly set the whole place on fire."
           ],
           "stress": 12
         }
       },
       {
         "id": "esperar",
-        "label": "Quedate quieto hasta que pasen",
+        "label": "Stay still until they pass",
         "stat": "nerve",
         "difficulty": 6,
         "success": {
           "text": [
-            "Pasaron por al lado. Ni me miraron."
+            "They went right past me. Didn't even look."
           ]
         },
         "failure": {
           "text": [
-            "Una me mordió el tobillo."
+            "One bit my ankle."
           ],
           "injury": "light",
           "stress": 15
@@ -1515,17 +1515,17 @@
   {
     "id": "deposito_frio",
     "intro": [
-      "Una cámara frigorífica. La puerta está trabada desde adentro."
+      "A walk-in freezer. The door is jammed from the inside."
     ],
     "options": [
       {
         "id": "forzar",
-        "label": "Forzá la puerta",
+        "label": "Force the door",
         "stat": "endurance",
         "difficulty": 7,
         "success": {
           "text": [
-            "Adentro hay latas que aguantaron todo."
+            "There are cans inside that survived everything."
           ],
           "loot": [
             {
@@ -1537,7 +1537,7 @@
         },
         "failure": {
           "text": [
-            "Me lastimé la espalda empujando."
+            "Hurt my back pushing."
           ],
           "injury": "light",
           "stress": 8
@@ -1545,17 +1545,17 @@
       },
       {
         "id": "dejar",
-        "label": "No la abras",
+        "label": "Don't open it",
         "stat": "wits",
         "difficulty": 3,
         "success": {
           "text": [
-            "Trabada desde adentro. Mejor no saber."
+            "Jammed from the inside. Better not to know."
           ]
         },
         "failure": {
           "text": [
-            "No la abro. Pero escuché algo golpear."
+            "Not opening it. But I heard something knock."
           ],
           "stress": 12
         }
@@ -1565,18 +1565,18 @@
   {
     "id": "trampa",
     "intro": [
-      "Hay un alambre a la altura del tobillo.",
-      "Alguien puso una trampa."
+      "There's a wire at ankle height.",
+      "Someone set a trap."
     ],
     "options": [
       {
         "id": "desarmar",
-        "label": "Desarmala",
+        "label": "Disarm it",
         "stat": "craft",
         "difficulty": 6,
         "success": {
           "text": [
-            "La desarmé. El mecanismo sirve para piezas."
+            "Disarmed it. The mechanism is good for parts."
           ],
           "loot": [
             {
@@ -1588,7 +1588,7 @@
         },
         "failure": {
           "text": [
-            "Saltó. Me cortó la pierna."
+            "It sprang. Cut my leg."
           ],
           "injury": "serious",
           "stress": 15
@@ -1596,18 +1596,18 @@
       },
       {
         "id": "evitar",
-        "label": "Rodeala",
+        "label": "Go around it",
         "stat": "stealth",
         "difficulty": 4,
         "success": {
           "text": [
-            "La esquivé. Quien la puso no debe estar lejos."
+            "Avoided it. Whoever set it can't be far."
           ],
           "stress": 5
         },
         "failure": {
           "text": [
-            "Había otra. La pisé."
+            "There was a second one. I stepped on it."
           ],
           "injury": "light",
           "stress": 10
@@ -1618,40 +1618,40 @@
   {
     "id": "tormenta",
     "intro": [
-      "Se levantó una tormenta de polvo. No veo a dos metros."
+      "A dust storm blew up. I can't see two meters ahead."
     ],
     "options": [
       {
         "id": "refugio",
-        "label": "Buscá refugio y esperá",
+        "label": "Find shelter and wait",
         "stat": "wits",
         "difficulty": 6,
         "success": {
           "text": [
-            "Me metí en un colectivo. Pasó en dos horas."
+            "Got inside a bus. It passed in two hours."
           ]
         },
         "failure": {
           "text": [
-            "No encontré nada. Me tapé con la campera."
+            "Found nothing. Covered up with my jacket."
           ],
           "stress": 18
         }
       },
       {
         "id": "seguir",
-        "label": "Seguí con la brújula",
+        "label": "Keep going by compass",
         "stat": "nerve",
         "difficulty": 8,
         "success": {
           "text": [
-            "Llegué derecho. Ni sé cómo."
+            "Came out right on target. No idea how."
           ],
-          "memory": "la tormenta que crucé a ciegas"
+          "memory": "the storm I crossed blind"
         },
         "failure": {
           "text": [
-            "Me perdí. Tardé el doble en volver al camino."
+            "Got lost. Took twice as long to find the road."
           ],
           "injury": "light",
           "stress": 20
@@ -1663,23 +1663,23 @@
   {
     "id": "pista",
     "intro": [
-      "La pista del aeropuerto está a cielo abierto.",
-      "Hay que cruzarla. Sin dónde esconderse."
+      "The airport runway is wide open.",
+      "I have to cross it. Nowhere to hide."
     ],
     "options": [
       {
         "id": "correr",
-        "label": "Cruzala corriendo",
+        "label": "Run across",
         "stat": "endurance",
         "difficulty": 7,
         "success": {
           "text": [
-            "Crucé. Nadie disparó."
+            "Made it. Nobody fired."
           ]
         },
         "failure": {
           "text": [
-            "Algo me persiguió hasta el hangar."
+            "Something chased me all the way to the hangar."
           ],
           "injury": "light",
           "stress": 20
@@ -1687,17 +1687,17 @@
       },
       {
         "id": "noche",
-        "label": "Esperá a la noche",
+        "label": "Wait for dark",
         "stat": "stealth",
         "difficulty": 6,
         "success": {
           "text": [
-            "De noche, despacito. Llegué."
+            "At night, slowly. Made it."
           ]
         },
         "failure": {
           "text": [
-            "La noche tiene sus cosas. Llegué temblando."
+            "The night has its own things. Got there shaking."
           ],
           "stress": 18
         }
@@ -1707,18 +1707,18 @@
   {
     "id": "avion",
     "intro": [
-      "Un avión de carga partido al medio.",
-      "La bodega está entera."
+      "A cargo plane split in half.",
+      "The hold is intact."
     ],
     "options": [
       {
         "id": "bodega",
-        "label": "Entrá a la bodega",
+        "label": "Go into the hold",
         "stat": "endurance",
         "difficulty": 8,
         "success": {
           "text": [
-            "Cajas de repuestos. Esto vale oro."
+            "Crates of spare parts. This is worth gold."
           ],
           "loot": [
             {
@@ -1735,7 +1735,7 @@
         },
         "failure": {
           "text": [
-            "El fuselaje cedió. Me quedé atrapado un rato."
+            "The fuselage gave way. I was trapped for a while."
           ],
           "injury": "serious",
           "stress": 20,
@@ -1745,12 +1745,12 @@
       },
       {
         "id": "cabina",
-        "label": "Revisá la cabina",
+        "label": "Search the cockpit",
         "stat": "wits",
         "difficulty": 6,
         "success": {
           "text": [
-            "El equipo de radio del avión todavía tiene piezas."
+            "The plane's radio still has good parts."
           ],
           "loot": [
             {
@@ -1762,7 +1762,7 @@
         },
         "failure": {
           "text": [
-            "Nada que sirva. Y un olor que no quiero describir."
+            "Nothing useful. And a smell I won't describe."
           ],
           "stress": 10
         }
@@ -1772,18 +1772,18 @@
   {
     "id": "compuertas",
     "intro": [
-      "Las compuertas de la represa crujen.",
-      "El agua empuja del otro lado."
+      "The dam's floodgates are groaning.",
+      "The water is pushing from the other side."
     ],
     "options": [
       {
         "id": "cerrar",
-        "label": "Trabá la compuerta",
+        "label": "Brace the floodgate",
         "stat": "craft",
         "difficulty": 8,
         "success": {
           "text": [
-            "La trabé con una barra. Del cuarto de control me llevo lo que pude."
+            "Wedged it with a bar. Took what I could from the control room."
           ],
           "loot": [
             {
@@ -1795,7 +1795,7 @@
         },
         "failure": {
           "text": [
-            "Se soltó. El agua me arrastró unos metros."
+            "It broke loose. The water dragged me a few meters."
           ],
           "injury": "serious",
           "stress": 25,
@@ -1805,17 +1805,17 @@
       },
       {
         "id": "alejarse",
-        "label": "Alejate por arriba",
+        "label": "Get away over the top",
         "stat": "endurance",
         "difficulty": 6,
         "success": {
           "text": [
-            "Subí por la escalera de servicio. Desde arriba se ve todo."
+            "Went up the service stairs. You can see everything from up here."
           ]
         },
         "failure": {
           "text": [
-            "La escalera está podrida. Bajé por donde pude."
+            "The stairs are rotten. Got down however I could."
           ],
           "injury": "light",
           "stress": 12
@@ -1826,17 +1826,17 @@
   {
     "id": "turbinas",
     "intro": [
-      "La sala de turbinas. Una todavía gira, lenta."
+      "The turbine hall. One is still turning, slowly."
     ],
     "options": [
       {
         "id": "desarmar",
-        "label": "Desarmá lo que puedas",
+        "label": "Strip what you can",
         "stat": "craft",
         "difficulty": 7,
         "success": {
           "text": [
-            "Bobinas, rodamientos, cobre. Todo sirve."
+            "Coils, bearings, copper. All of it useful."
           ],
           "loot": [
             {
@@ -1853,7 +1853,7 @@
         },
         "failure": {
           "text": [
-            "Me agarró la manga. Salí con un tirón."
+            "It caught my sleeve. Yanked myself free."
           ],
           "injury": "light",
           "stress": 15
@@ -1861,12 +1861,12 @@
       },
       {
         "id": "frenar",
-        "label": "Frená la turbina primero",
+        "label": "Stop the turbine first",
         "stat": "wits",
         "difficulty": 8,
         "success": {
           "text": [
-            "La frené. Ahora sí, todo con calma."
+            "Stopped it. Now I can take my time."
           ],
           "loot": [
             {
@@ -1883,7 +1883,7 @@
         },
         "failure": {
           "text": [
-            "No entiendo los controles. Mejor no toco."
+            "I can't make sense of the controls. Better not touch anything."
           ],
           "stress": 8
         }
@@ -1893,18 +1893,18 @@
   {
     "id": "torre",
     "intro": [
-      "La torre de la antena tiene cuarenta metros.",
-      "Arriba hay una caja que no es de antes."
+      "The antenna tower is forty meters tall.",
+      "There's a box at the top that wasn't there before."
     ],
     "options": [
       {
         "id": "subir",
-        "label": "Subí",
+        "label": "Climb it",
         "stat": "endurance",
         "difficulty": 8,
         "success": {
           "text": [
-            "Subí. Viento terrible. Bajé la caja."
+            "Climbed. Terrible wind. Brought the box down."
           ],
           "loot": [
             {
@@ -1913,11 +1913,11 @@
               "max": 4
             }
           ],
-          "memory": "la torre de cuarenta metros"
+          "memory": "the forty-meter tower"
         },
         "failure": {
           "text": [
-            "Un peldaño se soltó."
+            "A rung came loose."
           ],
           "injury": "serious",
           "stress": 25,
@@ -1927,17 +1927,17 @@
       },
       {
         "id": "mirar",
-        "label": "Mirala de lejos con lo que tengas",
+        "label": "Look at it from below with whatever you have",
         "stat": "wits",
         "difficulty": 6,
         "success": {
           "text": [
-            "Desde abajo se ve: es un retransmisor. Alguien lo mantiene."
+            "From down here you can tell: it's a relay. Someone maintains it."
           ]
         },
         "failure": {
           "text": [
-            "No se distingue nada."
+            "Can't make anything out."
           ],
           "stress": 5
         }
@@ -1947,18 +1947,18 @@
   {
     "id": "campamento",
     "intro": [
-      "Un campamento. Fogatas recientes.",
-      "Hay gente, y no parecen amables."
+      "A camp. Fresh campfires.",
+      "There are people, and they don't look friendly."
     ],
     "options": [
       {
         "id": "negociar",
-        "label": "Acercate y negociá",
+        "label": "Approach and bargain",
         "stat": "nerve",
         "difficulty": 8,
         "success": {
           "text": [
-            "Intercambiamos noticias. Me dieron comida."
+            "We traded news. They gave me food."
           ],
           "loot": [
             {
@@ -1967,11 +1967,11 @@
               "max": 4
             }
           ],
-          "memory": "el campamento que me dio comida"
+          "memory": "the camp that gave me food"
         },
         "failure": {
           "text": [
-            "Me sacaron todo y me echaron."
+            "They took everything and ran me off."
           ],
           "injury": "light",
           "stress": 25
@@ -1979,29 +1979,29 @@
       },
       {
         "id": "observar",
-        "label": "Observalos de lejos",
+        "label": "Watch them from a distance",
         "stat": "stealth",
         "difficulty": 6,
         "success": {
           "text": [
-            "Tienen radios. Escuchan lo mismo que nosotros."
+            "They have radios. They're listening to the same thing we are."
           ]
         },
         "failure": {
           "text": [
-            "Un perro me olió. Salí corriendo."
+            "A dog smelled me. I ran."
           ],
           "stress": 20
         }
       },
       {
         "id": "robar",
-        "label": "Robales de noche",
+        "label": "Rob them at night",
         "stat": "stealth",
         "difficulty": 9,
         "success": {
           "text": [
-            "Me llevé baterías y medicinas."
+            "Took batteries and medicine."
           ],
           "loot": [
             {
@@ -2018,7 +2018,7 @@
         },
         "failure": {
           "text": [
-            "Me agarraron."
+            "They caught me."
           ],
           "injury": "serious",
           "stress": 30,
@@ -2031,45 +2031,45 @@
   {
     "id": "la_voz_rele",
     "intro": [
-      "Encontré un equipo en la sala de la antena.",
-      "No es de antes del Silencio. Alguien lo instaló después.",
-      "Repite los números. Siete, tres, uno, nueve."
+      "Found a device in the antenna room.",
+      "It's not from before the Silence. Someone installed it after.",
+      "It repeats the numbers. Seven, three, one, nine."
     ],
     "options": [
       {
         "id": "estudiar",
-        "label": "Estudiá el equipo",
+        "label": "Study the device",
         "stat": "wits",
         "difficulty": 7,
         "success": {
           "text": [
-            "Tiene una placa: ECO-7. Retransmite algo que viene de más lejos."
+            "There's a plate: ECHO-7. It relays something coming from farther away."
           ],
           "plot": "c1_4",
-          "memory": "el equipo que repetía los números"
+          "memory": "the device that repeated the numbers"
         },
         "failure": {
           "text": [
-            "No entiendo cómo funciona. Lo dejo como está."
+            "I can't figure out how it works. Leaving it as it is."
           ],
           "stress": 10
         }
       },
       {
         "id": "desconectar",
-        "label": "Desconectalo",
+        "label": "Unplug it",
         "stat": "craft",
         "difficulty": 6,
         "success": {
           "text": [
-            "Lo apagué. Treinta segundos después, se prendió solo."
+            "Shut it off. Thirty seconds later it switched itself back on."
           ],
           "plot": "c1_4",
           "stress": 15
         },
         "failure": {
           "text": [
-            "Me dio una descarga."
+            "It shocked me."
           ],
           "injury": "light",
           "stress": 15
@@ -2081,43 +2081,43 @@
   {
     "id": "mara_olazabal",
     "intro": [
-      "La panadería de Olazábal. La persiana está baja, pero hay luz adentro.",
-      "Alguien vive acá."
+      "Olazábal's bakery. The shutter's down, but there's light inside.",
+      "Someone lives here."
     ],
     "options": [
       {
         "id": "golpear",
-        "label": "Golpeá",
+        "label": "Knock",
         "stat": "nerve",
         "difficulty": 5,
         "success": {
           "text": [
-            "Abrió el hijo de Olazábal. Me reconoció. Lloramos los dos.",
-            "Me dio la receta de las medialunas, escrita a mano."
+            "Olazábal's son opened the door. He recognized me. We both cried.",
+            "He gave me the croissant recipe, handwritten."
           ],
-          "memory": "el hijo de Olazábal y la receta de las medialunas"
+          "memory": "Olazábal's son and the croissant recipe"
         },
         "failure": {
           "text": [
-            "No abrió nadie. La luz se apagó."
+            "Nobody answered. The light went out."
           ],
           "stress": 15
         }
       },
       {
         "id": "mirar",
-        "label": "Mirá por la ventana",
+        "label": "Look through the window",
         "stat": "stealth",
         "difficulty": 5,
         "success": {
           "text": [
-            "Es el hijo de Olazábal. Está bien. Le dejo una nota."
+            "It's Olazábal's son. He's alive. I'm leaving him a note."
           ],
-          "memory": "la nota que le dejé al hijo de Olazábal"
+          "memory": "the note I left for Olazábal's son"
         },
         "failure": {
           "text": [
-            "No se ve nada."
+            "Can't see a thing."
           ],
           "stress": 10
         }
@@ -2127,42 +2127,42 @@
   {
     "id": "tano_casita",
     "intro": [
-      "El anexo de la escuela. Lo levanté yo, con dos ayudantes.",
-      "Sigue en pie, jefe. Sigue en pie."
+      "The school annex. I built it, with two helpers.",
+      "It's still standing, boss. Still standing."
     ],
     "options": [
       {
         "id": "revisar",
-        "label": "Revisá la estructura",
+        "label": "Check the structure",
         "stat": "craft",
         "difficulty": 5,
         "success": {
           "text": [
-            "Ni una fisura. Le dejé mi firma en el revoque, como antes."
+            "Not a single crack. I signed the plaster again, like I used to."
           ],
-          "memory": "el anexo que levanté y sigue en pie"
+          "memory": "the annex I built that's still standing"
         },
         "failure": {
           "text": [
-            "Hay una grieta. La voy a tener que volver a hacer."
+            "There's a crack. I'll have to redo it."
           ],
           "stress": 10
         }
       },
       {
         "id": "sentarse",
-        "label": "Quedate un rato",
+        "label": "Stay a while",
         "stat": "nerve",
         "difficulty": 3,
         "success": {
           "text": [
-            "Me senté en la escalera que hice. Un rato nomás."
+            "Sat on the steps I made. Just for a bit."
           ],
-          "memory": "la escalera del anexo"
+          "memory": "the annex steps"
         },
         "failure": {
           "text": [
-            "No pude quedarme. Me ganó la bronca."
+            "Couldn't stay. The anger got me."
           ],
           "stress": 10
         }
@@ -2172,38 +2172,38 @@
   {
     "id": "irene_laboratorio",
     "intro": [
-      "Mi laboratorio, operador. El piso cuatro.",
-      "Las heladeras están abiertas. Alguien estuvo acá."
+      "My laboratory, Operator. Fourth floor.",
+      "The fridges are open. Someone has been here."
     ],
     "options": [
       {
         "id": "archivos",
-        "label": "Buscá sus notas",
+        "label": "Look for her notes",
         "stat": "wits",
         "difficulty": 6,
         "success": {
           "text": [
-            "Están mis cuadernos. Y otros, que no son míos.",
-            "Hablan de una red de alerta. Proyecto Eco."
+            "My notebooks are here. And others that aren't mine.",
+            "They describe an alert network. Project Echo."
           ],
-          "memory": "mis cuadernos del laboratorio",
+          "memory": "my notebooks from the lab",
           "plot": "c1_3"
         },
         "failure": {
           "text": [
-            "Se llevaron todo. Solo quedan carpetas vacías."
+            "They took everything. Only empty folders left."
           ],
           "stress": 15
         }
       },
       {
         "id": "muestras",
-        "label": "Rescatá lo que se pueda",
+        "label": "Save what you can",
         "stat": "craft",
         "difficulty": 6,
         "success": {
           "text": [
-            "Medicamentos que todavía sirven."
+            "Medicine that's still good."
           ],
           "loot": [
             {
@@ -2212,11 +2212,11 @@
               "max": 5
             }
           ],
-          "memory": "las muestras que rescaté del laboratorio"
+          "memory": "the samples I saved from the lab"
         },
         "failure": {
           "text": [
-            "Todo vencido. Todo."
+            "All expired. All of it."
           ],
           "stress": 10
         }
@@ -2226,43 +2226,43 @@
   {
     "id": "beto_cuadrilla",
     "intro": [
-      "La casilla de señales. Acá trabajé treinta años.",
-      "La palanca del cambio de vías sigue en su lugar."
+      "The signal box. Worked here thirty years.",
+      "The switch lever is still in place."
     ],
     "options": [
       {
         "id": "libro",
-        "label": "Buscá el libro de guardia",
+        "label": "Find the logbook",
         "stat": "wits",
         "difficulty": 4,
         "success": {
           "text": [
-            "Está. Las firmas de mi cuadrilla. Todas.",
-            "Me lo llevo."
+            "It's here. My crew's signatures. All of them.",
+            "Taking it."
           ],
-          "memory": "el libro de guardia con las firmas de la cuadrilla"
+          "memory": "the logbook with my crew's signatures"
         },
         "failure": {
           "text": [
-            "La lluvia lo deshizo."
+            "The rain ruined it."
           ],
           "stress": 12
         }
       },
       {
         "id": "palanca",
-        "label": "Mové la palanca una vez más",
+        "label": "Throw the lever one more time",
         "stat": "endurance",
         "difficulty": 5,
         "success": {
           "text": [
-            "Clac. Como antes. Cambio y fuera."
+            "Clack. Like before. Over and out."
           ],
-          "memory": "la palanca del cambio de vías"
+          "memory": "the switch lever"
         },
         "failure": {
           "text": [
-            "Trabada. Como todo ahora."
+            "Jammed. Like everything now."
           ],
           "stress": 8
         }
@@ -2272,43 +2272,43 @@
   {
     "id": "lucho_vieja",
     "intro": [
-      "La casa del barrio. Acá esperé a mi vieja.",
-      "No volvió nunca."
+      "The house in the gated community. This is where I waited for my mom.",
+      "She never came back."
     ],
     "options": [
       {
         "id": "buscar",
-        "label": "Buscá su carta",
+        "label": "Look for her letter",
         "stat": "stealth",
         "difficulty": 4,
         "success": {
           "text": [
-            "Estaba debajo del colchón. Dice que me quiere. Que me vaya al sur si no vuelve.",
-            "Ya está. Ya sé."
+            "It was under the mattress. Says she loves me. Says to go south if she doesn't come back.",
+            "That's it. Now I know."
           ],
-          "memory": "la carta de mi vieja"
+          "memory": "my mom's letter"
         },
         "failure": {
           "text": [
-            "No la encontré. Capaz nunca hubo carta."
+            "Couldn't find it. Maybe there never was a letter."
           ],
           "stress": 20
         }
       },
       {
         "id": "dejar",
-        "label": "Dejale algo vos",
+        "label": "Leave her something",
         "stat": "nerve",
         "difficulty": 3,
         "success": {
           "text": [
-            "Le dejé mi gorra en la mesa. Por si vuelve."
+            "Left my cap on the table. In case she comes back."
           ],
-          "memory": "la gorra que le dejé a mi vieja"
+          "memory": "the cap I left for my mom"
         },
         "failure": {
           "text": [
-            "No pude entrar. Me quedé en la vereda."
+            "Couldn't go in. Stayed on the sidewalk."
           ],
           "stress": 12
         }
@@ -2318,36 +2318,36 @@
   {
     "id": "radioaficionado",
     "intro": [
-      "Una casa con una antena casera en el techo.",
-      "Adentro, un equipo de radioaficionado con el dial marcado."
+      "A house with a homemade antenna on the roof.",
+      "Inside, a ham radio rig with the dial marked."
     ],
     "options": [
       {
         "id": "anotar",
-        "label": "Anotá las frecuencias marcadas",
+        "label": "Write down the marked frequencies",
         "stat": "wits",
         "difficulty": 5,
         "success": {
           "text": [
-            "Hay frecuencias marcadas con lápiz. Una dice \"VOZ\" y está subrayada tres veces."
+            "Frequencies marked in pencil. One says \"VOICE\" and it's underlined three times."
           ],
-          "memory": "el dial marcado del radioaficionado"
+          "memory": "the ham radio operator's marked dial"
         },
         "failure": {
           "text": [
-            "La letra es ilegible. Una lástima."
+            "The handwriting's illegible. Shame."
           ],
           "stress": 4
         }
       },
       {
         "id": "desarmar",
-        "label": "Desarmá el equipo",
+        "label": "Strip the rig",
         "stat": "craft",
         "difficulty": 6,
         "success": {
           "text": [
-            "Válvulas, bobinas. Para el taller."
+            "Tubes, coils. For the workshop."
           ],
           "loot": [
             {
@@ -2359,7 +2359,7 @@
         },
         "failure": {
           "text": [
-            "Se me rompió todo en las manos."
+            "It all fell apart in my hands."
           ],
           "stress": 6
         }
@@ -2369,23 +2369,23 @@
   {
     "id": "helada",
     "intro": [
-      "Bajó la temperatura de golpe. Escarcha en todo.",
-      "Me tiemblan las manos."
+      "The temperature dropped all at once. Frost on everything.",
+      "My hands are shaking."
     ],
     "options": [
       {
         "id": "fuego",
-        "label": "Hacé un fuego y esperá",
+        "label": "Make a fire and wait",
         "stat": "craft",
         "difficulty": 4,
         "success": {
           "text": [
-            "Un fuego chico en un tacho. Se pasa."
+            "A small fire in a drum. It passes."
           ]
         },
         "failure": {
           "text": [
-            "No prende. Pasé la noche temblando."
+            "It won't light. Spent the night shivering."
           ],
           "injury": "light",
           "stress": 12
@@ -2393,18 +2393,18 @@
       },
       {
         "id": "seguir",
-        "label": "Seguí caminando para no enfriarte",
+        "label": "Keep walking to stay warm",
         "stat": "endurance",
         "difficulty": 6,
         "success": {
           "text": [
-            "Caminé toda la noche. Llegué entero."
+            "Walked all night. Made it in one piece."
           ]
         },
         "failure": {
           "text": [
-            "Se me congelaron los dedos.",
-            "Puedo seguir, pero duele."
+            "My fingers froze.",
+            "I can keep going, but it hurts."
           ],
           "injury": "serious",
           "stress": 15

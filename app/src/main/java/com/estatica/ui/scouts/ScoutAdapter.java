@@ -16,7 +16,13 @@ import com.estatica.data.session.SessionSnapshot.ScoutView;
 import com.estatica.data.session.SessionSnapshot.StatView;
 import com.estatica.databinding.ItemScoutBinding;
 
-/** Roster: one card per scout with stats as monospace bars and their actions. */
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Roster: one card per scout. Collapsed, a card shows name, mood and mini bars; tapping the
+ * header reveals stats, relations, habits and the rest. Actions are always visible.
+ */
 public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Holder> {
 
     public interface Listener {
@@ -35,6 +41,8 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
     private static final char EMPTY = '□';
 
     private final Listener listener;
+    /** Cards the player opened; kept across snapshot rebinds. */
+    private final Set<String> expanded = new HashSet<>();
 
     public ScoutAdapter(Listener listener) {
         super(DIFF);
@@ -49,26 +57,46 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.bind(getItem(position), listener);
+        ScoutView scout = getItem(position);
+        holder.bind(scout, listener, expanded.contains(scout.id));
+        holder.b.header.setOnClickListener(v -> {
+            if (!expanded.remove(scout.id)) {
+                expanded.add(scout.id);
+            }
+            int at = holder.getBindingAdapterPosition();
+            if (at != RecyclerView.NO_POSITION) {
+                notifyItemChanged(at);
+            }
+        });
     }
 
     static final class Holder extends RecyclerView.ViewHolder {
-        private final ItemScoutBinding b;
+        final ItemScoutBinding b;
 
         Holder(ItemScoutBinding binding) {
             super(binding.getRoot());
             this.b = binding;
         }
 
-        void bind(ScoutView s, Listener listener) {
+        void bind(ScoutView s, Listener listener, boolean open) {
             Resources res = b.getRoot().getResources();
-            b.name.setText(s.name);
+            b.name.setText(res.getString(open ? R.string.card_name_open : R.string.card_name_closed, s.name));
+            b.summary.setText(res.getString(R.string.scout_summary,
+                    s.awayAt != null ? s.awayAt : s.status,
+                    s.dead ? "—" : s.mood,
+                    bar(Math.round(s.stress / 20f), 5),
+                    bar(s.bondLevel, s.bondLevels)));
+            b.header.setContentDescription(res.getString(R.string.card_expand_description, s.name));
+            b.details.setVisibility(open ? View.VISIBLE : View.GONE);
             b.status.setText(s.awayAt != null
                     ? res.getString(R.string.scout_status_away, s.status, s.awayAt)
                     : s.status);
             b.stats.setText(statBlock(s));
             b.vitals.setText(res.getString(R.string.scout_vitals, s.stress, s.trust, s.injury));
             b.bond.setText(res.getString(R.string.scout_bond, bar(s.bondLevel, s.bondLevels)));
+            optional(b.mood, s.dead || s.mood == null ? null : res.getString(R.string.scout_mood, s.mood));
+            optional(b.habits, s.habits.isEmpty() ? null
+                    : res.getString(R.string.scout_habits, String.join("; ", s.habits)));
             optional(b.task, s.dead ? null : res.getString(R.string.scout_task, s.task));
             optional(b.traits, s.traits.isEmpty() ? null
                     : res.getString(R.string.scout_traits, String.join(", ", s.traits)));
@@ -107,7 +135,7 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
             return out.toString();
         }
 
-        /** "Aguante ■■■■■■□□□ 6/9", one line per stat, names padded to align. */
+        /** "Endurance ■■■■■■□□□ 6/9", one line per stat, names padded to align. */
         private static String statBlock(ScoutView s) {
             int width = 0;
             for (StatView stat : s.stats) {

@@ -71,7 +71,7 @@ public class StoryTest {
                     found++;
                 }
                 if (e.isAwaitingDecision() && lab.getEvent().equals(e.currentSegment().getEventId())) {
-                    engine.choose(e, 0, t); // "Buscá sus notas"
+                    engine.choose(e, 0, t); // "Look for her notes"
                 }
             }
         }
