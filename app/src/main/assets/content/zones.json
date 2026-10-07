@@ -57,8 +57,7 @@
         "item": "naipes",
         "chance": 0.05
       }
-    ],
-    "startKnown": true
+    ]
   },
   {
     "id": "estacion",
@@ -131,8 +130,7 @@
         "item": "naipes",
         "chance": 0.06
       }
-    ],
-    "startKnown": true
+    ]
   },
   {
     "id": "farmacia",
@@ -194,8 +192,7 @@
         "item": "foto",
         "chance": 0.05
       }
-    ],
-    "startKnown": true
+    ]
   },
   {
     "id": "escuela",
@@ -269,8 +266,7 @@
         "item": "foto",
         "chance": 0.05
       }
-    ],
-    "startKnown": true
+    ]
   },
   {
     "id": "lavadero",
@@ -327,8 +323,7 @@
       "There are still sheets hanging. They move on their own.",
       "The floor's wet. No idea where the water's coming from.",
       "Crossing the loading yard. Nobody."
-    ],
-    "startKnown": false
+    ]
   },
   {
     "id": "hospital",
@@ -399,8 +394,7 @@
       "The ambulance ramp is covered in leaves.",
       "Long corridors. The emergency lights still flicker.",
       "Stretchers crossed in the lobby. Climbing over them."
-    ],
-    "startKnown": false
+    ]
   },
   {
     "id": "estacion_tren",
@@ -462,8 +456,7 @@
       "Walking the tracks. The sleepers creak.",
       "The departures board shows a train that never arrived.",
       "There's a dog watching me from the footbridge."
-    ],
-    "startKnown": false
+    ]
   },
   {
     "id": "comisaria",
@@ -529,8 +522,7 @@
       "Burned-out patrol cars on the sidewalk.",
       "A \"Wanted\" poster, the face washed away by rain.",
       "I can hear a police radio. Only static."
-    ],
-    "startKnown": false
+    ]
   },
   {
     "id": "barrio_privado",
@@ -601,8 +593,7 @@
       "The guard booth's barrier is up.",
       "Green pool. Something moves at the bottom. Not looking again.",
       "A plastic dog in a garden. Scared me anyway."
-    ],
-    "startKnown": false
+    ]
   },
   {
     "id": "aeropuerto",
@@ -678,8 +669,7 @@
       "The airport road is lined with abandoned cars.",
       "Passed a toll booth. The barriers are still down.",
       "I can see the control tower. No lights."
-    ],
-    "startKnown": false
+    ]
   },
   {
     "id": "represa",
@@ -750,8 +740,7 @@
       "The lake is still as a mirror.",
       "A sign: \"Danger. Sudden floods\".",
       "Walking along the top of the dam. Lots of wind."
-    ],
-    "startKnown": false
+    ]
   },
   {
     "id": "antena_norte",
@@ -808,7 +797,160 @@
       "The gravel road climbs and climbs.",
       "There's an electric hum coming from above.",
       "On the portable radio, the Voice's numbers are louder."
+    ]
+  },
+  {
+    "id": "afueras",
+    "wilds": true,
+    "name": "Outskirts",
+    "band": "short",
+    "description": "The blocks around the bunker, street by street.",
+    "danger": 1,
+    "durationMinutes": [
+      2,
+      4
     ],
-    "startKnown": false
+    "situations": [
+      1,
+      1
+    ],
+    "finds": [
+      1,
+      1
+    ],
+    "events": [
+      "perro",
+      "auto_volcado",
+      "avispas",
+      "techo",
+      "radio_encendida",
+      "persiana"
+    ],
+    "loot": [
+      {
+        "resource": "scrap",
+        "min": 1,
+        "max": 2,
+        "weight": 3
+      },
+      {
+        "resource": "rations",
+        "min": 1,
+        "max": 1,
+        "weight": 1
+      }
+    ],
+    "transit": [
+      "Marking street corners on the map as I go.",
+      "Checking every side street. Slow work.",
+      "Chalk arrows on the walls, so I can find my way back."
+    ]
+  },
+  {
+    "id": "suburbios",
+    "wilds": true,
+    "name": "Far suburbs",
+    "band": "medium",
+    "description": "Past the overpass: whole neighborhoods nobody has walked in months.",
+    "danger": 2,
+    "durationMinutes": [
+      12,
+      24
+    ],
+    "situations": [
+      1,
+      2
+    ],
+    "finds": [
+      1,
+      2
+    ],
+    "events": [
+      "jauria",
+      "saqueadores",
+      "vagon",
+      "trampa",
+      "derrumbe",
+      "herido",
+      "pelea_amigos"
+    ],
+    "loot": [
+      {
+        "resource": "scrap",
+        "min": 1,
+        "max": 3,
+        "weight": 3
+      },
+      {
+        "resource": "components",
+        "min": 1,
+        "max": 1,
+        "weight": 1
+      },
+      {
+        "resource": "rations",
+        "min": 1,
+        "max": 2,
+        "weight": 1
+      }
+    ],
+    "transit": [
+      "Following the old bus route. Counting the stops.",
+      "Climbed a water tower to look around. Drawing what I see.",
+      "Every street looks the same out here. Writing names down."
+    ]
+  },
+  {
+    "id": "yermo",
+    "wilds": true,
+    "name": "The wastes",
+    "band": "long",
+    "description": "Open country, dead roads and whatever's left beyond them.",
+    "danger": 3,
+    "durationMinutes": [
+      60,
+      120
+    ],
+    "situations": [
+      2,
+      2
+    ],
+    "finds": [
+      1,
+      2
+    ],
+    "events": [
+      "tormenta",
+      "campamento",
+      "helada",
+      "escalada",
+      "pista",
+      "semi"
+    ],
+    "loot": [
+      {
+        "resource": "scrap",
+        "min": 2,
+        "max": 4,
+        "weight": 2
+      },
+      {
+        "resource": "components",
+        "min": 1,
+        "max": 2,
+        "weight": 2
+      },
+      {
+        "resource": "batteries",
+        "min": 1,
+        "max": 2,
+        "weight": 1
+      }
+    ],
+    "transit": [
+      "Nothing but road for hours. Writing down every landmark.",
+      "Found a road sign still standing. Copied it.",
+      "The wind out here never stops. Neither do I."
+    ]
   }
 ]

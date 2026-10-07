@@ -24,8 +24,12 @@ public final class ZoneDef {
     private List<ItemDrop> items;
     /** Neutral transit report lines (voice styling is applied on top). */
     private List<String> transit;
-    /** Known from the start; otherwise found on the dial. */
-    private boolean startKnown;
+    /** Scouting ground for a band: not a place on the map, never listed as a zone. */
+    private boolean wilds;
+
+    public boolean isWilds() {
+        return wilds;
+    }
 
     public String getId() {
         return id;
@@ -75,7 +79,4 @@ public final class ZoneDef {
         return transit;
     }
 
-    public boolean isStartKnown() {
-        return startKnown;
-    }
 }

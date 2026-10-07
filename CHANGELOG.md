@@ -41,6 +41,19 @@ When they change, each entry lists the three independent versions:
   - **DB 6 → 7:** new `gear_pieces` table. Old saves' gear (stock counts and equipped ids) becomes common pieces in full condition on load.
   - Content 10 → 11: `balance.gear` and the gear texts and rarity names.
 - Tests: 140 in total (4 new for rarity, wear, finds and crafting).
+- **Map scouting:**
+  - **The map starts blank:** no place is known at the start. Every zone is found by scouting and added to the map, so the first thing a new game asks for is to send someone out.
+  - **Region map** ([MAP] in the CREW panel):
+    - The bunker in the middle, one ring per band, eight directions.
+    - Unexplored sectors show "?". Places found show as dots with their names, and the ones out of reach are dimmed.
+    - It's drawn only when the game state changes (no animation).
+  - **Scouting:**
+    - Tap a "?" and pick who goes. They travel through that band's scouting ground: Outskirts (2–4 min), Far suburbs (12–24 min), The wastes (1–2 h), each with its own situations and loot.
+    - When they come back the sector is mapped, and every place in it is added. An empty sector is still mapped.
+  - **Where places sit:** each game places zones differently, from the game seed. Close to home they're spread across different directions, so early scouting is rarely wasted.
+  - **The radio points the way:** a zone signal no longer reveals the place. It marks its sector "?!" ("Something on the radio from the northeast"). Survivors are only heard in places you've already found.
+  - No save change: scouted and heard sectors live in the game flags. Content 11 → 12: `wilds` zones, the map texts and direction names, and no more `startKnown`.
+- Tests: 145 in total (5 new for the map).
 - **A generated third starter:** new games start with Mara, Irene and one generated person (`balance.json → people.generatedStarters`). It comes from the game seed, so each game starts with someone different. Existing saves are untouched.
 
 ## [0.6.3] — Tano removed — in verification

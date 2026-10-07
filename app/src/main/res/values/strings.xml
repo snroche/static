@@ -123,6 +123,22 @@
     <string name="hud_night">☾</string>
     <string name="hud_blackout">⚠ blackout</string>
     <string name="hud_resource">%1$s %2$d</string>
+    <string name="panel_map_button">[MAP]</string>
+    <string name="panel_map_title">REGION MAP</string>
+    <string name="map_description" tools:ignore="PluralsCandidate">Region map: %1$d places found, %2$d sectors left to scout.</string>
+    <string name="map_hint">Tap a ? to send someone to scout it. Places show up as they\'re found.</string>
+    <string name="map_scout">[ SEND SOMEONE ]</string>
+    <string name="map_legend">◉ bunker · ? unexplored · ?! something on the radio · … someone\'s out there · · out of reach</string>
+    <string name="map_place">%1$s · danger %2$d. Dispatch from the crew card.</string>
+    <string name="map_place_far">%1$s · danger %2$d. Out of reach: the antenna can\'t get that far.</string>
+    <string name="map_sector_unknown">The %1$s. Nobody\'s been there.</string>
+    <string name="map_sector_heard">The %1$s. The radio picked up something from there.</string>
+    <string name="map_sector_scouting">The %1$s. Someone\'s out there mapping it.</string>
+    <string name="map_sector_scouted">The %1$s. Already on the map.</string>
+    <string name="map_sector_far">The %1$s. Out of reach: upgrade the antenna.</string>
+    <string name="panel_scout_sector_title">Who scouts the %1$s?</string>
+    <string name="scout_sector_nobody">Nobody\'s free to go.</string>
+    <string name="zones_none">No places known yet. Open the [MAP] and scout around the bunker.</string>
     <string name="gear_title">GEAR</string>
     <string name="gear_line_worn_by">%1$s — %2$s</string>
     <string name="gear_repair">[ REPAIR: %1$s ]</string>

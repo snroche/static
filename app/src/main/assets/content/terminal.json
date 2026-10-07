@@ -6,9 +6,9 @@
     "Air filters ...... OK",
     "Radio ............ OK. Short band available.",
     "Sweeping frequencies...",
-    "Outside, nobody answers. Yet.",
+    "Outside, nobody answers. The map is blank.",
     "Scouts in the bunker: {scouts}.",
-    "Tap CREW to send someone out.",
+    "We don't know what's out there. Open CREW, then [MAP], and send someone to scout.",
     "Type 'help' to see the commands."
   ],
   "reconnect": [
@@ -39,7 +39,7 @@
       "  status         operator and bunker status",
       "  sound          turns sound on or off",
       "  notifications  turns notifications on or off",
-      "[ RADIO ] dial and decoding · [ BUNKER ] power, workshop, modules · [ CREW ] your scouts."
+      "[ RADIO ] dial and decoding · [ BUNKER ] power, workshop, modules · [ CREW ] your scouts and the [MAP]."
     ],
     "status": [
       "Operator #{operator}",
@@ -167,7 +167,21 @@
       "COMMON": "common",
       "UNCOMMON": "uncommon",
       "RARE": "rare"
-    }
+    },
+    "mapScouted": "{name} came back from the {direction} ({band}). It's on the map now.",
+    "mapFoundZone": "{name} found a place: {zone}.",
+    "mapNothing": "Nothing worth a trip out there. At least now we know.",
+    "mapHeard": "Something on the radio from the {direction} ({band}). Worth scouting.",
+    "directions": [
+      "north",
+      "northeast",
+      "east",
+      "southeast",
+      "south",
+      "southwest",
+      "west",
+      "northwest"
+    ]
   },
   "story": {
     "personalAvailable": "{name} asked you for something: \"{title}\". It shows up as a mission when dispatching.",

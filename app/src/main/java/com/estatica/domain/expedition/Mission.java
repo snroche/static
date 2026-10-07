@@ -18,7 +18,9 @@ public final class Mission {
         /** Repair the relay in the zone. */
         MAINTAIN_RELAY,
         /** A scout's own arc (target: personal mission id). */
-        PERSONAL
+        PERSONAL,
+        /** Map out a sector of the region (target: sector id); goes through the band's wilds. */
+        SCOUT
     }
 
     private final Type type;

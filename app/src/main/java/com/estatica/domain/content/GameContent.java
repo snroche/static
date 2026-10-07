@@ -14,6 +14,8 @@ public final class GameContent {
     private final List<ScoutTemplate> starters;
     private final Map<String, TraitDef> traits;
     private final Map<String, ZoneDef> zones;
+    /** Scouting grounds by band id (zones.json entries with "wilds"). */
+    private final Map<String, ZoneDef> wilds = new LinkedHashMap<>();
     private final Map<String, EventDef> events;
     private final Map<String, VoiceDef> voices;
     private final Map<String, ResourceDef> resources;
@@ -37,7 +39,17 @@ public final class GameContent {
         this.terminal = Objects.requireNonNull(terminal);
         this.starters = Collections.unmodifiableList(starters);
         this.traits = index(traits, TraitDef::getId);
-        this.zones = index(zones, ZoneDef::getId);
+        List<ZoneDef> places = new java.util.ArrayList<>();
+        for (ZoneDef z : zones) {
+            if (z.isWilds()) {
+                if (wilds.put(z.getBand(), z) != null) {
+                    throw new IllegalStateException("Invalid content: two scouting grounds on band " + z.getBand());
+                }
+            } else {
+                places.add(z);
+            }
+        }
+        this.zones = index(places, ZoneDef::getId);
         this.events = index(events, EventDef::getId);
         this.voices = index(voices, VoiceDef::getId);
         this.resources = index(resources, ResourceDef::getId);
@@ -82,8 +94,23 @@ public final class GameContent {
         return require(traits, id, "trait");
     }
 
+    /** A place or a scouting ground. */
     public ZoneDef zone(String id) {
+        for (ZoneDef w : wilds.values()) {
+            if (w.getId().equals(id)) {
+                return w;
+            }
+        }
         return require(zones, id, "zone");
+    }
+
+    /** Scouting ground for a band, or null. */
+    public ZoneDef wilds(String bandId) {
+        return wilds.get(bandId);
+    }
+
+    public java.util.Collection<ZoneDef> getWilds() {
+        return Collections.unmodifiableCollection(wilds.values());
     }
 
     public EventDef event(String id) {

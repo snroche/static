@@ -176,9 +176,18 @@
             android:accessibilityHeading="true"
             tools:targetApi="28"
             app:layout_constraintBottom_toBottomOf="@id/panelClose"
-            app:layout_constraintEnd_toStartOf="@id/panelExtra"
+            app:layout_constraintEnd_toStartOf="@id/panelMap"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/panelClose" />
+
+        <TextView
+            android:id="@+id/panelMap"
+            style="@style/TerminalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/panel_map_button"
+            app:layout_constraintEnd_toStartOf="@id/panelExtra"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/panelExtra"
@@ -226,6 +235,17 @@
     <include
         android:id="@+id/bunkerPanel"
         layout="@layout/panel_bunker"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/mapPanel"
+        layout="@layout/panel_map"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"

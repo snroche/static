@@ -141,9 +141,12 @@ public class RadioTest {
         RadioRules.Outcome nothingLeft = rules.resolve(spotOf(SignalField.Kind.ZONE, "short"), known, true, Set.of(), rng);
         assertEquals(SignalField.Kind.RARE, nothingLeft.kind);
 
+        RadioRules.Outcome nobodyThere = rules.resolve(spotOf(SignalField.Kind.SURVIVOR, "medium"), known, true, Set.of(), rng);
+        assertEquals("survivors are only heard where we know the way", SignalField.Kind.RARE, nobodyThere.kind);
+        known.add("hospital");
         RadioRules.Outcome survivor = rules.resolve(spotOf(SignalField.Kind.SURVIVOR, "medium"), known, true, Set.of(), rng);
         assertEquals(SignalField.Kind.SURVIVOR, survivor.kind);
-        assertEquals("medium", content.zone(survivor.zoneId).getBand());
+        assertEquals("hospital", survivor.zoneId);
         RadioRules.Outcome enoughWaiting = rules.resolve(spotOf(SignalField.Kind.SURVIVOR, "medium"), known,
                 false, Set.of(), rng);
         assertEquals(SignalField.Kind.RARE, enoughWaiting.kind);

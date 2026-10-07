@@ -20,6 +20,8 @@ public final class SessionSnapshot {
     public final BaseView base;
     /** Scouts out right now, for the expedition strip. */
     public final List<ExpeditionView> expeditions;
+    /** The region around the bunker: sectors and the places found so far. */
+    public final MapView map;
     /** How long the rations last at the current rate (infinite if nobody eats). */
     public final double foodDaysLeft;
     /** The stores are empty and the crew is going hungry. */
@@ -31,7 +33,8 @@ public final class SessionSnapshot {
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
                     List<MissionView> missions, RadioView radio, BaseView base,
                     List<ExpeditionView> expeditions, double foodDaysLeft, boolean hungry,
-                    long nextWakeAtMillis) {
+                    MapView map, long nextWakeAtMillis) {
+        this.map = map;
         this.expeditions = Collections.unmodifiableList(expeditions);
         this.foodDaysLeft = foodDaysLeft;
         this.hungry = hungry;
@@ -447,6 +450,70 @@ public final class SessionSnapshot {
             this.name = name;
             this.amount = amount;
             this.shortName = shortName;
+        }
+    }
+
+    /** The region map: rings by band, eight directions, places found. */
+    public static final class MapView {
+        public final List<SectorView> sectors;
+        public final List<PlaceView> places;
+        /** Ring labels, inner first. */
+        public final List<String> bands;
+
+        MapView(List<SectorView> sectors, List<PlaceView> places, List<String> bands) {
+            this.sectors = Collections.unmodifiableList(sectors);
+            this.places = Collections.unmodifiableList(places);
+            this.bands = Collections.unmodifiableList(bands);
+        }
+    }
+
+    public static final class SectorView {
+        public final String id;
+        public final int ring;
+        /** 0 = north, clockwise. */
+        public final int direction;
+        /** "the northeast, short band". */
+        public final String label;
+        public final boolean scouted;
+        /** The radio picked up something from here. */
+        public final boolean heard;
+        public final boolean reachable;
+        public final boolean beingScouted;
+
+        SectorView(String id, int ring, int direction, String label, boolean scouted, boolean heard,
+                   boolean reachable, boolean beingScouted) {
+            this.id = id;
+            this.ring = ring;
+            this.direction = direction;
+            this.label = label;
+            this.scouted = scouted;
+            this.heard = heard;
+            this.reachable = reachable;
+            this.beingScouted = beingScouted;
+        }
+    }
+
+    /** A known place, positioned inside its sector. */
+    public static final class PlaceView {
+        public final String zoneId;
+        public final String name;
+        public final int ring;
+        /** 0 inner edge of the ring, 1 outer edge. */
+        public final double ringPosition;
+        /** 0–1 of a turn, clockwise from north. */
+        public final double turn;
+        public final int danger;
+        public final boolean reachable;
+
+        PlaceView(String zoneId, String name, int ring, double ringPosition, double turn, int danger,
+                  boolean reachable) {
+            this.zoneId = zoneId;
+            this.name = name;
+            this.ring = ring;
+            this.ringPosition = ringPosition;
+            this.turn = turn;
+            this.danger = danger;
+            this.reachable = reachable;
         }
     }
 

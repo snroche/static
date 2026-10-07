@@ -55,7 +55,7 @@ public final class TerminalActivity extends ComponentActivity {
     private SoundEngine sound;
     private int typedSinceTick;
 
-    private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY, GEAR, RECIPES }
+    private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR }
 
     private ActivityTerminalBinding binding;
     private TerminalViewModel viewModel;
@@ -76,12 +76,21 @@ public final class TerminalActivity extends ComponentActivity {
     private RadioPanel radioPanel;
     private DecoderPanel decoderPanel;
     private BunkerPanel bunkerPanel;
+    private MapPanel mapPanel;
+    /** Sector the scout picker is for. */
+    private SessionSnapshot.SectorView pendingSector;
 
     private final OnBackPressedCallback closePanelOnBack = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
             if (decoderPanel.isShown()) {
                 decoderPanel.hide();
+            } else if (panel == Panel.SCOUT_SECTOR) {
+                showPanel(Panel.NONE);
+                mapPanel.show();
+            } else if (mapPanel.isShown()) {
+                mapPanel.hide();
+                showPanel(Panel.SCOUTS);
             } else if (panel == Panel.RECIPES) {
                 showPanel(Panel.NONE);
                 bunkerPanel.show();
@@ -262,6 +271,7 @@ public final class TerminalActivity extends ComponentActivity {
         scoutAdapter.submitList(snapshot.scouts);
         radioPanel.render(snapshot);
         bunkerPanel.render(snapshot);
+        mapPanel.render(snapshot);
         if (panel != Panel.NONE && panel != Panel.SCOUTS) {
             renderPanel();
         }
@@ -463,6 +473,26 @@ public final class TerminalActivity extends ComponentActivity {
             viewModel.loadDiary();
             showPanel(Panel.DIARY);
         });
+        mapPanel = new MapPanel(binding.mapPanel, new MapPanel.Host() {
+            @Override
+            public void closeMap() {
+                mapPanel.hide();
+                showPanel(Panel.SCOUTS);
+                updateBack();
+            }
+
+            @Override
+            public void pickScout(SessionSnapshot.SectorView sector) {
+                pendingSector = sector;
+                mapPanel.hide();
+                showPanel(Panel.SCOUT_SECTOR);
+            }
+        });
+        binding.panelMap.setOnClickListener(v -> {
+            showPanel(Panel.NONE);
+            mapPanel.show();
+            updateBack();
+        });
     }
 
     // ---- Radio and decoder ----
@@ -516,7 +546,7 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void updateBack() {
         closePanelOnBack.setEnabled(panel != Panel.NONE || radioPanel.isShown() || decoderPanel.isShown()
-                || bunkerPanel.isShown());
+                || bunkerPanel.isShown() || mapPanel.isShown());
     }
 
     private void select(SessionSnapshot.ScoutView scout) {
@@ -543,6 +573,10 @@ public final class TerminalActivity extends ComponentActivity {
             case GEAR:
                 viewModel.equip(selectedScoutId, row.key);
                 break;
+            case SCOUT_SECTOR:
+                requestNotificationPermission();
+                viewModel.scoutSector(row.key, pendingSector.id);
+                break;
             case RECIPES:
                 viewModel.craft(row.key);
                 showPanel(Panel.NONE);
@@ -561,7 +595,8 @@ public final class TerminalActivity extends ComponentActivity {
         closePanelOnBack.setEnabled(target != Panel.NONE
                 || (radioPanel != null && radioPanel.isShown())
                 || (decoderPanel != null && decoderPanel.isShown())
-                || (bunkerPanel != null && bunkerPanel.isShown()));
+                || (bunkerPanel != null && bunkerPanel.isShown())
+                || (mapPanel != null && mapPanel.isShown()));
         if (target == Panel.NONE) {
             binding.panel.setVisibility(View.GONE);
             binding.panelList.setAdapter(null);
@@ -569,6 +604,7 @@ public final class TerminalActivity extends ComponentActivity {
         }
         binding.panel.setVisibility(View.VISIBLE);
         binding.panelExtra.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
+        binding.panelMap.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
         // The recipe picker opens over the bunker panel and returns to it.
         binding.panelClose.setText(target == Panel.SCOUTS ? R.string.panel_close : R.string.panel_back);
         if (target == Panel.SCOUTS) {
@@ -607,6 +643,20 @@ public final class TerminalActivity extends ComponentActivity {
                     rows.add(new PickerAdapter.Row(Mission.Type.EXPLORE.name() + "|" + z.id + "|", z.name,
                             getString(R.string.zone_band_meta, z.band, dangerBar(z.danger), z.minMinutes, z.maxMinutes),
                             extra.toString(), true));
+                }
+                if (rows.isEmpty()) {
+                    rows.add(new PickerAdapter.Row("-", getString(R.string.zones_none), null, null, false));
+                }
+                break;
+            case SCOUT_SECTOR:
+                binding.panelTitle.setText(getString(R.string.panel_scout_sector_title, pendingSector.label));
+                for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+                    if (s.canDispatch) {
+                        rows.add(new PickerAdapter.Row(s.id, s.name, s.mood, null, true));
+                    }
+                }
+                if (rows.isEmpty()) {
+                    rows.add(new PickerAdapter.Row("-", getString(R.string.scout_sector_nobody), null, null, false));
                 }
                 break;
             case GIFTS:

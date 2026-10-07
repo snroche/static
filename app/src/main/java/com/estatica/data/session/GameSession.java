@@ -119,6 +119,7 @@ public final class GameSession {
     private com.estatica.domain.scouts.PersonaGenerator personas;
     private com.estatica.domain.bunker.FoodRules food;
     private com.estatica.domain.bunker.GearRules gearRules;
+    private com.estatica.domain.map.RegionMap regionMap;
     /** Every piece of equipment, by id (stock, equipped, lost in zones). */
     private final Map<String, com.estatica.domain.bunker.GearPiece> gear = new HashMap<>();
     private com.estatica.domain.state.GameState state;
@@ -272,6 +273,7 @@ public final class GameSession {
 
         radio = new RadioRules(content);
         field = new SignalField(content.getBalance(), state.getRngSeed());
+        regionMap = new com.estatica.domain.map.RegionMap(content, state.getRngSeed());
         gameFlags.addAll(radioRepository.flags());
         knownZones.addAll(radioRepository.knownZones());
         caughtSignals.addAll(radioRepository.caughtSignals());
@@ -287,12 +289,7 @@ public final class GameSession {
         moduleLevels.putAll(radioRepository.moduleLevels());
         long now = clock.nowMillis();
         db.runInTransaction(() -> {
-            // New games and saves from before Phase 3: starting zones and module levels.
-            for (ZoneDef z : content.getZones().values()) {
-                if (z.isStartKnown() && knownZones.add(z.getId())) {
-                    radioRepository.addKnownZone(z.getId(), now);
-                }
-            }
+            // New games: module levels. No zone starts known: everything is found by scouting.
             for (ModuleDef m : content.getBalance().getModules()) {
                 if (!moduleLevels.containsKey(m.getId())) {
                     moduleLevels.put(m.getId(), m.getStartLevel());
@@ -777,6 +774,13 @@ public final class GameSession {
         advance(step);
         Scout scout = scouts.get(scoutId);
         ZoneDef zone = content.getZones().get(zoneId);
+        if (type == Mission.Type.SCOUT) {
+            com.estatica.domain.map.RegionMap.Sector sector = target != null ? regionMap.sector(target) : null;
+            zone = sector != null ? content.wilds(sector.bandId) : null;
+            if (sector == null || !canScout(sector)) {
+                return step.commit();
+            }
+        }
         if (scout == null || zone == null || !rules.canDispatch(scout) || !canReach(zone)) {
             return step.commit();
         }
@@ -869,7 +873,109 @@ public final class GameSession {
 
     /** Known and within reach. */
     private boolean canReach(ZoneDef zone) {
-        return knownZones.contains(zone.getId()) && isUnlocked(content.getBalance().band(zone.getBand()));
+        return (zone.isWilds() || knownZones.contains(zone.getId()))
+                && isUnlocked(content.getBalance().band(zone.getBand()));
+    }
+
+    // ---- The region map (scouting) ----
+
+    private static final String SCOUTED = "scouted:";
+    private static final String HEARD = "heard:";
+
+    /** Sends a scout to map out a sector. */
+    @WorkerThread
+    public List<LogLine> scoutSector(String scoutId, String sectorId) {
+        com.estatica.domain.map.RegionMap.Sector sector = regionMap.sector(sectorId);
+        if (sector == null) {
+            return List.of();
+        }
+        return dispatch(scoutId, content.wilds(sector.bandId).getId(), Mission.Type.SCOUT, sectorId);
+    }
+
+    private boolean isScouted(String sectorId) {
+        return gameFlags.contains(SCOUTED + sectorId);
+    }
+
+    private boolean beingScouted(String sectorId) {
+        for (Expedition e : active.values()) {
+            if (e.getMission().getType() == Mission.Type.SCOUT && sectorId.equals(e.getMission().getTarget())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean canScout(com.estatica.domain.map.RegionMap.Sector sector) {
+        return !isScouted(sector.id) && !beingScouted(sector.id)
+                && isUnlocked(content.getBalance().band(sector.bandId));
+    }
+
+    private void addGameFlag(String flag, Step step) {
+        if (gameFlags.add(flag)) {
+            step.radioWrites.add(() -> radioRepository.addFlag(flag, step.now));
+        }
+    }
+
+    private Map<String, String> sectorVars(com.estatica.domain.map.RegionMap.Sector sector) {
+        Map<String, String> vars = new HashMap<>();
+        List<String> names = content.getTerminal().getBase().getDirections();
+        vars.put("direction", sector.direction < names.size() ? names.get(sector.direction) : "?");
+        vars.put("band", content.getBalance().band(sector.bandId).getName().toLowerCase(Locale.ROOT));
+        return vars;
+    }
+
+    /** The scout came back from a sector: it's on the map now, with whatever was out there. */
+    private void mapSector(String sectorId, Scout scout, Step step) {
+        com.estatica.domain.map.RegionMap.Sector sector = regionMap.sector(sectorId);
+        if (sector == null) {
+            return;
+        }
+        addGameFlag(SCOUTED + sectorId, step);
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        Map<String, String> vars = sectorVars(sector);
+        vars.put("name", scout.getName());
+        step.system(text.getMapScouted(), vars, scout);
+        boolean found = false;
+        for (String zoneId : regionMap.zonesIn(sectorId)) {
+            if (!knownZones.contains(zoneId)) {
+                discover(zoneId, step);
+                found = true;
+                Map<String, String> zoneVars = new HashMap<>();
+                zoneVars.put("name", scout.getName());
+                zoneVars.put("zone", content.zone(zoneId).getName());
+                step.system(text.getMapFoundZone(), zoneVars, scout);
+            }
+        }
+        if (!found) {
+            step.system(text.getMapNothing(), vars, scout);
+        }
+    }
+
+    private SessionSnapshot.MapView mapView() {
+        List<SessionSnapshot.SectorView> sectors = new ArrayList<>();
+        for (com.estatica.domain.map.RegionMap.Sector s : regionMap.sectors()) {
+            Map<String, String> vars = sectorVars(s);
+            sectors.add(new SessionSnapshot.SectorView(s.id, s.bandIndex, s.direction,
+                    vars.get("direction") + " · " + vars.get("band"), isScouted(s.id),
+                    gameFlags.contains(HEARD + s.id), isUnlocked(content.getBalance().band(s.bandId)),
+                    beingScouted(s.id)));
+        }
+        List<SessionSnapshot.PlaceView> places = new ArrayList<>();
+        for (String zoneId : knownZones) {
+            ZoneDef z = content.getZones().get(zoneId);
+            com.estatica.domain.map.RegionMap.Place place = z != null ? regionMap.placeOf(zoneId) : null;
+            if (place != null) {
+                places.add(new SessionSnapshot.PlaceView(zoneId, z.getName(),
+                        content.getBalance().bandIndex(z.getBand()), place.ring, place.turn, z.getDanger(), canReach(z)));
+            }
+        }
+        List<String> bands = new ArrayList<>();
+        for (BandDef b : content.getBalance().getBands()) {
+            if (content.wilds(b.getId()) != null) {
+                bands.add(b.getName());
+            }
+        }
+        return new SessionSnapshot.MapView(sectors, places, bands);
     }
 
     /**
@@ -960,6 +1066,17 @@ public final class GameSession {
         Map<String, String> vars = new HashMap<>();
         switch (outcome.kind) {
             case ZONE: {
+                com.estatica.domain.map.RegionMap.Place place = regionMap.placeOf(outcome.zoneId);
+                if (place != null && !isScouted(place.sectorId)) {
+                    // All places are found by scouting: the radio only says where to look.
+                    if (gameFlags.add(HEARD + place.sectorId)) {
+                        String heard = HEARD + place.sectorId;
+                        step.radioWrites.add(() -> radioRepository.addFlag(heard, step.now));
+                        step.system(content.getTerminal().getBase().getMapHeard(),
+                                sectorVars(regionMap.sector(place.sectorId)), null);
+                    }
+                    break;
+                }
                 discover(outcome.zoneId, step);
                 ZoneDef zone = content.zone(outcome.zoneId);
                 vars.put("zone", zone.getName());
@@ -1186,6 +1303,11 @@ public final class GameSession {
             case PERSONAL:
                 if (completed) {
                     completePersonal(content.getStory().personalMission(mission.getTarget()), scout, step);
+                }
+                break;
+            case SCOUT:
+                if (completed) {
+                    mapSector(mission.getTarget(), scout, step);
                 }
                 break;
             default:
@@ -2177,7 +2299,7 @@ public final class GameSession {
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
                 radioView(), baseView(now), expeditionViews,
                 food.daysLeft(mouths(), kitchenSaving(), resources.getOrDefault("rations", 0), foodCarryNow(now)),
-                value(KEY_HUNGRY) > 0, nextWake);
+                value(KEY_HUNGRY) > 0, mapView(), nextWake);
     }
 
     private SessionSnapshot.RadioView radioView() {

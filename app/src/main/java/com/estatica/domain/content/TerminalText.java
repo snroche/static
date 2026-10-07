@@ -297,6 +297,37 @@ public final class TerminalText {
         private String gearLabel;
         /** {gear}, {rarity}. */
         private String gearLabelBroken;
+        /** {name}, {direction}, {band}. */
+        private String mapScouted;
+        /** {name}, {zone}. */
+        private String mapFoundZone;
+        /** {name}. */
+        private String mapNothing;
+        /** {direction}, {band}. */
+        private String mapHeard;
+        /** North first, clockwise: eight names. */
+        private java.util.List<String> directions;
+
+        public String getMapScouted() {
+            return mapScouted;
+        }
+
+        public String getMapFoundZone() {
+            return mapFoundZone;
+        }
+
+        public String getMapNothing() {
+            return mapNothing;
+        }
+
+        public String getMapHeard() {
+            return mapHeard;
+        }
+
+        public java.util.List<String> getDirections() {
+            return directions != null ? directions : java.util.List.of();
+        }
+
         /** COMMON, UNCOMMON, RARE to display name. */
         private java.util.Map<String, String> rarities;
 

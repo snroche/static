@@ -376,7 +376,20 @@ public final class ContentValidator {
             check(t.getReward() != SignalsDef.Transmission.Reward.LORE || t.getLore() != null, where + ": lore");
         }
 
+        List<ZoneDef> allZones = new ArrayList<>(content.getZones().values());
+        allZones.addAll(content.getWilds());
+        java.util.Set<String> bandsWithPlaces = new java.util.HashSet<>();
         for (ZoneDef z : content.getZones().values()) {
+            bandsWithPlaces.add(z.getBand());
+        }
+        for (String band : bandsWithPlaces) {
+            check(content.wilds(band) != null, "band " + band + ": places but no scouting ground (wilds) to find them");
+        }
+        TerminalText.BaseText mapText = content.getTerminal().getBase();
+        check(mapText.getMapScouted() != null && mapText.getMapFoundZone() != null && mapText.getMapNothing() != null
+                        && mapText.getMapHeard() != null && mapText.getDirections().size() == 8,
+                "terminal.base: map texts and eight directions");
+        for (ZoneDef z : allZones) {
             String where = "zone " + z.getId();
             check(z.getName() != null, where + ": name");
             checkRange(z.getDurationMinutes(), 1, where + ": durationMinutes");

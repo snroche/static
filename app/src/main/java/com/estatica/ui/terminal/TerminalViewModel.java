@@ -187,6 +187,12 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
+    void scoutSector(String scoutId, String sectorId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.scoutSector(scoutId, sectorId)));
+        }
+    }
+
     void repairGear(String pieceId) {
         if (ready) {
             run(step -> step.animated.addAll(session.repairGear(pieceId)));
