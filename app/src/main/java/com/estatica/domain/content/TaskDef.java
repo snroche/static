@@ -26,6 +26,12 @@ public final class TaskDef {
     private boolean passiveSweep;
     /** Defends the bunker against raids. */
     private boolean guards;
+    /** Kitchen: fraction of the crew's rations this person saves (capped in balance). */
+    private double foodSaving;
+
+    public double getFoodSaving() {
+        return foodSaving;
+    }
 
     public String getId() {
         return id;

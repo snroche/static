@@ -20,6 +20,15 @@ When they change, each entry lists the three independent versions:
   - The log and the buttons only number the options that person can take. Saved choices keep working.
   - Content 8 → 9: events and options can have `requiresTrait` / `requiresBackground`. Validation now allows 2–4 options anyone can take and 6 at most in all.
 - Tests: 130 in total (5 new for who-gets-what).
+- **The bunker eats:**
+  - Everyone alive goes through 1 ration a day; those out carry their share.
+  - Each cook on the Kitchen task saves a fifth, up to 40 %.
+  - When the stores run out, whoever is home gets hungry: stress rises and wounds heal at half speed. Hungry people talk about food in the bunker chatter.
+  - The log warns when there's less than a day of food, when it runs out and when it's back.
+  - The status bar shows how long the food lasts ("food ~2.5d", or "⚠ hungry"). The [ BUNKER ! ] badge lights up with under a day of food.
+  - More zones now drop rations. It's all elapsed-time arithmetic, with no ticking and no save change (the food clock lives in the bunker's key-value store).
+  - Content 9 → 10: `balance.food`, the `foodSaving` task field, the `hungry` voice phrases and the `foodLow`/`foodOut`/`foodBack` texts.
+- Tests: 136 in total (6 new for food).
 - **A generated third starter:** new games start with Mara, Irene and one generated person (`balance.json → people.generatedStarters`). It comes from the game seed, so each game starts with someone different. Existing saves are untouched.
 
 ## [0.6.3] — Tano removed — in verification

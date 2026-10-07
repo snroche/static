@@ -20,6 +20,43 @@ public final class Balance {
     private EnergyDef energy;
     private Barks barks;
     private People people;
+    private Food food;
+
+    public Food getFood() {
+        return food;
+    }
+
+    /** The bunker eats. [placeholder] */
+    public static final class Food {
+        private double rationsPerScoutPerDay;
+        /** Cap on what cooks can save, 0–1. */
+        private double kitchenMaxSaving;
+        private double hungerStressPerHour;
+        /** Healing speed while hungry. */
+        private double hungerHealMultiplier = 1.0;
+        /** Warn when the stores last less than this. */
+        private double lowFoodDays;
+
+        public double getRationsPerScoutPerDay() {
+            return rationsPerScoutPerDay;
+        }
+
+        public double getKitchenMaxSaving() {
+            return kitchenMaxSaving;
+        }
+
+        public double getHungerStressPerHour() {
+            return hungerStressPerHour;
+        }
+
+        public double getHungerHealMultiplier() {
+            return hungerHealMultiplier;
+        }
+
+        public double getLowFoodDays() {
+            return lowFoodDays;
+        }
+    }
 
     public Barks getBarks() {
         return barks;

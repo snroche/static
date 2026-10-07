@@ -510,6 +510,22 @@ public final class TerminalText {
     /** System lines about life in the bunker. All are templates. */
     public static final class BunkerText {
         private String retreatLabel;
+        /** {days}. */
+        private String foodLow;
+        private String foodOut;
+        private String foodBack;
+
+        public String getFoodLow() {
+            return foodLow;
+        }
+
+        public String getFoodOut() {
+            return foodOut;
+        }
+
+        public String getFoodBack() {
+            return foodBack;
+        }
         /** {name}, {hours}. */
         private String talkCooldown;
         /** {name}. */

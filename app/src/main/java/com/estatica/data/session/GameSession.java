@@ -117,6 +117,7 @@ public final class GameSession {
     private GriefRules grief;
     private com.estatica.domain.scouts.BarkRules barks;
     private com.estatica.domain.scouts.PersonaGenerator personas;
+    private com.estatica.domain.bunker.FoodRules food;
     private com.estatica.domain.state.GameState state;
     private GameRandom random;
     private long lastSeenAtMillis;
@@ -219,6 +220,7 @@ public final class GameSession {
         });
         barks = new com.estatica.domain.scouts.BarkRules(content, rules);
         personas = new com.estatica.domain.scouts.PersonaGenerator(content);
+        food = new com.estatica.domain.bunker.FoodRules(content.getBalance().getFood());
         gifts = new GiftRules(content, rules);
         grief = new GriefRules(content, rules);
         state = gameStateRepository.loadOrCreate();
@@ -503,8 +505,10 @@ public final class GameSession {
         }
 
         PowerGrid.State grid = baseAdvance(step);
+        boolean hungry = feed(step);
         BunkerRules.Conditions conditions = new BunkerRules.Conditions(
-                PowerGrid.infirmaryHeal(grid.units("infirmary"), moduleLevel("infirmary")),
+                PowerGrid.infirmaryHeal(grid.units("infirmary"), moduleLevel("infirmary"))
+                        * (hungry ? food.hungerHealMultiplier() : 1.0),
                 PowerGrid.infirmaryRelief(grid.units("infirmary")),
                 grid.filtersShort ? content.getBalance().getEnergy().getBadAirStressPerHour() : 0);
         BunkerRules.Result life = bunker.advance(scouts.values(), affinities, resources, now, conditions);
@@ -517,6 +521,94 @@ public final class GameSession {
         expireConversations(step);
         maybeStartConversation(step);
         maybeBark(step);
+    }
+
+    private static final String KEY_FOOD_AT = "food_at";
+    private static final String KEY_FOOD_CARRY = "food_carry";
+    private static final String KEY_HUNGRY = "hungry";
+    private static final String KEY_FOOD_WARNED = "food_warned";
+
+    /** Rations nibbled so far, counting the time since the last meal was written. */
+    private double foodCarryNow(long now) {
+        double last = value(KEY_FOOD_AT);
+        double hours = last <= 0 ? 0 : (now - last) / (double) HOUR;
+        return value(KEY_FOOD_CARRY) + food.perHour(mouths(), kitchenSaving()) * hours;
+    }
+
+    private int mouths() {
+        return aliveScouts();
+    }
+
+    /** What the cooks at home save, before the cap. */
+    private double kitchenSaving() {
+        double saving = 0;
+        for (Scout s : scouts.values()) {
+            String task = s.getLife().getTaskId();
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && task != null) {
+                saving += content.task(task).getFoodSaving();
+            }
+        }
+        return saving;
+    }
+
+    private int rationsNow(Step step) {
+        return resources.getOrDefault("rations", 0) + step.resourceDelta.getOrDefault("rations", 0);
+    }
+
+    /**
+     * The bunker eats since the last step. Everyone alive eats (those out carry their share);
+     * when the stores run out, whoever is home gets hungry.
+     *
+     * @return true if the crew is hungry now
+     */
+    private boolean feed(Step step) {
+        double last = value(KEY_FOOD_AT);
+        if (last <= 0) {
+            setValue(KEY_FOOD_AT, step.now, step);
+            return false;
+        }
+        double hours = (step.now - last) / (double) HOUR;
+        int rations = rationsNow(step);
+        com.estatica.domain.bunker.FoodRules.Meal meal =
+                food.eat(mouths(), kitchenSaving(), rations, value(KEY_FOOD_CARRY), hours);
+        boolean wasHungry = value(KEY_HUNGRY) > 0;
+        if (meal.eaten == 0 && meal.hungryHours <= 0 && !wasHungry) {
+            // Nothing to write yet: the clock keeps running from the last meal.
+            return false;
+        }
+        setValue(KEY_FOOD_AT, step.now, step);
+        setValue(KEY_FOOD_CARRY, meal.carry, step);
+        if (meal.eaten > 0) {
+            step.resourceDelta.merge("rations", -meal.eaten, Integer::sum);
+        }
+        TerminalText.BunkerText text = content.getTerminal().getBunker();
+        boolean hungry = meal.hungryHours > 0;
+        if (hungry) {
+            int stress = food.hungerStress(meal.hungryHours);
+            for (Scout s : scouts.values()) {
+                if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && stress > 0) {
+                    rules.addStress(s, stress);
+                }
+            }
+            if (!wasHungry) {
+                step.system(text.getFoodOut(), Map.of(), null);
+            }
+        } else if (wasHungry && rationsNow(step) > 0) {
+            step.system(text.getFoodBack(), Map.of(), null);
+        }
+        setValue(KEY_HUNGRY, hungry ? 1 : 0, step);
+
+        double days = food.daysLeft(mouths(), kitchenSaving(), rationsNow(step), meal.carry);
+        boolean warned = value(KEY_FOOD_WARNED) > 0;
+        if (!hungry && food.isLow(days) && !warned) {
+            Map<String, String> vars = new HashMap<>();
+            vars.put("days", String.format(Locale.ENGLISH, "%.1f", days));
+            step.system(text.getFoodLow(), vars, null);
+            setValue(KEY_FOOD_WARNED, 1, step);
+        } else if (warned && !food.isLow(days / 2)) {
+            setValue(KEY_FOOD_WARNED, 0, step);
+        }
+        return hungry;
     }
 
     /** GDD §5.5: what a dying scout can mention. */
@@ -590,7 +682,7 @@ public final class GameSession {
         }
         setValue("last_bark", step.now, step);
         if (random.chance(config.getChance())) {
-            LogLine line = barks.bark(scouts.values(), affinities, random, step.now);
+            LogLine line = barks.bark(scouts.values(), affinities, random, step.now, value(KEY_HUNGRY) > 0);
             if (line != null) {
                 step.lines.add(line);
             }
@@ -1917,7 +2009,9 @@ public final class GameSession {
                     e.getPendingSinceMillis() != Expedition.NONE && !e.isAwaitingDecision()));
         }
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
-                radioView(), baseView(now), expeditionViews, nextWake);
+                radioView(), baseView(now), expeditionViews,
+                food.daysLeft(mouths(), kitchenSaving(), resources.getOrDefault("rations", 0), foodCarryNow(now)),
+                value(KEY_HUNGRY) > 0, nextWake);
     }
 
     private SessionSnapshot.RadioView radioView() {

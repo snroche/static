@@ -105,7 +105,10 @@
     "diaryLastWords": "Last transmission:",
     "diaryEmpty": "Nobody has fallen. Yet.",
     "knownLikes": "Likes: {items}",
-    "knownDislikes": "Dislikes: {items}"
+    "knownDislikes": "Dislikes: {items}",
+    "foodLow": "Rations for about {days} days. Someone should go looking for food.",
+    "foodOut": "The rations ran out. Everyone at home is hungry: stress is rising and wounds heal slower.",
+    "foodBack": "There's food again. The bunker breathes easier."
   },
   "radio": {
     "staticNoise": "kssshhhh...",

@@ -139,6 +139,11 @@
       "task:guardia": [
         "nothing at the door. nothing yet.",
         "i hear everything from here. everything."
+      ],
+      "hungry": [
+        "stomach's making noises.",
+        "i keep thinking about bread. just bread.",
+        "is there really nothing left? nothing?"
       ]
     }
   },
@@ -279,6 +284,11 @@
       "task:cocina": [
         "Today's special: whatever's left!",
         "Taste this, boss. Tell me it's not good."
+      ],
+      "hungry": [
+        "Boss, I could eat the radio. Seriously.",
+        "Nothing in the pot, boss. Nothing.",
+        "My stomach's louder than the static."
       ]
     }
   },
@@ -412,6 +422,11 @@
       "task:radio": [
         "Logging every crackle. Some of them repeat.",
         "There's a pattern in the static. I'm almost sure."
+      ],
+      "hungry": [
+        "Operator, the stores are empty. We need food.",
+        "Forgive me, but I can't think on an empty stomach.",
+        "Someone has to go out for supplies. Soon."
       ]
     }
   },
@@ -517,6 +532,11 @@
       ],
       "task:radio": [
         "Monitoring. The band is busy tonight."
+      ],
+      "hungry": [
+        "NO FOOD. REQUEST SUPPLIES.",
+        "STORES EMPTY. MORALE DOWN. OVER.",
+        "HUNGRY. STOP."
       ]
     }
   },
@@ -630,6 +650,11 @@
       "task:entrenamiento": [
         "Push-ups! Count for me!",
         "I'm getting stronger. Look. Look!"
+      ],
+      "hungry": [
+        "I'm so hungry, man. So hungry.",
+        "Can we eat the candy? Is there candy? There's no candy.",
+        "My stomach's eating itself, I swear."
       ]
     }
   },
@@ -732,6 +757,11 @@
       "task:enfermeria": [
         "Hold still, this will sting. There. Brave.",
         "Thirty years of nursing. Still the same bandages."
+      ],
+      "hungry": [
+        "Ay, dear, the pantry's bare. Not even a crumb.",
+        "Children shouldn't go to bed hungry. Nobody should.",
+        "If I had anything, I'd cook it. Anything."
       ]
     }
   }

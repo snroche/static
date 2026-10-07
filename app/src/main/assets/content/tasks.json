@@ -19,10 +19,11 @@
   {
     "id": "cocina",
     "name": "Kitchen",
-    "description": "Stretches what we have. A hot meal lowers everyone's stress.",
+    "description": "Stretches the rations (each cook saves a fifth, up to 40%). A hot meal lowers everyone's stress.",
     "stat": "craft",
     "xpPerHour": 0.5,
-    "groupStressReliefPerHour": 1.5
+    "groupStressReliefPerHour": 1.5,
+    "foodSaving": 0.2
   },
   {
     "id": "taller",

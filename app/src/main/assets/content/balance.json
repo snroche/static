@@ -1,5 +1,5 @@
 {
-  "contentVersion": 9,
+  "contentVersion": 10,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
@@ -379,6 +379,14 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "food": {
+    "_comment": "The bunker eats. [placeholder]",
+    "rationsPerScoutPerDay": 1.0,
+    "kitchenMaxSaving": 0.4,
+    "hungerStressPerHour": 1.5,
+    "hungerHealMultiplier": 0.5,
+    "lowFoodDays": 1.0
   },
   "people": {
     "_comment": "Generated survivors. [placeholder]",

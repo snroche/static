@@ -296,6 +296,12 @@ public final class TerminalActivity extends ComponentActivity {
             }
             supplies.append(getString(R.string.hud_resource, r.shortName, r.amount));
         }
+        if (snapshot.hungry) {
+            supplies.append("  ").append(getString(R.string.hud_hungry));
+        } else if (!Double.isInfinite(snapshot.foodDaysLeft)) {
+            supplies.append("  ").append(getString(R.string.hud_food,
+                    String.format(java.util.Locale.ENGLISH, "%.1f", snapshot.foodDaysLeft)));
+        }
         if (supplies.length() > 0) {
             hud.append('\n').append(supplies);
         }
@@ -344,7 +350,8 @@ public final class TerminalActivity extends ComponentActivity {
                 ? getString(R.string.radio_button_count, waiting)
                 : getString(R.string.radio_button));
         SessionSnapshot.BaseView base = snapshot.base;
-        boolean alert = base.blackout || base.powerCut || base.filtersShort;
+        boolean alert = base.blackout || base.powerCut || base.filtersShort || snapshot.hungry
+                || snapshot.foodDaysLeft < 1;
         binding.bunkerButton.setText(alert ? R.string.bunker_button_alert : R.string.bunker_button);
         int alive = 0;
         int home = 0;

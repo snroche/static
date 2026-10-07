@@ -20,14 +20,21 @@ public final class SessionSnapshot {
     public final BaseView base;
     /** Scouts out right now, for the expedition strip. */
     public final List<ExpeditionView> expeditions;
+    /** How long the rations last at the current rate (infinite if nobody eats). */
+    public final double foodDaysLeft;
+    /** The stores are empty and the crew is going hungry. */
+    public final boolean hungry;
     /** Next moment the game state changes on its own, or -1. */
     public final long nextWakeAtMillis;
 
     SessionSnapshot(List<ScoutView> scouts, List<PendingDecision> pending, List<ZoneView> zones,
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
                     List<MissionView> missions, RadioView radio, BaseView base,
-                    List<ExpeditionView> expeditions, long nextWakeAtMillis) {
+                    List<ExpeditionView> expeditions, double foodDaysLeft, boolean hungry,
+                    long nextWakeAtMillis) {
         this.expeditions = Collections.unmodifiableList(expeditions);
+        this.foodDaysLeft = foodDaysLeft;
+        this.hungry = hungry;
         this.base = base;
         this.missions = Collections.unmodifiableList(missions);
         this.radio = radio;

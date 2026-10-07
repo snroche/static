@@ -30,6 +30,11 @@ public final class BarkRules {
 
     /** One line of chatter from someone in the bunker, or null if nobody is home. */
     public LogLine bark(Collection<Scout> scouts, Affinities affinities, GameRandom rng, long now) {
+        return bark(scouts, affinities, rng, now, false);
+    }
+
+    /** @param hungry the stores are empty: food is all anyone talks about */
+    public LogLine bark(Collection<Scout> scouts, Affinities affinities, GameRandom rng, long now, boolean hungry) {
         List<Scout> home = new ArrayList<>();
         for (Scout s : scouts) {
             if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE) {
@@ -61,7 +66,9 @@ public final class BarkRules {
         vars.put("name", s.getName());
         String key;
         String task = s.getLife().getTaskId();
-        if (rival != null && rng.chance(0.5)) {
+        if (hungry && phrases.containsKey("hungry") && rng.chance(0.7)) {
+            key = "hungry";
+        } else if (rival != null && rng.chance(0.5)) {
             key = "aboutRival";
             vars.put("other", rival.getName());
         } else if (friend != null && rng.chance(0.4)) {
