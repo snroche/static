@@ -8,6 +8,14 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.6.4] — Depth: situations, food, gear, map, pairs — in verification
+
+App 0.6.4 (versionCode 604) · **DB 6 → 8** · **Content 9 → 13**
+
+No release date: not tested on a device. Unsigned release APK: ~1.1 MB.
+
 ### Added
 - **Situations react to who's there** (GDD §4.2):
   - 31 options exist only for certain people:
@@ -40,7 +48,7 @@ When they change, each entry lists the three independent versions:
   - The gear picker and crew cards show "Flashlight · rare · 80%".
   - **DB 6 → 7:** new `gear_pieces` table. Old saves' gear (stock counts and equipped ids) becomes common pieces in full condition on load.
   - Content 10 → 11: `balance.gear` and the gear texts and rarity names.
-- Tests: 140 in total (4 new for rarity, wear, finds and crafting).
+- Tests: 139 in total (3 new for rarity, wear, finds and crafting).
 - **Map scouting:**
   - **The map starts blank:** no place is known at the start. Every zone is found by scouting and added to the map, so the first thing a new game asks for is to send someone out.
   - **Region map** ([MAP] in the CREW panel):
@@ -53,7 +61,19 @@ When they change, each entry lists the three independent versions:
   - **Where places sit:** each game places zones differently, from the game seed. Close to home they're spread across different directions, so early scouting is rarely wasted.
   - **The radio points the way:** a zone signal no longer reveals the place. It marks its sector "?!" ("Something on the radio from the northeast"). Survivors are only heard in places you've already found.
   - No save change: scouted and heard sectors live in the game flags. Content 11 → 12: `wilds` zones, the map texts and direction names, and no more `startKnown`.
-- Tests: 145 in total (5 new for the map).
+- Tests: 144 in total (5 new for the map).
+- **Two-scout expeditions** (GDD §5.3): after picking a destination, choose who goes along, or send them alone. The picker shows who gets on and who doesn't.
+  - **Skills:**
+    - Situations offer what either of them can do: a nurse partner brings the nurse's options.
+    - Checks get help when the partner is better at that stat, plus a bonus between friends (+5 %) or inseparables (+10 %), and −5 % between rivals.
+    - Both take the stress and both learn.
+  - **Loot:** a pair brings back 40 % more.
+  - **On the road:** friends talk about each other on the radio. Rivals argue, and it costs them both stress.
+  - **Carrying home:** if an order would kill the lead, the partner can carry them home, critically hurt but alive. The odds come from the partner's Endurance and how close they are. If it fails, the partner comes home alone.
+  - Coming back together raises their affinity, even between rivals.
+  - The pair moves at the slower one's pace. The expedition strip shows "Mara + Noor → …".
+  - **DB 7 → 8:** `expeditions.partner_id`. Content 12 → 13: `balance.pairs`, the `carryHome` voice phrases and the pair texts.
+- Tests: 148 in total (4 new for pairs).
 - **A generated third starter:** new games start with Mara, Irene and one generated person (`balance.json → people.generatedStarters`). It comes from the game seed, so each game starts with someone different. Existing saves are untouched.
 
 ## [0.6.3] — Tano removed — in verification
@@ -540,6 +560,7 @@ No release date yet: it still needs testing on a device or emulator. Once approv
 - Lint reports newer versions of AGP, Room and Lifecycle. The project uses the ones already in the local cache; upgrading is a separate decision.
 
 [Unreleased]: #unreleased
+[0.6.4]: #064--depth-situations-food-gear-map-pairs--in-verification
 [0.6.3]: #063--tano-removed--in-verification
 [0.6.2]: #062--generated-survivors--in-verification
 [0.6.1]: #061--english-personalities-and-interface--in-verification

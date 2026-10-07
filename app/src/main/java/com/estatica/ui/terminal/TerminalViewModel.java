@@ -206,8 +206,12 @@ public final class TerminalViewModel extends ViewModel {
     }
 
     void dispatch(String scoutId, String zoneId, Mission.Type type, String target) {
+        dispatch(scoutId, zoneId, type, target, null);
+    }
+
+    void dispatch(String scoutId, String zoneId, Mission.Type type, String target, String partnerId) {
         if (ready) {
-            run(step -> step.animated.addAll(session.dispatch(scoutId, zoneId, type, target)));
+            run(step -> step.animated.addAll(session.dispatch(scoutId, zoneId, type, target, partnerId)));
         }
     }
 

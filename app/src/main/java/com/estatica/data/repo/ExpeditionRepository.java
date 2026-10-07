@@ -46,13 +46,15 @@ public final class ExpeditionRepository {
             for (ExpeditionItemEntity i : dao.items(e.id)) {
                 items.add(i.itemId);
             }
-            out.add(new Expedition(e.id, e.scoutId, e.zoneId, e.seed, e.startedAtMillis, segments,
+            Expedition expedition = new Expedition(e.id, e.scoutId, e.zoneId, e.seed, e.startedAtMillis, segments,
                     e.rngState, Expedition.Status.valueOf(e.status), e.segmentIndex,
                     e.cursorAtMillis, e.pendingSinceMillis, e.chosenOption, e.chosenAtMillis, loot,
                     items, e.retreatOffered,
                     new Mission(Mission.Type.valueOf(e.missionType), e.missionTarget, e.signalNoise,
                             e.orderDelayMillis, e.cacheIntel, e.dangerIntel),
-                    e.aborted, e.lostHints));
+                    e.aborted, e.lostHints);
+            expedition.setPartnerId(e.partnerId);
+            out.add(expedition);
         }
         return out;
     }
@@ -99,6 +101,7 @@ public final class ExpeditionRepository {
         e.dangerIntel = mission.hasDangerIntel();
         e.aborted = expedition.isAborted();
         e.lostHints = expedition.getLostHints();
+        e.partnerId = expedition.getPartnerId();
         dao.upsert(e);
 
         dao.clearItems(expedition.getId());

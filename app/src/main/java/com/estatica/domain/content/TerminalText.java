@@ -102,6 +102,18 @@ public final class TerminalText {
         private String lootItem;
         private String lootSeparator;
         private String signalLost;
+        /** {name} joins {other} (pairs). */
+        private String pairJoins;
+        /** {name} carried {other} home: the carried one's memory. */
+        private String carriedMemory;
+
+        public String getPairJoins() {
+            return pairJoins;
+        }
+
+        public String getCarriedMemory() {
+            return carriedMemory;
+        }
         /** {name}. */
         private String deathNotice;
         /** Notification text when a scout gets back. {name}. */

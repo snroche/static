@@ -64,6 +64,25 @@ public final class ExpeditionEngine {
         return rules;
     }
 
+    // ---- Pairs (GDD §5.3) ----
+
+    /** Who goes along with the lead, and how they get on ("friends", "inseparable", "rivals" or null). */
+    public static final class Party {
+        public static final Party ALONE = new Party(null, null);
+
+        public final Scout partner;
+        public final String relation;
+
+        public Party(Scout partner, String relation) {
+            this.partner = partner;
+            this.relation = relation;
+        }
+
+        boolean isPair() {
+            return partner != null;
+        }
+    }
+
     // ---- Dispatch ----
 
     public static final class Dispatch {
@@ -85,12 +104,20 @@ public final class ExpeditionEngine {
     }
 
     public Dispatch dispatch(Scout scout, ZoneDef zone, long seed, Mission mission, long now) {
-        if (!rules.canDispatch(scout)) {
+        return dispatch(scout, zone, seed, mission, Party.ALONE, now);
+    }
+
+    /** A pair moves at the slower one's pace; situations can come up for either of them. */
+    public Dispatch dispatch(Scout scout, ZoneDef zone, long seed, Mission mission, Party party, long now) {
+        if (!rules.canDispatch(scout) || (party.isPair() && (!rules.canDispatch(party.partner) || party.partner == scout))) {
             throw new IllegalStateException(scout.getName() + " can't be dispatched");
         }
         GameRandom rng = GameRandom.fromSeed(seed);
-        List<Segment> segments = TimelineGenerator.generate(zone, rules.durationMultiplier(scout), rng,
-                id -> fits(scout, content.event(id)));
+        double pace = party.isPair()
+                ? Math.max(rules.durationMultiplier(scout), rules.durationMultiplier(party.partner))
+                : rules.durationMultiplier(scout);
+        List<Segment> segments = TimelineGenerator.generate(zone, pace, rng,
+                id -> fits(scout, content.event(id)) || (party.isPair() && fits(party.partner, content.event(id))));
         if (mission.getType() == Mission.Type.PERSONAL) {
             forceEvent(segments, content.getStory().personalMission(mission.getTarget()).getEvent());
         }
@@ -104,10 +131,17 @@ public final class ExpeditionEngine {
         List<LogLine> lines = new ArrayList<>();
         lines.add(system(now, TextTemplate.format(text.getDispatched(), vars), scout));
         lines.add(radio(now, scout, say(voice, scout, "departure", rng, vars)));
+        if (party.isPair()) {
+            rules.markDeparted(party.partner, now);
+            Map<String, String> pairVars = vars(party.partner);
+            pairVars.put("other", scout.getName());
+            lines.add(system(now, TextTemplate.format(text.getPairJoins(), pairVars), party.partner));
+        }
 
         Expedition expedition = new Expedition(Ids.newId(), scout.getId(), zone.getId(), seed, now,
                 segments, rng.getState(), Expedition.Status.ACTIVE, 0, now, Expedition.NONE,
                 Expedition.NO_CHOICE, Expedition.NONE, Map.of(), List.of(), false, mission, false, 0);
+        expedition.setPartnerId(party.isPair() ? party.partner.getId() : null);
         return new Dispatch(expedition, lines);
     }
 
@@ -155,18 +189,27 @@ public final class ExpeditionEngine {
         return rules.fits(scout, option.getRequiresTrait(), option.getRequiresBackground());
     }
 
+    /** On a pair, what either of them can do. */
+    public boolean isAvailable(Scout scout, Party party, EventDef.Option option) {
+        return isAvailable(scout, option) || (party.isPair() && isAvailable(party.partner, option));
+    }
+
     /**
      * Button labels for the pending situation, including "come home" when offered. Indexes
      * match the event's options; options this scout can't take are null (skip them).
      */
     public List<String> pendingOptions(Expedition expedition, Scout scout) {
+        return pendingOptions(expedition, scout, Party.ALONE);
+    }
+
+    public List<String> pendingOptions(Expedition expedition, Scout scout, Party party) {
         EventDef event = pendingEvent(expedition);
         if (event == null) {
             return List.of();
         }
         List<String> labels = new ArrayList<>();
         for (EventDef.Option option : event.getOptions()) {
-            labels.add(isAvailable(scout, option) ? option.getLabel() : null);
+            labels.add(isAvailable(scout, party, option) ? option.getLabel() : null);
         }
         if (expedition.isRetreatOffered()) {
             labels.add(content.getTerminal().getBunker().getRetreatLabel());
@@ -301,6 +344,11 @@ public final class ExpeditionEngine {
 
     public ExpeditionResult advance(Expedition expedition, Scout scout, List<Memory> memories,
                                     DeathContext death, long now) {
+        return advance(expedition, scout, Party.ALONE, memories, death, now);
+    }
+
+    public ExpeditionResult advance(Expedition expedition, Scout scout, Party party, List<Memory> memories,
+                                    DeathContext death, long now) {
         ExpeditionResult out = new ExpeditionResult();
         if (!expedition.isActive()) {
             return out;
@@ -319,7 +367,7 @@ public final class ExpeditionEngine {
                     if (due > now) {
                         break;
                     }
-                    presentSituation(expedition, scout, zone, voice, rng, due, out);
+                    presentSituation(expedition, scout, party, zone, voice, rng, due, out);
                 }
                 long resolveAt;
                 boolean ordered;
@@ -335,7 +383,7 @@ public final class ExpeditionEngine {
                 } else {
                     break;
                 }
-                resolveSituation(expedition, scout, zone, voice, rng, resolveAt, ordered, known, death, out);
+                resolveSituation(expedition, scout, party, zone, voice, rng, resolveAt, ordered, known, death, out);
             } else {
                 if (due > now) {
                     break;
@@ -344,14 +392,15 @@ public final class ExpeditionEngine {
                     case TRANSIT:
                         out.line(heard(expedition, rng, due, scout, VoiceRenderer.render(voice,
                                 rng.pick(zone.getTransit()), vars(scout))));
+                        pairChatter(expedition, scout, party, rng, due, out);
                         expedition.advance(due);
                         break;
                     case FIND:
-                        resolveFind(expedition, scout, zone, voice, rng, due, out);
+                        resolveFind(expedition, scout, party, zone, voice, rng, due, out);
                         expedition.advance(due);
                         break;
                     case RETURN:
-                        resolveReturn(expedition, scout, voice, rng, due, out);
+                        resolveReturn(expedition, scout, party, voice, rng, due, out);
                         break;
                     default:
                         throw new IllegalStateException(segment.getType().name());
@@ -362,7 +411,7 @@ public final class ExpeditionEngine {
         return out;
     }
 
-    private void presentSituation(Expedition expedition, Scout scout, ZoneDef zone, VoiceDef voice,
+    private void presentSituation(Expedition expedition, Scout scout, Party party, ZoneDef zone, VoiceDef voice,
                                   GameRandom rng, long at, ExpeditionResult out) {
         expedition.markPending(at);
         EventDef event = content.event(expedition.currentSegment().getEventId());
@@ -376,10 +425,10 @@ public final class ExpeditionEngine {
         int shown = 0;
         for (int i = 0; i < options.size(); i++) {
             EventDef.Option option = options.get(i);
-            if (!isAvailable(scout, option)) {
+            if (!isAvailable(scout, party, option)) {
                 continue;
             }
-            OddsHint hint = checks.hint(chanceFor(expedition, scout, option, zone));
+            OddsHint hint = checks.hint(chanceFor(expedition, scout, party, option, zone));
             Map<String, String> optionVars = new HashMap<>(vars);
             optionVars.put("n", String.valueOf(++shown));
             optionVars.put("label", option.getLabel());
@@ -400,7 +449,7 @@ public final class ExpeditionEngine {
         out.markSituationArrived();
     }
 
-    private void resolveSituation(Expedition expedition, Scout scout, ZoneDef zone, VoiceDef voice,
+    private void resolveSituation(Expedition expedition, Scout scout, Party party, ZoneDef zone, VoiceDef voice,
                                   GameRandom rng, long at, boolean ordered, List<Memory> known,
                                   DeathContext death, ExpeditionResult out) {
         EventDef event = content.event(expedition.currentSegment().getEventId());
@@ -420,7 +469,7 @@ public final class ExpeditionEngine {
             choice = expedition.getChosenOption();
             if (scout.getTrust() < rules.disobeyThreshold(scout)
                     && rng.chance(expeditionBalance.getDisobeyChance())) {
-                int own = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, o));
+                int own = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, party, o));
                 if (own != choice) {
                     choice = own;
                     byOrder = false;
@@ -428,12 +477,12 @@ public final class ExpeditionEngine {
                 }
             }
         } else {
-            choice = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, o));
+            choice = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, party, o));
             out.line(radio(at, scout, say(voice, scout, "autoDecide", rng, vars)));
         }
 
         EventDef.Option option = event.getOptions().get(choice);
-        double chance = chanceFor(expedition, scout, option, zone);
+        double chance = chanceFor(expedition, scout, party, option, zone);
         // GDD §5.5: warned = already in bad shape, or the scout said it looked bad and the
         // operator actually heard it through the static.
         boolean badOdds = checks.hint(chance) == OddsHint.BAD;
@@ -456,14 +505,24 @@ public final class ExpeditionEngine {
             statVars.put("value", String.valueOf(scout.stat(stat).getValue()));
             out.line(system(at, TextTemplate.format(text.getStatUp(), statVars), scout));
         }
-        rules.addStress(scout, outcome.getStress()
-                + (success ? scoutBalance.getStressOnSuccess() : scoutBalance.getStressOnFailure()));
+        int stress = outcome.getStress()
+                + (success ? scoutBalance.getStressOnSuccess() : scoutBalance.getStressOnFailure());
+        rules.addStress(scout, stress);
+        if (party.isPair()) {
+            rules.addStress(party.partner, stress);
+            if (rules.train(party.partner, stat, success)) {
+                Map<String, String> statVars = vars(party.partner);
+                statVars.put("stat", content.getTerminal().getStatNames().get(stat.key()));
+                statVars.put("value", String.valueOf(party.partner.stat(stat).getValue()));
+                out.line(system(at, TextTemplate.format(text.getStatUp(), statVars), party.partner));
+            }
+        }
         if (byOrder) {
             rules.addTrust(scout, success ? scoutBalance.getTrustOnSuccess() : -scoutBalance.getTrustOnFailure());
         }
         if (outcome.getLoot() != null) {
             for (LootRoll roll : outcome.getLoot()) {
-                expedition.addLoot(roll.getResource(), rollAmount(roll, scout, rng));
+                expedition.addLoot(roll.getResource(), rollAmount(roll, scout, party, rng));
             }
         }
         if (outcome.getPlot() != null) {
@@ -490,7 +549,22 @@ public final class ExpeditionEngine {
         boolean lethal = outcome.isLethal()
                 || (incoming != Injury.NONE && scout.getInjury() == Injury.CRITICAL);
         if (lethal && warned && byOrder) {
+            if (carriedHome(scout, party, rng)) {
+                // GDD §5.3: one can carry the other home. Alive, barely.
+                rules.injure(scout, Injury.CRITICAL);
+                Map<String, String> carryVars = vars(party.partner);
+                carryVars.put("other", scout.getName());
+                VoiceDef partnerVoice = content.voice(party.partner.getVoiceId());
+                out.line(radio(at, party.partner, say(partnerVoice, party.partner, "carryHome", rng, carryVars)));
+                remember(Memory.create(scout.getId(), Memory.Type.EVENT,
+                        TextTemplate.format(text.getCarriedMemory(), carryVars), event.getId(), at), known, out);
+                expedition.abortToReturn(at);
+                return;
+            }
             die(expedition, scout, voice, rng, at, known, death, out);
+            if (party.isPair()) {
+                rules.markReturned(party.partner, at); // comes home alone
+            }
             return;
         }
         GearDef gear = rules.gearOf(scout);
@@ -514,10 +588,10 @@ public final class ExpeditionEngine {
         }
     }
 
-    private void resolveFind(Expedition expedition, Scout scout, ZoneDef zone, VoiceDef voice,
+    private void resolveFind(Expedition expedition, Scout scout, Party party, ZoneDef zone, VoiceDef voice,
                              GameRandom rng, long at, ExpeditionResult out) {
         LootRoll roll = weightedPick(zone.getLoot(), rng);
-        int amount = rollAmount(roll, scout, rng);
+        int amount = rollAmount(roll, scout, party, rng);
         expedition.addLoot(roll.getResource(), amount);
         Map<String, String> vars = vars(scout);
         vars.put("amount", String.valueOf(amount));
@@ -535,7 +609,7 @@ public final class ExpeditionEngine {
         }
     }
 
-    private void resolveReturn(Expedition expedition, Scout scout, VoiceDef voice, GameRandom rng,
+    private void resolveReturn(Expedition expedition, Scout scout, Party party, VoiceDef voice, GameRandom rng,
                                long at, ExpeditionResult out) {
         Map<String, String> vars = vars(scout);
         out.line(radio(at, scout, say(voice, scout, "arrival", rng, vars)));
@@ -544,8 +618,13 @@ public final class ExpeditionEngine {
             ZoneDef zone = content.zone(expedition.getZoneId());
             for (int i = 0; i < content.getBalance().getRadio().getCacheIntelLootRolls(); i++) {
                 LootRoll roll = weightedPick(zone.getLoot(), rng);
-                expedition.addLoot(roll.getResource(), rollAmount(roll, scout, rng));
+                expedition.addLoot(roll.getResource(), rollAmount(roll, scout, party, rng));
             }
+        }
+        if (party.isPair()) {
+            VoiceDef partnerVoice = content.voice(party.partner.getVoiceId());
+            out.line(radio(at, party.partner, say(partnerVoice, party.partner, "arrival", rng, vars(party.partner))));
+            rules.markReturned(party.partner, at);
         }
         if (!expedition.isAborted()) {
             out.markMissionCompleted();
@@ -634,9 +713,41 @@ public final class ExpeditionEngine {
         out.memory(memory);
     }
 
-    private int rollAmount(LootRoll roll, Scout scout, GameRandom rng) {
+    private int rollAmount(LootRoll roll, Scout scout, Party party, GameRandom rng) {
         int base = rng.nextIntInclusive(roll.getMin(), roll.getMax());
-        return Math.max(1, (int) Math.round(base * rules.lootMultiplier(scout)));
+        double pair = party.isPair() ? content.getBalance().getPairs().getLootMultiplier() : 1.0;
+        return Math.max(1, (int) Math.round(base * rules.lootMultiplier(scout) * pair));
+    }
+
+    /** Whether the partner manages to drag a dying lead home. */
+    private boolean carriedHome(Scout scout, Party party, GameRandom rng) {
+        if (!party.isPair() || party.partner.getInjury() == Injury.CRITICAL) {
+            return false;
+        }
+        Balance.Pairs pairs = content.getBalance().getPairs();
+        double chance = pairs.getCarryBase()
+                + rules.effectiveStat(party.partner, StatType.ENDURANCE) * pairs.getCarryPerEndurance()
+                + pairs.relationBonus(party.relation) * 2;
+        return rng.nextDouble() < Math.max(0, Math.min(0.95, chance));
+    }
+
+    /** On the road, the partner talks: friends about each other, rivals at each other. */
+    private void pairChatter(Expedition expedition, Scout scout, Party party, GameRandom rng, long at,
+                             ExpeditionResult out) {
+        Balance.Pairs pairs = content.getBalance().getPairs();
+        if (!party.isPair() || party.relation == null || !rng.chance(pairs.getChatterChance())) {
+            return;
+        }
+        boolean rivals = "rivals".equals(party.relation);
+        Map<String, String> v = vars(party.partner);
+        v.put("other", scout.getName());
+        VoiceDef partnerVoice = content.voice(party.partner.getVoiceId());
+        out.line(heard(expedition, rng, at, party.partner,
+                say(partnerVoice, party.partner, rivals ? "aboutRival" : "aboutFriend", rng, v)));
+        if (rivals) {
+            rules.addStress(scout, pairs.getRivalArgueStress());
+            rules.addStress(party.partner, pairs.getRivalArgueStress());
+        }
     }
 
     private static LootRoll weightedPick(List<LootRoll> table, GameRandom rng) {
@@ -672,9 +783,21 @@ public final class ExpeditionEngine {
     }
 
     private double chanceFor(Expedition expedition, Scout scout, EventDef.Option option, ZoneDef zone) {
-        double intel = expedition.getMission().hasDangerIntel()
+        return chanceFor(expedition, scout, Party.ALONE, option, zone);
+    }
+
+    /** Intel, plus on a pair: the partner's help where they're better, and how they get on. */
+    private double chanceFor(Expedition expedition, Scout scout, Party party, EventDef.Option option, ZoneDef zone) {
+        double bonus = expedition.getMission().hasDangerIntel()
                 ? content.getBalance().getRadio().getDangerIntelCheckBonus() : 0;
-        return checks.chance(scout, option, zone, intel);
+        if (party.isPair()) {
+            Balance.Pairs pairs = content.getBalance().getPairs();
+            StatType stat = StatType.fromKey(option.getStat());
+            int better = rules.effectiveStat(party.partner, stat) - rules.effectiveStat(scout, stat);
+            bonus += Math.min(pairs.getMaxSupport(), Math.max(0, better) * pairs.getSupportPerPoint())
+                    + pairs.relationBonus(party.relation);
+        }
+        return checks.chance(scout, option, zone, bonus);
     }
 
     /** A transmission from the field, broken up by distance (GDD §4.4). */

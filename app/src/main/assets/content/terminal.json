@@ -84,7 +84,9 @@
     "lootSeparator": ", ",
     "signalLost": "— signal lost —",
     "deathNotice": "{name}'s channel is still open. Only static.",
-    "notifyReturned": "I'm back at the bunker."
+    "notifyReturned": "I'm back at the bunker.",
+    "pairJoins": "{name} goes along with {other}.",
+    "carriedMemory": "the day {name} carried me home"
   },
   "bunker": {
     "retreatLabel": "Come back to the bunker",

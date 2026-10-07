@@ -78,4 +78,9 @@ public class ExpeditionEntity {
 
     @ColumnInfo(name = "lost_hints", defaultValue = "0")
     public int lostHints;
+
+    /** DB v8: second scout on a pair expedition. */
+    @androidx.annotation.Nullable
+    @ColumnInfo(name = "partner_id")
+    public String partnerId;
 }

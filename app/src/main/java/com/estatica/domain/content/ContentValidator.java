@@ -21,7 +21,7 @@ public final class ContentValidator {
             "autoDecide", "injured", "find", "lastWords", "lastMemory", "lastOrder",
             "initiate", "askReturn", "goingHome", "findItem", "lastGift", "lastCompanion",
             "giftLiked", "giftDisliked", "giftNeutral",
-            "idle", "idleTense", "aboutFriend", "aboutRival", "hungry");
+            "idle", "idleTense", "aboutFriend", "aboutRival", "hungry", "carryHome");
 
     private final GameContent content;
     private final List<String> problems = new ArrayList<>();
@@ -173,6 +173,12 @@ public final class ContentValidator {
         check(food != null && food.getRationsPerScoutPerDay() > 0 && food.getKitchenMaxSaving() >= 0
                         && food.getKitchenMaxSaving() < 1 && food.getHungerHealMultiplier() > 0,
                 "balance.food: rationsPerScoutPerDay > 0, 0 ≤ kitchenMaxSaving < 1, hungerHealMultiplier > 0");
+        Balance.Pairs pairs = content.getBalance().getPairs();
+        check(pairs != null && pairs.getLootMultiplier() >= 1 && pairs.getCarryBase() >= 0,
+                "balance.pairs: lootMultiplier ≥ 1, carryBase ≥ 0");
+        check(content.getTerminal().getExpedition().getPairJoins() != null
+                        && content.getTerminal().getExpedition().getCarriedMemory() != null,
+                "terminal.expedition: pairJoins, carriedMemory");
         Balance.Gear gearBalance = content.getBalance().getGear();
         int bands = content.getBalance().getBands().size();
         check(gearBalance != null && gearBalance.getFindChance() != null && gearBalance.getRarityWeights() != null

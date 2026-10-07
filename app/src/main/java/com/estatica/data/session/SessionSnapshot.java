@@ -90,11 +90,14 @@ public final class SessionSnapshot {
         public final String moodKey;
         /** Habits revealed so far. */
         public final List<String> habits;
+        /** Other scout id to "friends", "inseparable" or "rivals". */
+        public final java.util.Map<String, String> relationKinds;
 
         ScoutView(Builder b) {
             this.mood = b.mood;
             this.moodKey = b.moodKey;
             this.habits = Collections.unmodifiableList(b.habits);
+            this.relationKinds = Collections.unmodifiableMap(b.relationKinds);
             this.relations = Collections.unmodifiableList(b.relations);
             this.gear = b.gear;
             this.canEquip = b.canEquip;
@@ -149,6 +152,7 @@ public final class SessionSnapshot {
             String mood;
             String moodKey;
             List<String> habits;
+            java.util.Map<String, String> relationKinds = new java.util.HashMap<>();
         }
     }
 

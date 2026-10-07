@@ -61,6 +61,7 @@ Rules:
 | 5 | 0.5.0 | Power (`power`, `bunker_state`), workshop (`craft_jobs`), `scouts.gear_id` |
 | 6 | 0.6.2 | Generated people: `scouts.persona`, `rescue_targets.persona` |
 | 7 | 0.6.4 | Equipment pieces: `gear_pieces` (rarity, condition, location) |
+| 8 | 0.6.4 | Pair expeditions: `expeditions.partner_id` |
 
 `MigrationsTest` (JVM) compares each migration's SQL against the exported schemas. When adding a migration, extend that test.
 

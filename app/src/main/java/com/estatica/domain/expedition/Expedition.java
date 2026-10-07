@@ -43,6 +43,21 @@ public final class Expedition {
     private boolean aborted;
     /** Bit i set: the odds hint of option i was lost in the static. */
     private int lostHints;
+    /** Second scout on a pair expedition, or null (GDD §5.3). */
+    private String partnerId;
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    /** True if this scout is the lead or the partner. */
+    public boolean involves(String scoutId) {
+        return getScoutId().equals(scoutId) || scoutId.equals(partnerId);
+    }
 
     public Expedition(String id, String scoutId, String zoneId, long seed, long startedAtMillis,
                       List<Segment> segments, long rngState, Status status, int index,

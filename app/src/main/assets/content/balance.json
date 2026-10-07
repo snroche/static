@@ -1,5 +1,5 @@
 {
-  "contentVersion": 12,
+  "contentVersion": 13,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
@@ -379,6 +379,18 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "pairs": {
+    "_comment": "Two-scout expeditions. [placeholder]",
+    "lootMultiplier": 1.4,
+    "supportPerPoint": 0.03,
+    "maxSupport": 0.12,
+    "relationBonus": {"inseparable": 0.1, "friends": 0.05, "rivals": -0.05},
+    "carryBase": 0.35,
+    "carryPerEndurance": 0.04,
+    "chatterChance": 0.4,
+    "rivalArgueStress": 4,
+    "affinityPerTrip": 5
   },
   "gear": {
     "_comment": "Equipment rarity, wear and repair. [placeholder]",

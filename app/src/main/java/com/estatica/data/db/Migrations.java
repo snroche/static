@@ -102,8 +102,13 @@ public final class Migrations {
             "CREATE TABLE IF NOT EXISTS `gear_pieces` (`id` TEXT NOT NULL, `gear_id` TEXT NOT NULL, `rarity` TEXT NOT NULL, `condition` INTEGER NOT NULL, `location` TEXT NOT NULL, `original_owner_id` TEXT, PRIMARY KEY(`id`))"
     );
 
+    /** Pair expeditions: the second scout. */
+    static final List<String> MIGRATION_7_8_SQL = List.of(
+            "ALTER TABLE `expeditions` ADD COLUMN `partner_id` TEXT"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL);
 
     public static final Migration[] ALL = build();
 

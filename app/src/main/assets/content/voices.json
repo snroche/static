@@ -144,6 +144,10 @@
         "stomach's making noises.",
         "i keep thinking about bread. just bread.",
         "is there really nothing left? nothing?"
+      ],
+      "carryHome": [
+        "i've got {other}. holding on. we're coming home.",
+        "{other}'s not walking. i'm carrying. don't argue."
       ]
     }
   },
@@ -289,6 +293,10 @@
         "Boss, I could eat the radio. Seriously.",
         "Nothing in the pot, boss. Nothing.",
         "My stomach's louder than the static."
+      ],
+      "carryHome": [
+        "Got {other} on my back, boss. We're coming home. Both of us.",
+        "Nobody's dying today. I've got {other}. Heading back."
       ]
     }
   },
@@ -427,6 +435,10 @@
         "Operator, the stores are empty. We need food.",
         "Forgive me, but I can't think on an empty stomach.",
         "Someone has to go out for supplies. Soon."
+      ],
+      "carryHome": [
+        "Operator, {other} is badly hurt. I am bringing them back. Now.",
+        "I have {other}. We are returning. Please have the infirmary ready."
       ]
     }
   },
@@ -537,6 +549,10 @@
         "NO FOOD. REQUEST SUPPLIES.",
         "STORES EMPTY. MORALE DOWN. OVER.",
         "HUNGRY. STOP."
+      ],
+      "carryHome": [
+        "{other} DOWN. CARRYING. RETURNING. OVER.",
+        "HAVE {other}. COMING HOME. KEEP LINE OPEN."
       ]
     }
   },
@@ -655,6 +671,10 @@
         "I'm so hungry, man. So hungry.",
         "Can we eat the candy? Is there candy? There's no candy.",
         "My stomach's eating itself, I swear."
+      ],
+      "carryHome": [
+        "I've got {other}! I've got them! We're coming back, ok? Ok?",
+        "{other}'s hurt bad, man. I'm carrying them. Don't hang up."
       ]
     }
   },
@@ -762,6 +782,10 @@
         "Ay, dear, the pantry's bare. Not even a crumb.",
         "Children shouldn't go to bed hungry. Nobody should.",
         "If I had anything, I'd cook it. Anything."
+      ],
+      "carryHome": [
+        "I've got {other}, dear. Nobody's staying out here. We're coming home.",
+        "Hold on, {other}. Lean on me. We're going home."
       ]
     }
   }

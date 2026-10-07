@@ -22,6 +22,66 @@ public final class Balance {
     private People people;
     private Food food;
     private Gear gear;
+    private Pairs pairs;
+
+    public Pairs getPairs() {
+        return pairs;
+    }
+
+    /** Two-scout expeditions (GDD §5.3). [placeholder] */
+    public static final class Pairs {
+        private double lootMultiplier = 1.0;
+        /** Check bonus per point the partner is better at the stat. */
+        private double supportPerPoint;
+        private double maxSupport;
+        /** Check bonus by relationship ("inseparable", "friends", "rivals"). */
+        private java.util.Map<String, Double> relationBonus;
+        /** Chance the partner carries a dying lead home. */
+        private double carryBase;
+        private double carryPerEndurance;
+        /** Chance per transit leg that the partner says something. */
+        private double chatterChance;
+        /** Stress for both when rivals argue on the radio. */
+        private int rivalArgueStress;
+        /** Affinity gained by coming back together. */
+        private double affinityPerTrip;
+
+        public double getLootMultiplier() {
+            return lootMultiplier;
+        }
+
+        public double getSupportPerPoint() {
+            return supportPerPoint;
+        }
+
+        public double getMaxSupport() {
+            return maxSupport;
+        }
+
+        public double relationBonus(String relation) {
+            return relation == null || relationBonus == null ? 0 : relationBonus.getOrDefault(relation, 0.0);
+        }
+
+        public double getCarryBase() {
+            return carryBase;
+        }
+
+        public double getCarryPerEndurance() {
+            return carryPerEndurance;
+        }
+
+        public double getChatterChance() {
+            return chatterChance;
+        }
+
+        public int getRivalArgueStress() {
+            return rivalArgueStress;
+        }
+
+        public double getAffinityPerTrip() {
+            return affinityPerTrip;
+        }
+    }
 
     public Gear getGear() {
         return gear;

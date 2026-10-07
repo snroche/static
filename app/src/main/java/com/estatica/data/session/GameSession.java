@@ -470,7 +470,8 @@ public final class GameSession {
         long now = step.now;
         for (Expedition expedition : new ArrayList<>(active.values())) {
             Scout scout = scouts.get(expedition.getScoutId());
-            ExpeditionResult result = engine.advance(expedition, scout,
+            ExpeditionEngine.Party party = party(expedition);
+            ExpeditionResult result = engine.advance(expedition, scout, party,
                     memoryRepository.forScout(scout.getId()), deathContext(scout), now);
             step.expeditions.add(expedition);
             step.lines.addAll(result.getLines());
@@ -486,6 +487,12 @@ public final class GameSession {
             if (result.isReturned()) {
                 recoverLostItems(scout, expedition.getZoneId(), step);
                 gearAfterTrip(scout, expedition.getZoneId(), step);
+                if (party.partner != null) {
+                    gearAfterTrip(party.partner, expedition.getZoneId(), step);
+                    // Coming back together builds something, even between rivals.
+                    affinities.add(scout.getId(), party.partner.getId(),
+                            content.getBalance().getPairs().getAffinityPerTrip());
+                }
                 finishMission(expedition, scout, result.isMissionCompleted(), step);
                 if (result.isMissionCompleted()) {
                     count("expeditions", step);
@@ -770,6 +777,26 @@ public final class GameSession {
      */
     @WorkerThread
     public List<LogLine> dispatch(String scoutId, String zoneId, Mission.Type type, String target) {
+        return dispatch(scoutId, zoneId, type, target, null);
+    }
+
+    /** Who goes along on an expedition, and how they get on with the lead. */
+    private ExpeditionEngine.Party party(Expedition expedition) {
+        Scout partner = expedition.getPartnerId() != null ? scouts.get(expedition.getPartnerId()) : null;
+        if (partner == null || !partner.isAlive()) {
+            return ExpeditionEngine.Party.ALONE;
+        }
+        Scout lead = scouts.get(expedition.getScoutId());
+        return new ExpeditionEngine.Party(partner, bunker.relationship(affinities, lead, partner));
+    }
+
+    /**
+     * Sends a scout out, optionally with a partner (GDD §5.3).
+     *
+     * @param partnerId second scout, or null to go alone
+     */
+    @WorkerThread
+    public List<LogLine> dispatch(String scoutId, String zoneId, Mission.Type type, String target, String partnerId) {
         Step step = new Step();
         advance(step);
         Scout scout = scouts.get(scoutId);
@@ -831,7 +858,19 @@ public final class GameSession {
         double noise = quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"));
         noise *= rules.gearNoiseFactor(scout);
         Mission mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger);
-        ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, step.now);
+        Scout partner = partnerId != null ? scouts.get(partnerId) : null;
+        if (partner != null && (partner == scout || !rules.canDispatch(partner))) {
+            return step.commit();
+        }
+        ExpeditionEngine.Party party = partner == null ? ExpeditionEngine.Party.ALONE
+                : new ExpeditionEngine.Party(partner, bunker.relationship(affinities, scout, partner));
+        if (partner != null) {
+            // The clearer radio of the two carries the reports.
+            noise = Math.min(noise, quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"))
+                    * rules.gearNoiseFactor(partner));
+            mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger);
+        }
+        ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, party, step.now);
         step.lines.addAll(dispatch.lines);
         step.newExpeditions.add(dispatch.expedition);
         active.put(dispatch.expedition.getId(), dispatch.expedition);
@@ -2092,6 +2131,9 @@ public final class GameSession {
         Map<String, Expedition> byScout = new HashMap<>();
         for (Expedition e : active.values()) {
             byScout.put(e.getScoutId(), e);
+            if (e.getPartnerId() != null) {
+                byScout.put(e.getPartnerId(), e);
+            }
         }
         boolean hasInventory = false;
         for (ItemInstance item : items.values()) {
@@ -2154,10 +2196,12 @@ public final class GameSession {
                 }
             }
             b.relations = new ArrayList<>();
+            b.relationKinds = new HashMap<>();
             for (Scout other : scouts.values()) {
                 String relation = other == s || !other.isAlive() || !s.isAlive()
                         ? null : bunker.relationship(affinities, s, other);
                 if (relation != null) {
+                    b.relationKinds.put(other.getId(), relation);
                     Map<String, String> vars = new HashMap<>();
                     vars.put("other", other.getName());
                     TerminalText.StoryText st = content.getTerminal().getStory();
@@ -2179,7 +2223,7 @@ public final class GameSession {
             if (at >= 0 && (nextWake < 0 || at < nextWake)) {
                 nextWake = at;
             }
-            List<String> labels = engine.pendingOptions(e, scouts.get(e.getScoutId()));
+            List<String> labels = engine.pendingOptions(e, scouts.get(e.getScoutId()), party(e));
             if (!labels.isEmpty()) {
                 orders.add(new SessionSnapshot.PendingDecision(SessionSnapshot.PendingDecision.Kind.ORDER,
                         e.getId(), scouts.get(e.getScoutId()).getName(), labels, engine.deadline(e)));
@@ -2292,7 +2336,10 @@ public final class GameSession {
             long end = engine.estimatedReturn(e, now);
             long span = Math.max(1, end - e.getStartedAtMillis());
             int percent = (int) Math.max(0, Math.min(99, 100 * (now - e.getStartedAtMillis()) / span));
-            expeditionViews.add(new SessionSnapshot.ExpeditionView(scouts.get(e.getScoutId()).getName(),
+            ExpeditionEngine.Party party = party(e);
+            String who = scouts.get(e.getScoutId()).getName()
+                    + (party.partner != null ? " + " + party.partner.getName() : "");
+            expeditionViews.add(new SessionSnapshot.ExpeditionView(who,
                     content.zone(e.getZoneId()).getName(), percent, end, e.isAwaitingDecision(),
                     e.getPendingSinceMillis() != Expedition.NONE && !e.isAwaitingDecision()));
         }

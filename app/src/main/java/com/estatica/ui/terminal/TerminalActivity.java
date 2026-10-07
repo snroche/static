@@ -55,7 +55,7 @@ public final class TerminalActivity extends ComponentActivity {
     private SoundEngine sound;
     private int typedSinceTick;
 
-    private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR }
+    private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR, PARTNER }
 
     private ActivityTerminalBinding binding;
     private TerminalViewModel viewModel;
@@ -77,6 +77,8 @@ public final class TerminalActivity extends ComponentActivity {
     private DecoderPanel decoderPanel;
     private BunkerPanel bunkerPanel;
     private MapPanel mapPanel;
+    /** Destination chosen, waiting for "who goes along?": TYPE|zoneId|target. */
+    private String pendingDispatch;
     /** Sector the scout picker is for. */
     private SessionSnapshot.SectorView pendingSector;
 
@@ -98,6 +100,8 @@ public final class TerminalActivity extends ComponentActivity {
                 bunkerPanel.hide();
             } else if (radioPanel.isShown()) {
                 radioPanel.hide();
+            } else if (panel == Panel.PARTNER) {
+                showPanel(Panel.ZONES);
             } else if (panel == Panel.ZONES || panel == Panel.GIFTS || panel == Panel.TASKS
                     || panel == Panel.DIARY || panel == Panel.GEAR) {
                 showPanel(Panel.SCOUTS);
@@ -558,12 +562,17 @@ public final class TerminalActivity extends ComponentActivity {
         switch (panel) {
             case ZONES: {
                 requestNotificationPermission();
-                // key: TYPE|zoneId|target
-                String[] parts = row.key.split("\\|", -1);
-                viewModel.dispatch(selectedScoutId, parts[1], Mission.Type.valueOf(parts[0]),
-                        parts[2].isEmpty() ? null : parts[2]);
+                if (hasFreeCompanion()) {
+                    pendingDispatch = row.key;
+                    showPanel(Panel.PARTNER);
+                    return;
+                }
+                sendOut(row.key, null);
                 break;
             }
+            case PARTNER:
+                sendOut(pendingDispatch, row.key.isEmpty() ? null : row.key);
+                break;
             case GIFTS:
                 viewModel.gift(selectedScoutId, row.key);
                 break;
@@ -588,6 +597,22 @@ public final class TerminalActivity extends ComponentActivity {
         }
         showPanel(Panel.NONE);
         followTail();
+    }
+
+    /** key: TYPE|zoneId|target. */
+    private void sendOut(String key, String partnerId) {
+        String[] parts = key.split("\\|", -1);
+        viewModel.dispatch(selectedScoutId, parts[1], Mission.Type.valueOf(parts[0]),
+                parts[2].isEmpty() ? null : parts[2], partnerId);
+    }
+
+    private boolean hasFreeCompanion() {
+        for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+            if (s.canDispatch && !s.id.equals(selectedScoutId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showPanel(Panel target) {
@@ -648,6 +673,27 @@ public final class TerminalActivity extends ComponentActivity {
                     rows.add(new PickerAdapter.Row("-", getString(R.string.zones_none), null, null, false));
                 }
                 break;
+            case PARTNER: {
+                binding.panelTitle.setText(getString(R.string.panel_partner_title, selectedScoutName));
+                rows.add(new PickerAdapter.Row("", getString(R.string.partner_alone), null, null, true));
+                SessionSnapshot.ScoutView lead = null;
+                for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+                    if (s.id.equals(selectedScoutId)) {
+                        lead = s;
+                    }
+                }
+                for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+                    if (!s.canDispatch || s.id.equals(selectedScoutId)) {
+                        continue;
+                    }
+                    String relation = lead != null ? lead.relationKinds.get(s.id) : null;
+                    String meta = relation == null ? s.mood
+                            : "rivals".equals(relation) ? getString(R.string.partner_rivals)
+                            : getString(R.string.partner_friends);
+                    rows.add(new PickerAdapter.Row(s.id, s.name, meta, null, true));
+                }
+                break;
+            }
             case SCOUT_SECTOR:
                 binding.panelTitle.setText(getString(R.string.panel_scout_sector_title, pendingSector.label));
                 for (SessionSnapshot.ScoutView s : snapshot.scouts) {
