@@ -21,6 +21,64 @@ public final class Balance {
     private Barks barks;
     private People people;
     private Food food;
+    private Gear gear;
+
+    public Gear getGear() {
+        return gear;
+    }
+
+    /** Equipment rarity, wear and repair. [placeholder] */
+    public static final class Gear {
+        /** Chance of finding a piece on the way back, per band index. */
+        private double[] findChance;
+        /** {common, uncommon, rare} weights per band index. */
+        private java.util.List<int[]> rarityWeights;
+        /** Condition lost per expedition, by rarity. */
+        private java.util.Map<String, Integer> wear;
+        private int injuryWear;
+        private int wornAt;
+        /** By rarity. */
+        private java.util.Map<String, java.util.Map<String, Integer>> repairCost;
+        private double craftUncommonPerPoint;
+        private int craftRareAbove;
+        private double craftRarePerPoint;
+
+        public double[] getFindChance() {
+            return findChance;
+        }
+
+        public java.util.List<int[]> getRarityWeights() {
+            return rarityWeights;
+        }
+
+        public java.util.Map<String, Integer> getWear() {
+            return wear;
+        }
+
+        public int getInjuryWear() {
+            return injuryWear;
+        }
+
+        public int getWornAt() {
+            return wornAt;
+        }
+
+        public java.util.Map<String, java.util.Map<String, Integer>> getRepairCost() {
+            return repairCost;
+        }
+
+        public double getCraftUncommonPerPoint() {
+            return craftUncommonPerPoint;
+        }
+
+        public int getCraftRareAbove() {
+            return craftRareAbove;
+        }
+
+        public double getCraftRarePerPoint() {
+            return craftRarePerPoint;
+        }
+    }
 
     public Food getFood() {
         return food;

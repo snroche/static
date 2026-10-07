@@ -27,8 +27,10 @@ public final class ScoutLife {
     private String diedZoneId;
     /** Fractional stress recovery not applied yet (so frequent catch-ups lose nothing). */
     private double stressCarry;
-    /** Equipped gear (resource id), or null. */
+    /** Equipped gear piece id, or null (older saves: a gear.json id, converted on load). */
     private String gearId;
+    /** The equipped piece itself, attached on load. */
+    private com.estatica.domain.bunker.GearPiece gear;
 
     public ScoutLife(int bond, String taskId, Set<String> flags, long lastTalkAtMillis,
                      long lastInitiatedAtMillis, long lastDecayAtMillis, double taskXpCarry,
@@ -54,6 +56,18 @@ public final class ScoutLife {
 
     public void setGearId(String gearId) {
         this.gearId = gearId;
+        if (gear != null && !gear.getId().equals(gearId)) {
+            gear = null;
+        }
+    }
+
+    public com.estatica.domain.bunker.GearPiece getGear() {
+        return gear;
+    }
+
+    public void setGear(com.estatica.domain.bunker.GearPiece piece) {
+        this.gear = piece;
+        this.gearId = piece != null ? piece.getId() : null;
     }
 
     public double getStressCarry() {

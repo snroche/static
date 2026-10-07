@@ -171,15 +171,81 @@ public class BaseSystemsTest {
 
     // ---- Gear ----
 
+    private static GearPiece piece(String gearId, GearPiece.Rarity rarity) {
+        return GearPiece.fresh(gearId, rarity);
+    }
+
     @Test
     public void gearChangesStatsAndLoot() {
         Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
         int wits = rules.effectiveStat(s, StatType.WITS);
         double loot = rules.lootMultiplier(s);
-        s.getLife().setGearId("gear_linterna");
+        s.getLife().setGear(piece("gear_linterna", GearPiece.Rarity.COMMON));
         assertEquals(wits + 1, rules.effectiveStat(s, StatType.WITS));
-        s.getLife().setGearId("gear_mochila");
+        s.getLife().setGear(piece("gear_mochila", GearPiece.Rarity.COMMON));
         assertEquals(loot * 1.25, rules.lootMultiplier(s), 1e-9);
+    }
+
+    @Test
+    public void rarerGearDoesMore() {
+        Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
+        int endurance = rules.effectiveStat(s, StatType.ENDURANCE);
+        s.getLife().setGear(piece("gear_chaleco", GearPiece.Rarity.RARE));
+        assertEquals(endurance + 4, rules.effectiveStat(s, StatType.ENDURANCE));
+        s.getLife().setGear(piece("gear_mochila", GearPiece.Rarity.UNCOMMON));
+        assertTrue(rules.lootMultiplier(s) > rules.lootMultiplier(TestScouts.custom("irene", 5, 0, 0, T0)) * 1.25);
+        s.getLife().setGear(piece("gear_radio", GearPiece.Rarity.RARE));
+        assertTrue(rules.gearNoiseFactor(s) < 0.6);
+    }
+
+    @Test
+    public void wornGearBreaksAndStopsWorkingUntilRepaired() {
+        GearRules gearRules = new GearRules(content);
+        Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
+        int wits = rules.effectiveStat(s, StatType.WITS);
+        GearPiece light = piece("gear_linterna", GearPiece.Rarity.COMMON);
+        s.getLife().setGear(light);
+        int trips = 0;
+        while (!light.isBroken()) {
+            gearRules.wear(light, false);
+            trips++;
+        }
+        assertTrue("lasts a few trips", trips >= 5);
+        assertEquals("broken gear does nothing", wits, rules.effectiveStat(s, StatType.WITS));
+        assertFalse(gearRules.repairCost(light).isEmpty());
+        light.repair();
+        assertEquals(wits + 1, rules.effectiveStat(s, StatType.WITS));
+    }
+
+    @Test
+    public void fartherFindsAreRicherAndSkilledHandsCraftBetter() {
+        GearRules gearRules = new GearRules(content);
+        int nearFinds = 0;
+        int farFinds = 0;
+        int nearRare = 0;
+        int farRare = 0;
+        for (long seed = 0; seed < 4000; seed++) {
+            GearPiece near = gearRules.find(0, GameRandom.fromSeed(seed));
+            GearPiece far = gearRules.find(2, GameRandom.fromSeed(seed + 99_999));
+            if (near != null) {
+                nearFinds++;
+                nearRare += near.getRarity() == GearPiece.Rarity.RARE ? 1 : 0;
+            }
+            if (far != null) {
+                farFinds++;
+                farRare += far.getRarity() == GearPiece.Rarity.RARE ? 1 : 0;
+            }
+        }
+        assertTrue(farFinds > nearFinds);
+        assertTrue(farRare > nearRare);
+
+        int clumsy = 0;
+        int skilled = 0;
+        for (long seed = 0; seed < 2000; seed++) {
+            clumsy += gearRules.crafted(1, GameRandom.fromSeed(seed)) != GearPiece.Rarity.COMMON ? 1 : 0;
+            skilled += gearRules.crafted(10, GameRandom.fromSeed(seed)) != GearPiece.Rarity.COMMON ? 1 : 0;
+        }
+        assertTrue(skilled > clumsy * 3);
     }
 
     @Test
@@ -188,11 +254,13 @@ public class BaseSystemsTest {
         int used = 0;
         for (long seed = 0; seed < 200 && used == 0; seed++) {
             Scout s = TestScouts.custom("mara", 2, 0, 0, T0);
-            s.getLife().setGearId("gear_botiquin");
+            GearPiece kit = piece("gear_botiquin", GearPiece.Rarity.COMMON);
+            s.getLife().setGear(kit);
             Expedition e = engine.dispatch(s, content.zone("escuela"), seed, T0).expedition;
             ExpeditionResult r = engine.advance(e, s, List.of(), T0 + 3 * HOUR);
-            if (s.getLife().getGearId() == null) {
+            if (s.getLife().getGear() == null) {
                 used++;
+                assertTrue("used up", kit.isGone());
                 boolean announced = false;
                 for (LogLine line : r.getLines()) {
                     announced |= line.getText().contains("first-aid kit");

@@ -173,6 +173,23 @@ public final class ContentValidator {
         check(food != null && food.getRationsPerScoutPerDay() > 0 && food.getKitchenMaxSaving() >= 0
                         && food.getKitchenMaxSaving() < 1 && food.getHungerHealMultiplier() > 0,
                 "balance.food: rationsPerScoutPerDay > 0, 0 ≤ kitchenMaxSaving < 1, hungerHealMultiplier > 0");
+        Balance.Gear gearBalance = content.getBalance().getGear();
+        int bands = content.getBalance().getBands().size();
+        check(gearBalance != null && gearBalance.getFindChance() != null && gearBalance.getRarityWeights() != null
+                        && gearBalance.getWear() != null && gearBalance.getRepairCost() != null,
+                "balance.gear: findChance, rarityWeights, wear, repairCost");
+        if (gearBalance != null && gearBalance.getRepairCost() != null) {
+            for (Map<String, Integer> cost : gearBalance.getRepairCost().values()) {
+                checkResources(cost, "balance.gear.repairCost");
+            }
+            check(gearBalance.getFindChance().length >= Math.min(3, bands), "balance.gear.findChance: one per band");
+        }
+        TerminalText.BaseText baseText = content.getTerminal().getBase();
+        check(baseText.getGearLabel() != null && baseText.getGearLabelBroken() != null && baseText.getGearFound() != null
+                        && baseText.getGearWorn() != null && baseText.getGearBroken() != null
+                        && baseText.getGearRepaired() != null && baseText.getGearRecovered() != null
+                        && baseText.getRarities().size() == 3,
+                "terminal.base: gear texts and the three rarities");
         TerminalText.BunkerText bunkerText = content.getTerminal().getBunker();
         check(bunkerText.getFoodLow() != null && bunkerText.getFoodOut() != null && bunkerText.getFoodBack() != null,
                 "terminal.bunker: foodLow, foodOut, foodBack");

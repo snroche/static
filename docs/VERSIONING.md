@@ -60,6 +60,7 @@ Rules:
 | 4 | 0.4.0 | Radio: known zones, caught signals, transmissions, intel, relays, rescues, lore, modules; missions in `expeditions` |
 | 5 | 0.5.0 | Power (`power`, `bunker_state`), workshop (`craft_jobs`), `scouts.gear_id` |
 | 6 | 0.6.2 | Generated people: `scouts.persona`, `rescue_targets.persona` |
+| 7 | 0.6.4 | Equipment pieces: `gear_pieces` (rarity, condition, location) |
 
 `MigrationsTest` (JVM) compares each migration's SQL against the exported schemas. When adding a migration, extend that test.
 

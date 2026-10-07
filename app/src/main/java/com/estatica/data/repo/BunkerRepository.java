@@ -7,7 +7,9 @@ import com.estatica.data.db.AffinityEntity;
 import com.estatica.data.db.ConversationDao;
 import com.estatica.data.db.ConversationEntity;
 import com.estatica.data.db.ItemDao;
+import com.estatica.data.db.GearEntity;
 import com.estatica.data.db.ItemEntity;
+import com.estatica.domain.bunker.GearPiece;
 import com.estatica.domain.bunker.ItemInstance;
 import com.estatica.domain.dialogue.Conversation;
 import com.estatica.domain.scouts.Affinities;
@@ -85,6 +87,43 @@ public final class BunkerRepository {
             entities.add(e);
         }
         items.upsert(entities);
+    }
+
+    @WorkerThread
+    public List<GearPiece> gear() {
+        List<GearPiece> out = new ArrayList<>();
+        for (GearEntity e : items.allGear()) {
+            out.add(new GearPiece(e.id, e.gearId, GearPiece.Rarity.fromKey(e.rarity), e.condition, e.location,
+                    e.originalOwnerId));
+        }
+        return out;
+    }
+
+    /** Upserts every piece; used-up ones are deleted. */
+    @WorkerThread
+    public void saveGear(Collection<GearPiece> pieces) {
+        List<GearEntity> keep = new ArrayList<>();
+        List<String> gone = new ArrayList<>();
+        for (GearPiece p : pieces) {
+            if (p.isGone()) {
+                gone.add(p.getId());
+                continue;
+            }
+            GearEntity e = new GearEntity();
+            e.id = p.getId();
+            e.gearId = p.getGearId();
+            e.rarity = p.getRarity().name();
+            e.condition = p.getCondition();
+            e.location = p.getLocation();
+            e.originalOwnerId = p.getOriginalOwnerId();
+            keep.add(e);
+        }
+        if (!keep.isEmpty()) {
+            items.upsertGear(keep);
+        }
+        if (!gone.isEmpty()) {
+            items.deleteGear(gone);
+        }
     }
 
     @WorkerThread

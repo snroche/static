@@ -130,6 +130,27 @@ final class BunkerPanel {
             }
         }
 
+        b.gear.removeAllViews();
+        for (SessionSnapshot.GearView piece : base.gear) {
+            TextView line = (TextView) inflater.inflate(R.layout.item_log_line, b.gear, false);
+            line.setText(piece.holder != null
+                    ? res.getString(R.string.gear_line_worn_by, piece.label, piece.holder)
+                    : piece.label);
+            b.gear.addView(line);
+            if (piece.repairCost != null) {
+                TextView repair = (TextView) inflater.inflate(R.layout.item_decision_option, b.gear, false);
+                repair.setText(res.getString(R.string.gear_repair, piece.repairCost));
+                repair.setAlpha(piece.affordable ? 1f : 0.5f);
+                repair.setOnClickListener(v -> viewModel.repairGear(piece.id));
+                b.gear.addView(repair);
+            }
+        }
+        if (base.gear.isEmpty()) {
+            TextView none = (TextView) inflater.inflate(R.layout.item_log_line, b.gear, false);
+            none.setText(R.string.gear_empty);
+            b.gear.addView(none);
+        }
+
         String guards = base.guards.isEmpty() ? res.getString(R.string.nobody_on_guard) : String.join(", ", base.guards);
         b.defense.setText(res.getString(R.string.defense_line, guards, base.defense, base.scouts, base.bunks));
     }

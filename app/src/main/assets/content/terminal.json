@@ -155,7 +155,19 @@
     "gearSaved": "The {gear} saved {name} from something worse.",
     "reserveLow": "The power reserve isn't enough to lock onto the signal.",
     "reserveRecharged": "Reserve recharged with a battery.",
-    "nobody": "nobody"
+    "nobody": "nobody",
+    "gearFound": "{name} brought back a {gear}.",
+    "gearWorn": "{name}'s {gear} is falling apart ({condition}%). Repair it in the bunker.",
+    "gearBroken": "{name}'s {gear} broke. It does nothing until it's repaired.",
+    "gearRepaired": "The {gear} is as good as new.",
+    "gearRecovered": "{name} found {dead}'s {gear} where they fell.",
+    "gearLabel": "{gear} · {rarity} · {condition}%",
+    "gearLabelBroken": "{gear} · {rarity} · broken",
+    "rarities": {
+      "COMMON": "common",
+      "UNCOMMON": "uncommon",
+      "RARE": "rare"
+    }
   },
   "story": {
     "personalAvailable": "{name} asked you for something: \"{title}\". It shows up as a mission when dispatching.",

@@ -497,7 +497,8 @@ public final class ExpeditionEngine {
         if (incoming != Injury.NONE && gear != null && gear.isAbsorbsInjury()) {
             // Used up: one level less of damage.
             incoming = incoming.better();
-            scout.getLife().setGearId(null);
+            rules.pieceOf(scout).moveTo(com.estatica.domain.bunker.GearPiece.GONE);
+            scout.getLife().setGear(null);
             Map<String, String> gearVars = vars(scout);
             gearVars.put("gear", gear.getName().toLowerCase(Locale.ROOT));
             out.line(system(at, TextTemplate.format(content.getTerminal().getBase().getGearSaved(), gearVars), scout));

@@ -283,6 +283,54 @@ public final class TerminalText {
         private String unequipped;
         /** {name}, {gear}. */
         private String gearSaved;
+        /** {name}, {gear}. */
+        private String gearFound;
+        /** {name}, {gear}, {condition}. */
+        private String gearWorn;
+        /** {name}, {gear}. */
+        private String gearBroken;
+        /** {gear}. */
+        private String gearRepaired;
+        /** {name}, {dead}, {gear}. */
+        private String gearRecovered;
+        /** {gear}, {rarity}, {condition}. */
+        private String gearLabel;
+        /** {gear}, {rarity}. */
+        private String gearLabelBroken;
+        /** COMMON, UNCOMMON, RARE to display name. */
+        private java.util.Map<String, String> rarities;
+
+        public String getGearFound() {
+            return gearFound;
+        }
+
+        public String getGearWorn() {
+            return gearWorn;
+        }
+
+        public String getGearBroken() {
+            return gearBroken;
+        }
+
+        public String getGearRepaired() {
+            return gearRepaired;
+        }
+
+        public String getGearRecovered() {
+            return gearRecovered;
+        }
+
+        public String getGearLabel() {
+            return gearLabel;
+        }
+
+        public String getGearLabelBroken() {
+            return gearLabelBroken;
+        }
+
+        public java.util.Map<String, String> getRarities() {
+            return rarities != null ? rarities : java.util.Map.of();
+        }
         private String reserveLow;
         private String reserveRecharged;
         private String nobody;

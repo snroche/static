@@ -14,4 +14,13 @@ public interface ItemDao {
 
     @Upsert
     void upsert(List<ItemEntity> items);
+
+    @Query("SELECT * FROM gear_pieces")
+    List<GearEntity> allGear();
+
+    @Upsert
+    void upsertGear(List<GearEntity> pieces);
+
+    @Query("DELETE FROM gear_pieces WHERE id IN (:ids)")
+    void deleteGear(List<String> ids);
 }

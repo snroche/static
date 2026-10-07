@@ -40,7 +40,7 @@ public final class ScoutRules {
         }
         GearDef gear = gearOf(scout);
         if (gear != null) {
-            value += gear.statBonus(type.key());
+            value += com.estatica.domain.bunker.GearRules.statBonus(gear, pieceOf(scout), type.key());
         }
         return Math.max(0, value);
     }
@@ -60,14 +60,26 @@ public final class ScoutRules {
         }
         GearDef gear = gearOf(scout);
         if (gear != null) {
-            m *= gear.getLootMultiplier();
+            m *= com.estatica.domain.bunker.GearRules.lootMultiplier(gear, pieceOf(scout));
         }
         return m;
     }
 
-    /** Equipped gear, or null. */
+    /** Equipped piece, broken or not, or null. */
+    public com.estatica.domain.bunker.GearPiece pieceOf(Scout scout) {
+        return scout.getLife().getGear();
+    }
+
+    /** What the equipped piece does, or null if there is none or it's broken. */
     public GearDef gearOf(Scout scout) {
-        return content.gear(scout.getLife().getGearId());
+        com.estatica.domain.bunker.GearPiece piece = pieceOf(scout);
+        return piece == null || piece.isBroken() ? null : content.gear(piece.getGearId());
+    }
+
+    /** Noise multiplier from a portable radio (1 without one). */
+    public double gearNoiseFactor(Scout scout) {
+        GearDef gear = gearOf(scout);
+        return gear == null ? 1.0 : com.estatica.domain.bunker.GearRules.noiseFactor(gear, pieceOf(scout));
     }
 
     public double durationMultiplier(Scout scout) {

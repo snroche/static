@@ -21,8 +21,9 @@ import androidx.room.RoomDatabase;
                 RadioEntities.Intel.class, RadioEntities.RelayRow.class,
                 RadioEntities.RescueTarget.class, RadioEntities.Lore.class,
                 RadioEntities.Module.class,
-                BaseEntities.Power.class, BaseEntities.Value.class, BaseEntities.CraftJobRow.class},
-        version = 6,
+                BaseEntities.Power.class, BaseEntities.Value.class, BaseEntities.CraftJobRow.class,
+                GearEntity.class},
+        version = 7,
         exportSchema = true)
 public abstract class EstaticaDatabase extends RoomDatabase {
 

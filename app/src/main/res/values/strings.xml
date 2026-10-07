@@ -112,7 +112,7 @@
     <string name="scout_gear">Gear: %1$s</string>
     <string name="panel_gear_title">What does %1$s carry?</string>
     <string name="gear_none">Nothing (return it to the bunker)</string>
-    <string name="gear_empty">No gear made yet. It\'s built in the workshop.</string>
+    <string name="gear_empty">No gear yet. It turns up on expeditions or gets built in the workshop.</string>
 
     <string name="goals_title">GOALS</string>
     <string name="goal_line">%1$s %2$s (%3$d/%4$d)</string>
@@ -123,6 +123,9 @@
     <string name="hud_night">☾</string>
     <string name="hud_blackout">⚠ blackout</string>
     <string name="hud_resource">%1$s %2$d</string>
+    <string name="gear_title">GEAR</string>
+    <string name="gear_line_worn_by">%1$s — %2$s</string>
+    <string name="gear_repair">[ REPAIR: %1$s ]</string>
     <string name="hud_food">food ~%1$sd</string>
     <string name="hud_hungry">⚠ hungry</string>
     <string name="hud_description">Status: %1$s</string>

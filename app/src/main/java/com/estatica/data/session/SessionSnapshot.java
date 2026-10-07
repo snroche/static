@@ -336,6 +336,8 @@ public final class SessionSnapshot {
         public final List<String> guards;
         public final int defense;
         public final List<ItemView> gearStock;
+        /** Every piece the bunker has (stock and equipped), for repairs. */
+        public final List<GearView> gear;
         public final int scouts;
         public final int bunks;
         public final List<GoalView> goals;
@@ -345,7 +347,9 @@ public final class SessionSnapshot {
         BaseView(List<GoalView> goals, boolean powerCut, int watts, int available, int used, boolean blackout, boolean night, boolean filtersShort,
                  List<ConsumerView> consumers, int reserve, int reserveCapacity, boolean canRecharge,
                  List<ModuleView> modules, int slots, List<JobView> jobs, List<RecipeView> recipes,
-                 List<String> guards, int defense, List<ItemView> gearStock, int scouts, int bunks) {
+                 List<String> guards, int defense, List<ItemView> gearStock, int scouts, int bunks,
+                 List<GearView> gear) {
+            this.gear = Collections.unmodifiableList(gear);
             this.watts = watts;
             this.available = available;
             this.used = used;
@@ -443,6 +447,26 @@ public final class SessionSnapshot {
             this.name = name;
             this.amount = amount;
             this.shortName = shortName;
+        }
+    }
+
+    /** One piece of equipment in the bunker or on someone. */
+    public static final class GearView {
+        public final String id;
+        /** "Flashlight · rare · 80%". */
+        public final String label;
+        /** Who has it on, or null if in stock. */
+        public final String holder;
+        /** "2 parts, 1 components", or null at full condition. */
+        public final String repairCost;
+        public final boolean affordable;
+
+        GearView(String id, String label, String holder, String repairCost, boolean affordable) {
+            this.id = id;
+            this.label = label;
+            this.holder = holder;
+            this.repairCost = repairCost;
+            this.affordable = affordable;
         }
     }
 

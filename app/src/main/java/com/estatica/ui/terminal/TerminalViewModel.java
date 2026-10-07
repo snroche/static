@@ -187,6 +187,12 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
+    void repairGear(String pieceId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.repairGear(pieceId)));
+        }
+    }
+
     void upgradeModule(String moduleId) {
         if (ready) {
             run(step -> step.animated.addAll(session.upgradeModule(moduleId)));

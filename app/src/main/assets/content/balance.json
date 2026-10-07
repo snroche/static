@@ -1,5 +1,5 @@
 {
-  "contentVersion": 10,
+  "contentVersion": 11,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 200,
@@ -379,6 +379,22 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "gear": {
+    "_comment": "Equipment rarity, wear and repair. [placeholder]",
+    "findChance": [0.06, 0.1, 0.15],
+    "rarityWeights": [[85, 14, 1], [65, 30, 5], [45, 40, 15]],
+    "wear": {"COMMON": 15, "UNCOMMON": 12, "RARE": 8},
+    "injuryWear": 10,
+    "wornAt": 30,
+    "repairCost": {
+      "COMMON": {"scrap": 2},
+      "UNCOMMON": {"scrap": 2, "components": 1},
+      "RARE": {"components": 2, "parts": 1}
+    },
+    "craftUncommonPerPoint": 0.03,
+    "craftRareAbove": 6,
+    "craftRarePerPoint": 0.03
   },
   "food": {
     "_comment": "The bunker eats. [placeholder]",

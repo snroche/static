@@ -29,6 +29,18 @@ When they change, each entry lists the three independent versions:
   - More zones now drop rations. It's all elapsed-time arithmetic, with no ticking and no save change (the food clock lives in the bunker's key-value store).
   - Content 9 → 10: `balance.food`, the `foodSaving` task field, the `hungry` voice phrases and the `foodLow`/`foodOut`/`foodBack` texts.
 - Tests: 136 in total (6 new for food).
+- **Equipment:**
+  - Every piece is now its own object with a **rarity** and a **condition**:
+    - Uncommon pieces work 1.5× as well, rare ones 2× (a rare padded vest gives Endurance +4).
+    - Condition drops after each expedition, faster for common pieces and more if they came back hurt.
+    - Under 30 % the log warns. At 0 it breaks and does nothing.
+  - **Repair** in the [ BUNKER ] panel's new GEAR section: scrap for common pieces, components and parts for rare ones. You can fix pieces in stock or on anyone at home.
+  - **Finding gear:** pieces turn up on the way back from expeditions. Farther bands give better odds and better rarities. The workshop also makes gear, and a skilled crafter on the Workshop task sometimes turns out uncommon or rare pieces.
+  - **The dead keep their gear where they fell:** whoever goes back to that zone recovers it, like personal items.
+  - The gear picker and crew cards show "Flashlight · rare · 80%".
+  - **DB 6 → 7:** new `gear_pieces` table. Old saves' gear (stock counts and equipped ids) becomes common pieces in full condition on load.
+  - Content 10 → 11: `balance.gear` and the gear texts and rarity names.
+- Tests: 140 in total (4 new for rarity, wear, finds and crafting).
 - **A generated third starter:** new games start with Mara, Irene and one generated person (`balance.json → people.generatedStarters`). It comes from the game seed, so each game starts with someone different. Existing saves are untouched.
 
 ## [0.6.3] — Tano removed — in verification

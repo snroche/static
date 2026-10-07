@@ -118,6 +118,9 @@ public final class GameSession {
     private com.estatica.domain.scouts.BarkRules barks;
     private com.estatica.domain.scouts.PersonaGenerator personas;
     private com.estatica.domain.bunker.FoodRules food;
+    private com.estatica.domain.bunker.GearRules gearRules;
+    /** Every piece of equipment, by id (stock, equipped, lost in zones). */
+    private final Map<String, com.estatica.domain.bunker.GearPiece> gear = new HashMap<>();
     private com.estatica.domain.state.GameState state;
     private GameRandom random;
     private long lastSeenAtMillis;
@@ -221,6 +224,7 @@ public final class GameSession {
         barks = new com.estatica.domain.scouts.BarkRules(content, rules);
         personas = new com.estatica.domain.scouts.PersonaGenerator(content);
         food = new com.estatica.domain.bunker.FoodRules(content.getBalance().getFood());
+        gearRules = new com.estatica.domain.bunker.GearRules(content);
         gifts = new GiftRules(content, rules);
         grief = new GriefRules(content, rules);
         state = gameStateRepository.loadOrCreate();
@@ -257,6 +261,7 @@ public final class GameSession {
         for (ItemInstance item : bunkerRepository.items()) {
             items.put(item.getId(), item);
         }
+        loadGear();
         for (Conversation c : bunkerRepository.pendingConversations()) {
             // Content updates can remove a dialogue (Tano's, in 0.6.3): drop it instead of crashing.
             if (content.getDialogues().containsKey(c.getDialogueId())) {
@@ -426,6 +431,7 @@ public final class GameSession {
                 resourceRepository.add(resourceDelta);
                 resourceRepository.add(paid);
                 bunkerRepository.saveItems(items.values());
+                bunkerRepository.saveGear(gear.values());
                 bunkerRepository.saveAffinities(affinities);
                 for (Conversation c : conversationsChanged) {
                     bunkerRepository.save(c);
@@ -482,6 +488,7 @@ public final class GameSession {
             }
             if (result.isReturned()) {
                 recoverLostItems(scout, expedition.getZoneId(), step);
+                gearAfterTrip(scout, expedition.getZoneId(), step);
                 finishMission(expedition, scout, result.isMissionCompleted(), step);
                 if (result.isMissionCompleted()) {
                     count("expeditions", step);
@@ -631,7 +638,12 @@ public final class GameSession {
 
     /** GDD §5.5 "afterwards": belongings stay in the zone, the others grieve, the task is left. */
     private void afterDeath(Scout dead, String zoneId, Step step) {
-        dead.getLife().setGearId(null);
+        com.estatica.domain.bunker.GearPiece worn = dead.getLife().getGear();
+        if (worn != null) {
+            worn.moveTo(com.estatica.domain.bunker.GearPiece.lostIn(zoneId));
+            worn.setOriginalOwnerId(dead.getId());
+        }
+        dead.getLife().setGear(null);
         for (ItemInstance item : items.values()) {
             if (item.getLocation().equals(ItemInstance.carriedBy(dead.getId()))) {
                 item.moveTo(ItemInstance.lostIn(zoneId));
@@ -651,6 +663,18 @@ public final class GameSession {
 
     /** GDD §5.5: belongings of the dead can be recovered by going back to that zone. */
     private void recoverLostItems(Scout finder, String zoneId, Step step) {
+        for (com.estatica.domain.bunker.GearPiece piece : gear.values()) {
+            if (!piece.getLocation().equals(com.estatica.domain.bunker.GearPiece.lostIn(zoneId))) {
+                continue;
+            }
+            piece.moveTo(com.estatica.domain.bunker.GearPiece.BUNKER);
+            Scout owner = scouts.get(piece.getOriginalOwnerId());
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", finder.getName());
+            vars.put("dead", owner != null ? owner.getName() : "?");
+            vars.put("gear", gearName(piece));
+            step.system(content.getTerminal().getBase().getGearRecovered(), vars, finder);
+        }
         for (ItemInstance item : items.values()) {
             if (!item.getLocation().equals(ItemInstance.lostIn(zoneId))) {
                 continue;
@@ -801,10 +825,7 @@ public final class GameSession {
         }
         RadioRules.Quality quality = radio.quality(zone, relays, moduleLevel("radio"));
         double noise = quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"));
-        GearDef gear = rules.gearOf(scout);
-        if (gear != null) {
-            noise *= gear.getNoiseFactor();
-        }
+        noise *= rules.gearNoiseFactor(scout);
         Mission mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger);
         ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, step.now);
         step.lines.addAll(dispatch.lines);
@@ -1359,13 +1380,17 @@ public final class GameSession {
     /** Workshop speed: power, and the best Oficio among scouts on the workshop task. */
     private double workshopSpeed(PowerGrid.State g) {
         double base = PowerGrid.workshopSpeed(g.units("workshop"));
+        return base * (1 + 0.05 * bestWorkshopCraft());
+    }
+
+    private int bestWorkshopCraft() {
         int bestCraft = 0;
         for (Scout s : scouts.values()) {
             if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && "taller".equals(s.getLife().getTaskId())) {
                 bestCraft = Math.max(bestCraft, rules.effectiveStat(s, StatType.CRAFT));
             }
         }
-        return base * (1 + 0.05 * bestCraft);
+        return bestCraft;
     }
 
     private void craft(double hours, PowerGrid.State g, Step step) {
@@ -1384,9 +1409,18 @@ public final class GameSession {
         }
         for (CraftJob job : done) {
             RecipeDef recipe = content.recipe(job.getRecipeId());
-            step.resourceDelta.merge(recipe.getOutput(), recipe.getAmount(), Integer::sum);
             Map<String, String> vars = new HashMap<>();
             vars.put("item", recipe.getName());
+            if (content.gear(recipe.getOutput()) != null) {
+                for (int i = 0; i < recipe.getAmount(); i++) {
+                    com.estatica.domain.bunker.GearPiece piece = com.estatica.domain.bunker.GearPiece.fresh(recipe.getOutput(),
+                            gearRules.crafted(bestWorkshopCraft(), random));
+                    gear.put(piece.getId(), piece);
+                    vars.put("item", gearName(piece));
+                }
+            } else {
+                step.resourceDelta.merge(recipe.getOutput(), recipe.getAmount(), Integer::sum);
+            }
             step.system(content.getTerminal().getBase().getCraftDone(), vars, null);
             craftJobs.remove(job);
             step.radioWrites.add(() -> baseRepository.delete(job));
@@ -1456,35 +1490,152 @@ public final class GameSession {
         return step.commit();
     }
 
-    /** Equips gear from stock ({@code gearId} null to take it off). The old one goes back to stock. */
+    /** Equips a piece from stock ({@code pieceId} null to take it off). The old one goes back to stock. */
     @WorkerThread
-    public List<LogLine> equip(String scoutId, String gearId) {
+    public List<LogLine> equip(String scoutId, String pieceId) {
         Step step = new Step();
         advance(step);
         Scout scout = scouts.get(scoutId);
         if (scout == null || !scout.isAlive() || scout.getStatus() != ScoutStatus.IDLE) {
             return step.commit();
         }
-        String current = scout.getLife().getGearId();
-        if (gearId != null && content.gear(gearId) == null) {
+        com.estatica.domain.bunker.GearPiece next = pieceId != null ? gear.get(pieceId) : null;
+        if (pieceId != null && (next == null || !next.isInBunker())) {
             return step.commit();
         }
-        if (gearId != null && !pay(Map.of(gearId, 1), step)) {
-            return step.commit();
-        }
+        com.estatica.domain.bunker.GearPiece current = scout.getLife().getGear();
         if (current != null) {
-            step.resourceDelta.merge(current, 1, Integer::sum);
+            current.moveTo(com.estatica.domain.bunker.GearPiece.BUNKER);
         }
-        scout.getLife().setGearId(gearId);
+        if (next != null) {
+            next.moveTo(com.estatica.domain.bunker.GearPiece.carriedBy(scout.getId()));
+        }
+        scout.getLife().setGear(next);
         Map<String, String> vars = new HashMap<>();
         vars.put("name", scout.getName());
-        if (gearId != null) {
-            vars.put("gear", content.gear(gearId).getName().toLowerCase(Locale.ROOT));
+        if (next != null) {
+            vars.put("gear", gearName(next));
             step.system(content.getTerminal().getBase().getEquipped(), vars, scout);
         } else {
             step.system(content.getTerminal().getBase().getUnequipped(), vars, scout);
         }
         return step.commit();
+    }
+
+    /** Fixes a worn or broken piece, in stock or on someone at home. */
+    @WorkerThread
+    public List<LogLine> repairGear(String pieceId) {
+        Step step = new Step();
+        advance(step);
+        com.estatica.domain.bunker.GearPiece piece = gear.get(pieceId);
+        if (piece == null || piece.getCondition() >= com.estatica.domain.bunker.GearPiece.MAX_CONDITION || !atHome(piece)
+                || !pay(gearRules.repairCost(piece), step)) {
+            return step.commit();
+        }
+        piece.repair();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("gear", gearName(piece));
+        step.system(content.getTerminal().getBase().getGearRepaired(), vars, null);
+        return step.commit();
+    }
+
+    /** In stock, or on someone who is in the bunker right now. */
+    private boolean atHome(com.estatica.domain.bunker.GearPiece piece) {
+        if (piece.isInBunker()) {
+            return true;
+        }
+        for (Scout s : scouts.values()) {
+            if (piece == s.getLife().getGear()) {
+                return s.isAlive() && s.getStatus() == ScoutStatus.IDLE;
+            }
+        }
+        return false;
+    }
+
+    private String gearName(com.estatica.domain.bunker.GearPiece piece) {
+        return content.gear(piece.getGearId()).getName().toLowerCase(Locale.ROOT);
+    }
+
+    private String gearLabel(com.estatica.domain.bunker.GearPiece piece) {
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("gear", content.gear(piece.getGearId()).getName());
+        vars.put("rarity", text.getRarities().getOrDefault(piece.getRarity().name(), piece.getRarity().name()));
+        vars.put("condition", String.valueOf(piece.getCondition()));
+        return TextTemplate.format(piece.isBroken() ? text.getGearLabelBroken() : text.getGearLabel(), vars);
+    }
+
+    /** Wear on the way back, and sometimes something useful found on the road. */
+    private void gearAfterTrip(Scout scout, String zoneId, Step step) {
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        com.estatica.domain.bunker.GearPiece piece = scout.getLife().getGear();
+        if (piece != null && !piece.isBroken()) {
+            int before = gearRules.wear(piece, scout.getInjury() != com.estatica.domain.scouts.Injury.NONE);
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", scout.getName());
+            vars.put("gear", gearName(piece));
+            vars.put("condition", String.valueOf(piece.getCondition()));
+            if (piece.isBroken()) {
+                step.system(text.getGearBroken(), vars, scout);
+            } else if (gearRules.isWorn(piece) && before > content.getBalance().getGear().getWornAt()) {
+                step.system(text.getGearWorn(), vars, scout);
+            }
+        }
+        int band = content.getBalance().bandIndex(content.zone(zoneId).getBand());
+        com.estatica.domain.bunker.GearPiece found = gearRules.find(band, random);
+        if (found != null) {
+            gear.put(found.getId(), found);
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", scout.getName());
+            vars.put("gear", gearLabel(found));
+            step.system(text.getGearFound(), vars, scout);
+        }
+    }
+
+    /**
+     * Loads every piece and attaches the equipped ones. Saves from before DB v7 kept gear as
+     * resource counts and gear.json ids on scouts: they become common pieces in full shape.
+     */
+    private void loadGear() {
+        for (com.estatica.domain.bunker.GearPiece piece : bunkerRepository.gear()) {
+            gear.put(piece.getId(), piece);
+        }
+        Map<String, Integer> legacyStock = new HashMap<>();
+        for (GearDef def : content.getGear().values()) {
+            int count = resources.getOrDefault(def.getId(), 0);
+            for (int i = 0; i < count; i++) {
+                com.estatica.domain.bunker.GearPiece piece = com.estatica.domain.bunker.GearPiece.fresh(def.getId(), com.estatica.domain.bunker.GearPiece.Rarity.COMMON);
+                gear.put(piece.getId(), piece);
+            }
+            if (count > 0) {
+                legacyStock.put(def.getId(), -count);
+            }
+        }
+        List<Scout> legacyEquipped = new ArrayList<>();
+        for (Scout s : scouts.values()) {
+            String id = s.getLife().getGearId();
+            if (id == null) {
+                continue;
+            }
+            com.estatica.domain.bunker.GearPiece piece = gear.get(id);
+            if (piece == null && content.gear(id) != null) {
+                piece = new com.estatica.domain.bunker.GearPiece(Ids.newId(), id, com.estatica.domain.bunker.GearPiece.Rarity.COMMON, com.estatica.domain.bunker.GearPiece.MAX_CONDITION,
+                        com.estatica.domain.bunker.GearPiece.carriedBy(s.getId()), null);
+                gear.put(piece.getId(), piece);
+                legacyEquipped.add(s);
+            }
+            s.getLife().setGear(piece);
+        }
+        if (!legacyStock.isEmpty() || !legacyEquipped.isEmpty()) {
+            legacyStock.forEach((k, v) -> resources.merge(k, v, Integer::sum));
+            db.runInTransaction(() -> {
+                resourceRepository.add(legacyStock);
+                bunkerRepository.saveGear(gear.values());
+                for (Scout s : legacyEquipped) {
+                    scoutRepository.save(s);
+                }
+            });
+        }
     }
 
     private SessionSnapshot.BaseView baseView(long now) {
@@ -1523,18 +1674,34 @@ public final class GameSession {
             guardNames.add(s.getName());
         }
         List<SessionSnapshot.ItemView> gearStock = new ArrayList<>();
-        for (GearDef gear : content.getGear().values()) {
-            int count = resources.getOrDefault(gear.getId(), 0);
-            if (count > 0) {
-                gearStock.add(new SessionSnapshot.ItemView(gear.getId(), gear.getName() + " ×" + count,
-                        gear.getDescription()));
+        List<SessionSnapshot.GearView> gearViews = new ArrayList<>();
+        List<com.estatica.domain.bunker.GearPiece> pieces = new ArrayList<>(gear.values());
+        pieces.sort(Comparator.comparing(com.estatica.domain.bunker.GearPiece::getGearId).thenComparing(p -> -p.getRarity().ordinal()));
+        for (com.estatica.domain.bunker.GearPiece piece : pieces) {
+            if (piece.isGone() || !atHome(piece) && !piece.getLocation().startsWith("scout:")) {
+                continue;
             }
+            String label = gearLabel(piece);
+            if (piece.isInBunker()) {
+                gearStock.add(new SessionSnapshot.ItemView(piece.getId(), label,
+                        content.gear(piece.getGearId()).getDescription()));
+            }
+            String holder = null;
+            for (Scout s : scouts.values()) {
+                if (piece == s.getLife().getGear()) {
+                    holder = s.getName();
+                }
+            }
+            boolean damaged = piece.getCondition() < com.estatica.domain.bunker.GearPiece.MAX_CONDITION;
+            Map<String, Integer> cost = gearRules.repairCost(piece);
+            gearViews.add(new SessionSnapshot.GearView(piece.getId(), label, holder,
+                    damaged && atHome(piece) ? describe(cost) : null, canAfford(cost)));
         }
         return new SessionSnapshot.BaseView(goalViews(now), !g.cut.isEmpty(), energy.watts(moduleLevel("generator")), g.available, g.used,
                 events.blackoutWattsAt(now) > 0, g.night, g.filtersShort, consumers,
                 (int) Math.floor(reserve), (int) energy.batteryCapacity(moduleLevel("generator")),
                 resources.getOrDefault("batteries", 0) > 0, modules, moduleLevel("workshop"), jobs, recipes,
-                guardNames, raids.defense(guards), gearStock, aliveScouts(), rosterCap());
+                guardNames, raids.defense(guards), gearStock, aliveScouts(), rosterCap(), gearViews);
     }
 
     // ---- Story: personal missions, La Voz, goals (GDD §5.2, §8, §9) ----
@@ -1852,8 +2019,7 @@ public final class GameSession {
             b.canTalk = home && !hasPendingConversation(s) && now >= talkReadyAt(s);
             b.canGift = home && hasInventory;
             b.canAssignTask = s.isAlive();
-            GearDef gear = rules.gearOf(s);
-            b.gear = gear != null ? gear.getName() : null;
+            b.gear = s.getLife().getGear() != null ? gearLabel(s.getLife().getGear()) : null;
             b.canEquip = home;
             b.moodKey = rules.mood(s);
             b.mood = content.getTerminal().getMoods().get(b.moodKey);
