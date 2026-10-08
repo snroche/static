@@ -152,4 +152,25 @@ public class PairExpeditionTest {
         }
         assertTrue("carried home at least once", carried > 0);
     }
+
+    @Test
+    public void aPickedOverPlaceGivesLess() {
+        int fresh = 0;
+        int bare = 0;
+        for (long seed = 0; seed < 60; seed++) {
+            Scout a = TestScouts.custom("mara", 6, 0, 0, T0);
+            Expedition full = engine.dispatch(a, content.zone("almacen"), seed,
+                    new Mission(Mission.Type.EXPLORE, null, 0, 0, false, false, 1.0), T0).expedition;
+            Scout b = TestScouts.custom("mara", 6, 0, 0, T0);
+            Expedition picked = engine.dispatch(b, content.zone("almacen"), seed,
+                    new Mission(Mission.Type.EXPLORE, null, 0, 0, false, false, 0.25), T0).expedition;
+            long t = T0;
+            while (full.isActive() || picked.isActive()) {
+                t += 10 * 60_000;
+                fresh += total(engine.advance(full, a, List.of(), t).getDelivered());
+                bare += total(engine.advance(picked, b, List.of(), t).getDelivered());
+            }
+        }
+        assertTrue(bare < fresh);
+    }
 }

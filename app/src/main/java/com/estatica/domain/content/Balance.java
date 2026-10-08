@@ -23,6 +23,32 @@ public final class Balance {
     private Food food;
     private Gear gear;
     private Pairs pairs;
+    private Depletion depletion;
+
+    public Depletion getDepletion() {
+        return depletion;
+    }
+
+    /** Places run dry when looted and slowly refill. [placeholder] */
+    public static final class Depletion {
+        /** Added per expedition there, 0–1. */
+        private double perTrip;
+        private double recoveryPerDay;
+        /** Loot lost when fully picked over (0.75 = a quarter left). */
+        private double maxPenalty;
+
+        public double getPerTrip() {
+            return perTrip;
+        }
+
+        public double getRecoveryPerDay() {
+            return recoveryPerDay;
+        }
+
+        public double getMaxPenalty() {
+            return maxPenalty;
+        }
+    }
 
     public Pairs getPairs() {
         return pairs;

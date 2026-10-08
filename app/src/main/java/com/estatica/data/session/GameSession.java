@@ -516,6 +516,9 @@ public final class GameSession {
             }
             if (result.isReturned()) {
                 recoverLostItems(scout, expedition.getZoneId(), step);
+                if (!content.zone(expedition.getZoneId()).isWilds()) {
+                    pickOver(expedition.getZoneId(), step);
+                }
                 gearAfterTrip(scout, expedition.getZoneId(), step);
                 if (party.partner != null) {
                     gearAfterTrip(party.partner, expedition.getZoneId(), step);
@@ -924,7 +927,9 @@ public final class GameSession {
         RadioRules.Quality quality = radio.quality(zone, relays, moduleLevel("radio"));
         double noise = quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"));
         noise *= rules.gearNoiseFactor(scout);
-        Mission mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger);
+        double lootFactor = zone.isWilds() ? 1.0 : lootFactor(zone.getId(), step.now);
+        Mission mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger,
+                lootFactor);
         Scout partner = partnerId != null ? scouts.get(partnerId) : null;
         if (partner != null && (partner == scout || !rules.canDispatch(partner))) {
             return step.commit();
@@ -935,7 +940,8 @@ public final class GameSession {
             // The clearer radio of the two carries the reports.
             noise = Math.min(noise, quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"))
                     * rules.gearNoiseFactor(partner));
-            mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger);
+            mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger,
+                    lootFactor);
         }
         ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, party, step.now);
         step.into(dispatch.lines, LogLine.expeditionThread(dispatch.expedition.getId()));
@@ -985,6 +991,32 @@ public final class GameSession {
     private boolean canReach(ZoneDef zone) {
         return (zone.isWilds() || knownZones.contains(zone.getId()))
                 && isUnlocked(content.getBalance().band(zone.getBand()));
+    }
+
+    // ---- Places run dry ----
+
+    private static final String DEPLETION = "dep:";
+    private static final String DEPLETION_AT = "dept:";
+
+    /** How picked-over a place is now (0 untouched, 1 bare), recovering with time. */
+    public double depletion(String zoneId, long now) {
+        double stored = value(DEPLETION + zoneId);
+        if (stored <= 0) {
+            return 0;
+        }
+        double days = Math.max(0, now - value(DEPLETION_AT + zoneId)) / (24.0 * HOUR);
+        return Math.max(0, stored - days * content.getBalance().getDepletion().getRecoveryPerDay());
+    }
+
+    private double lootFactor(String zoneId, long now) {
+        return 1 - depletion(zoneId, now) * content.getBalance().getDepletion().getMaxPenalty();
+    }
+
+    /** A trip there takes its share. */
+    private void pickOver(String zoneId, Step step) {
+        double now = Math.min(1, depletion(zoneId, step.now) + content.getBalance().getDepletion().getPerTrip());
+        setValue(DEPLETION + zoneId, now, step);
+        setValue(DEPLETION_AT + zoneId, step.now, step);
     }
 
     // ---- The region map (scouting) ----
@@ -1100,7 +1132,8 @@ public final class GameSession {
             com.estatica.domain.map.RegionMap.Place place = z != null ? regionMap.placeOf(zoneId) : null;
             if (place != null) {
                 places.add(new SessionSnapshot.PlaceView(zoneId, z.getName(),
-                        content.getBalance().bandIndex(z.getBand()), place.ring, place.turn, z.getDanger(), canReach(z)));
+                        content.getBalance().bandIndex(z.getBand()), place.ring, place.turn, z.getDanger(), canReach(z),
+                        (int) Math.round(depletion(zoneId, clock.nowMillis()) * 100)));
             }
         }
         List<String> bands = new ArrayList<>();
@@ -2356,7 +2389,7 @@ public final class GameSession {
                     z.getDanger(), z.getDurationMinutes()[0], z.getDurationMinutes()[1],
                     content.getBalance().band(z.getBand()).getName(),
                     relay != null ? (int) Math.round(relay.getCondition()) : -1,
-                    intel.containsKey(z.getId())));
+                    intel.containsKey(z.getId()), (int) Math.round(depletion(z.getId(), now) * 100)));
         }
 
         TerminalText.RadioText radioText = content.getTerminal().getRadio();

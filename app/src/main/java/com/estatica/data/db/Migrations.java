@@ -118,8 +118,13 @@ public final class Migrations {
             "CREATE INDEX IF NOT EXISTS `index_log_lines_thread` ON `log_lines` (`thread`)"
     );
 
+    /** Places run dry: how much was left to find. */
+    static final List<String> MIGRATION_10_11_SQL = List.of(
+            "ALTER TABLE `expeditions` ADD COLUMN `loot_factor` REAL NOT NULL DEFAULT 1"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL, MIGRATION_9_10_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL, MIGRATION_9_10_SQL, MIGRATION_10_11_SQL);
 
     public static final Migration[] ALL = build();
 

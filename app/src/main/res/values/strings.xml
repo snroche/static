@@ -181,7 +181,7 @@
     <string name="map_description" tools:ignore="PluralsCandidate">Region map: %1$d places found, %2$d sectors left to scout.</string>
     <string name="map_hint">Tap a ? to send someone to scout it. Places show up as they\'re found.</string>
     <string name="map_scout">[ SEND SOMEONE ]</string>
-    <string name="map_legend">&#xF068A; bunker · ? unexplored · ?! something on the radio · … someone\'s out there · · out of reach</string>
+    <string name="map_legend">&#xF068A; bunker · ? unexplored · ?! something on the radio · ○ picked over · … someone\'s out there · · out of reach</string>
     <string name="map_place">%1$s · danger %2$d. Dispatch from the crew card.</string>
     <string name="map_place_far">%1$s · danger %2$d. Out of reach: the antenna can\'t get that far.</string>
     <string name="map_sector_unknown">The %1$s. Nobody\'s been there.</string>
@@ -192,6 +192,8 @@
     <string name="panel_scout_sector_title">Who scouts the %1$s?</string>
     <string name="scout_sector_nobody">Nobody\'s free to go.</string>
     <string name="zones_none">No places known yet. Open the [MAP] and scout around the bunker.</string>
+    <string name="zone_depleted">picked over %1$d%%</string>
+    <string name="zone_depleted_long">Picked over (%1$d%%): less to find until it refills.</string>
     <string name="gear_title">GEAR</string>
     <string name="gear_line_worn_by">%1$s — %2$s</string>
     <string name="gear_repair">[ REPAIR: %1$s ]</string>

@@ -36,8 +36,12 @@ final class MapPanel {
             public void onPlace(SessionSnapshot.PlaceView place) {
                 selectedSector = null;
                 Resources res = b.getRoot().getResources();
-                b.mapInfo.setText(res.getString(place.reachable ? R.string.map_place : R.string.map_place_far,
-                        place.name, place.danger));
+                String info = res.getString(place.reachable ? R.string.map_place : R.string.map_place_far,
+                        place.name, place.danger);
+                if (place.depleted >= 15) {
+                    info += " " + res.getString(R.string.zone_depleted_long, place.depleted);
+                }
+                b.mapInfo.setText(info);
                 b.mapAction.setVisibility(View.GONE);
                 redraw();
             }

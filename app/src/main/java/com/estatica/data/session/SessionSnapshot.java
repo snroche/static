@@ -229,9 +229,12 @@ public final class SessionSnapshot {
         public final int relay;
         /** Decoded intel waiting here (cache / danger). */
         public final boolean intel;
+        /** How picked-over it is, 0–100. */
+        public final int depleted;
 
         ZoneView(String id, String name, String description, int danger, int minMinutes, int maxMinutes,
-                 String band, int relay, boolean intel) {
+                 String band, int relay, boolean intel, int depleted) {
+            this.depleted = depleted;
             this.id = id;
             this.name = name;
             this.description = description;
@@ -543,9 +546,12 @@ public final class SessionSnapshot {
         public final double turn;
         public final int danger;
         public final boolean reachable;
+        /** How picked-over it is, 0–100. */
+        public final int depleted;
 
         PlaceView(String zoneId, String name, int ring, double ringPosition, double turn, int danger,
-                  boolean reachable) {
+                  boolean reachable, int depleted) {
+            this.depleted = depleted;
             this.zoneId = zoneId;
             this.name = name;
             this.ring = ring;

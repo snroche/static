@@ -51,7 +51,7 @@ public final class ExpeditionRepository {
                     e.cursorAtMillis, e.pendingSinceMillis, e.chosenOption, e.chosenAtMillis, loot,
                     items, e.retreatOffered,
                     new Mission(Mission.Type.valueOf(e.missionType), e.missionTarget, e.signalNoise,
-                            e.orderDelayMillis, e.cacheIntel, e.dangerIntel),
+                            e.orderDelayMillis, e.cacheIntel, e.dangerIntel, e.lootFactor),
                     e.aborted, e.lostHints);
             expedition.setPartnerId(e.partnerId);
             out.add(expedition);
@@ -99,6 +99,7 @@ public final class ExpeditionRepository {
         e.orderDelayMillis = mission.getOrderDelayMillis();
         e.cacheIntel = mission.hasCacheIntel();
         e.dangerIntel = mission.hasDangerIntel();
+        e.lootFactor = mission.getLootFactor();
         e.aborted = expedition.isAborted();
         e.lostHints = expedition.getLostHints();
         e.partnerId = expedition.getPartnerId();

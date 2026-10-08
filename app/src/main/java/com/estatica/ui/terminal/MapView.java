@@ -195,8 +195,15 @@ public final class MapView extends View {
             float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
             float px = x(radius, p.turn);
             float py = y(radius, p.turn);
-            dot.setColor(p.reachable ? bright : dim);
-            canvas.drawCircle(px, py, 3.5f * dp, dot);
+            // Picked over: a hollow ring instead of a solid dot.
+            if (p.depleted >= 50) {
+                line.setColor(p.reachable ? bright : dim);
+                canvas.drawCircle(px, py, 3.5f * dp, line);
+                line.setColor(hint);
+            } else {
+                dot.setColor(p.reachable ? bright : dim);
+                canvas.drawCircle(px, py, 3.5f * dp, dot);
+            }
             text.setColor(p.reachable ? amber : dim);
             canvas.drawText(shortName(p.name), px, py - 6 * dp, text);
         }

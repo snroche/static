@@ -121,6 +121,9 @@ final class SendPanel {
             if (z.intel) {
                 label.append(" · ").append(res.getString(R.string.zone_intel));
             }
+            if (z.depleted >= 15) {
+                label.append(" · ").append(res.getString(R.string.zone_depleted, z.depleted));
+            }
             row(inflater, b.sendWhere, label.toString(), key.equals(destination), v -> choose(key));
             any = true;
         }

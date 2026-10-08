@@ -79,6 +79,10 @@ public class ExpeditionEntity {
     @ColumnInfo(name = "lost_hints", defaultValue = "0")
     public int lostHints;
 
+    /** DB v11: how much was left to find there (1 = untouched). */
+    @ColumnInfo(name = "loot_factor", defaultValue = "1")
+    public double lootFactor = 1;
+
     /** DB v8: second scout on a pair expedition. */
     @androidx.annotation.Nullable
     @ColumnInfo(name = "partner_id")

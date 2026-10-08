@@ -173,6 +173,10 @@ public final class ContentValidator {
         check(food != null && food.getRationsPerScoutPerDay() > 0 && food.getKitchenMaxSaving() >= 0
                         && food.getKitchenMaxSaving() < 1 && food.getHungerHealMultiplier() > 0,
                 "balance.food: rationsPerScoutPerDay > 0, 0 ≤ kitchenMaxSaving < 1, hungerHealMultiplier > 0");
+        Balance.Depletion depletion = content.getBalance().getDepletion();
+        check(depletion != null && depletion.getPerTrip() > 0 && depletion.getRecoveryPerDay() > 0
+                        && depletion.getMaxPenalty() >= 0 && depletion.getMaxPenalty() < 1,
+                "balance.depletion: perTrip > 0, recoveryPerDay > 0, 0 ≤ maxPenalty < 1");
         Balance.Pairs pairs = content.getBalance().getPairs();
         check(pairs != null && pairs.getLootMultiplier() >= 1 && pairs.getCarryBase() >= 0,
                 "balance.pairs: lootMultiplier ≥ 1, carryBase ≥ 0");

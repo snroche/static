@@ -9,6 +9,11 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Added
+- **Places run dry:**
+  - Every trip to a place leaves it more picked over (+30 %). It refills by itself (−25 % a day), worked out from elapsed time.
+  - Loot found there shrinks with it, down to a quarter when it's bare. The factor is fixed when someone leaves and stored with the expedition. **DB 10 → 11:** `expeditions.loot_factor`.
+  - Shown in the SEND list ("picked over 60 %"), on the map (a hollow dot means picked over) and in the map's place info. Scouting grounds never run dry.
+  - Content 13 → 14: `balance.depletion`.
 - **Gear slots:** every scout has seven slots (head, neck, body, hands, belt, back, feet), one piece each, and the effects of everything worn add up.
   - **Gear screen:** [GEAR] on a crew card opens it. It lists the slots with what's in them and how many spare pieces in the bunker fit each one. Tap a slot to put something on or take it off; whatever was there goes back to the bunker.
   - **Five new pieces:** helmet (head), lucky charm (neck), soft boots (feet: Stealth +1 and 10 % shorter trips), tool belt (belt) and work gloves (hands). The workshop can make four of them; the charm only turns up on expeditions.

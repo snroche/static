@@ -630,7 +630,7 @@ public final class ExpeditionEngine {
     private void resolveFind(Expedition expedition, Scout scout, Party party, ZoneDef zone, VoiceDef voice,
                              GameRandom rng, long at, ExpeditionResult out) {
         LootRoll roll = weightedPick(zone.getLoot(), rng);
-        int amount = rollAmount(roll, scout, party, rng);
+        int amount = rollAmount(roll, scout, party, expedition.getMission().getLootFactor(), rng);
         expedition.addLoot(roll.getResource(), amount);
         Map<String, String> vars = vars(scout);
         vars.put("amount", String.valueOf(amount));
@@ -753,9 +753,14 @@ public final class ExpeditionEngine {
     }
 
     private int rollAmount(LootRoll roll, Scout scout, Party party, GameRandom rng) {
+        return rollAmount(roll, scout, party, 1.0, rng);
+    }
+
+    /** @param lootFactor how picked-over the place is (1 = untouched) */
+    private int rollAmount(LootRoll roll, Scout scout, Party party, double lootFactor, GameRandom rng) {
         int base = rng.nextIntInclusive(roll.getMin(), roll.getMax());
         double pair = party.isPair() ? content.getBalance().getPairs().getLootMultiplier() : 1.0;
-        return Math.max(1, (int) Math.round(base * rules.lootMultiplier(scout) * pair));
+        return Math.max(1, (int) Math.round(base * rules.lootMultiplier(scout) * pair * lootFactor));
     }
 
     /** Whether the partner manages to drag a dying lead home. */

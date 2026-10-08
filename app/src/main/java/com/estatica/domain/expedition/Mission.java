@@ -34,9 +34,17 @@ public final class Mission {
     private final boolean cacheIntel;
     /** Decoded intel: known dangers (better odds). */
     private final boolean dangerIntel;
+    /** How much there's left to find (1 = untouched, lower = picked over). */
+    private final double lootFactor;
 
     public Mission(Type type, String target, double noise, long orderDelayMillis,
                    boolean cacheIntel, boolean dangerIntel) {
+        this(type, target, noise, orderDelayMillis, cacheIntel, dangerIntel, 1.0);
+    }
+
+    public Mission(Type type, String target, double noise, long orderDelayMillis,
+                   boolean cacheIntel, boolean dangerIntel, double lootFactor) {
+        this.lootFactor = lootFactor;
         this.type = Objects.requireNonNull(type);
         this.target = target;
         this.noise = noise;
@@ -72,5 +80,9 @@ public final class Mission {
 
     public boolean hasDangerIntel() {
         return dangerIntel;
+    }
+
+    public double getLootFactor() {
+        return lootFactor;
     }
 }
