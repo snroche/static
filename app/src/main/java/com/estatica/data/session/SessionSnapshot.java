@@ -20,6 +20,9 @@ public final class SessionSnapshot {
     public final BaseView base;
     /** Scouts out right now, for the expedition strip. */
     public final List<ExpeditionView> expeditions;
+    /** Weather outside now (WeatherRules.Weather name) and its display name. */
+    public final String weather;
+    public final String weatherName;
     /** Words the terminal highlights: every place name and resource name. */
     public final List<String> placeNames;
     public final List<String> resourceNames;
@@ -39,9 +42,11 @@ public final class SessionSnapshot {
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
                     List<MissionView> missions, RadioView radio, BaseView base,
                     List<ExpeditionView> expeditions, double foodDaysLeft, boolean hungry,
-                    MapView map, List<String> placeNames, List<String> resourceNames, List<String> dangerWords,
+                    MapView map, String weather, String weatherName, List<String> placeNames, List<String> resourceNames, List<String> dangerWords,
                     List<String> goodWords, long nextWakeAtMillis) {
         this.map = map;
+        this.weather = weather;
+        this.weatherName = weatherName;
         this.placeNames = placeNames;
         this.resourceNames = resourceNames;
         this.dangerWords = dangerWords;

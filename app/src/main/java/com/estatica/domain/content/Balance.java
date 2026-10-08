@@ -24,6 +24,55 @@ public final class Balance {
     private Gear gear;
     private Pairs pairs;
     private Depletion depletion;
+    private Weather weather;
+
+    public Weather getWeather() {
+        return weather;
+    }
+
+    /** Weather and darkness outside. [placeholder] */
+    public static final class Weather {
+        private int blockHours = 3;
+        /** Chance a block keeps the previous block's weather. */
+        private double persistence;
+        private java.util.Map<String, Integer> weights;
+        /** By weather: stat key (or "all") to check bonus. */
+        private java.util.Map<String, java.util.Map<String, Double>> effects;
+        /** At night: stat key (or "all") to check bonus. */
+        private java.util.Map<String, Double> night;
+        /** By weather: extra radio noise. */
+        private java.util.Map<String, Double> noise;
+        /** Chance a transit leg mentions the weather. */
+        private double flavorChance;
+
+        public int getBlockHours() {
+            return Math.max(1, blockHours);
+        }
+
+        public double getPersistence() {
+            return persistence;
+        }
+
+        public java.util.Map<String, Integer> getWeights() {
+            return weights != null ? weights : java.util.Map.of();
+        }
+
+        public java.util.Map<String, java.util.Map<String, Double>> getEffects() {
+            return effects != null ? effects : java.util.Map.of();
+        }
+
+        public java.util.Map<String, Double> getNight() {
+            return night != null ? night : java.util.Map.of();
+        }
+
+        public java.util.Map<String, Double> getNoise() {
+            return noise != null ? noise : java.util.Map.of();
+        }
+
+        public double getFlavorChance() {
+            return flavorChance;
+        }
+    }
 
     public Depletion getDepletion() {
         return depletion;

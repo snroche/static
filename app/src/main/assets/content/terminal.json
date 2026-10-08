@@ -292,5 +292,37 @@
       "made it",
       "home"
     ]
+  },
+  "weather": {
+    "names": {
+      "CLEAR": "clear",
+      "CLOUDY": "cloudy",
+      "RAIN": "rain",
+      "FOG": "fog",
+      "STORM": "storm"
+    },
+    "lines": {
+      "CLOUDY": [
+        "Grey sky. Feels like it's waiting for something.",
+        "Clouds coming in low."
+      ],
+      "RAIN": [
+        "Raining hard. Everything's slippery.",
+        "Soaked through. The rain won't let up.",
+        "Rain on the roofs. Covers my steps, at least."
+      ],
+      "FOG": [
+        "Can't see ten meters in this fog.",
+        "Fog everywhere. Good for hiding, bad for finding."
+      ],
+      "STORM": [
+        "Storm's on top of me. The radio's crackling.",
+        "Wind's tearing at everything. Hard to hear myself."
+      ],
+      "NIGHT": [
+        "Dark out here. Going slow.",
+        "No moon tonight. I'm feeling my way."
+      ]
+    }
   }
 }

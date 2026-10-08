@@ -6,6 +6,28 @@ import java.util.Map;
 /** Terminal texts from {@code assets/content/terminal.json}. Filled by Gson. */
 public final class TerminalText {
 
+    /** Weather names and the lines scouts use about it. */
+    private WeatherText weather;
+
+    public WeatherText getWeather() {
+        return weather != null ? weather : new WeatherText();
+    }
+
+    public static final class WeatherText {
+        /** CLEAR, CLOUDY, RAIN, FOG, STORM to a short name. */
+        private Map<String, String> names;
+        /** Same keys plus NIGHT: road lines. */
+        private Map<String, List<String>> lines;
+
+        public Map<String, String> getNames() {
+            return names != null ? names : Map.of();
+        }
+
+        public Map<String, List<String>> getLines() {
+            return lines != null ? lines : Map.of();
+        }
+    }
+
     /** Words the terminal colors: danger in red, good news in green. */
     private Highlight highlight;
 

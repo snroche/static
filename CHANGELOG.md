@@ -9,6 +9,16 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Added
+- **Weather and daylight:**
+  - Weather outside comes in 3-hour blocks from the game seed: clear, cloudy, rain, fog or a storm. Fronts tend to last.
+  - Night follows the device clock, like the air filters.
+  - Effects on checks:
+    - Night: stealth +8 %, wits −5 %.
+    - Fog: stealth +8 %, wits −6 %.
+    - Rain: endurance −5 %.
+    - Storm: everything −6 %, plus more radio static.
+  - Shown in the status bar (☀ / ☾ plus the weather icon and name). Scouts mention it on the road now and then.
+  - Content 14 → 15: `balance.weather` and `terminal.weather`.
 - **Places run dry:**
   - Every trip to a place leaves it more picked over (+30 %). It refills by itself (−25 % a day), worked out from elapsed time.
   - Loot found there shrinks with it, down to a quarter when it's bare. The factor is fixed when someone leaves and stored with the expedition. **DB 10 → 11:** `expeditions.loot_factor`.

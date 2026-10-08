@@ -64,6 +64,13 @@ public final class ExpeditionEngine {
         return rules;
     }
 
+    /** Weather and darkness: calm unless the session wires the real thing. */
+    private com.estatica.domain.world.World world = com.estatica.domain.world.World.CALM;
+
+    public void setWorld(com.estatica.domain.world.World world) {
+        this.world = world;
+    }
+
     // ---- Pairs (GDD §5.3) ----
 
     /** Who goes along with the lead, and how they get on ("friends", "inseparable", "rivals" or null). */
@@ -211,7 +218,8 @@ public final class ExpeditionEngine {
             } else if (!expedition.heardHint(i)) {
                 out.add("LOST");
             } else {
-                out.add(checks.hint(chanceFor(expedition, scout, party, option, zone)).name());
+                out.add(checks.hint(chanceFor(expedition, scout, party, option, zone,
+                        expedition.getPendingSinceMillis())).name());
             }
         }
         return out;
@@ -430,6 +438,7 @@ public final class ExpeditionEngine {
                     case TRANSIT:
                         out.line(heard(expedition, rng, due, scout, VoiceRenderer.render(voice,
                                 rng.pick(zone.getTransit()), vars(scout))));
+                        weatherLine(expedition, scout, voice, rng, due, out);
                         pairChatter(expedition, scout, party, rng, due, out);
                         expedition.advance(due);
                         break;
@@ -458,7 +467,7 @@ public final class ExpeditionEngine {
             out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, line, vars)));
         }
         List<EventDef.Option> options = event.getOptions();
-        double noise = expedition.getMission().getNoise();
+        double noise = Math.min(1.0, expedition.getMission().getNoise() + world.noiseAt(at));
         double hintLoss = Math.min(0.8, noise * content.getBalance().getRadio().getHintLossPerNoise());
         int shown = 0;
         for (int i = 0; i < options.size(); i++) {
@@ -466,7 +475,7 @@ public final class ExpeditionEngine {
             if (!isAvailable(scout, party, option)) {
                 continue;
             }
-            OddsHint hint = checks.hint(chanceFor(expedition, scout, party, option, zone));
+            OddsHint hint = checks.hint(chanceFor(expedition, scout, party, option, zone, at));
             Map<String, String> optionVars = new HashMap<>(vars);
             optionVars.put("n", String.valueOf(++shown));
             optionVars.put("label", option.getLabel());
@@ -520,7 +529,7 @@ public final class ExpeditionEngine {
         }
 
         EventDef.Option option = event.getOptions().get(choice);
-        double chance = chanceFor(expedition, scout, party, option, zone);
+        double chance = chanceFor(expedition, scout, party, option, zone, at);
         // GDD §5.5: warned = already in bad shape, or the scout said it looked bad and the
         // operator actually heard it through the static.
         boolean badOdds = checks.hint(chance) == OddsHint.BAD;
@@ -763,6 +772,18 @@ public final class ExpeditionEngine {
         return Math.max(1, (int) Math.round(base * rules.lootMultiplier(scout) * pair * lootFactor));
     }
 
+    /** Now and then the road report mentions the sky (or the dark). */
+    private void weatherLine(Expedition expedition, Scout scout, VoiceDef voice, GameRandom rng, long at,
+                             ExpeditionResult out) {
+        String key = world.nightAt(at) && world.weatherAt(at) == com.estatica.domain.world.WeatherRules.Weather.CLEAR
+                ? "NIGHT" : world.weatherAt(at).name();
+        List<String> lines = content.getTerminal().getWeather().getLines().get(key);
+        if (lines == null || lines.isEmpty() || !rng.chance(content.getBalance().getWeather().getFlavorChance())) {
+            return;
+        }
+        out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, rng.pick(lines), vars(scout))));
+    }
+
     /** Whether the partner manages to drag a dying lead home. */
     private boolean carriedHome(Scout scout, Party party, GameRandom rng) {
         if (!party.isPair() || party.partner.getInjury() == Injury.CRITICAL) {
@@ -827,13 +848,16 @@ public final class ExpeditionEngine {
     }
 
     private double chanceFor(Expedition expedition, Scout scout, EventDef.Option option, ZoneDef zone) {
-        return chanceFor(expedition, scout, Party.ALONE, option, zone);
+        return chanceFor(expedition, scout, Party.ALONE, option, zone, expedition.getPendingSinceMillis());
     }
 
     /** Intel, plus on a pair: the partner's help where they're better, and how they get on. */
-    private double chanceFor(Expedition expedition, Scout scout, Party party, EventDef.Option option, ZoneDef zone) {
+    private double chanceFor(Expedition expedition, Scout scout, Party party, EventDef.Option option, ZoneDef zone,
+                             long at) {
         double bonus = expedition.getMission().hasDangerIntel()
                 ? content.getBalance().getRadio().getDangerIntelCheckBonus() : 0;
+        // Fog hides you, rain wears you down, the dark is on the sneaky one's side.
+        bonus += world.checkBonus(option.getStat(), at);
         if (party.isPair()) {
             Balance.Pairs pairs = content.getBalance().getPairs();
             StatType stat = StatType.fromKey(option.getStat());
@@ -846,7 +870,7 @@ public final class ExpeditionEngine {
 
     /** A transmission from the field, broken up by distance (GDD §4.4). */
     private LogLine heard(Expedition expedition, GameRandom rng, long at, Scout scout, String line) {
-        double noise = expedition.getMission().getNoise();
+        double noise = Math.min(1.0, expedition.getMission().getNoise() + world.noiseAt(at));
         return radio(at, scout, noise > 0 ? SignalDegrader.degrade(line, noise, rng) : line);
     }
 

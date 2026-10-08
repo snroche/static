@@ -1,5 +1,5 @@
 {
-  "contentVersion": 14,
+  "contentVersion": 15,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -379,6 +379,20 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "weather": {
+    "_comment": "Weather outside and the dark. Bonuses add to check chances. [placeholder]",
+    "blockHours": 3,
+    "persistence": 0.55,
+    "weights": {"CLEAR": 40, "CLOUDY": 25, "RAIN": 18, "FOG": 10, "STORM": 7},
+    "effects": {
+      "RAIN": {"endurance": -0.05, "stealth": 0.03},
+      "FOG": {"stealth": 0.08, "wits": -0.06},
+      "STORM": {"all": -0.06}
+    },
+    "night": {"stealth": 0.08, "wits": -0.05},
+    "noise": {"RAIN": 0.05, "FOG": 0.03, "STORM": 0.2},
+    "flavorChance": 0.35
   },
   "depletion": {
     "_comment": "Places run dry when looted and slowly refill. [placeholder]",

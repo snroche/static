@@ -120,6 +120,7 @@ public final class GameSession {
     private com.estatica.domain.bunker.FoodRules food;
     private com.estatica.domain.bunker.GearRules gearRules;
     private com.estatica.domain.map.RegionMap regionMap;
+    private com.estatica.domain.world.WeatherRules weather;
     /** Every piece of equipment, by id (stock, equipped, lost in zones). */
     private final Map<String, com.estatica.domain.bunker.GearPiece> gear = new HashMap<>();
     private com.estatica.domain.state.GameState state;
@@ -275,6 +276,28 @@ public final class GameSession {
         radio = new RadioRules(content);
         field = new SignalField(content.getBalance(), state.getRngSeed());
         regionMap = new com.estatica.domain.map.RegionMap(content, state.getRngSeed());
+        weather = new com.estatica.domain.world.WeatherRules(content.getBalance().getWeather(), state.getRngSeed());
+        engine.setWorld(new com.estatica.domain.world.World() {
+            @Override
+            public com.estatica.domain.world.WeatherRules.Weather weatherAt(long millis) {
+                return weather.at(millis);
+            }
+
+            @Override
+            public boolean nightAt(long millis) {
+                return content.getBalance().getEnergy().isNight(clock.localHour(millis));
+            }
+
+            @Override
+            public double checkBonus(String stat, long millis) {
+                return weather.checkBonus(weatherAt(millis), nightAt(millis), stat);
+            }
+
+            @Override
+            public double noiseAt(long millis) {
+                return weather.noise(weatherAt(millis));
+            }
+        });
         gameFlags.addAll(radioRepository.flags());
         knownZones.addAll(radioRepository.knownZones());
         caughtSignals.addAll(radioRepository.caughtSignals());
@@ -2469,7 +2492,9 @@ public final class GameSession {
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
                 radioView(), baseView(now), expeditionViews,
                 food.daysLeft(mouths(), kitchenSaving(), resources.getOrDefault("rations", 0), foodCarryNow(now)),
-                value(KEY_HUNGRY) > 0, mapView(), placeNames(), resourceNames(),
+                value(KEY_HUNGRY) > 0, mapView(), weather.at(now).name(),
+                content.getTerminal().getWeather().getNames().getOrDefault(weather.at(now).name(), ""),
+                placeNames(), resourceNames(),
                 content.getTerminal().getHighlight().getDanger(), content.getTerminal().getHighlight().getGood(),
                 nextWake);
     }

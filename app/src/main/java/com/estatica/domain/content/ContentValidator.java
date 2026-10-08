@@ -173,6 +173,11 @@ public final class ContentValidator {
         check(food != null && food.getRationsPerScoutPerDay() > 0 && food.getKitchenMaxSaving() >= 0
                         && food.getKitchenMaxSaving() < 1 && food.getHungerHealMultiplier() > 0,
                 "balance.food: rationsPerScoutPerDay > 0, 0 ≤ kitchenMaxSaving < 1, hungerHealMultiplier > 0");
+        Balance.Weather weatherBalance = content.getBalance().getWeather();
+        check(weatherBalance != null && !weatherBalance.getWeights().isEmpty(), "balance.weather: weights");
+        for (String kind : java.util.List.of("CLEAR", "CLOUDY", "RAIN", "FOG", "STORM")) {
+            check(content.getTerminal().getWeather().getNames().containsKey(kind), "terminal.weather.names: " + kind);
+        }
         Balance.Depletion depletion = content.getBalance().getDepletion();
         check(depletion != null && depletion.getPerTrip() > 0 && depletion.getRecoveryPerDay() > 0
                         && depletion.getMaxPenalty() >= 0 && depletion.getMaxPenalty() < 1,

@@ -429,7 +429,8 @@ public final class TerminalActivity extends ComponentActivity {
             hud.append(getString(R.string.hud_power, base.used, base.available));
         }
         hud.append("  ").append(getString(R.string.hud_reserve, base.reserve, base.reserveCapacity));
-        hud.append("  ").append(getString(base.night ? R.string.hud_night : R.string.hud_day));
+        hud.append("  ").append(getString(base.night ? R.string.hud_night : R.string.hud_day))
+                .append(' ').append(getString(weatherIcon(snapshot.weather))).append(' ').append(snapshot.weatherName);
         StringBuilder supplies = new StringBuilder();
         for (SessionSnapshot.ResourceView r : snapshot.resources) {
             if (r.shortName == null) {
@@ -815,6 +816,21 @@ public final class TerminalActivity extends ComponentActivity {
     }
 
     private static final String KEY_TAKE_OFF = "off";
+
+    private static int weatherIcon(String weather) {
+        switch (weather) {
+            case "CLOUDY":
+                return R.string.ic_cloudy;
+            case "RAIN":
+                return R.string.ic_rain;
+            case "FOG":
+                return R.string.ic_fog;
+            case "STORM":
+                return R.string.ic_lightning;
+            default:
+                return R.string.ic_day;
+        }
+    }
 
     private SessionSnapshot.ScoutView scoutById(String id) {
         if (snapshot != null) {
