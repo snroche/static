@@ -8,12 +8,26 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.6.5] — Interface: bottom bar, COMMS views, decisions, options — in verification
+
+App 0.6.5 (versionCode 605) · **DB 8 → 10** · Content 13 (texts added)
+
+No release date: not tested on a device.
+
 ### Added
 - **Your name:** a new game asks who's on the radio, and the crew calls you by it.
   - The terminal greets you by name, and `status` shows it.
   - Closer scouts use it in their own voice ("Off I go, Sam. Put the kettle on.").
   - Any line can use `{operator}`.
   - Change it any time in options. **DB 8 → 9:** `game_state.operator_name`.
+- **One SEND screen:** tick one or two people (the first leads), pick a destination, press SEND.
+  - The list shows who gets on with whom, and every destination's band, time, danger, relay and intel.
+  - Personal missions only appear for whoever leads.
+  - Sending one person and then another always makes two separate expeditions.
+  - Opening it from a crew card pre-ticks that person.
+  - This replaces the destination picker plus the "who goes with them?" picker.
 - **Readable decisions:** the decision card above the input now shows:
   - who and where ("⚠ Mara + Noor · Hospital");
   - the deadline;
@@ -592,6 +606,7 @@ No release date yet: it still needs testing on a device or emulator. Once approv
 - Lint reports newer versions of AGP, Room and Lifecycle. The project uses the ones already in the local cache; upgrading is a separate decision.
 
 [Unreleased]: #unreleased
+[0.6.5]: #065--interface-bottom-bar-comms-views-decisions-options--in-verification
 [0.6.4]: #064--depth-situations-food-gear-map-pairs--in-verification
 [0.6.3]: #063--tano-removed--in-verification
 [0.6.2]: #062--generated-survivors--in-verification

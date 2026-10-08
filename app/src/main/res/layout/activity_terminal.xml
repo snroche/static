@@ -370,6 +370,17 @@
         app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <include
+        android:id="@+id/sendPanel"
+        layout="@layout/panel_send"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
+
+    <include
         android:id="@+id/optionsPanel"
         layout="@layout/panel_options"
         android:layout_width="0dp"

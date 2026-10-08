@@ -8,7 +8,6 @@
     <string name="panel_back">[ BACK ]</string>
     <string name="panel_diary_button">[ DIARY ]</string>
     <string name="panel_scouts_title">CREW</string>
-    <string name="panel_zones_title">Where does %1$s go?</string>
     <string name="panel_gift_title">What do you give %1$s?</string>
     <string name="panel_task_title">What does %1$s do in the bunker?</string>
     <string name="panel_diary_title">DIARY</string>
@@ -57,7 +56,6 @@
     <string name="module_upgrade">[ UPGRADE: %1$s ]</string>
     <string name="relays_line">Relay kits: %1$d (made in the workshop) · Installed: %2$s</string>
     <string name="relays_none">none</string>
-    <string name="zone_band_meta">%1$s · Danger %2$s · %3$d–%4$d min</string>
     <string name="zone_relay">Relay %1$d%%</string>
     <string name="zone_intel">There is decoded intel on this zone</string>
 
@@ -123,8 +121,18 @@
     <string name="hud_night">☾</string>
     <string name="hud_blackout">⚠ blackout</string>
     <string name="hud_resource">%1$s %2$d</string>
-    <string name="panel_partner_title">Who goes with %1$s?</string>
-    <string name="partner_alone">Alone</string>
+    <string name="send_title">SEND OUT</string>
+    <string name="send_team_title">WHO GOES (one or two; the first leads)</string>
+    <string name="send_where_title">WHERE</string>
+    <string name="send_member">[%1$s] %2$s%3$s · %4$s</string>
+    <string name="send_lead">" (lead)"</string>
+    <string name="send_place">(%1$s) %2$s · %3$s</string>
+    <string name="send_zone">(%1$s) %2$s · %3$s · %4$d–%5$d min · danger %6$d</string>
+    <string name="send_nobody">Nobody\'s free to go.</string>
+    <string name="send_pick_team">Pick who goes.</string>
+    <string name="send_pick_where">%1$s. Now pick where.</string>
+    <string name="send_ready">%1$s → %2$s</string>
+    <string name="send_go">[ SEND ]</string>
     <string name="partner_friends">they get on: works better together</string>
     <string name="partner_rivals">rivals: they\'ll argue the whole way</string>
     <string name="log_system">SYSTEM</string>
