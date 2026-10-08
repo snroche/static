@@ -393,8 +393,8 @@ public final class ContentValidator {
         }
         TerminalText.BaseText mapText = content.getTerminal().getBase();
         check(mapText.getMapScouted() != null && mapText.getMapFoundZone() != null && mapText.getMapNothing() != null
-                        && mapText.getMapHeard() != null && mapText.getDirections().size() == 8,
-                "terminal.base: map texts and eight directions");
+                        && mapText.getMapHeard() != null && mapText.getDirections().size() == 16,
+                "terminal.base: map texts and sixteen compass points");
         for (ZoneDef z : allZones) {
             String where = "zone " + z.getId();
             check(z.getName() != null, where + ": name");

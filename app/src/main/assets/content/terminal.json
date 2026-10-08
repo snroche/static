@@ -188,13 +188,21 @@
     "mapHeard": "Something on the radio from the {direction} ({band}). Worth scouting.",
     "directions": [
       "north",
+      "north-northeast",
       "northeast",
+      "east-northeast",
       "east",
+      "east-southeast",
       "southeast",
+      "south-southeast",
       "south",
+      "south-southwest",
       "southwest",
+      "west-southwest",
       "west",
-      "northwest"
+      "west-northwest",
+      "northwest",
+      "north-northwest"
     ]
   },
   "story": {

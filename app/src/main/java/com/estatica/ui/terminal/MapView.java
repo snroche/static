@@ -30,7 +30,10 @@ public final class MapView extends View {
         void onPlace(SessionSnapshot.PlaceView place);
     }
 
-    private static final int DIRECTIONS = 8;
+    /** Same rule as the region map: 8 on the inner ring, 4 more per ring outward. */
+    private static int directionsOn(int ring) {
+        return com.estatica.domain.map.RegionMap.directionsOn(ring);
+    }
     private static final float BUNKER_FRACTION = 0.12f;
 
     private final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -142,9 +145,14 @@ public final class MapView extends View {
         for (int r = 0; r <= rings; r++) {
             canvas.drawCircle(cx(), cy(), ringStart(r), line);
         }
-        for (int d = 0; d < DIRECTIONS; d++) {
-            double turn = (d + 0.5) / DIRECTIONS;
-            canvas.drawLine(x(ringStart(0), turn), y(ringStart(0), turn), x(outer(), turn), y(outer(), turn), line);
+        // Each ring has its own spokes: farther rings are split finer.
+        for (int r = 0; r < rings; r++) {
+            int count = directionsOn(r);
+            for (int d = 0; d < count; d++) {
+                double turn = (d + 0.5) / count;
+                canvas.drawLine(x(ringStart(r), turn), y(ringStart(r), turn),
+                        x(ringStart(r + 1), turn), y(ringStart(r + 1), turn), line);
+            }
         }
         // Ring names, along the north spoke.
         text.setTextSize(sp(9));
@@ -155,7 +163,7 @@ public final class MapView extends View {
         // Sectors.
         text.setTextSize(sp(16));
         for (SessionSnapshot.SectorView s : map.sectors) {
-            double turn = (double) s.direction / DIRECTIONS;
+            double turn = (double) s.direction / s.count;
             float radius = ringStart(s.ring) + ringWidth() / 2;
             float px = x(radius, turn);
             float py = y(radius, turn) + text.getTextSize() / 3;
@@ -247,7 +255,8 @@ public final class MapView extends View {
         }
         int ring = (int) ((radius - ringStart(0)) / ringWidth());
         double turn = Math.atan2(dx, dy) / (2 * Math.PI);
-        int direction = (int) Math.round((turn < 0 ? turn + 1 : turn) * DIRECTIONS) % DIRECTIONS;
+        int count = directionsOn(ring);
+        int direction = (int) Math.round((turn < 0 ? turn + 1 : turn) * count) % count;
         for (SessionSnapshot.SectorView s : map.sectors) {
             if (s.ring == ring && s.direction == direction) {
                 listener.onSector(s);

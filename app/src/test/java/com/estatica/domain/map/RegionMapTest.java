@@ -74,7 +74,7 @@ public class RegionMapTest {
                     sectors.add(map.placeOf(z.getId()).sectorId);
                 }
             }
-            assertEquals("one place per direction", Math.min(shortZones, RegionMap.DIRECTIONS), sectors.size());
+            assertEquals("one place per direction", Math.min(shortZones, RegionMap.directionsOn(0)), sectors.size());
         }
     }
 
@@ -84,12 +84,25 @@ public class RegionMapTest {
             RegionMap map = new RegionMap(content, seed);
             for (String zoneId : content.getZones().keySet()) {
                 RegionMap.Place p = map.placeOf(zoneId);
-                double center = (double) map.sector(p.sectorId).direction / RegionMap.DIRECTIONS;
+                RegionMap.Sector sector = map.sector(p.sectorId);
+                double center = sector.turn();
                 double offset = Math.abs(p.turn - center);
                 offset = Math.min(offset, 1 - offset); // north wraps around
                 assertTrue(zoneId, p.ring > 0 && p.ring < 1);
-                assertTrue(zoneId + " " + offset, offset < 0.5 / RegionMap.DIRECTIONS);
+                assertTrue(zoneId + " " + offset, offset < 0.5 / sector.count);
             }
         }
+    }
+
+    @Test
+    public void fartherRingsAreSplitFiner() {
+        RegionMap map = new RegionMap(content, 1);
+        java.util.Map<String, Integer> perBand = new java.util.HashMap<>();
+        for (RegionMap.Sector s : map.sectors()) {
+            perBand.merge(s.bandId, 1, Integer::sum);
+        }
+        assertEquals(8, (int) perBand.get("short"));
+        assertEquals(12, (int) perBand.get("medium"));
+        assertEquals(16, (int) perBand.get("long"));
     }
 }

@@ -9,6 +9,7 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Changed
+- **Finer outer rings on the map:** the short band has 8 sectors, the medium 12, the long 16. Farther rings cover more ground, so there's more to scout. Sectors are named by 16 compass points ("north-northeast · long band"). Places keep being placed per save from the game seed: same places, different spots each game.
 - **Terminal font with icons:** JetBrains Mono Nerd Font (SIL OFL, license in `assets/licenses/`), subset to the characters and ~60 icons the game uses (~140 KB per weight; the APK grew ~30 KB).
   - **Icons appear in:** the bottom bar tabs, the ⚙ options button, the status bar (power, reserve, day/night, each resource, food), the COMMS views, the expedition strip, the crew cards (stress, bond) and the decision cards.
   - **Glyphs:** ⚠ ✝ ☾ in content became icons the font has.

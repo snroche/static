@@ -1031,7 +1031,9 @@ public final class GameSession {
     private Map<String, String> sectorVars(com.estatica.domain.map.RegionMap.Sector sector) {
         Map<String, String> vars = new HashMap<>();
         List<String> names = content.getTerminal().getBase().getDirections();
-        vars.put("direction", sector.direction < names.size() ? names.get(sector.direction) : "?");
+        // Name the sector by the nearest of the content's compass points.
+        int point = names.isEmpty() ? 0 : (int) Math.round(sector.turn() * names.size()) % names.size();
+        vars.put("direction", names.isEmpty() ? "?" : names.get(point));
         vars.put("band", content.getBalance().band(sector.bandId).getName().toLowerCase(Locale.ROOT));
         return vars;
     }
@@ -1089,7 +1091,7 @@ public final class GameSession {
         List<SessionSnapshot.SectorView> sectors = new ArrayList<>();
         for (com.estatica.domain.map.RegionMap.Sector s : regionMap.sectors()) {
             Map<String, String> vars = sectorVars(s);
-            sectors.add(new SessionSnapshot.SectorView(s.id, s.bandIndex, s.direction,
+            sectors.add(new SessionSnapshot.SectorView(s.id, s.ring, s.direction, s.count,
                     vars.get("direction") + " · " + vars.get("band"), isScouted(s.id),
                     gameFlags.contains(HEARD + s.id), isUnlocked(content.getBalance().band(s.bandId)),
                     beingScouted(s.id)));

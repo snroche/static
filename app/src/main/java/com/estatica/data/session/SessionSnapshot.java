@@ -502,8 +502,10 @@ public final class SessionSnapshot {
     public static final class SectorView {
         public final String id;
         public final int ring;
-        /** 0 = north, clockwise. */
+        /** 0 = north, clockwise, out of {@link #count}. */
         public final int direction;
+        /** Sectors on this ring (8, 12, 16…). */
+        public final int count;
         /** "the northeast, short band". */
         public final String label;
         public final boolean scouted;
@@ -512,11 +514,12 @@ public final class SessionSnapshot {
         public final boolean reachable;
         public final boolean beingScouted;
 
-        SectorView(String id, int ring, int direction, String label, boolean scouted, boolean heard,
+        SectorView(String id, int ring, int direction, int count, String label, boolean scouted, boolean heard,
                    boolean reachable, boolean beingScouted) {
             this.id = id;
             this.ring = ring;
             this.direction = direction;
+            this.count = count;
             this.label = label;
             this.scouted = scouted;
             this.heard = heard;
