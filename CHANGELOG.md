@@ -8,6 +8,14 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.6.7] — Readable map, info, console, key items, radio depth — in verification
+
+App 0.6.7 (versionCode 607) · **DB 11 → 12** · **Content 16 → 18**
+
+From this version on, saves carry over between updates.
+
 ### Added
 - **Log details:**
   - Tap a line to see when it happened.
