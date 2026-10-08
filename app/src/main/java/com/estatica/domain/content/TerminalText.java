@@ -127,6 +127,13 @@ public final class TerminalText {
         private String lootItem;
         private String lootSeparator;
         private String signalLost;
+        /** Decision card: "GOOD", "UNSURE", "BAD", "LOST" to a short label. */
+        private java.util.Map<String, String> hintLabels;
+
+        public java.util.Map<String, String> getHintLabels() {
+            return hintLabels != null ? hintLabels : java.util.Map.of();
+        }
+
         /** System summaries. {who}, {zone}. */
         private String summaryDeparted;
         /** {who}, {zone}. */

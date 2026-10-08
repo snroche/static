@@ -117,4 +117,36 @@ public class WhoIsThereTest {
         assertTrue(engine.fits(TestScouts.starter("irene", T0), content.event("escotilla")));
         assertTrue(engine.fits(TestScouts.person("trucker", 5, 0, 0, T0), content.event("semi")));
     }
+
+    @Test
+    public void theDecisionCardHasTheSituationAndAGutFeelingPerOption() {
+        int checked = 0;
+        for (long seed = 0; seed < 100 && checked < 10; seed++) {
+            Scout s = TestScouts.person("nurse", 5, 10, 0, T0);
+            ExpeditionEngine.Dispatch d = engine.dispatch(s, content.zone("hospital"), seed, T0);
+            long t = T0;
+            while (d.expedition.isActive() && !d.expedition.isAwaitingDecision()) {
+                t += 30_000;
+                engine.advance(d.expedition, s, List.of(), t);
+            }
+            if (!d.expedition.isAwaitingDecision()) {
+                continue;
+            }
+            checked++;
+            EventDef event = engine.pendingEvent(d.expedition);
+            List<String> text = engine.situationText(d.expedition, s);
+            assertEquals(event.getIntro().size(), text.size());
+            List<String> hints = engine.pendingHints(d.expedition, s, ExpeditionEngine.Party.ALONE);
+            assertEquals(event.getOptions().size(), hints.size());
+            for (int i = 0; i < hints.size(); i++) {
+                boolean mine = engine.isAvailable(s, event.getOptions().get(i));
+                assertEquals(mine, hints.get(i) != null);
+                if (mine) {
+                    assertTrue(List.of("GOOD", "UNSURE", "BAD", "LOST").contains(hints.get(i)));
+                    assertTrue(content.getTerminal().getExpedition().getHintLabels().containsKey(hints.get(i)));
+                }
+            }
+        }
+        assertTrue(checked > 0);
+    }
 }

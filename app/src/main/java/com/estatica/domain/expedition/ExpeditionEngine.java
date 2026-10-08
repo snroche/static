@@ -179,6 +179,44 @@ public final class ExpeditionEngine {
                 : null;
     }
 
+    /** The pending situation as the scout described it, without radio noise (for the decision card). */
+    public List<String> situationText(Expedition expedition, Scout scout) {
+        EventDef event = pendingEvent(expedition);
+        if (event == null) {
+            return List.of();
+        }
+        VoiceDef voice = content.voice(scout.getVoiceId());
+        List<String> out = new ArrayList<>();
+        for (String line : event.getIntro()) {
+            out.add(VoiceRenderer.render(voice, line, vars(scout)));
+        }
+        return out;
+    }
+
+    /**
+     * What the scout said about each option: "GOOD", "UNSURE", "BAD", "LOST" (didn't come
+     * through the static) or null (not theirs to take). Indexes match the event's options.
+     */
+    public List<String> pendingHints(Expedition expedition, Scout scout, Party party) {
+        EventDef event = pendingEvent(expedition);
+        if (event == null) {
+            return List.of();
+        }
+        ZoneDef zone = content.zone(expedition.getZoneId());
+        List<String> out = new ArrayList<>();
+        for (int i = 0; i < event.getOptions().size(); i++) {
+            EventDef.Option option = event.getOptions().get(i);
+            if (!isAvailable(scout, party, option)) {
+                out.add(null);
+            } else if (!expedition.heardHint(i)) {
+                out.add("LOST");
+            } else {
+                out.add(checks.hint(chanceFor(expedition, scout, party, option, zone)).name());
+            }
+        }
+        return out;
+    }
+
     /** Whether the situation can come up for this scout (event requirements). */
     public boolean fits(Scout scout, EventDef event) {
         return rules.fits(scout, event.getRequiresTrait(), event.getRequiresBackground());

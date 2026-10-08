@@ -175,16 +175,30 @@ public final class SessionSnapshot {
         /** Expedition id (ORDER) or conversation id (TALK). */
         public final String id;
         public final String scoutName;
+        /** Null options aren't this team's to take (indexes still match). */
         public final List<String> options;
         /** When it resolves without the operator, or -1 if it waits. */
         public final long deadlineMillis;
+        /** Where (ORDER), or null. */
+        public final String place;
+        /** Log thread with the full story (expedition or chat). */
+        public final String thread;
+        /** What they said: the situation, or their lines in a conversation. */
+        public final List<String> situation;
+        /** Gut feeling per option, ready to show ("bad feeling"), or null. */
+        public final List<String> hints;
 
-        PendingDecision(Kind kind, String id, String scoutName, List<String> options, long deadlineMillis) {
+        PendingDecision(Kind kind, String id, String scoutName, List<String> options, long deadlineMillis,
+                        String place, String thread, List<String> situation, List<String> hints) {
             this.kind = kind;
             this.id = id;
             this.scoutName = scoutName;
             this.options = Collections.unmodifiableList(options);
             this.deadlineMillis = deadlineMillis;
+            this.place = place;
+            this.thread = thread;
+            this.situation = Collections.unmodifiableList(situation);
+            this.hints = Collections.unmodifiableList(hints);
         }
     }
 

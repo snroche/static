@@ -141,38 +141,97 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logChipsScroll" />
 
-    <!-- Shown while a situation waits for an order. Options are added in code. -->
+    <!-- Decision card: who, where, what they see, and the orders with their gut feeling. -->
     <LinearLayout
         android:id="@+id/decisionPanel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/terminal_bg"
         android:orientation="vertical"
-        android:paddingHorizontal="12dp"
-        android:paddingTop="8dp"
         android:visibility="gone"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logChipsScroll"
+        app:layout_constraintVertical_bias="1">
 
-        <TextView
-            android:id="@+id/decisionHeader"
-            style="@style/TerminalText.Bright"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/amber_dim" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:accessibilityLiveRegion="polite" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="4dp">
+
+            <TextView
+                android:id="@+id/decisionHeader"
+                style="@style/TerminalText.Bright"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:accessibilityLiveRegion="polite"
+                android:background="?android:attr/selectableItemBackground"
+                android:minHeight="48dp"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/decisionPrev"
+                style="@style/TerminalButton.Top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/decision_prev"
+                android:minWidth="40dp"
+                android:gravity="center"
+                android:text="@string/decision_prev_mark" />
+
+            <TextView
+                android:id="@+id/decisionCount"
+                style="@style/TerminalText.Dim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/decisionNext"
+                style="@style/TerminalButton.Top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/decision_next"
+                android:minWidth="40dp"
+                android:gravity="center"
+                android:text="@string/decision_next_mark" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/decisionDeadline"
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/decisionSituation"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="6"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp" />
 
         <LinearLayout
             android:id="@+id/decisionOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <TextView
-            android:id="@+id/decisionMore"
-            style="@style/TerminalText.Dim"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp" />
     </LinearLayout>
 
     <TextView

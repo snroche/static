@@ -14,6 +14,13 @@ When they change, each entry lists the three independent versions:
   - Closer scouts use it in their own voice ("Off I go, Sam. Put the kettle on.").
   - Any line can use `{operator}`.
   - Change it any time in options. **DB 8 → 9:** `game_state.operator_name`.
+- **Readable decisions:** the decision card above the input now shows:
+  - who and where ("⚠ Mara + Noor · Hospital");
+  - the deadline;
+  - what they see, without the radio noise;
+  - each order with the scout's gut feeling under it: "looks easy", "could go either way", "bad feeling", or "lost in the static" when the hint didn't come through.
+
+  Conversations show the scout's lines the same way. ◀ 1/3 ▶ pages through everything waiting, and tapping the name opens that expedition's radio thread or that person's chat.
 - **COMMS split in three views** (SYSTEM · EXPEDITIONS · CHATS), each with its unread count:
   - **SYSTEM** keeps only what matters:
     - "Mara + Noor left for Hospital."

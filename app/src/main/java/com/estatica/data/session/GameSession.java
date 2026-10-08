@@ -2297,10 +2297,19 @@ public final class GameSession {
             if (at >= 0 && (nextWake < 0 || at < nextWake)) {
                 nextWake = at;
             }
-            List<String> labels = engine.pendingOptions(e, scouts.get(e.getScoutId()), party(e));
+            Scout lead = scouts.get(e.getScoutId());
+            ExpeditionEngine.Party team = party(e);
+            List<String> labels = engine.pendingOptions(e, lead, team);
             if (!labels.isEmpty()) {
+                Map<String, String> hintLabels = content.getTerminal().getExpedition().getHintLabels();
+                List<String> hints = new ArrayList<>();
+                for (String key : engine.pendingHints(e, lead, team)) {
+                    hints.add(key != null ? hintLabels.get(key) : null);
+                }
+                String who = lead.getName() + (team.partner != null ? " + " + team.partner.getName() : "");
                 orders.add(new SessionSnapshot.PendingDecision(SessionSnapshot.PendingDecision.Kind.ORDER,
-                        e.getId(), scouts.get(e.getScoutId()).getName(), labels, engine.deadline(e)));
+                        e.getId(), who, labels, engine.deadline(e), content.zone(e.getZoneId()).getName(),
+                        LogLine.expeditionThread(e.getId()), engine.situationText(e, lead), hints));
             }
         }
         orders.sort(Comparator.comparingLong(p -> p.deadlineMillis));
@@ -2324,7 +2333,8 @@ public final class GameSession {
             }
             long expiresAt = c.isInitiated() ? c.getStartedAtMillis() + expireAfter : -1;
             pending.add(new SessionSnapshot.PendingDecision(SessionSnapshot.PendingDecision.Kind.TALK,
-                    c.getId(), scout.getName(), labels, expiresAt));
+                    c.getId(), scout.getName(), labels, expiresAt, null, LogLine.chatThread(scout.getId()),
+                    dialogues.linesOf(scout, content.dialogue(c.getDialogueId()), scouts.values()), List.of()));
             if (expiresAt >= 0 && (nextWake < 0 || expiresAt < nextWake)) {
                 nextWake = expiresAt;
             }

@@ -92,7 +92,13 @@
     "summaryReturned": "{who} back from {zone}: {loot}.",
     "summaryReturnedEmpty": "{who} back from {zone}, empty-handed.",
     "summaryHurt": "{name}: {injury}.",
-    "summaryDied": "✝ {name} died at {zone}."
+    "summaryDied": "✝ {name} died at {zone}.",
+    "hintLabels": {
+      "GOOD": "looks easy",
+      "UNSURE": "could go either way",
+      "BAD": "bad feeling",
+      "LOST": "lost in the static"
+    }
   },
   "bunker": {
     "retreatLabel": "Come back to the bunker",

@@ -531,38 +531,77 @@ public final class TerminalActivity extends ComponentActivity {
         updateBack();
     }
 
+    /** Which pending decision the card shows (they can page through them). */
+    private int decisionIndex;
+
     private void renderDecision(SessionSnapshot snapshot) {
         if (snapshot.pending.isEmpty()) {
             binding.decisionPanel.setVisibility(View.GONE);
             shownDecisionId = null;
             return;
         }
-        SessionSnapshot.PendingDecision decision = snapshot.pending.get(0);
+        // Keep showing the same decision while it's still pending.
+        int index = -1;
+        for (int i = 0; i < snapshot.pending.size(); i++) {
+            if (snapshot.pending.get(i).id.equals(shownDecisionId)) {
+                index = i;
+            }
+        }
+        decisionIndex = index >= 0 ? index : Math.min(decisionIndex, snapshot.pending.size() - 1);
+        SessionSnapshot.PendingDecision decision = snapshot.pending.get(decisionIndex);
         binding.decisionPanel.setVisibility(View.VISIBLE);
-        int more = snapshot.pending.size() - 1;
-        binding.decisionMore.setVisibility(more > 0 ? View.VISIBLE : View.GONE);
-        binding.decisionMore.setText(getString(R.string.decision_more, more));
+        int total = snapshot.pending.size();
+        binding.decisionCount.setText(getString(R.string.decision_count, decisionIndex + 1, total));
+        binding.decisionCount.setVisibility(total > 1 ? View.VISIBLE : View.GONE);
+        binding.decisionPrev.setVisibility(total > 1 ? View.VISIBLE : View.GONE);
+        binding.decisionNext.setVisibility(total > 1 ? View.VISIBLE : View.GONE);
+        binding.decisionPrev.setOnClickListener(v -> pageDecision(-1));
+        binding.decisionNext.setOnClickListener(v -> pageDecision(1));
         if (decision.id.equals(shownDecisionId)) {
             return;
         }
         shownDecisionId = decision.id;
-        binding.decisionHeader.setText(decisionHeader(decision));
+        boolean order = decision.kind == SessionSnapshot.PendingDecision.Kind.ORDER;
+        binding.decisionHeader.setText(order
+                ? getString(R.string.decision_header, decision.scoutName, decision.place)
+                : getString(R.string.decision_talk_header, decision.scoutName));
+        binding.decisionHeader.setOnClickListener(v -> switchLog(
+                order ? LogView.EXPEDITIONS : LogView.CHATS, decision.thread));
+        String deadline = decision.deadlineMillis < 0 ? null
+                : DateFormat.getTimeFormat(this).format(new Date(decision.deadlineMillis));
+        binding.decisionDeadline.setText(order ? getString(R.string.decision_deadline, deadline)
+                : deadline != null ? getString(R.string.decision_talk_deadline, deadline)
+                : getString(R.string.decision_talk_open));
+        binding.decisionSituation.setText(String.join("\n", decision.situation));
+        binding.decisionSituation.setVisibility(decision.situation.isEmpty() ? View.GONE : View.VISIBLE);
         binding.decisionOptions.removeAllViews();
         LayoutInflater inflater = getLayoutInflater();
         int shown = 0;
+        int dim = ContextCompat.getColor(this, R.color.amber_dim);
         for (int i = 0; i < decision.options.size(); i++) {
             if (decision.options.get(i) == null) {
-                continue; // Not for this scout: indexes still match the event's options.
+                continue; // Not for this team: indexes still match the event's options.
             }
             TextView button = (TextView) inflater.inflate(
                     R.layout.item_decision_option, binding.decisionOptions, false);
-            button.setText(getString(R.string.decision_option, ++shown, decision.options.get(i)));
+            android.text.SpannableStringBuilder text = new android.text.SpannableStringBuilder(
+                    getString(R.string.decision_option, ++shown, decision.options.get(i)));
+            String hint = i < decision.hints.size() ? decision.hints.get(i) : null;
+            if (hint != null) {
+                int from = text.length();
+                text.append("\n    ").append(hint);
+                text.setSpan(new android.text.style.ForegroundColorSpan(dim), from, text.length(),
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new android.text.style.RelativeSizeSpan(0.85f), from, text.length(),
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            button.setText(text);
             int option = i;
             button.setOnClickListener(v -> {
                 binding.decisionOptions.removeAllViews();
                 binding.decisionPanel.setVisibility(View.GONE);
                 shownDecisionId = null;
-                if (decision.kind == SessionSnapshot.PendingDecision.Kind.ORDER) {
+                if (order) {
                     viewModel.order(decision.id, option);
                 } else {
                     viewModel.answer(decision.id, option);
@@ -573,15 +612,14 @@ public final class TerminalActivity extends ComponentActivity {
         }
     }
 
-    private String decisionHeader(SessionSnapshot.PendingDecision decision) {
-        String deadline = decision.deadlineMillis < 0 ? null
-                : DateFormat.getTimeFormat(this).format(new Date(decision.deadlineMillis));
-        if (decision.kind == SessionSnapshot.PendingDecision.Kind.ORDER) {
-            return getString(R.string.decision_header, decision.scoutName, deadline);
+    private void pageDecision(int delta) {
+        if (snapshot == null || snapshot.pending.isEmpty()) {
+            return;
         }
-        return deadline == null
-                ? getString(R.string.decision_talk_header, decision.scoutName)
-                : getString(R.string.decision_talk_header_until, decision.scoutName, deadline);
+        int total = snapshot.pending.size();
+        decisionIndex = ((decisionIndex + delta) % total + total) % total;
+        shownDecisionId = null; // redraw at the new index
+        renderDecision(snapshot);
     }
 
     // ---- Scouts panel and its pickers ----

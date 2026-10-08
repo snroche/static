@@ -167,6 +167,17 @@ public final class DialogueEngine {
     }
 
     /** The scout's opening lines. Marks the dialogue as had. */
+    /** What the scout says in a dialogue, rendered in their voice (for the decision card). */
+    public List<String> linesOf(Scout s, DialogueDef d, Collection<Scout> everyone) {
+        VoiceDef voice = content.voice(s.getVoiceId());
+        Map<String, String> vars = vars(s, subject(s, d, everyone));
+        List<String> out = new ArrayList<>();
+        for (String line : d.getLines()) {
+            out.add(VoiceRenderer.render(voice, line, vars));
+        }
+        return out;
+    }
+
     public List<LogLine> open(Scout s, DialogueDef d, boolean initiated, Collection<Scout> everyone,
                               GameRandom rng, long now) {
         Scout dead = subject(s, d, everyone);

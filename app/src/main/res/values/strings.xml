@@ -31,10 +31,16 @@
     <string name="card_expand_description">Show details for %1$s</string>
     <string name="inventory_empty">No objects in the bunker.</string>
 
-    <string name="decision_header">%1$s is waiting for orders (until %2$s)</string>
+    <string name="decision_header">⚠ %1$s · %2$s</string>
+    <string name="decision_deadline">Orders by %1$s, or they decide alone. Tap the name for the full radio log.</string>
     <string name="decision_talk_header">%1$s wants to talk</string>
-    <string name="decision_talk_header_until">%1$s wants to talk (until %2$s)</string>
-    <string name="decision_more" tools:ignore="PluralsCandidate">+%1$d more waiting</string>
+    <string name="decision_talk_deadline">Answer by %1$s, or the moment passes.</string>
+    <string name="decision_talk_open">No rush. Tap the name for the whole chat.</string>
+    <string name="decision_count">%1$d/%2$d</string>
+    <string name="decision_prev">Previous decision</string>
+    <string name="decision_next">Next decision</string>
+    <string name="decision_prev_mark">◀</string>
+    <string name="decision_next_mark">▶</string>
     <string name="decision_option">[%1$d] %2$s</string>
 
     <string name="panel_radio_title">RADIO</string>
