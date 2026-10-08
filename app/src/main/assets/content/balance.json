@@ -2,7 +2,7 @@
   "contentVersion": 13,
   "ui": {
     "typewriterCharMillis": 22,
-    "logWindowLines": 200,
+    "logWindowLines": 400,
     "logPageSize": 100
   },
   "_comment": "Everything below is a [placeholder] (from the GDD or our own), untested. Tune with playtesting.",

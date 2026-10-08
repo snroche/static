@@ -422,6 +422,13 @@ public final class GameSession {
         /** Already applied in memory by pay(); only persisted on commit. */
         final Map<String, Integer> paid = new HashMap<>();
 
+        /** Lines that belong to an expedition or a chat, not to the system log. */
+        void into(List<LogLine> source, String thread) {
+            for (LogLine line : source) {
+                lines.add(line.withThread(thread));
+            }
+        }
+
         void system(String template, Map<String, String> vars, Scout scout) {
             lines.add(LogLine.draft(now, LogChannel.SYSTEM, null, TextTemplate.format(template, vars),
                     scout != null ? scout.getId() : null));
@@ -496,7 +503,8 @@ public final class GameSession {
             ExpeditionResult result = engine.advance(expedition, scout, party,
                     memoryRepository.forScout(scout.getId()), deathContext(scout), now);
             step.expeditions.add(expedition);
-            step.lines.addAll(result.getLines());
+            step.into(result.getLines(), LogLine.expeditionThread(expedition.getId()));
+            summarize(expedition, scout, party, result, step);
             step.memories.addAll(result.getMemories());
             result.getDelivered().forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
             for (String itemId : result.getDeliveredItems()) {
@@ -644,6 +652,43 @@ public final class GameSession {
         return hungry;
     }
 
+    /** The few lines that matter go to the system log: orders needed, back with what, dead. */
+    private void summarize(Expedition expedition, Scout scout, ExpeditionEngine.Party party,
+                           ExpeditionResult result, Step step) {
+        TerminalText.ExpeditionText text = content.getTerminal().getExpedition();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("who", scout.getName() + (party.partner != null ? " + " + party.partner.getName() : ""));
+        vars.put("zone", content.zone(expedition.getZoneId()).getName());
+        if (result.isSituationArrived() && expedition.isAwaitingDecision()) {
+            step.lines.add(LogLine.draft(step.now, LogChannel.ALERT, null,
+                    TextTemplate.format(text.getSummaryOrders(), vars), scout.getId()));
+        }
+        if (result.isScoutDied()) {
+            Map<String, String> died = new HashMap<>(vars);
+            died.put("name", scout.getName());
+            step.system(text.getSummaryDied(), died, scout);
+        }
+        if (result.isReturned()) {
+            StringBuilder line = new StringBuilder();
+            Map<String, Integer> loot = result.getDelivered();
+            if (loot.isEmpty()) {
+                line.append(TextTemplate.format(text.getSummaryReturnedEmpty(), vars));
+            } else {
+                vars.put("loot", engine.describeLoot(loot));
+                line.append(TextTemplate.format(text.getSummaryReturned(), vars));
+            }
+            for (Scout s : party.partner != null ? List.of(scout, party.partner) : List.of(scout)) {
+                if (s.getInjury() != com.estatica.domain.scouts.Injury.NONE) {
+                    Map<String, String> hurt = new HashMap<>();
+                    hurt.put("name", s.getName());
+                    hurt.put("injury", content.getTerminal().getInjuries().get(s.getInjury().name()));
+                    line.append(' ').append(TextTemplate.format(text.getSummaryHurt(), hurt));
+                }
+            }
+            step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null, line.toString(), scout.getId()));
+        }
+    }
+
     /** GDD §5.5: what a dying scout can mention. */
     private ExpeditionEngine.DeathContext deathContext(Scout scout) {
         List<String> carried = new ArrayList<>();
@@ -734,7 +779,8 @@ public final class GameSession {
         if (random.chance(config.getChance())) {
             LogLine line = barks.bark(scouts.values(), affinities, random, step.now, value(KEY_HUNGRY) > 0);
             if (line != null) {
-                step.lines.add(line);
+                step.lines.add(line.withThread(line.getScoutId() != null
+                        ? LogLine.chatThread(line.getScoutId()) : LogLine.SYSTEM_THREAD));
             }
         }
     }
@@ -767,7 +813,8 @@ public final class GameSession {
             if (dialogue == null) {
                 continue;
             }
-            step.lines.addAll(dialogues.open(scout, dialogue, true, scouts.values(), random, step.now));
+            step.into(dialogues.open(scout, dialogue, true, scouts.values(), random, step.now),
+                    LogLine.chatThread(scout.getId()));
             Conversation c = Conversation.start(scout.getId(), dialogue.getId(), step.now, true);
             conversations.put(c.getId(), c);
             step.conversationsChanged.add(c);
@@ -893,7 +940,11 @@ public final class GameSession {
             mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger);
         }
         ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, party, step.now);
-        step.lines.addAll(dispatch.lines);
+        step.into(dispatch.lines, LogLine.expeditionThread(dispatch.expedition.getId()));
+        Map<String, String> left = new HashMap<>();
+        left.put("who", scout.getName() + (partner != null ? " + " + partner.getName() : ""));
+        left.put("zone", zone.getName());
+        step.system(content.getTerminal().getExpedition().getSummaryDeparted(), left, scout);
         step.newExpeditions.add(dispatch.expedition);
         active.put(dispatch.expedition.getId(), dispatch.expedition);
         return step.commit();
@@ -2027,7 +2078,8 @@ public final class GameSession {
         }
         DialogueDef dialogue = dialogues.pick(scout, false, scouts.values(), random, step.now);
         if (dialogue != null) {
-            step.lines.addAll(dialogues.open(scout, dialogue, false, scouts.values(), random, step.now));
+            step.into(dialogues.open(scout, dialogue, false, scouts.values(), random, step.now),
+                    LogLine.chatThread(scout.getId()));
             scout.getLife().setLastTalkAtMillis(step.now);
             Conversation c = Conversation.start(scout.getId(), dialogue.getId(), step.now, false);
             conversations.put(c.getId(), c);
@@ -2047,7 +2099,7 @@ public final class GameSession {
             DialogueDef dialogue = content.dialogue(c.getDialogueId());
             Set<String> before = new java.util.HashSet<>(scout.getLife().getFlags());
             DialogueEngine.Answer answer = dialogues.answer(scout, dialogue, choice, scouts.values(), step.now);
-            step.lines.addAll(answer.lines);
+            step.into(answer.lines, LogLine.chatThread(scout.getId()));
             for (StoryDef.PersonalMission m : content.getStory().getPersonalMissions()) {
                 if (!before.contains(m.offeredFlag()) && scout.getLife().hasFlag(m.offeredFlag())) {
                     Map<String, String> vars = new HashMap<>();
@@ -2074,7 +2126,7 @@ public final class GameSession {
         if (scout != null && scout.isAlive() && scout.getStatus() == ScoutStatus.IDLE
                 && item != null && item.isInBunker()) {
             GiftRules.Result result = gifts.give(scout, content.item(item.getItemId()), random, step.now);
-            step.lines.addAll(result.lines);
+            step.into(result.lines, LogLine.chatThread(scout.getId()));
             step.memories.addAll(result.memories);
             item.moveTo(ItemInstance.carriedBy(scout.getId()));
             scout.getLife().setLastTalkAtMillis(step.now);
@@ -2361,7 +2413,7 @@ public final class GameSession {
             ExpeditionEngine.Party party = party(e);
             String who = scouts.get(e.getScoutId()).getName()
                     + (party.partner != null ? " + " + party.partner.getName() : "");
-            expeditionViews.add(new SessionSnapshot.ExpeditionView(who,
+            expeditionViews.add(new SessionSnapshot.ExpeditionView(LogLine.expeditionThread(e.getId()), who,
                     content.zone(e.getZoneId()).getName(), percent, end, e.isAwaitingDecision(),
                     e.getPendingSinceMillis() != Expedition.NONE && !e.isAwaitingDecision()));
         }

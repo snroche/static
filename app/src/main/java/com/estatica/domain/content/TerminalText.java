@@ -127,6 +127,43 @@ public final class TerminalText {
         private String lootItem;
         private String lootSeparator;
         private String signalLost;
+        /** System summaries. {who}, {zone}. */
+        private String summaryDeparted;
+        /** {who}, {zone}. */
+        private String summaryOrders;
+        /** {who}, {zone}, {loot}. */
+        private String summaryReturned;
+        /** {who}, {zone}. */
+        private String summaryReturnedEmpty;
+        /** {name}, {injury}: appended per hurt scout. */
+        private String summaryHurt;
+        /** {name}, {zone}. */
+        private String summaryDied;
+
+        public String getSummaryDeparted() {
+            return summaryDeparted;
+        }
+
+        public String getSummaryOrders() {
+            return summaryOrders;
+        }
+
+        public String getSummaryReturned() {
+            return summaryReturned;
+        }
+
+        public String getSummaryReturnedEmpty() {
+            return summaryReturnedEmpty;
+        }
+
+        public String getSummaryHurt() {
+            return summaryHurt;
+        }
+
+        public String getSummaryDied() {
+            return summaryDied;
+        }
+
         /** {name} joins {other} (pairs). */
         private String pairJoins;
         /** {name} carried {other} home: the carried one's memory. */

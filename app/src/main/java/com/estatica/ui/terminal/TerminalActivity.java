@@ -153,6 +153,16 @@ public final class TerminalActivity extends ComponentActivity {
         getOnBackPressedDispatcher().addCallback(this, closePanelOnBack);
 
         viewModel.getState().observe(this, this::render);
+        viewModel.getAlerts().observe(this, seq -> {
+            // GDD §2: short haptic when an urgent message arrives, whatever view is open.
+            if (hapticsOn) {
+                binding.getRoot().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            }
+            sound.beep();
+        });
+        binding.logTabSystem.setOnClickListener(v -> switchLog(LogView.SYSTEM, null));
+        binding.logTabExpeditions.setOnClickListener(v -> switchLog(LogView.EXPEDITIONS, null));
+        binding.logTabChats.setOnClickListener(v -> switchLog(LogView.CHATS, null));
         viewModel.getSnapshot().observe(this, this::renderSnapshot);
         viewModel.getDiary().observe(this, entries -> {
             if (panel == Panel.DIARY) {
@@ -201,15 +211,8 @@ public final class TerminalActivity extends ComponentActivity {
         if (newTypingLine) {
             typewriter.cancel();
             adapter.startTyping(state.typingSeq);
-            LogLine line = findLine(state, state.typingSeq);
-            if (line != null && line.getChannel() == LogChannel.ALERT) {
-                // GDD §2: short haptic when an urgent message arrives.
-                if (hapticsOn) {
-                    binding.getRoot().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-                sound.beep();
-            }
         }
+        renderLogTabs(state);
         adapter.submitList(state.lines, () -> {
             if (newTypingLine) {
                 LogLine line = findLine(state, state.typingSeq);
@@ -220,6 +223,69 @@ public final class TerminalActivity extends ComponentActivity {
                 scrollToBottom();
             }
         });
+    }
+
+    // ---- COMMS views ----
+
+    private void renderLogTabs(TerminalUiState state) {
+        logTab(binding.logTabSystem, LogView.SYSTEM, R.string.log_system, state);
+        logTab(binding.logTabExpeditions, LogView.EXPEDITIONS, R.string.log_expeditions, state);
+        logTab(binding.logTabChats, LogView.CHATS, R.string.log_chats, state);
+    }
+
+    private void logTab(TextView view, LogView which, int label, TerminalUiState state) {
+        String text = getString(label);
+        int unread = state.unread[which.ordinal()];
+        if (unread > 0 && state.view != which) {
+            text = getString(R.string.log_unread, text, unread);
+        }
+        boolean selected = state.view == which;
+        view.setText(selected ? getString(R.string.tab_selected, text) : text);
+        view.setTextColor(ContextCompat.getColor(this, selected ? R.color.amber_bright : R.color.amber_dim));
+    }
+
+    private LogView logView = LogView.SYSTEM;
+    private String logFocus;
+
+    private void switchLog(LogView view, String focus) {
+        typewriter.skip(); // the line being typed may not be in the new view
+        logView = view;
+        logFocus = focus;
+        viewModel.setLogView(view, focus);
+        renderLogChips();
+        followTail();
+    }
+
+    /** EXPEDITIONS: one chip per team out. CHATS: one per person. */
+    private void renderLogChips() {
+        binding.logChips.removeAllViews();
+        if (logView == LogView.SYSTEM || snapshot == null) {
+            binding.logChipsScroll.setVisibility(View.GONE);
+            return;
+        }
+        binding.logChipsScroll.setVisibility(View.VISIBLE);
+        addChip(null, getString(R.string.log_all));
+        if (logView == LogView.EXPEDITIONS) {
+            for (SessionSnapshot.ExpeditionView e : snapshot.expeditions) {
+                addChip(e.thread, e.scoutName);
+            }
+        } else {
+            for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+                if (!s.dead) {
+                    addChip(LogLine.chatThread(s.id), s.name);
+                }
+            }
+        }
+    }
+
+    private void addChip(String thread, String label) {
+        TextView chip = (TextView) getLayoutInflater().inflate(R.layout.item_decision_option, binding.logChips, false);
+        boolean selected = thread == null ? logFocus == null : thread.equals(logFocus);
+        chip.setText(thread == null ? label
+                : getString(selected ? R.string.log_chip_on : R.string.log_chip, label));
+        chip.setTextColor(ContextCompat.getColor(this, selected ? R.color.amber_bright : R.color.amber_dim));
+        chip.setOnClickListener(v -> switchLog(logView, thread));
+        binding.logChips.addView(chip);
     }
 
     private static LogLine findLine(TerminalUiState state, long seq) {
@@ -280,6 +346,9 @@ public final class TerminalActivity extends ComponentActivity {
                     || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
                     && event.getAction() == KeyEvent.ACTION_DOWN);
             if (send) {
+                if (logView != LogView.SYSTEM) {
+                    switchLog(LogView.SYSTEM, null); // commands answer in the system log
+                }
                 viewModel.submitCommand(binding.input.getText().toString());
                 binding.input.setText("");
                 followTail();
@@ -298,6 +367,9 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void renderSnapshot(SessionSnapshot snapshot) {
         this.snapshot = snapshot;
+        if (logView != LogView.SYSTEM) {
+            renderLogChips();
+        }
         scoutAdapter.submitList(snapshot.scouts);
         radioPanel.render(snapshot);
         bunkerPanel.render(snapshot);

@@ -121,6 +121,13 @@
     <string name="partner_alone">Alone</string>
     <string name="partner_friends">they get on: works better together</string>
     <string name="partner_rivals">rivals: they\'ll argue the whole way</string>
+    <string name="log_system">SYSTEM</string>
+    <string name="log_expeditions">EXPEDITIONS</string>
+    <string name="log_chats">CHATS</string>
+    <string name="log_unread">%1$s •%2$d</string>
+    <string name="log_all">[ ALL ]</string>
+    <string name="log_chip">[ %1$s ]</string>
+    <string name="log_chip_on">[•%1$s ]</string>
     <string name="tab_comms">COMMS</string>
     <string name="tab_comms_badge">COMMS\n●%1$d</string>
     <string name="tab_crew">CREW</string>

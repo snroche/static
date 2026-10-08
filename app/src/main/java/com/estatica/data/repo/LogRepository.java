@@ -56,7 +56,7 @@ public final class LogRepository {
         List<LogLine> lines = new ArrayList<>(newestFirst.size());
         for (LogLineEntity e : newestFirst) {
             lines.add(new LogLine(e.seq, e.uuid, e.timestampMillis,
-                    LogChannel.fromName(e.channel), e.speaker, e.text, e.scoutId));
+                    LogChannel.fromName(e.channel), e.speaker, e.text, e.scoutId, e.thread));
         }
         Collections.reverse(lines);
         return lines;
@@ -70,6 +70,7 @@ public final class LogRepository {
         e.speaker = line.getSpeaker();
         e.text = line.getText();
         e.scoutId = line.getScoutId();
+        e.thread = line.getThread();
         return e;
     }
 }

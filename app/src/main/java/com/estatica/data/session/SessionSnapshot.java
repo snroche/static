@@ -543,6 +543,8 @@ public final class SessionSnapshot {
 
     /** One expedition in progress. */
     public static final class ExpeditionView {
+        /** Log thread of this expedition. */
+        public final String thread;
         public final String scoutName;
         public final String zoneName;
         /** 0–100, by planned time. */
@@ -552,8 +554,9 @@ public final class SessionSnapshot {
         public final boolean waitingForOrders;
         public final boolean orderOnItsWay;
 
-        ExpeditionView(String scoutName, String zoneName, int percent, long returnAtMillis,
+        ExpeditionView(String thread, String scoutName, String zoneName, int percent, long returnAtMillis,
                        boolean waitingForOrders, boolean orderOnItsWay) {
+            this.thread = thread;
             this.scoutName = scoutName;
             this.zoneName = zoneName;
             this.percent = percent;

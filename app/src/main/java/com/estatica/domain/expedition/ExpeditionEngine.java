@@ -765,7 +765,7 @@ public final class ExpeditionEngine {
         throw new IllegalStateException("unreachable");
     }
 
-    private String describeLoot(Map<String, Integer> loot) {
+    public String describeLoot(Map<String, Integer> loot) {
         List<String> parts = new ArrayList<>();
         for (Map.Entry<String, Integer> e : loot.entrySet()) {
             Map<String, String> v = new HashMap<>();

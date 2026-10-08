@@ -86,7 +86,13 @@
     "deathNotice": "{name}'s channel is still open. Only static.",
     "notifyReturned": "I'm back at the bunker.",
     "pairJoins": "{name} goes along with {other}.",
-    "carriedMemory": "the day {name} carried me home"
+    "carriedMemory": "the day {name} carried me home",
+    "summaryDeparted": "{who} left for {zone}.",
+    "summaryOrders": "⚠ {who} needs orders at {zone}.",
+    "summaryReturned": "{who} back from {zone}: {loot}.",
+    "summaryReturnedEmpty": "{who} back from {zone}, empty-handed.",
+    "summaryHurt": "{name}: {injury}.",
+    "summaryDied": "✝ {name} died at {zone}."
   },
   "bunker": {
     "retreatLabel": "Come back to the bunker",

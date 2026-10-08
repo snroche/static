@@ -112,8 +112,14 @@ public final class Migrations {
             "ALTER TABLE `game_state` ADD COLUMN `operator_name` TEXT"
     );
 
+    /** Log threads: system, expeditions, chats. */
+    static final List<String> MIGRATION_9_10_SQL = List.of(
+            "ALTER TABLE `log_lines` ADD COLUMN `thread` TEXT NOT NULL DEFAULT 'system'",
+            "CREATE INDEX IF NOT EXISTS `index_log_lines_thread` ON `log_lines` (`thread`)"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL, MIGRATION_9_10_SQL);
 
     public static final Migration[] ALL = build();
 

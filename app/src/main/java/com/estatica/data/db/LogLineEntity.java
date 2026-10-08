@@ -7,7 +7,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "log_lines", indices = {@Index(value = "uuid", unique = true)})
+@Entity(tableName = "log_lines", indices = {@Index(value = "uuid", unique = true), @Index("thread")})
 public class LogLineEntity {
 
     @PrimaryKey(autoGenerate = true)
@@ -32,4 +32,9 @@ public class LogLineEntity {
     @Nullable
     @ColumnInfo(name = "scout_id")
     public String scoutId;
+
+    /** DB v10: "system", "exp:&lt;id&gt;" or "chat:&lt;scoutId&gt;". */
+    @NonNull
+    @ColumnInfo(defaultValue = "system")
+    public String thread = "system";
 }

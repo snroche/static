@@ -19,9 +19,29 @@ public final class LogLine {
     private final String speaker;
     private final String text;
     private final String scoutId;
+    /** Where it shows: {@link #SYSTEM_THREAD}, an expedition ({@code exp:id}) or a chat ({@code chat:scoutId}). */
+    private final String thread;
+
+    public static final String SYSTEM_THREAD = "system";
+    public static final String EXPEDITION_PREFIX = "exp:";
+    public static final String CHAT_PREFIX = "chat:";
+
+    public static String expeditionThread(String expeditionId) {
+        return EXPEDITION_PREFIX + expeditionId;
+    }
+
+    public static String chatThread(String scoutId) {
+        return CHAT_PREFIX + scoutId;
+    }
 
     public LogLine(long seq, String id, long timestampMillis, LogChannel channel,
                    String speaker, String text, String scoutId) {
+        this(seq, id, timestampMillis, channel, speaker, text, scoutId, SYSTEM_THREAD);
+    }
+
+    public LogLine(long seq, String id, long timestampMillis, LogChannel channel,
+                   String speaker, String text, String scoutId, String thread) {
+        this.thread = thread != null ? thread : SYSTEM_THREAD;
         this.seq = seq;
         this.id = Objects.requireNonNull(id);
         this.timestampMillis = timestampMillis;
@@ -43,7 +63,15 @@ public final class LogLine {
     }
 
     public LogLine withSeq(long newSeq) {
-        return new LogLine(newSeq, id, timestampMillis, channel, speaker, text, scoutId);
+        return new LogLine(newSeq, id, timestampMillis, channel, speaker, text, scoutId, thread);
+    }
+
+    public LogLine withThread(String newThread) {
+        return new LogLine(seq, id, timestampMillis, channel, speaker, text, scoutId, newThread);
+    }
+
+    public String getThread() {
+        return thread;
     }
 
     public long getSeq() {

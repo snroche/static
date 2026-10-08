@@ -77,6 +77,17 @@ public class MigrationsTest {
                         !notNull || field.has("defaultValue"));
                 expected.add(alter.toString());
             }
+            // New indices on an existing table.
+            Set<String> oldIndices = new HashSet<>();
+            for (JsonElement i : array(oldTables.get(table), "indices")) {
+                oldIndices.add(i.getAsJsonObject().get("name").getAsString());
+            }
+            for (JsonElement i : array(entity, "indices")) {
+                JsonObject index = i.getAsJsonObject();
+                if (!oldIndices.contains(index.get("name").getAsString())) {
+                    expected.add(sub(index.get("createSql").getAsString(), table));
+                }
+            }
         }
 
         for (String statement : expected) {

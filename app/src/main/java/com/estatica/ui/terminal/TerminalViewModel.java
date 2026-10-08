@@ -53,6 +53,8 @@ public final class TerminalViewModel extends ViewModel {
     private final Settings settings;
     private final MutableLiveData<Boolean> soundOn = new MutableLiveData<>();
     private final MutableLiveData<OptionsState> options = new MutableLiveData<>();
+    /** Seq of the latest urgent line revealed, whatever view is open (beep + vibration). */
+    private final MutableLiveData<Long> alerts = new MutableLiveData<>();
     /** New game: the next thing typed is the operator's name. */
     private boolean awaitingName;
     /** Base typewriter delay from balance.json; the options speed scales it. */
@@ -74,6 +76,11 @@ public final class TerminalViewModel extends ViewModel {
     private final List<LogLine> window = new ArrayList<>();
     private final ArrayDeque<Pending> pending = new ArrayDeque<>();
     private long typingSeq = TerminalUiState.NO_TYPING;
+    /** What the COMMS screen is showing. */
+    private LogView view = LogView.SYSTEM;
+    private String focus;
+    /** Newest seq the player has seen, per view. */
+    private final long[] seenSeq = new long[LogView.values().length];
     private int windowMax;
     private int pageSize;
     private int charMillis;
@@ -126,6 +133,10 @@ public final class TerminalViewModel extends ViewModel {
 
     String appVersion() {
         return appVersion;
+    }
+
+    LiveData<Long> getAlerts() {
+        return alerts;
     }
 
     LiveData<OptionsState> getOptions() {
@@ -526,6 +537,9 @@ public final class TerminalViewModel extends ViewModel {
         this.charMillis = charMillis;
         this.hasOlder = hasOlder;
         window.addAll(recent);
+        // What was there before this session counts as seen.
+        long newest = recent.isEmpty() ? 0 : recent.get(recent.size() - 1).getSeq();
+        java.util.Arrays.fill(seenSeq, newest);
         ready = true;
         apply(step);
     }
@@ -561,7 +575,13 @@ public final class TerminalViewModel extends ViewModel {
         Pending next;
         while ((next = pending.poll()) != null) {
             window.add(next.line);
-            if (next.animate) {
+            // One beep per event: the system summary, not its copy in the expedition thread.
+            if (next.animate && next.line.getChannel() == LogChannel.ALERT
+                    && LogLine.SYSTEM_THREAD.equals(next.line.getThread())) {
+                alerts.setValue(next.line.getSeq());
+            }
+            // Only what's on screen gets the typewriter; the rest just arrives.
+            if (next.animate && view.shows(next.line, focus)) {
                 typingSeq = next.line.getSeq();
                 break;
             }
@@ -579,7 +599,41 @@ public final class TerminalViewModel extends ViewModel {
     }
 
     private void publish() {
-        state.setValue(new TerminalUiState(new ArrayList<>(window), typingSeq, charMillis));
+        List<LogLine> visible = new ArrayList<>();
+        for (LogLine line : window) {
+            if (view.shows(line, focus)) {
+                visible.add(line);
+            }
+        }
+        if (!visible.isEmpty()) {
+            seenSeq[view.ordinal()] = Math.max(seenSeq[view.ordinal()], visible.get(visible.size() - 1).getSeq());
+        }
+        int[] unread = new int[LogView.values().length];
+        for (LogLine line : window) {
+            for (LogView v : LogView.values()) {
+                if (line.getSeq() > seenSeq[v.ordinal()] && v.shows(line, null)) {
+                    unread[v.ordinal()]++;
+                }
+            }
+        }
+        state.setValue(new TerminalUiState(visible, typingSeq, charMillis, view, focus, unread));
+    }
+
+    /** Switches the COMMS view (and optionally narrows it to one expedition or chat). */
+    void setLogView(LogView newView, String newFocus) {
+        view = newView;
+        focus = newFocus;
+        if (!ready) {
+            return;
+        }
+        publish();
+        int shown = 0;
+        for (LogLine line : window) {
+            shown += view.shows(line, focus) ? 1 : 0;
+        }
+        if (shown < pageSize && hasOlder) {
+            loadOlder(); // a quiet view: fetch more history
+        }
     }
 
     @Override

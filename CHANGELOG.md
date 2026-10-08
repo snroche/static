@@ -14,6 +14,18 @@ When they change, each entry lists the three independent versions:
   - Closer scouts use it in their own voice ("Off I go, Sam. Put the kettle on.").
   - Any line can use `{operator}`.
   - Change it any time in options. **DB 8 → 9:** `game_state.operator_name`.
+- **COMMS split in three views** (SYSTEM · EXPEDITIONS · CHATS), each with its unread count:
+  - **SYSTEM** keeps only what matters:
+    - "Mara + Noor left for Hospital."
+    - "⚠ Mara needs orders at Hospital."
+    - "Mara back from Hospital: 3 rations, 2 scrap. Mara: light injury."
+    - "✝ Noor died at Hospital."
+    - Plus the bunker's own messages (power, food, gear, map, workshop) and your typed commands.
+  - **EXPEDITIONS** has the radio traffic from the field. A chip row narrows it to one team.
+  - **CHATS** has conversations, gifts and bunker chatter. A chip row narrows it to one person.
+  - The typewriter only animates what's on screen. Urgent alerts beep and vibrate whatever view is open, once per event.
+  - The log keeps more history in memory (400 lines), and a quiet view loads older lines.
+  - **DB 9 → 10:** `log_lines.thread` and its index. The migration test now also checks new indexes on existing tables.
 - **Options screen** (⚙ in the header): your name, sound, vibration, notifications, text speed (slow / normal / fast / instant) and the CRT scanlines. The typed commands `sound` and `notifications` still work.
 
 ### Changed

@@ -72,6 +72,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/expeditionStrip" />
 
+    <!-- COMMS views: what the bunker reports, the field radio, conversations. -->
+    <LinearLayout
+        android:id="@+id/logTabs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <TextView
+            android:id="@+id/logTabSystem"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="44dp" />
+
+        <TextView
+            android:id="@+id/logTabExpeditions"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.3"
+            android:minHeight="44dp" />
+
+        <TextView
+            android:id="@+id/logTabChats"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="44dp" />
+    </LinearLayout>
+
+    <!-- Narrow EXPEDITIONS / CHATS to one team or one person. -->
+    <HorizontalScrollView
+        android:id="@+id/logChipsScroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:scrollbars="none"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logTabs">
+
+        <LinearLayout
+            android:id="@+id/logChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/log"
         android:layout_width="0dp"
@@ -84,7 +139,7 @@
         app:layout_constraintBottom_toTopOf="@id/decisionPanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+        app:layout_constraintTop_toBottomOf="@id/logChipsScroll" />
 
     <!-- Shown while a situation waits for an order. Options are added in code. -->
     <LinearLayout

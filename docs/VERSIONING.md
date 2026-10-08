@@ -63,6 +63,7 @@ Rules:
 | 7 | 0.6.4 | Equipment pieces: `gear_pieces` (rarity, condition, location) |
 | 8 | 0.6.4 | Pair expeditions: `expeditions.partner_id` |
 | 9 | 0.6.5 | Operator name: `game_state.operator_name` |
+| 10 | 0.6.5 | Log threads: `log_lines.thread` (+ index) |
 
 `MigrationsTest` (JVM) compares each migration's SQL against the exported schemas. When adding a migration, extend that test.
 
