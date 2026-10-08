@@ -482,6 +482,13 @@ public final class TerminalText {
             return directions != null ? directions : java.util.List.of();
         }
 
+        /** {name} (who brought it, may be empty), {item}. */
+        private String keyItemFound;
+
+        public String getKeyItemFound() {
+            return keyItemFound;
+        }
+
         /** GearDef.Slot name to display name ("Head"). */
         private java.util.Map<String, String> slotNames;
 

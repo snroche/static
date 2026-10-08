@@ -71,6 +71,17 @@ public final class ExpeditionEngine {
         this.world = world;
     }
 
+    /** Key items the bunker already has: situations that only give one of those don't come up. */
+    private java.util.function.Predicate<String> hasKey = k -> false;
+
+    public void setKeyOwnership(java.util.function.Predicate<String> hasKey) {
+        this.hasKey = hasKey;
+    }
+
+    private boolean stillUseful(EventDef event) {
+        return event.getGrantsKey() == null || !hasKey.test(event.getGrantsKey());
+    }
+
     // ---- Pairs (GDD §5.3) ----
 
     /** Who goes along with the lead, and how they get on ("friends", "inseparable", "rivals" or null). */
@@ -124,7 +135,8 @@ public final class ExpeditionEngine {
                 ? Math.max(rules.durationMultiplier(scout), rules.durationMultiplier(party.partner))
                 : rules.durationMultiplier(scout);
         List<Segment> segments = TimelineGenerator.generate(zone, pace, rng,
-                id -> fits(scout, content.event(id)) || (party.isPair() && fits(party.partner, content.event(id))));
+                id -> stillUseful(content.event(id))
+                        && (fits(scout, content.event(id)) || (party.isPair() && fits(party.partner, content.event(id)))));
         if (mission.getType() == Mission.Type.PERSONAL) {
             forceEvent(segments, content.getStory().personalMission(mission.getTarget()).getEvent());
         }
@@ -594,6 +606,10 @@ public final class ExpeditionEngine {
         if (outcome.getPlot() != null) {
             out.plot(outcome.getPlot());
         }
+        if (outcome.getKeyItem() != null && !hasKey.test(outcome.getKeyItem())
+                && !expedition.getCarriedItems().contains(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX + outcome.getKeyItem())) {
+            expedition.addItem(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX + outcome.getKeyItem());
+        }
         if (outcome.getMemory() != null) {
             remember(Memory.create(scout.getId(), Memory.Type.EVENT,
                     TextTemplate.format(outcome.getMemory(), vars), event.getId(), at), known, out);
@@ -707,7 +723,10 @@ public final class ExpeditionEngine {
         out.deliverItems(expedition.getCarriedItems());
         for (String itemId : expedition.getCarriedItems()) {
             Map<String, String> itemVars = vars(scout);
-            itemVars.put("item", content.item(itemId).getName().toLowerCase(Locale.ROOT));
+            String name = itemId.startsWith(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX)
+                    ? content.keyItem(itemId.substring(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX.length())).getName()
+                    : content.item(itemId).getName();
+            itemVars.put("item", name.toLowerCase(Locale.ROOT));
             out.line(system(at, TextTemplate.format(content.getTerminal().getBunker().getItemFound(), itemVars), scout));
         }
         expedition.clearLoot();

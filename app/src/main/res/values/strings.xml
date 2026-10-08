@@ -201,6 +201,16 @@
     <string name="module_now_max">   now: %1$s (max level)</string>
     <string name="info_title">INFO</string>
     <string name="info_nothing">Nothing here needs explaining. Long-press names, traits, stats, places or supplies.</string>
+    <string name="inventory_button">&#xF03D7; [ INVENTORY ]</string>
+    <string name="inventory_title">INVENTORY</string>
+    <string name="inventory_supplies">&#xF03D7;\nSUPPLIES</string>
+    <string name="inventory_gear">&#xF1323;\nGEAR</string>
+    <string name="inventory_keepsakes">&#xF02D2;\nKEEPSAKES</string>
+    <string name="inventory_keys">&#xF030B; %1$d\nKEY ITEMS</string>
+    <string name="inventory_supply">%1$s %2$s ×%3$d</string>
+    <string name="inventory_key_line">&#xF14F7; %1$s  [ READ ]</string>
+    <string name="inventory_no_keepsakes">No keepsakes yet. They turn up out there, and make good gifts.</string>
+    <string name="inventory_no_keys">No key items yet. Notebooks, manuals and codebooks turn up out there: some unlock ciphers.</string>
     <string name="gear_title">GEAR</string>
     <string name="gear_line_worn_by">%1$s — %2$s</string>
     <string name="gear_repair">[ REPAIR: %1$s ]</string>

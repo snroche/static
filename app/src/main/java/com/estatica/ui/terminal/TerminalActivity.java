@@ -84,6 +84,7 @@ public final class TerminalActivity extends ComponentActivity {
     private MapPanel mapPanel;
     private OptionsPanel optionsPanel;
     private InfoSheet infoSheet;
+    private InventoryPanel inventoryPanel;
     private boolean hapticsOn = true;
     private SendPanel sendPanel;
     /** Gear slot being changed (GearDef.Slot name). */
@@ -96,6 +97,8 @@ public final class TerminalActivity extends ComponentActivity {
         public void handleOnBackPressed() {
             if (infoSheet.isShown()) {
                 infoSheet.hide();
+            } else if (inventoryPanel.isShown()) {
+                inventoryPanel.hide();
             } else if (optionsPanel.isShown()) {
                 optionsPanel.hide();
             } else if (decoderPanel.isShown()) {
@@ -133,6 +136,19 @@ public final class TerminalActivity extends ComponentActivity {
         sound = new SoundEngine(settings.isSoundOn());
         viewModel.getSoundOn().observe(this, sound::setEnabled);
         infoSheet = new InfoSheet(binding.infoSheet, this::updateBack);
+        inventoryPanel = new InventoryPanel(binding.inventoryPanel, new InventoryPanel.Host() {
+            @Override
+            public void closeInventory() {
+                inventoryPanel.hide();
+                updateBack();
+            }
+
+            @Override
+            public void read(String title, String text) {
+                infoSheet.showText(title, text);
+                updateBack();
+            }
+        });
         infoSheet.explainOnLongPress(binding.hud);
         infoSheet.explainOnLongPress(binding.expeditionStrip);
         infoSheet.explainOnLongPress(binding.decisionSituation);
@@ -457,6 +473,7 @@ public final class TerminalActivity extends ComponentActivity {
         radioPanel.render(snapshot);
         bunkerPanel.render(snapshot);
         mapPanel.render(snapshot);
+        inventoryPanel.render(snapshot);
         sendPanel.render(snapshot);
         if (panel != Panel.NONE && panel != Panel.SCOUTS) {
             renderPanel();
@@ -586,6 +603,7 @@ public final class TerminalActivity extends ComponentActivity {
     private void selectTab(Tab target) {
         tab = target;
         optionsPanel.hide();
+        inventoryPanel.hide();
         sendPanel.hide();
         showPanel(Panel.NONE);
         radioPanel.hide();
@@ -826,6 +844,12 @@ public final class TerminalActivity extends ComponentActivity {
             }
 
             @Override
+            public void openInventory() {
+                inventoryPanel.show();
+                updateBack();
+            }
+
+            @Override
             public void explain(CharSequence text) {
                 infoSheet.show(text);
                 updateBack();
@@ -843,7 +867,8 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void updateBack() {
         closePanelOnBack.setEnabled(tab != Tab.COMMS || panel != Panel.NONE || decoderPanel.isShown()
-                || optionsPanel.isShown() || sendPanel.isShown() || infoSheet.isShown());
+                || optionsPanel.isShown() || sendPanel.isShown() || infoSheet.isShown()
+                || inventoryPanel.isShown());
     }
 
     private void select(SessionSnapshot.ScoutView scout) {

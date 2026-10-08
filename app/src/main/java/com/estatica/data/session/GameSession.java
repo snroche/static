@@ -279,6 +279,7 @@ public final class GameSession {
         field = new SignalField(content.getBalance(), state.getRngSeed());
         regionMap = new com.estatica.domain.map.RegionMap(content, state.getRngSeed());
         weather = new com.estatica.domain.world.WeatherRules(content.getBalance().getWeather(), state.getRngSeed());
+        engine.setKeyOwnership(this::hasKey);
         engine.setWorld(new com.estatica.domain.world.World() {
             @Override
             public com.estatica.domain.world.WeatherRules.Weather weatherAt(long millis) {
@@ -301,6 +302,10 @@ public final class GameSession {
             }
         });
         gameFlags.addAll(radioRepository.flags());
+        // Saves from before key items: the Morse table they earned becomes the radio manual.
+        if (gameFlags.contains(FLAG_MORSE_TABLE) && gameFlags.add("key:radio_manual")) {
+            radioRepository.addFlag("key:radio_manual", clock.nowMillis());
+        }
         knownZones.addAll(radioRepository.knownZones());
         caughtSignals.addAll(radioRepository.caughtSignals());
         receivedTransmissions.addAll(radioRepository.receivedTransmissionSources());
@@ -533,6 +538,10 @@ public final class GameSession {
             step.memories.addAll(result.getMemories());
             result.getDelivered().forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
             for (String itemId : result.getDeliveredItems()) {
+                if (itemId.startsWith(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX)) {
+                    grantKey(itemId.substring(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX.length()), scout, step);
+                    continue;
+                }
                 ItemInstance found = ItemInstance.found(itemId, now);
                 items.put(found.getId(), found);
             }
@@ -1196,9 +1205,35 @@ public final class GameSession {
         return glossary;
     }
 
-    /** Filled by the key items system. */
+    // ---- Key items (notebooks, manuals, codebooks…) ----
+
+    private static final String KEY_FLAG = "key:";
+
+    public boolean hasKey(String keyId) {
+        return gameFlags.contains(KEY_FLAG + keyId);
+    }
+
+    /** Yours now: kept in the inventory, readable, may unlock a way to decode. */
+    private void grantKey(String keyId, Scout finder, Step step) {
+        com.estatica.domain.content.KeyItemDef def = content.keyItem(keyId);
+        if (def == null || hasKey(keyId)) {
+            return;
+        }
+        addGameFlag(KEY_FLAG + keyId, step);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("item", def.getName());
+        vars.put("name", finder != null ? finder.getName() : "");
+        step.system(content.getTerminal().getBase().getKeyItemFound(), vars, finder);
+    }
+
     private List<SessionSnapshot.KeyItemView> keyItemViews() {
-        return new ArrayList<>();
+        List<SessionSnapshot.KeyItemView> out = new ArrayList<>();
+        for (com.estatica.domain.content.KeyItemDef k : content.getKeyItems().values()) {
+            if (hasKey(k.getId())) {
+                out.add(new SessionSnapshot.KeyItemView(k.getId(), k.getName(), k.getDescription(), k.getText()));
+            }
+        }
+        return out;
     }
 
     private List<String> placeNames() {
@@ -1514,6 +1549,7 @@ public final class GameSession {
                 foundPlot(def.getPlot(), step);
                 break;
             case MORSE_TABLE:
+                grantKey("radio_manual", null, step);
                 if (gameFlags.add(FLAG_MORSE_TABLE)) {
                     step.radioWrites.add(() -> radioRepository.addFlag(FLAG_MORSE_TABLE, step.now));
                 }

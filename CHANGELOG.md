@@ -9,6 +9,17 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Added
+- **Key items and the inventory screen:**
+  - [ INVENTORY ] in the BUNKER opens four tabs:
+    - SUPPLIES: each resource and what it's for.
+    - GEAR: stock, and what everyone is wearing.
+    - KEEPSAKES.
+    - KEY ITEMS: tap one to read it.
+  - Nine key items (`keyitems.json`): radio manual, decoder card, cell wall chart, puzzle notebook, programmer's notebook, field codebook, two one-time pad pages and a 1974 field handbook. Most unlock a way to decode transmissions (next).
+  - **Where they turn up:** eight new situations in specific places (school, police station ×2, gated community, airport, northern antenna, dam, train station).
+    - A key item is yours only if the scout makes it home.
+    - Each situation stops appearing once you own its item.
+  - Stored as game flags, so no save change. **Old saves:** if the Morse table was already unlocked, you get the radio manual on load.
 - **Console commands**, with aliases (`help` lists them all):
   - `crew`, `scout <name>`
   - `send <name> [+name] <place>`, `recall <name>`

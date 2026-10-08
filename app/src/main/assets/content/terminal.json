@@ -218,7 +218,8 @@
       "BELT": "Belt",
       "BACK": "Back",
       "FEET": "Feet"
-    }
+    },
+    "keyItemFound": "Key item: {item}. It's in the INVENTORY (BUNKER)."
   },
   "story": {
     "personalAvailable": "{name} asked you for something: \"{title}\". It shows up as a mission when dispatching.",

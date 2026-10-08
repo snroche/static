@@ -9,6 +9,12 @@ public final class EventDef {
     /** Lines spoken by the scout when the situation starts. {@code {name}} available. */
     private List<String> intro;
     private List<Option> options;
+    /** The key item this situation exists to give: it stops showing up once you have it. */
+    private String grantsKey;
+
+    public String getGrantsKey() {
+        return grantsKey;
+    }
 
     /** Only for someone with any of these traits (visible ones). */
     private List<String> requiresTrait;
@@ -101,6 +107,12 @@ public final class EventDef {
         private String memory;
         /** Nullable: a La Voz fragment found here (GDD §8). */
         private String plot;
+        /** Key item found (carried home, yours on return). */
+        private String keyItem;
+
+        public String getKeyItem() {
+            return keyItem;
+        }
 
         public List<String> getText() {
             return text;

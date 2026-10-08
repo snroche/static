@@ -4095,5 +4095,368 @@
         }
       }
     ]
+  },
+  {
+    "id": "pupitre",
+    "grantsKey": "mirror_card",
+    "intro": [
+      "A kid's desk, still full of stuff.",
+      "There's a cardboard decoder card in here. Cereal box prize."
+    ],
+    "options": [
+      {
+        "id": "tomar",
+        "label": "Take the card",
+        "stat": "stealth",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Got it. Alphabet forwards and backwards. Cute.",
+            "Could be useful, actually."
+          ],
+          "keyItem": "mirror_card"
+        },
+        "failure": {
+          "text": [
+            "Tore it getting it out. Useless now."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Leaving it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "celda",
+    "grantsKey": "tap_chart",
+    "intro": [
+      "Holding cell two. Someone scratched a grid into the wall.",
+      "Letters in rows of five. Prisoners used to knock messages."
+    ],
+    "options": [
+      {
+        "id": "copiar",
+        "label": "Copy the grid",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Copied it all. Rows and columns.",
+            "Knock the row, then the column."
+          ],
+          "keyItem": "tap_chart"
+        },
+        "failure": {
+          "text": [
+            "Too dark to make out the letters."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Leaving it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "estudio",
+    "grantsKey": "cipher_notebook",
+    "intro": [
+      "A study full of puzzle books.",
+      "One notebook is nothing but ciphers."
+    ],
+    "options": [
+      {
+        "id": "leer",
+        "label": "Take the notebook",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "It's all about some cipher called Vigenère. Taking it."
+          ],
+          "keyItem": "cipher_notebook"
+        },
+        "failure": {
+          "text": [
+            "Mold got to most of it."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Leaving it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "oficina_it",
+    "grantsKey": "b64_notebook",
+    "intro": [
+      "The airport IT office. Dead screens, a coffee machine.",
+      "A notebook full of tables: letters, numbers, 'base sixty-four'."
+    ],
+    "options": [
+      {
+        "id": "tomar",
+        "label": "Grab the notebook",
+        "stat": "craft",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Got it. Whoever wrote this loved tables."
+          ],
+          "keyItem": "b64_notebook"
+        },
+        "failure": {
+          "text": [
+            "It's stuck under a fallen server rack."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Leaving it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "armeria",
+    "grantsKey": "military_codebook",
+    "intro": [
+      "The armory's empty. Someone got here first.",
+      "But there's a booklet wedged behind a shelf. 'RESTRICTED'."
+    ],
+    "options": [
+      {
+        "id": "sacar",
+        "label": "Pry it out",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Field codebook. Military. Keywords, phonetic alphabet, the lot."
+          ],
+          "keyItem": "military_codebook"
+        },
+        "failure": {
+          "text": [
+            "The shelf came down. Booklet's under it now."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "forzar",
+        "label": "Move the whole shelf",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Shelf moved. Codebook's mine."
+          ],
+          "keyItem": "military_codebook"
+        },
+        "failure": {
+          "text": [
+            "Pulled something in my back."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "pagina_siete",
+    "grantsKey": "pad_7",
+    "intro": [
+      "A clipboard in the antenna hut. Pages of numbers in groups of five.",
+      "Top page says 'PAD 7'."
+    ],
+    "options": [
+      {
+        "id": "tomar",
+        "label": "Take the page",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Got it. The rest of the pages are ash."
+          ],
+          "keyItem": "pad_7"
+        },
+        "failure": {
+          "text": [
+            "The wind took it. Gone."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Leaving it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "pagina_diecinueve",
+    "grantsKey": "pad_19",
+    "intro": [
+      "Control room of the dam. Someone left in a hurry.",
+      "A water-stained page: 'PAD 19', five-digit groups."
+    ],
+    "options": [
+      {
+        "id": "tomar",
+        "label": "Dry it and take it",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Mostly legible. Taking it."
+          ],
+          "keyItem": "pad_19"
+        },
+        "failure": {
+          "text": [
+            "Fell apart in my hands."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Leaving it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "manual_campo",
+    "grantsKey": "field_handbook",
+    "intro": [
+      "A signal box locker at the station.",
+      "A field radio handbook, 1974. Words underlined in pencil."
+    ],
+    "options": [
+      {
+        "id": "tomar",
+        "label": "Take the handbook",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Taking it. Someone used this as a codebook."
+          ],
+          "keyItem": "field_handbook"
+        },
+        "failure": {
+          "text": [
+            "Couldn't get the locker open."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dejar",
+        "label": "Leave it",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Leaving it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it."
+          ],
+          "stress": 0
+        }
+      }
+    ]
   }
 ]

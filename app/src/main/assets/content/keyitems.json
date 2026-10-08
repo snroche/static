@@ -1,0 +1,65 @@
+[
+  {
+    "id": "radio_manual",
+    "name": "Radio manual",
+    "unlocks": "MORSE",
+    "description": "A dog-eared operator's manual. The Morse table is on page 12.",
+    "text": "OPERATOR'S MANUAL — page 12\n\nMorse: a dot is short, a dash is three times longer. Short gap between letters, long gap between words.\n\nA ·—  B —···  C —·—·  D —··  E ·  F ··—·  G ——·  H ····  I ··\nJ ·———  K —·—  L ·—··  M ——  N —·  O ———  P ·——·  Q ——·—\nR ·—·  S ···  T —  U ··—  V ···—  W ·——  X —··—  Y —·——  Z ——··\n\nSomeone wrote in pencil: 'SOS is ··· ——— ···. Learn it first.'"
+  },
+  {
+    "id": "mirror_card",
+    "name": "Decoder card",
+    "unlocks": "ATBASH",
+    "description": "A cardboard decoder from a cereal box. The alphabet, written forwards and backwards.",
+    "text": "SECRET AGENT DECODER — mirror code!\n\nA B C D E F G H I J K L M\nZ Y X W V U T S R Q P O N\n\nEvery letter becomes its mirror: A↔Z, B↔Y, C↔X… Use it twice and you're back where you started."
+  },
+  {
+    "id": "tap_chart",
+    "name": "Cell wall chart",
+    "unlocks": "TAP",
+    "description": "A grid scratched into a holding cell wall, copied onto paper.",
+    "text": "Scratched into the wall of cell 2:\n\n    1 2 3 4 5\n 1  A B C D E\n 2  F G H I J\n 3  L M N O P\n 4  Q R S T U\n 5  V W X Y Z\n\n(C and K share a square.)\nKnock the row, pause, knock the column. ·· ··· is row 2, column 3: H."
+  },
+  {
+    "id": "cipher_notebook",
+    "name": "Puzzle notebook",
+    "unlocks": "VIGENERE",
+    "description": "Someone's notebook of word games. Half of it is about one cipher.",
+    "text": "VIGENÈRE — the 'unbreakable' one (it isn't).\n\nPick a keyword. Write it over the message, repeating it. Shift each letter by its keyword letter (A=0, B=1… Z=25).\n\nTo decode: shift back. Without the keyword you're lost, so whoever sends these always leaves a hint.\n\nMy favourite keywords are things everybody knows but nobody says."
+  },
+  {
+    "id": "b64_notebook",
+    "name": "Programmer's notebook",
+    "unlocks": "BASE64",
+    "description": "A notebook from an IT office: tables, scribbles, coffee rings.",
+    "text": "BASE 64 — for when you have to send bytes through something that only takes letters.\n\nA–Z = 0–25 · a–z = 26–51 · 0–9 = 52–61 · + = 62 · / = 63\n\nEvery 4 characters are 3 letters of the original. '=' at the end is padding.\n\n'SGVsbG8=' → Hello. Don't ask me why I know this by heart."
+  },
+  {
+    "id": "military_codebook",
+    "name": "Field codebook",
+    "unlocks": "PLAYFAIR",
+    "description": "A military codebook wedged behind an armory shelf. Some pages are missing.",
+    "text": "FIELD CODEBOOK — RESTRICTED\n\nPhonetic alphabet: ALFA BRAVO CHARLIE DELTA ECHO FOXTROT GOLF HOTEL INDIA JULIETT KILO LIMA MIKE NOVEMBER OSCAR PAPA QUEBEC ROMEO SIERRA TANGO UNIFORM VICTOR WHISKEY XRAY YANKEE ZULU.\n\nField cipher: PLAYFAIR, 5×5 grid from the net keyword (I/J share a square).\n\nNET KEYWORDS:\n  KESTREL — HARRIER\n  OSPREY — FALCONRY\n  MERLIN — STARLIGHT\n  (the rest of the page is torn out)"
+  },
+  {
+    "id": "pad_7",
+    "name": "Pad page 7",
+    "unlocks": "NUMBERS",
+    "description": "A page of five-digit groups headed 'PAD 7'. Burn after use. Nobody did.",
+    "text": "ONE-TIME PAD — PAGE 7\n\n12930 48211 70533 91847 26519 30772 85106 44398 61025 79314\n\nSubtract each pair of digits from the message, without borrowing. 01=A … 26=Z, 00=space."
+  },
+  {
+    "id": "pad_19",
+    "name": "Pad page 19",
+    "unlocks": "NUMBERS",
+    "description": "Another pad page, this one water-stained. 'PAD 19'.",
+    "text": "ONE-TIME PAD — PAGE 19\n\n55102 93847 10264 38819 70215 66431 29908 14572 83360 47129\n\nSubtract each pair of digits from the message, without borrowing. 01=A … 26=Z, 00=space."
+  },
+  {
+    "id": "field_handbook",
+    "name": "Field radio handbook",
+    "unlocks": "BOOK",
+    "description": "A 1974 field radio handbook. Words underlined in pencil, page after page.",
+    "text": "FIELD RADIO HANDBOOK (1974), the underlined bits.\n\nBook codes give page-line-word: find the page, count the lines, count the words.\n\nWhoever owned this used it a lot. The margins say: 'they use this one too'."
+  }
+]

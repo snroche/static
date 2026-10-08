@@ -57,6 +57,18 @@ final class InfoSheet {
         });
     }
 
+    /** A key item's text (or any titled text), as is. */
+    void showText(String title, String body) {
+        SpannableStringBuilder out = new SpannableStringBuilder();
+        int bright = ContextCompat.getColor(b.getRoot().getContext(), R.color.amber_bright);
+        out.append(title.toUpperCase(Locale.ROOT));
+        out.setSpan(new StyleSpan(Typeface.BOLD), 0, out.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        out.setSpan(new ForegroundColorSpan(bright), 0, out.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        out.append("\n\n").append(body);
+        b.infoText.setText(out);
+        b.getRoot().setVisibility(View.VISIBLE);
+    }
+
     void show(CharSequence context) {
         String text = context.toString();
         List<int[]> found = new ArrayList<>();

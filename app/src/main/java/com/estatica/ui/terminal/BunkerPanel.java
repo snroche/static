@@ -19,6 +19,10 @@ final class BunkerPanel {
 
         void pickRecipe();
 
+        /** Open the inventory screen. */
+        default void openInventory() {
+        }
+
         /** Long-press on a line: explain it. */
         default void explain(CharSequence text) {
         }
@@ -43,6 +47,7 @@ final class BunkerPanel {
         b.bunkerClose.setOnClickListener(v -> host.closeBunker());
         b.recharge.setOnClickListener(v -> viewModel.recharge());
         b.craft.setOnClickListener(v -> host.pickRecipe());
+        b.inventoryButton.setOnClickListener(v -> host.openInventory());
     }
 
     boolean isShown() {

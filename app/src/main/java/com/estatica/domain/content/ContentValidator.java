@@ -189,6 +189,22 @@ public final class ContentValidator {
                         where + ": line who must be a, b or absent");
             }
         }
+        java.util.Set<String> kinds = java.util.Set.of("CAESAR", "MORSE", "ATBASH", "TAP", "VIGENERE", "BASE64",
+                "PLAYFAIR", "NUMBERS", "BOOK");
+        for (KeyItemDef k : content.getKeyItems().values()) {
+            check(k.getName() != null && k.getDescription() != null, "key item " + k.getId() + ": name, description");
+            check(k.getUnlocks() == null || kinds.contains(k.getUnlocks()), "key item " + k.getId() + ": unknown unlock " + k.getUnlocks());
+        }
+        for (EventDef e : content.getEvents().values()) {
+            check(e.getGrantsKey() == null || content.keyItem(e.getGrantsKey()) != null,
+                    "event " + e.getId() + ": unknown grantsKey " + e.getGrantsKey());
+            for (EventDef.Option o : e.getOptions()) {
+                for (EventDef.Outcome out : java.util.Arrays.asList(o.getSuccess(), o.getFailure())) {
+                    check(out == null || out.getKeyItem() == null || content.keyItem(out.getKeyItem()) != null,
+                            "event " + e.getId() + ": unknown key item " + (out != null ? out.getKeyItem() : ""));
+                }
+            }
+        }
         Balance.Weather weatherBalance = content.getBalance().getWeather();
         check(weatherBalance != null && !weatherBalance.getWeights().isEmpty(), "balance.weather: weights");
         for (String kind : java.util.List.of("CLEAR", "CLOUDY", "RAIN", "FOG", "STORM")) {

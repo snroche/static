@@ -29,13 +29,15 @@ public final class GameContent {
     private final StoryDef story;
     private final PeopleDef people;
     private final List<VignetteDef> vignettes;
+    private final Map<String, KeyItemDef> keyItems;
 
     public GameContent(Balance balance, TerminalText terminal, List<ScoutTemplate> starters,
                        List<TraitDef> traits, List<ZoneDef> zones, List<EventDef> events,
                        List<VoiceDef> voices, List<ResourceDef> resources, List<ItemDef> items,
                        List<TaskDef> tasks, List<DialogueDef> dialogues,
                        List<ScoutTemplate> survivors, SignalsDef signals, List<GearDef> gear,
-                       List<RecipeDef> recipes, StoryDef story, PeopleDef people, List<VignetteDef> vignettes) {
+                       List<RecipeDef> recipes, StoryDef story, PeopleDef people, List<VignetteDef> vignettes,
+                       List<KeyItemDef> keyItems) {
         this.balance = Objects.requireNonNull(balance);
         this.terminal = Objects.requireNonNull(terminal);
         this.starters = Collections.unmodifiableList(starters);
@@ -64,6 +66,7 @@ public final class GameContent {
         this.story = Objects.requireNonNull(story);
         this.people = Objects.requireNonNull(people);
         this.vignettes = Collections.unmodifiableList(vignettes);
+        this.keyItems = index(keyItems, KeyItemDef::getId);
     }
 
     private interface IdOf<T> {
@@ -149,6 +152,15 @@ public final class GameContent {
 
     public Map<String, DialogueDef> getDialogues() {
         return dialogues;
+    }
+
+    public Map<String, KeyItemDef> getKeyItems() {
+        return keyItems;
+    }
+
+    /** Key item by id, or null. */
+    public KeyItemDef keyItem(String id) {
+        return keyItems.get(id);
     }
 
     public List<VignetteDef> getVignettes() {

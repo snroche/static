@@ -228,7 +228,8 @@
       "avispas",
       "radioaficionado",
       "piano",
-      "biblioteca"
+      "biblioteca",
+      "pupitre"
     ],
     "loot": [
       {
@@ -434,7 +435,8 @@
       "trampa",
       "derrumbe",
       "cambio_vias",
-      "escalada"
+      "escalada",
+      "manual_campo"
     ],
     "loot": [
       {
@@ -500,7 +502,9 @@
       "francotirador",
       "radioaficionado",
       "hueco",
-      "pelea_amigos"
+      "pelea_amigos",
+      "celda",
+      "armeria"
     ],
     "loot": [
       {
@@ -569,7 +573,8 @@
       "puerta_blindada",
       "helada",
       "piano",
-      "pelea_amigos"
+      "pelea_amigos",
+      "estudio"
     ],
     "loot": [
       {
@@ -641,7 +646,8 @@
       "helada",
       "semi",
       "hueco",
-      "escalada"
+      "escalada",
+      "oficina_it"
     ],
     "loot": [
       {
@@ -718,7 +724,8 @@
       "campamento",
       "helada",
       "generador_viejo",
-      "escalada"
+      "escalada",
+      "pagina_diecinueve"
     ],
     "loot": [
       {
@@ -789,7 +796,8 @@
       "campamento",
       "puerta_blindada",
       "cables",
-      "radioaficionado"
+      "radioaficionado",
+      "pagina_siete"
     ],
     "loot": [
       {

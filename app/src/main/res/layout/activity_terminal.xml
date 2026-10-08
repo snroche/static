@@ -411,6 +411,17 @@
         app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <include
+        android:id="@+id/inventoryPanel"
+        layout="@layout/panel_inventory"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
+
+    <include
         android:id="@+id/infoSheet"
         layout="@layout/panel_info"
         android:layout_width="0dp"
