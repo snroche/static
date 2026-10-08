@@ -66,7 +66,8 @@ final class Highlighter {
             }
             alt.append(Pattern.quote(w));
         }
-        return Pattern.compile("(?iu)(?<![\\p{L}\\d])(?:" + alt + ")(?![\\p{L}\\d])");
+        // No inline flags: Android's ICU regex rejects (?u); CASE_INSENSITIVE is Unicode-aware there.
+        return Pattern.compile("(?<![\\p{L}\\d])(?:" + alt + ")(?![\\p{L}\\d])", Pattern.CASE_INSENSITIVE);
     }
 
     /** Spans over {@code text} starting at {@code offset} in {@code out}. */

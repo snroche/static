@@ -38,7 +38,10 @@ public final class VoiceRenderer {
         Map<String, String> replacements = voice.getReplacements();
         if (replacements != null) {
             for (Map.Entry<String, String> r : replacements.entrySet()) {
-                text = Pattern.compile("(?iU)\\b" + Pattern.quote(r.getKey()) + "\\b")
+                // Whole words only. No inline flags: Android's regex engine (ICU) rejects (?U)/(?u),
+                // and its CASE_INSENSITIVE is already Unicode-aware.
+                text = Pattern.compile("(?<![\\p{L}\\d])" + Pattern.quote(r.getKey()) + "(?![\\p{L}\\d])",
+                                Pattern.CASE_INSENSITIVE)
                         .matcher(text)
                         .replaceAll(Matcher.quoteReplacement(r.getValue()));
             }
