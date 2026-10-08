@@ -8,7 +8,12 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
-_Nothing yet._
+### Changed
+- **Bottom bar navigation:** COMMS · CREW · MAP · RADIO · BUNKER replace the top buttons.
+  - The selected tab is bright and bracketed.
+  - Badges on the tabs: orders waiting (COMMS ●n), home/alive (CREW 3/4), sectors to scout while nothing is found yet (MAP ?n), transmissions to decode (RADIO •n), and power or food trouble (BUNKER !).
+  - The header keeps the status bar and expedition strip visible on every tab.
+  - Back from any tab returns to COMMS. The map moved out of the crew panel into its own tab.
 
 ## [0.6.4] — Depth: situations, food, gear, map, pairs — in verification
 

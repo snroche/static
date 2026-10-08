@@ -55,6 +55,11 @@ public final class TerminalActivity extends ComponentActivity {
     private SoundEngine sound;
     private int typedSinceTick;
 
+    /** Bottom bar destinations. */
+    private enum Tab { COMMS, CREW, MAP, RADIO, BUNKER }
+
+    private Tab tab = Tab.COMMS;
+
     private enum Panel { NONE, SCOUTS, ZONES, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR, PARTNER }
 
     private ActivityTerminalBinding binding;
@@ -90,23 +95,18 @@ public final class TerminalActivity extends ComponentActivity {
             } else if (panel == Panel.SCOUT_SECTOR) {
                 showPanel(Panel.NONE);
                 mapPanel.show();
-            } else if (mapPanel.isShown()) {
-                mapPanel.hide();
-                showPanel(Panel.SCOUTS);
             } else if (panel == Panel.RECIPES) {
                 showPanel(Panel.NONE);
                 bunkerPanel.show();
-            } else if (bunkerPanel.isShown()) {
-                bunkerPanel.hide();
-            } else if (radioPanel.isShown()) {
-                radioPanel.hide();
             } else if (panel == Panel.PARTNER) {
                 showPanel(Panel.ZONES);
             } else if (panel == Panel.ZONES || panel == Panel.GIFTS || panel == Panel.TASKS
                     || panel == Panel.DIARY || panel == Panel.GEAR) {
                 showPanel(Panel.SCOUTS);
             } else {
-                showPanel(Panel.NONE);
+                // A tab's own screen: back goes to COMMS.
+                selectTab(Tab.COMMS);
+                return;
             }
             updateBack();
         }
@@ -360,13 +360,9 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void renderBadges(SessionSnapshot snapshot) {
         int waiting = snapshot.radio.transmissions.size();
-        binding.radioButton.setText(waiting > 0
-                ? getString(R.string.radio_button_count, waiting)
-                : getString(R.string.radio_button));
         SessionSnapshot.BaseView base = snapshot.base;
         boolean alert = base.blackout || base.powerCut || base.filtersShort || snapshot.hungry
                 || snapshot.foodDaysLeft < 1;
-        binding.bunkerButton.setText(alert ? R.string.bunker_button_alert : R.string.bunker_button);
         int alive = 0;
         int home = 0;
         for (SessionSnapshot.ScoutView scout : snapshot.scouts) {
@@ -377,7 +373,63 @@ public final class TerminalActivity extends ComponentActivity {
                 }
             }
         }
-        binding.scoutsButton.setText(getString(R.string.scouts_button_count, home, alive));
+        int unexplored = 0;
+        for (SessionSnapshot.SectorView s : snapshot.map.sectors) {
+            unexplored += !s.scouted && s.reachable && !s.beingScouted ? 1 : 0;
+        }
+        int orders = snapshot.pending.size();
+        tabLabel(binding.tabComms, Tab.COMMS, orders > 0
+                ? getString(R.string.tab_comms_badge, orders) : getString(R.string.tab_comms));
+        tabLabel(binding.tabCrew, Tab.CREW, getString(R.string.tab_crew_count, home, alive));
+        tabLabel(binding.tabMap, Tab.MAP, unexplored > 0 && knowsNothing(snapshot)
+                ? getString(R.string.tab_map_badge, unexplored) : getString(R.string.tab_map));
+        tabLabel(binding.tabRadio, Tab.RADIO, waiting > 0
+                ? getString(R.string.tab_radio_badge, waiting) : getString(R.string.tab_radio));
+        tabLabel(binding.tabBunker, Tab.BUNKER, alert
+                ? getString(R.string.tab_bunker_alert) : getString(R.string.tab_bunker));
+    }
+
+    /** Early game: nothing found yet, so the map is where to go. */
+    private static boolean knowsNothing(SessionSnapshot snapshot) {
+        return snapshot.map.places.isEmpty();
+    }
+
+    private void tabLabel(TextView view, Tab which, String label) {
+        boolean selected = tab == which;
+        view.setText(selected ? getString(R.string.tab_selected, label) : label);
+        view.setTextColor(ContextCompat.getColor(this, selected ? R.color.amber_bright : R.color.amber_dim));
+        view.setSelected(selected);
+    }
+
+    /** Switches the screen above the bottom bar. */
+    private void selectTab(Tab target) {
+        tab = target;
+        showPanel(Panel.NONE);
+        radioPanel.hide();
+        decoderPanel.hide();
+        bunkerPanel.hide();
+        mapPanel.hide();
+        switch (target) {
+            case CREW:
+                showPanel(Panel.SCOUTS);
+                break;
+            case MAP:
+                mapPanel.show();
+                break;
+            case RADIO:
+                radioPanel.show();
+                break;
+            case BUNKER:
+                bunkerPanel.show();
+                break;
+            default:
+                followTail();
+                break;
+        }
+        if (snapshot != null) {
+            renderBadges(snapshot);
+        }
+        updateBack();
     }
 
     private void renderDecision(SessionSnapshot snapshot) {
@@ -471,7 +523,11 @@ public final class TerminalActivity extends ComponentActivity {
         pickerAdapter = new PickerAdapter(this::onPick);
         binding.panelList.setLayoutManager(new LinearLayoutManager(this));
         binding.panelList.setItemAnimator(null);
-        binding.scoutsButton.setOnClickListener(v -> showPanel(Panel.SCOUTS));
+        binding.tabComms.setOnClickListener(v -> selectTab(Tab.COMMS));
+        binding.tabCrew.setOnClickListener(v -> selectTab(Tab.CREW));
+        binding.tabMap.setOnClickListener(v -> selectTab(Tab.MAP));
+        binding.tabRadio.setOnClickListener(v -> selectTab(Tab.RADIO));
+        binding.tabBunker.setOnClickListener(v -> selectTab(Tab.BUNKER));
         binding.panelClose.setOnClickListener(v -> closePanelOnBack.handleOnBackPressed());
         binding.panelExtra.setOnClickListener(v -> {
             viewModel.loadDiary();
@@ -480,9 +536,7 @@ public final class TerminalActivity extends ComponentActivity {
         mapPanel = new MapPanel(binding.mapPanel, new MapPanel.Host() {
             @Override
             public void closeMap() {
-                mapPanel.hide();
-                showPanel(Panel.SCOUTS);
-                updateBack();
+                selectTab(Tab.COMMS);
             }
 
             @Override
@@ -491,11 +545,6 @@ public final class TerminalActivity extends ComponentActivity {
                 mapPanel.hide();
                 showPanel(Panel.SCOUT_SECTOR);
             }
-        });
-        binding.panelMap.setOnClickListener(v -> {
-            showPanel(Panel.NONE);
-            mapPanel.show();
-            updateBack();
         });
     }
 
@@ -511,25 +560,17 @@ public final class TerminalActivity extends ComponentActivity {
 
             @Override
             public void closeRadio() {
-                radioPanel.hide();
-                updateBack();
+                selectTab(Tab.COMMS);
             }
         }, sound);
         decoderPanel = new DecoderPanel(binding.decodePanel, viewModel, () -> {
             decoderPanel.hide();
             updateBack();
         });
-        binding.radioButton.setOnClickListener(v -> {
-            showPanel(Panel.NONE);
-            bunkerPanel.hide();
-            radioPanel.show();
-            updateBack();
-        });
         bunkerPanel = new BunkerPanel(binding.bunkerPanel, viewModel, new BunkerPanel.Host() {
             @Override
             public void closeBunker() {
-                bunkerPanel.hide();
-                updateBack();
+                selectTab(Tab.COMMS);
             }
 
             @Override
@@ -539,18 +580,11 @@ public final class TerminalActivity extends ComponentActivity {
                 showPanel(Panel.RECIPES);
             }
         });
-        binding.bunkerButton.setOnClickListener(v -> {
-            showPanel(Panel.NONE);
-            radioPanel.hide();
-            bunkerPanel.show();
-            updateBack();
-        });
         viewModel.getTuning().observe(this, radioPanel::onTuning);
     }
 
     private void updateBack() {
-        closePanelOnBack.setEnabled(panel != Panel.NONE || radioPanel.isShown() || decoderPanel.isShown()
-                || bunkerPanel.isShown() || mapPanel.isShown());
+        closePanelOnBack.setEnabled(tab != Tab.COMMS || panel != Panel.NONE || decoderPanel.isShown());
     }
 
     private void select(SessionSnapshot.ScoutView scout) {
@@ -595,8 +629,8 @@ public final class TerminalActivity extends ComponentActivity {
             default:
                 return;
         }
-        showPanel(Panel.NONE);
-        followTail();
+        // Done choosing: back to the log to see what happens.
+        selectTab(Tab.COMMS);
     }
 
     /** key: TYPE|zoneId|target. */
@@ -617,11 +651,8 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void showPanel(Panel target) {
         panel = target;
-        closePanelOnBack.setEnabled(target != Panel.NONE
-                || (radioPanel != null && radioPanel.isShown())
-                || (decoderPanel != null && decoderPanel.isShown())
-                || (bunkerPanel != null && bunkerPanel.isShown())
-                || (mapPanel != null && mapPanel.isShown()));
+        closePanelOnBack.setEnabled(tab != Tab.COMMS || target != Panel.NONE
+                || (decoderPanel != null && decoderPanel.isShown()));
         if (target == Panel.NONE) {
             binding.panel.setVisibility(View.GONE);
             binding.panelList.setAdapter(null);
@@ -629,7 +660,6 @@ public final class TerminalActivity extends ComponentActivity {
         }
         binding.panel.setVisibility(View.VISIBLE);
         binding.panelExtra.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
-        binding.panelMap.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
         // The recipe picker opens over the bunker panel and returns to it.
         binding.panelClose.setText(target == Panel.SCOUTS ? R.string.panel_close : R.string.panel_back);
         if (target == Panel.SCOUTS) {

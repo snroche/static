@@ -38,6 +38,17 @@
         <item name="android:paddingEnd">4dp</item>
     </style>
 
+    <!-- Bottom bar tab: centered, 48dp touch target; the selected one is bright. -->
+    <style name="TerminalTab" parent="TerminalText.Dim">
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
     <!-- Text button: [ LABEL ], 48dp touch target. -->
     <style name="TerminalButton" parent="TerminalText.Bright">
         <item name="android:background">@drawable/bg_terminal_button</item>

@@ -5,33 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Header: name of the game and options. Navigation lives in the bottom bar. -->
     <TextView
-        android:id="@+id/radioButton"
-        style="@style/TerminalButton.Top"
-        android:layout_width="wrap_content"
+        android:id="@+id/headerTitle"
+        style="@style/TerminalText.Bright"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/radio_button"
+        android:layout_marginStart="12dp"
+        android:accessibilityHeading="true"
+        android:text="@string/app_name"
+        app:layout_constraintBottom_toBottomOf="@id/optionsButton"
+        app:layout_constraintEnd_toStartOf="@id/optionsButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/optionsButton"
+        tools:targetApi="28" />
 
     <TextView
-        android:id="@+id/bunkerButton"
-        style="@style/TerminalButton.Top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bunker_button"
-        app:layout_constraintEnd_toStartOf="@id/scoutsButton"
-        app:layout_constraintStart_toEndOf="@id/radioButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/scoutsButton"
+        android:id="@+id/optionsButton"
         style="@style/TerminalButton.Top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:text="@string/scouts_button"
+        android:contentDescription="@string/options_description"
+        android:minWidth="48dp"
+        android:gravity="center"
+        android:text="@string/options_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,7 +45,7 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scoutsButton" />
+        app:layout_constraintTop_toBottomOf="@id/optionsButton" />
 
     <!-- Expeditions in progress, one per line. -->
     <TextView
@@ -149,7 +147,7 @@
         android:paddingVertical="14dp"
         android:textColorHint="@color/amber_hint"
         android:textCursorDrawable="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/prompt" />
 
@@ -162,10 +160,10 @@
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/divider">
 
         <TextView
             android:id="@+id/panelTitle"
@@ -176,18 +174,10 @@
             android:accessibilityHeading="true"
             tools:targetApi="28"
             app:layout_constraintBottom_toBottomOf="@id/panelClose"
-            app:layout_constraintEnd_toStartOf="@id/panelMap"
+            app:layout_constraintEnd_toStartOf="@id/panelExtra"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/panelClose" />
 
-        <TextView
-            android:id="@+id/panelMap"
-            style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/panel_map_button"
-            app:layout_constraintEnd_toStartOf="@id/panelExtra"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/panelExtra"
@@ -227,10 +217,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <include
         android:id="@+id/bunkerPanel"
@@ -238,10 +228,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <include
         android:id="@+id/mapPanel"
@@ -249,10 +239,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <include
         android:id="@+id/decodePanel"
@@ -260,10 +250,67 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/divider" />
+
+    <!-- Bottom bar: where you are and where you can go. -->
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/amber_hint"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/terminal_bg"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tabComms"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tab_comms" />
+        <TextView
+            android:id="@+id/tabCrew"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tab_crew" />
+        <TextView
+            android:id="@+id/tabMap"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tab_map" />
+        <TextView
+            android:id="@+id/tabRadio"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tab_radio" />
+        <TextView
+            android:id="@+id/tabBunker"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tab_bunker" />
+    </LinearLayout>
 
     <com.estatica.ui.terminal.ScanlineOverlayView
         android:layout_width="0dp"
