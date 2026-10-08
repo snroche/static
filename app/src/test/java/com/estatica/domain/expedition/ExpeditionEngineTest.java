@@ -436,7 +436,7 @@ public class ExpeditionEngineTest {
             while (!e.isAwaitingDecision() && e.isActive()) {
                 t += 1_000;
                 for (LogLine line : engine.advance(e, s, List.of(), t).getLines()) {
-                    broken += line.getText().contains("—") ? 1 : 0;
+                    broken += line.getText().contains("·") ? 1 : 0;
                     lost += line.getText().contains("can't make it out") ? 1 : 0;
                 }
             }

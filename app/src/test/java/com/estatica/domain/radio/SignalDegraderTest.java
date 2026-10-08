@@ -24,9 +24,18 @@ public class SignalDegraderTest {
     }
 
     @Test
-    public void fullIntensityCutsEveryLongWord() {
+    public void staticReplacesLettersButKeepsTheWordsShape() {
         String out = SignalDegrader.degrade(TEXT, 1.0, GameRandom.fromSeed(3));
         assertNotEquals(TEXT, out);
-        assertTrue(out.contains("—"));
+        assertEquals("same length: you can still piece it together", TEXT.length(), out.length());
+        String[] before = TEXT.split(" ");
+        String[] after = out.split(" ");
+        assertEquals(before.length, after.length);
+        for (int i = 0; i < before.length; i++) {
+            assertEquals("first letter survives", before[i].charAt(0), after[i].charAt(0));
+            if (before[i].length() > 2) {
+                assertTrue(after[i], after[i].contains("·") || after[i].contains("-"));
+            }
+        }
     }
 }

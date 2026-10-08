@@ -8,6 +8,9 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+### Changed
+- **Static instead of cut-off words:** a bad signal no longer chops words ("i found some—"). Letters drop out as dots and dashes and words keep their shape, so you can still piece it together: "i f·u-d s·me r-ti·ns". The worse the signal, the more letters go.
+
 ### Fixed
 - **Crash when sending out someone with the slang or kid voice.** Voice word swaps ("very" → "real") used a regex flag, `(?U)`, that the JDK accepts but Android's ICU regex engine rejects. Tests ran on the JDK, so they never saw it. This is also what crashed Tano, whose voice was the slang one. The text highlighter had the same kind of flag, `(?u)`. Both now pass case-insensitivity as a compile flag and use explicit letter/digit word edges.
 - New test `AndroidRegexTest` scans the source for inline regex flags Android rejects (anything but i, m, s, x).
