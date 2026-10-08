@@ -1,5 +1,5 @@
 {
-  "contentVersion": 16,
+  "contentVersion": 17,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -25,7 +25,12 @@
     "xpOnSuccess": 3,
     "xpOnFailure": 1,
     "xpPerLevel": 2,
-    "injuryStatPenalty": [0, 1, 2, 3],
+    "injuryStatPenalty": [
+      0,
+      1,
+      2,
+      3
+    ],
     "injuryHealHoursPerLevel": 4
   },
   "checks": {
@@ -40,7 +45,13 @@
     "hintBad": 0.4
   },
   "bond": {
-    "levelThresholds": [0, 15, 35, 60, 85],
+    "levelThresholds": [
+      0,
+      15,
+      35,
+      60,
+      85
+    ],
     "max": 100,
     "talkCooldownHours": 4,
     "initiatedCooldownHours": 6,
@@ -92,7 +103,8 @@
         "TRANSMISSION": 4,
         "RARE": 2
       },
-      "morseChance": 0.2
+      "morseChance": 0.2,
+      "description": "The blocks around the bunker. Quick trips, little danger, little loot."
     },
     {
       "id": "medium",
@@ -110,7 +122,8 @@
         "TRANSMISSION": 3,
         "RARE": 2
       },
-      "morseChance": 0.5
+      "morseChance": 0.5,
+      "description": "Past the overpass. 15–60 minute trips, real danger, better finds. Needs antenna level 2."
     },
     {
       "id": "long",
@@ -128,7 +141,8 @@
         "TRANSMISSION": 3,
         "RARE": 1
       },
-      "morseChance": 0.7
+      "morseChance": 0.7,
+      "description": "Open country. Trips of hours, dangerous, the best finds and the Voice's trail. Needs antenna level 4."
     },
     {
       "id": "deep",
@@ -144,7 +158,8 @@
         "TRANSMISSION": 2,
         "RARE": 1
       },
-      "morseChance": 0.9
+      "morseChance": 0.9,
+      "description": "Beyond anything the antenna reaches yet."
     }
   ],
   "radio": {
@@ -199,6 +214,13 @@
           "batteries": 6,
           "parts": 4
         }
+      ],
+      "levels": [
+        "Hears the short band only (the closest places).",
+        "Opens the medium band: farther places, stronger survivors.",
+        "Medium band with a steadier signal.",
+        "Opens the long band: the far country.",
+        "Long band at full reach."
       ]
     },
     {
@@ -226,6 +248,13 @@
           "components": 16,
           "parts": 5
         }
+      ],
+      "levels": [
+        "7 W to share out.",
+        "More watts: about 10 W.",
+        "About 12 W.",
+        "About 15 W.",
+        "17 W: everything can run at once."
       ]
     },
     {
@@ -248,6 +277,12 @@
           "batteries": 6,
           "parts": 4
         }
+      ],
+      "levels": [
+        "Basic signal: far reports break up and orders arrive late.",
+        "Less static, faster orders.",
+        "Clean signal on most bands.",
+        "Clearest signal: orders arrive almost at once."
       ]
     },
     {
@@ -265,6 +300,11 @@
           "components": 8,
           "parts": 2
         }
+      ],
+      "levels": [
+        "One workbench: one job at a time.",
+        "Two workbenches, and recipes that need a level-2 shop.",
+        "Three workbenches and the best recipes."
       ]
     },
     {
@@ -283,6 +323,11 @@
           "medicine": 8,
           "parts": 2
         }
+      ],
+      "levels": [
+        "Heals at the normal rate (with power).",
+        "Faster healing.",
+        "Fastest healing, and stress drops faster too."
       ]
     },
     {
@@ -305,11 +350,23 @@
           "rations": 14,
           "parts": 3
         }
+      ],
+      "levels": [
+        "Room for 5 scouts.",
+        "Room for 6.",
+        "Room for 7.",
+        "Room for 8."
       ]
     }
   ],
   "energy": {
-    "generatorWatts": [7, 9, 11, 14, 17],
+    "generatorWatts": [
+      7,
+      9,
+      11,
+      14,
+      17
+    ],
     "consumers": [
       {
         "id": "filters",
@@ -390,14 +447,35 @@
     "_comment": "Weather outside and the dark. Bonuses add to check chances. [placeholder]",
     "blockHours": 3,
     "persistence": 0.55,
-    "weights": {"CLEAR": 40, "CLOUDY": 25, "RAIN": 18, "FOG": 10, "STORM": 7},
-    "effects": {
-      "RAIN": {"endurance": -0.05, "stealth": 0.03},
-      "FOG": {"stealth": 0.08, "wits": -0.06},
-      "STORM": {"all": -0.06}
+    "weights": {
+      "CLEAR": 40,
+      "CLOUDY": 25,
+      "RAIN": 18,
+      "FOG": 10,
+      "STORM": 7
     },
-    "night": {"stealth": 0.08, "wits": -0.05},
-    "noise": {"RAIN": 0.05, "FOG": 0.03, "STORM": 0.2},
+    "effects": {
+      "RAIN": {
+        "endurance": -0.05,
+        "stealth": 0.03
+      },
+      "FOG": {
+        "stealth": 0.08,
+        "wits": -0.06
+      },
+      "STORM": {
+        "all": -0.06
+      }
+    },
+    "night": {
+      "stealth": 0.08,
+      "wits": -0.05
+    },
+    "noise": {
+      "RAIN": 0.05,
+      "FOG": 0.03,
+      "STORM": 0.2
+    },
     "flavorChance": 0.35
   },
   "depletion": {
@@ -411,7 +489,11 @@
     "lootMultiplier": 1.4,
     "supportPerPoint": 0.03,
     "maxSupport": 0.12,
-    "relationBonus": {"inseparable": 0.1, "friends": 0.05, "rivals": -0.05},
+    "relationBonus": {
+      "inseparable": 0.1,
+      "friends": 0.05,
+      "rivals": -0.05
+    },
     "carryBase": 0.35,
     "carryPerEndurance": 0.04,
     "chatterChance": 0.4,
@@ -420,15 +502,47 @@
   },
   "gear": {
     "_comment": "Equipment rarity, wear and repair. [placeholder]",
-    "findChance": [0.06, 0.1, 0.15],
-    "rarityWeights": [[85, 14, 1], [65, 30, 5], [45, 40, 15]],
-    "wear": {"COMMON": 15, "UNCOMMON": 12, "RARE": 8},
+    "findChance": [
+      0.06,
+      0.1,
+      0.15
+    ],
+    "rarityWeights": [
+      [
+        85,
+        14,
+        1
+      ],
+      [
+        65,
+        30,
+        5
+      ],
+      [
+        45,
+        40,
+        15
+      ]
+    ],
+    "wear": {
+      "COMMON": 15,
+      "UNCOMMON": 12,
+      "RARE": 8
+    },
     "injuryWear": 10,
     "wornAt": 30,
     "repairCost": {
-      "COMMON": {"scrap": 2},
-      "UNCOMMON": {"scrap": 2, "components": 1},
-      "RARE": {"components": 2, "parts": 1}
+      "COMMON": {
+        "scrap": 2
+      },
+      "UNCOMMON": {
+        "scrap": 2,
+        "components": 1
+      },
+      "RARE": {
+        "components": 2,
+        "parts": 1
+      }
     },
     "craftUncommonPerPoint": 0.03,
     "craftRareAbove": 6,
@@ -444,8 +558,14 @@
   },
   "people": {
     "_comment": "Generated survivors. [placeholder]",
-    "statBase": [2, 5],
-    "ceilingGain": [3, 4],
+    "statBase": [
+      2,
+      5
+    ],
+    "ceilingGain": [
+      3,
+      4
+    ],
     "primaryBonus": 2,
     "secondaryBonus": 1,
     "bandCeilingBonus": 1,

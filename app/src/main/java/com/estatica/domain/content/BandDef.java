@@ -10,6 +10,11 @@ public final class BandDef {
 
     private String id;
     private String name;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
     private int unlockAntennaLevel;
     /** Report noise for zones in this band (0 = clean, 1 = unintelligible). */
     private double noise;

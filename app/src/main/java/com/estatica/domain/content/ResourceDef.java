@@ -3,6 +3,13 @@ package com.estatica.domain.content;
 /** A bunker resource from {@code resources.json}. Filled by Gson. */
 public final class ResourceDef {
 
+    /** What it's for, for the info sheet. */
+    private String use;
+
+    public String getUse() {
+        return use;
+    }
+
     public enum Kind { MATERIAL, KIT, PART, GEAR }
 
     private String id;

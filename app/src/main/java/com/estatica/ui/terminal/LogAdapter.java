@@ -33,6 +33,17 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
     private int typedChars;
     private Highlighter highlighter = Highlighter.NONE;
 
+    /** Long-press on a line. */
+    interface LineListener {
+        void onLongPress(LogLine line);
+    }
+
+    private LineListener lineListener;
+
+    void setLineListener(LineListener listener) {
+        this.lineListener = listener;
+    }
+
     /** New vocabulary (someone joined, a place was found): redraw with it. */
     @SuppressLint("NotifyDataSetChanged")
     void setHighlighter(Highlighter highlighter) {
@@ -77,7 +88,16 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemLogLineBinding binding = ItemLogLineBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
-        return new Holder(binding);
+        Holder holder = new Holder(binding);
+        binding.text.setOnLongClickListener(v -> {
+            int position = holder.getBindingAdapterPosition();
+            if (lineListener != null && position != RecyclerView.NO_POSITION) {
+                lineListener.onLongPress(getItem(position));
+                return true;
+            }
+            return false;
+        });
+        return holder;
     }
 
     @Override

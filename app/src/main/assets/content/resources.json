@@ -3,45 +3,52 @@
     "id": "scrap",
     "name": "Scrap",
     "shortName": "SCR",
-    "icon": "󰛸"
+    "icon": "󰛸",
+    "use": "Metal and junk. Repairs, upgrades and most recipes."
   },
   {
     "id": "components",
     "name": "Components",
     "shortName": "CMP",
-    "icon": "󰘚"
+    "icon": "󰘚",
+    "use": "Wires, chips, springs. Upgrades, relay kits and gear."
   },
   {
     "id": "rations",
     "name": "Rations",
     "shortName": "RAT",
-    "icon": "󰉛"
+    "icon": "󰉛",
+    "use": "Food. Everyone eats one a day; cooks stretch them."
   },
   {
     "id": "batteries",
     "name": "Batteries",
     "shortName": "BAT",
-    "icon": "󰂄"
+    "icon": "󰂄",
+    "use": "Recharge the power reserve, build relay kits."
   },
   {
     "id": "medicine",
     "name": "Medicine",
     "shortName": "MED",
-    "icon": "󰛯"
+    "icon": "󰛯",
+    "use": "Infirmary upgrades. Keeps wounds from getting worse."
   },
   {
     "id": "relay_kit",
     "name": "Relay kits",
     "kind": "KIT",
     "shortName": "KIT",
-    "icon": "󰀃"
+    "icon": "󰀃",
+    "use": "Install in a zone to extend the radio's reach there."
   },
   {
     "id": "parts",
     "name": "Parts",
     "kind": "PART",
     "shortName": "PRT",
-    "icon": "󰣖"
+    "icon": "󰣖",
+    "use": "Rare mechanical parts. High-level upgrades and repairs of rare gear."
   },
   {
     "id": "gear_linterna",

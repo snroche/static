@@ -18,15 +18,28 @@ final class BunkerPanel {
         void closeBunker();
 
         void pickRecipe();
+
+        /** Long-press on a line: explain it. */
+        default void explain(CharSequence text) {
+        }
     }
 
     private final PanelBunkerBinding b;
     private final TerminalViewModel viewModel;
+    private final Host host;
     private SessionSnapshot snapshot;
+
+    private void explainable(TextView view) {
+        view.setOnLongClickListener(v -> {
+            host.explain(view.getText());
+            return true;
+        });
+    }
 
     BunkerPanel(PanelBunkerBinding binding, TerminalViewModel viewModel, Host host) {
         this.b = binding;
         this.viewModel = viewModel;
+        this.host = host;
         b.bunkerClose.setOnClickListener(v -> host.closeBunker());
         b.recharge.setOnClickListener(v -> viewModel.recharge());
         b.craft.setOnClickListener(v -> host.pickRecipe());
@@ -120,7 +133,16 @@ final class BunkerPanel {
         for (SessionSnapshot.ModuleView m : base.modules) {
             TextView line = (TextView) inflater.inflate(R.layout.item_log_line, b.modules, false);
             line.setText(res.getString(R.string.module_line, m.name, m.level, m.maxLevel));
+            explainable(line);
             b.modules.addView(line);
+            if (m.now != null) {
+                TextView now = (TextView) inflater.inflate(R.layout.item_log_line, b.modules, false);
+                now.setText(m.next != null ? res.getString(R.string.module_now_next, m.now, m.next)
+                        : res.getString(R.string.module_now_max, m.now));
+                now.setAlpha(0.8f);
+                explainable(now);
+                b.modules.addView(now);
+            }
             if (m.upgradeCost != null) {
                 TextView upgrade = (TextView) inflater.inflate(R.layout.item_decision_option, b.modules, false);
                 upgrade.setText(res.getString(R.string.module_upgrade, m.upgradeCost));

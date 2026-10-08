@@ -80,6 +80,24 @@ public final class TerminalText {
     private Map<String, List<String>> commands;
     /** Stat key to display name. */
     private Map<String, String> statNames;
+    /** Stat key to what it does. */
+    private Map<String, String> statDescriptions;
+    /** Mood key to what it means. */
+    private Map<String, String> moodDescriptions;
+    /** General terms (Bond, Trust, Reserve…) to their explanation. */
+    private Map<String, String> glossary;
+
+    public Map<String, String> getStatDescriptions() {
+        return statDescriptions != null ? statDescriptions : Map.of();
+    }
+
+    public Map<String, String> getMoodDescriptions() {
+        return moodDescriptions != null ? moodDescriptions : Map.of();
+    }
+
+    public Map<String, String> getGlossary() {
+        return glossary != null ? glossary : Map.of();
+    }
     /** ScoutStatus name to label. */
     private Map<String, String> scoutStatus;
     /** Injury name to label. */

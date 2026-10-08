@@ -83,6 +83,7 @@ public final class TerminalActivity extends ComponentActivity {
     private BunkerPanel bunkerPanel;
     private MapPanel mapPanel;
     private OptionsPanel optionsPanel;
+    private InfoSheet infoSheet;
     private boolean hapticsOn = true;
     private SendPanel sendPanel;
     /** Gear slot being changed (GearDef.Slot name). */
@@ -93,7 +94,9 @@ public final class TerminalActivity extends ComponentActivity {
     private final OnBackPressedCallback closePanelOnBack = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
-            if (optionsPanel.isShown()) {
+            if (infoSheet.isShown()) {
+                infoSheet.hide();
+            } else if (optionsPanel.isShown()) {
                 optionsPanel.hide();
             } else if (decoderPanel.isShown()) {
                 decoderPanel.hide();
@@ -129,6 +132,11 @@ public final class TerminalActivity extends ComponentActivity {
         viewModel = new ViewModelProvider(this).get(TerminalViewModel.class);
         sound = new SoundEngine(settings.isSoundOn());
         viewModel.getSoundOn().observe(this, sound::setEnabled);
+        infoSheet = new InfoSheet(binding.infoSheet, this::updateBack);
+        infoSheet.explainOnLongPress(binding.hud);
+        infoSheet.explainOnLongPress(binding.expeditionStrip);
+        infoSheet.explainOnLongPress(binding.decisionSituation);
+        infoSheet.explainOnLongPress(binding.mapPanel.mapInfo);
         optionsPanel = new OptionsPanel(binding.optionsPanel, viewModel, () -> {
             optionsPanel.hide();
             updateBack();
@@ -180,6 +188,10 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void setUpLog() {
         adapter = new LogAdapter();
+        adapter.setLineListener(line -> {
+            infoSheet.show(line.getText());
+            updateBack();
+        });
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
         binding.log.setLayoutManager(layoutManager);
@@ -400,6 +412,7 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void renderSnapshot(SessionSnapshot snapshot) {
         this.snapshot = snapshot;
+        infoSheet.setGlossary(snapshot.glossary);
         refreshHighlighter();
         if (logView != LogView.SYSTEM) {
             renderLogChips();
@@ -692,6 +705,12 @@ public final class TerminalActivity extends ComponentActivity {
                 select(scout);
                 showPanel(Panel.GEAR);
             }
+
+            @Override
+            public void onInfo(CharSequence cardText) {
+                infoSheet.show(cardText);
+                updateBack();
+            }
         });
         pickerAdapter = new PickerAdapter(this::onPick);
         binding.panelList.setLayoutManager(new LinearLayoutManager(this));
@@ -765,6 +784,12 @@ public final class TerminalActivity extends ComponentActivity {
             }
 
             @Override
+            public void explain(CharSequence text) {
+                infoSheet.show(text);
+                updateBack();
+            }
+
+            @Override
             public void pickRecipe() {
                 // The picker overlay sits below the bunker panel: swap them while choosing.
                 bunkerPanel.hide();
@@ -776,7 +801,7 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void updateBack() {
         closePanelOnBack.setEnabled(tab != Tab.COMMS || panel != Panel.NONE || decoderPanel.isShown()
-                || optionsPanel.isShown() || sendPanel.isShown());
+                || optionsPanel.isShown() || sendPanel.isShown() || infoSheet.isShown());
     }
 
     private void select(SessionSnapshot.ScoutView scout) {

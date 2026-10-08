@@ -1154,6 +1154,48 @@ public final class GameSession {
         }
     }
 
+    private Map<String, String> glossary;
+
+    /** Every term worth explaining, built once from content. */
+    private Map<String, String> glossary() {
+        if (glossary != null) {
+            return glossary;
+        }
+        Map<String, String> g = new java.util.LinkedHashMap<>(content.getTerminal().getGlossary());
+        for (com.estatica.domain.content.TraitDef t : content.getTraits().values()) {
+            g.put(t.getName(), t.getDescription());
+        }
+        content.getTerminal().getStatNames().forEach((key, name) ->
+                g.put(name, content.getTerminal().getStatDescriptions().get(key)));
+        content.getTerminal().getMoods().forEach((key, name) ->
+                g.put(name, content.getTerminal().getMoodDescriptions().get(key)));
+        for (com.estatica.domain.content.ResourceDef r : content.getResources().values()) {
+            if (r.getUse() != null) {
+                g.put(r.getName(), r.getUse());
+            }
+        }
+        for (GearDef gd : content.getGear().values()) {
+            g.put(gd.getName(), gd.getDescription());
+        }
+        for (ZoneDef z : content.getZones().values()) {
+            g.put(z.getName(), z.getDescription());
+        }
+        for (BandDef b : content.getBalance().getBands()) {
+            if (b.getDescription() != null) {
+                g.put(b.getName(), b.getDescription());
+            }
+        }
+        for (ModuleDef m : content.getBalance().getModules()) {
+            g.put(m.getName(), m.getDescription());
+        }
+        for (EnergyDef.Consumer c : content.getBalance().getEnergy().getConsumers()) {
+            g.putIfAbsent(c.getName(), c.getDescription());
+        }
+        g.values().removeIf(java.util.Objects::isNull);
+        glossary = java.util.Collections.unmodifiableMap(g);
+        return glossary;
+    }
+
     private List<String> placeNames() {
         List<String> out = new ArrayList<>();
         for (ZoneDef z : content.getZones().values()) {
@@ -1975,7 +2017,8 @@ public final class GameSession {
             int level = moduleLevel(m.getId());
             Map<String, Integer> cost = m.costFrom(level);
             modules.add(new SessionSnapshot.ModuleView(m.getId(), m.getName(), m.getDescription(), level,
-                    m.getMaxLevel(), cost != null ? describe(cost) : null, cost != null && canAfford(cost)));
+                    m.getMaxLevel(), cost != null ? describe(cost) : null, cost != null && canAfford(cost),
+                    m.levelText(level), level < m.getMaxLevel() ? m.levelText(level + 1) : null));
         }
         double speed = workshopSpeed(g);
         List<SessionSnapshot.JobView> jobs = new ArrayList<>();
@@ -2528,7 +2571,7 @@ public final class GameSession {
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
                 radioView(), baseView(now), expeditionViews,
                 food.daysLeft(mouths(), kitchenSaving(), resources.getOrDefault("rations", 0), foodCarryNow(now)),
-                value(KEY_HUNGRY) > 0, mapView(), weather.at(now).name(),
+                value(KEY_HUNGRY) > 0, mapView(), glossary(), weather.at(now).name(),
                 content.getTerminal().getWeather().getNames().getOrDefault(weather.at(now).name(), ""),
                 placeNames(), resourceNames(),
                 content.getTerminal().getHighlight().getDanger(), content.getTerminal().getHighlight().getGood(),

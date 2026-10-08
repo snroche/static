@@ -35,6 +35,10 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
         void onTask(ScoutView scout);
 
         void onEquip(ScoutView scout);
+
+        /** Long-press on a card: explain what's on it. */
+        default void onInfo(CharSequence cardText) {
+        }
     }
 
     private static final char FILLED = '■';
@@ -59,6 +63,12 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         ScoutView scout = getItem(position);
         holder.bind(scout, listener, expanded.contains(scout.id));
+        View.OnLongClickListener explain = v -> {
+            listener.onInfo(holder.cardText());
+            return true;
+        };
+        holder.b.header.setOnLongClickListener(explain);
+        holder.b.details.setOnLongClickListener(explain);
         holder.b.header.setOnClickListener(v -> {
             if (!expanded.remove(scout.id)) {
                 expanded.add(scout.id);
@@ -72,6 +82,17 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
 
     static final class Holder extends RecyclerView.ViewHolder {
         final ItemScoutBinding b;
+
+        /** Everything the card says, for the info sheet. */
+        CharSequence cardText() {
+            StringBuilder out = new StringBuilder();
+            for (TextView t : new TextView[]{b.summary, b.stats, b.mood, b.traits, b.task, b.gear, b.vitals, b.bond}) {
+                if (t.getVisibility() == View.VISIBLE && t.getText() != null) {
+                    out.append(t.getText()).append('\n');
+                }
+            }
+            return out;
+        }
 
         Holder(ItemScoutBinding binding) {
             super(binding.getRoot());

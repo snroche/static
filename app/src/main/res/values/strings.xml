@@ -196,6 +196,10 @@
     <string name="zones_none">No places known yet. Open the [MAP] and scout around the bunker.</string>
     <string name="zone_depleted">picked over %1$d%%</string>
     <string name="zone_depleted_long">Picked over (%1$d%%): less to find until it refills.</string>
+    <string name="module_now_next">   now: %1$s\n   next: %2$s</string>
+    <string name="module_now_max">   now: %1$s (max level)</string>
+    <string name="info_title">INFO</string>
+    <string name="info_nothing">Nothing here needs explaining. Long-press names, traits, stats, places or supplies.</string>
     <string name="gear_title">GEAR</string>
     <string name="gear_line_worn_by">%1$s — %2$s</string>
     <string name="gear_repair">[ REPAIR: %1$s ]</string>

@@ -324,5 +324,31 @@
         "No moon tonight. I'm feeling my way."
       ]
     }
+  },
+  "statDescriptions": {
+    "endurance": "Strength and stamina: climbing, carrying, running, taking a hit.",
+    "stealth": "Moving unseen: sneaking past danger, avoiding fights.",
+    "wits": "Noticing and figuring out: reading signs, maps, locks.",
+    "nerve": "Keeping calm: talking, waiting, facing people.",
+    "craft": "Fixing and building: machines, wires, traps; the workshop."
+  },
+  "moodDescriptions": {
+    "content": "Low stress and a strong bond: steady and happy to help.",
+    "steady": "Fine, for now.",
+    "tense": "Stressed. Worse odds out there; rest or a good talk helps.",
+    "breaking": "Close to the edge. Bad decisions and risk of disobeying. Keep them home."
+  },
+  "glossary": {
+    "Bond": "How close they feel to you (0–100, 5 levels). Grows with talks, gifts and listening. High bond: they open up, ask to come home when in danger.",
+    "Trust": "Whether they follow your orders. Low trust and a stubborn trait: they may do it their way.",
+    "Stress": "Wears them down. High stress lowers their odds and counts as a warning before a deadly situation.",
+    "Reserve": "Stored power, charged by spare watts. Locking a signal on the dial costs reserve.",
+    "Power": "Watts from the generator, shared between filters, radio, antenna, workshop and infirmary.",
+    "Picked over": "A place looted recently. Less to find until it refills (a quarter of its depletion recovers per day).",
+    "Bad feeling": "The scout thinks this option is likely to go wrong. Ordering it anyway can cost bond, and it counts as a warning.",
+    "Relay": "Installed in a zone: less static and faster orders there, and more reach.",
+    "Intel": "Decoded information about a zone: a stash (more loot) or its dangers (better odds).",
+    "Band": "How far the radio reaches. Short, medium, long, deep: farther is slower and more dangerous, and has better finds.",
+    "Personal mission": "Something a scout needs to do for themselves. Asked at bond level 4. Brings peace and a lot of bond."
   }
 }

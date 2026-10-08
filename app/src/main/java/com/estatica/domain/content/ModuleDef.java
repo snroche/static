@@ -9,6 +9,13 @@ public final class ModuleDef {
     private String id;
     private String name;
     private String description;
+    /** What each level does, level 1 first. */
+    private List<String> levels;
+
+    /** What it does at a level (1-based), or null. */
+    public String levelText(int level) {
+        return levels != null && level >= 1 && level <= levels.size() ? levels.get(level - 1) : null;
+    }
     private int startLevel = 1;
     /** Cost to reach level i + 2 (index 0 = upgrade from 1 to 2). Resource id to amount. */
     private List<Map<String, Integer>> upgradeCosts;

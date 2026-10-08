@@ -20,6 +20,8 @@ public final class SessionSnapshot {
     public final BaseView base;
     /** Scouts out right now, for the expedition strip. */
     public final List<ExpeditionView> expeditions;
+    /** Term to explanation, for long-press info (traits, stats, resources, places, gear…). */
+    public final java.util.Map<String, String> glossary;
     /** Weather outside now (WeatherRules.Weather name) and its display name. */
     public final String weather;
     public final String weatherName;
@@ -42,9 +44,11 @@ public final class SessionSnapshot {
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
                     List<MissionView> missions, RadioView radio, BaseView base,
                     List<ExpeditionView> expeditions, double foodDaysLeft, boolean hungry,
-                    MapView map, String weather, String weatherName, List<String> placeNames, List<String> resourceNames, List<String> dangerWords,
+                    MapView map, java.util.Map<String, String> glossary, String weather, String weatherName,
+                    List<String> placeNames, List<String> resourceNames, List<String> dangerWords,
                     List<String> goodWords, long nextWakeAtMillis) {
         this.map = map;
+        this.glossary = glossary;
         this.weather = weather;
         this.weatherName = weatherName;
         this.placeNames = placeNames;
@@ -325,12 +329,17 @@ public final class SessionSnapshot {
         public final String description;
         public final int level;
         public final int maxLevel;
-        /** "10 chatarra, 4 componentes" or null at max level. */
+        /** "10 scrap, 4 components" or null at max level. */
         public final String upgradeCost;
         public final boolean affordable;
+        /** What it does now, and what the next level gives (null at max). */
+        public final String now;
+        public final String next;
 
         ModuleView(String id, String name, String description, int level, int maxLevel,
-                   String upgradeCost, boolean affordable) {
+                   String upgradeCost, boolean affordable, String now, String next) {
+            this.now = now;
+            this.next = next;
             this.id = id;
             this.name = name;
             this.description = description;

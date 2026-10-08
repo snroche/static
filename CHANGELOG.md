@@ -8,6 +8,12 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+### Added
+- **Long-press explanations:** long-press a log line, a crew card, the status bar, the expedition strip, a bunker module, the decision card or the map's place info to open an INFO sheet explaining every known term in it.
+  - It covers traits, stats, moods, resources (and what they're for), gear, places, bands, modules, power consumers, and terms like Bond, Trust, Stress, Reserve, Picked over and Bad feeling.
+  - The glossary is built from content: `terminal.json` → `glossary`, `statDescriptions`, `moodDescriptions`; `resources.json` → `use`; band descriptions in `balance.json`.
+- **Modules explain their levels:** each shows what it does now and what the next level gives ("Antenna 1/5 · now: hears the short band only · next: opens the medium band"). Content 16 → 17: `levels` on modules.
+
 ### Changed
 - **Readable map:**
   - Each place has its own icon (store, gas station, pharmacy, school, laundry, hospital, trains, police, gated community, airport, dam, antenna) and a short label ("Hospital", "Trains").
