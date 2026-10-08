@@ -1,5 +1,5 @@
 {
-  "contentVersion": 17,
+  "contentVersion": 18,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -213,6 +213,12 @@
           "components": 14,
           "batteries": 6,
           "parts": 4
+        },
+        {
+          "scrap": 40,
+          "components": 20,
+          "batteries": 8,
+          "parts": 6
         }
       ],
       "levels": [
@@ -220,7 +226,8 @@
         "Opens the medium band: farther places, stronger survivors.",
         "Medium band with a steadier signal.",
         "Opens the long band: the far country.",
-        "Long band at full reach."
+        "Long band at full reach.",
+        "Opens the deep band: nothing to scout out there, only voices."
       ]
     },
     {

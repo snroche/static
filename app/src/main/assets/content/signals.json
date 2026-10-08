@@ -182,6 +182,194 @@
       "reward": "PLOT",
       "plot": "c1_5",
       "text": "Who else is listening"
+    },
+    {
+      "id": "atb_agua",
+      "band": "short",
+      "kind": "ATBASH",
+      "text": "Clean water in the school basement",
+      "reward": "RESOURCES",
+      "unique": true,
+      "resources": {
+        "rations": 2
+      }
+    },
+    {
+      "id": "atb_piezas",
+      "band": "short",
+      "kind": "ATBASH",
+      "text": "Spare parts hidden at {zone}",
+      "reward": "CACHE",
+      "unique": false
+    },
+    {
+      "id": "tap_celdas",
+      "band": "medium",
+      "kind": "TAP",
+      "text": "They locked us in the station cells",
+      "reward": "LORE",
+      "unique": true,
+      "lore": "Tap code from a cell: someone was locked up at the station when the Silence came, and kept knocking."
+    },
+    {
+      "id": "tap_noche",
+      "band": "short",
+      "kind": "TAP",
+      "text": "Stay away from {zone} at night",
+      "reward": "DANGER",
+      "unique": false,
+      "minPosition": 600
+    },
+    {
+      "id": "vig_solos",
+      "band": "medium",
+      "kind": "VIGENERE",
+      "text": "The voice is not alone",
+      "reward": "LORE",
+      "unique": true,
+      "key": "SILENCE",
+      "keyHint": "Key: what everyone fears now (one word)",
+      "lore": "A Vigenère message: the Voice is not alone. There are others on its net."
+    },
+    {
+      "id": "vig_botiquin",
+      "band": "medium",
+      "kind": "VIGENERE",
+      "text": "Medicine cache at {zone}",
+      "reward": "CACHE",
+      "unique": false,
+      "key": "BUNKER",
+      "keyHint": "Key: where you are (one word)"
+    },
+    {
+      "id": "b64_registro",
+      "band": "medium",
+      "kind": "BASE64",
+      "text": "system log echo seven online",
+      "reward": "LORE",
+      "unique": true,
+      "lore": "A machine's log, in Base64: 'echo seven online'. Something automatic is still running out there."
+    },
+    {
+      "id": "b64_baterias",
+      "band": "long",
+      "kind": "BASE64",
+      "text": "batteries in the hangar office",
+      "reward": "RESOURCES",
+      "unique": true,
+      "resources": {
+        "batteries": 3
+      }
+    },
+    {
+      "id": "pf_convoy",
+      "band": "long",
+      "kind": "PLAYFAIR",
+      "text": "convoy left the dam at dawn",
+      "reward": "LORE",
+      "unique": true,
+      "key": "HARRIER",
+      "keyHint": "Net KESTREL",
+      "lore": "Military traffic, net KESTREL: a convoy left the dam at dawn. Someone is still moving supplies."
+    },
+    {
+      "id": "pf_suministros",
+      "band": "long",
+      "kind": "PLAYFAIR",
+      "text": "supplies at {zone}",
+      "reward": "CACHE",
+      "unique": false,
+      "key": "FALCONRY",
+      "keyHint": "Net OSPREY"
+    },
+    {
+      "id": "pf_eco",
+      "band": "deep",
+      "kind": "PLAYFAIR",
+      "text": "echo seven relays the voice",
+      "reward": "LORE",
+      "unique": true,
+      "key": "STARLIGHT",
+      "keyHint": "Net MERLIN",
+      "lore": "Net MERLIN, from the deep band: Echo-7 relays the Voice. The station is a repeater, not the source."
+    },
+    {
+      "id": "num_prueba",
+      "band": "long",
+      "kind": "NUMBERS",
+      "text": "the silence was a test",
+      "reward": "LORE",
+      "unique": true,
+      "key": "pad_7",
+      "minPosition": 500,
+      "lore": "A numbers station, pad 7: 'the silence was a test'. A test of what, it doesn't say."
+    },
+    {
+      "id": "num_escuchan",
+      "band": "deep",
+      "kind": "NUMBERS",
+      "text": "they are listening to you",
+      "reward": "LORE",
+      "unique": true,
+      "key": "pad_19",
+      "lore": "A numbers station, pad 19: 'they are listening to you'. Meant for whoever has the pad. You do."
+    },
+    {
+      "id": "libro_mentiras",
+      "band": "medium",
+      "kind": "BOOK",
+      "text": "the voice lies do not answer",
+      "reward": "LORE",
+      "unique": true,
+      "lore": "A book code against the 1974 handbook: 'the voice lies, do not answer'."
+    },
+    {
+      "id": "libro_represa",
+      "band": "long",
+      "kind": "BOOK",
+      "text": "echo seven is under the dam",
+      "reward": "LORE",
+      "unique": true,
+      "lore": "Book code: 'echo seven is under the dam'. Not the antenna: under the dam."
+    },
+    {
+      "id": "morse_alto",
+      "band": "short",
+      "kind": "MORSE",
+      "text": "Is anyone on this frequency",
+      "reward": "LORE",
+      "unique": true,
+      "minPosition": 800,
+      "lore": "Way up the short band, in Morse: 'is anyone on this frequency?'. Someone else is sweeping too."
+    },
+    {
+      "id": "profunda_oimos",
+      "band": "deep",
+      "text": "We hear you bunker",
+      "reward": "LORE",
+      "unique": true,
+      "lore": "From the deep band, plainly: 'we hear you, bunker'."
+    },
+    {
+      "id": "herramientas_camion",
+      "band": "medium",
+      "text": "Tools in the red truck",
+      "reward": "RESOURCES",
+      "unique": true,
+      "resources": {
+        "parts": 1
+      },
+      "minPosition": 700
+    },
+    {
+      "id": "raciones_rio",
+      "band": "long",
+      "text": "Two crates of rations by the river",
+      "reward": "RESOURCES",
+      "unique": true,
+      "resources": {
+        "rations": 4
+      }
     }
   ]
 }

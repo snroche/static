@@ -123,8 +123,13 @@ public final class Migrations {
             "ALTER TABLE `expeditions` ADD COLUMN `loot_factor` REAL NOT NULL DEFAULT 1"
     );
 
+    /** Ciphers: the transmission's keyword or precomputed cipher text. */
+    static final List<String> MIGRATION_11_12_SQL = List.of(
+            "ALTER TABLE `transmissions` ADD COLUMN `cipher_key` TEXT"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL, MIGRATION_9_10_SQL, MIGRATION_10_11_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL, MIGRATION_9_10_SQL, MIGRATION_10_11_SQL, MIGRATION_11_12_SQL);
 
     public static final Migration[] ALL = build();
 

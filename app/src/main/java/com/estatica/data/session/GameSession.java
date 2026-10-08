@@ -1205,6 +1205,77 @@ public final class GameSession {
         return glossary;
     }
 
+    // ---- Ciphers: what each scheme needs and what the key item does for you ----
+
+    private SignalsDef.Transmission signalDef(String sourceId) {
+        for (SignalsDef.Transmission d : content.getSignals().getTransmissions()) {
+            if (d.getId().equals(sourceId)) {
+                return d;
+            }
+        }
+        return null;
+    }
+
+    /** Key item a transmission needs before you can work on it, or null. */
+    private String requiredKey(Transmission t) {
+        switch (t.getKind()) {
+            case ATBASH:
+                return "mirror_card";
+            case TAP:
+                return "tap_chart";
+            case VIGENERE:
+                return "cipher_notebook";
+            case BASE64:
+                return "b64_notebook";
+            case PLAYFAIR:
+                return "military_codebook";
+            case BOOK:
+                return "field_handbook";
+            case NUMBERS: {
+                SignalsDef.Transmission def = signalDef(t.getSourceId());
+                return def != null ? def.getKey() : null;
+            }
+            default:
+                return null;
+        }
+    }
+
+    private SessionSnapshot.TransmissionView transmissionView(Transmission t) {
+        TerminalText.RadioText text = content.getTerminal().getRadio();
+        String need = requiredKey(t);
+        boolean unlocked = need == null || hasKey(need);
+        SignalsDef.Transmission def = signalDef(t.getSourceId());
+        String cipher = t.cipherText();
+        String assisted = null;
+        if (unlocked) {
+            switch (t.getKind()) {
+                case ATBASH:
+                    assisted = com.estatica.domain.radio.Ciphers.atbash(cipher);
+                    break;
+                case BASE64: {
+                    String plain = com.estatica.domain.radio.Ciphers.unbase64(cipher);
+                    assisted = plain != null ? plain.toUpperCase(Locale.ROOT) : null;
+                    break;
+                }
+                case PLAYFAIR:
+                    assisted = com.estatica.domain.radio.Ciphers.fromNato(cipher);
+                    break;
+                case NUMBERS:
+                    assisted = com.estatica.domain.radio.Ciphers.unnumbers(cipher, content.keyItem(need).getPad());
+                    break;
+                case BOOK:
+                    assisted = com.estatica.domain.radio.Ciphers.unbook(cipher, content.keyItem(need).getPages());
+                    break;
+                default:
+                    break;
+            }
+        }
+        String locked = unlocked ? null : text.getLockedHints().getOrDefault(t.getKind().name(), "");
+        return new SessionSnapshot.TransmissionView(t.getId(), t.getKind().name(), cipher, t.getBandId(), unlocked,
+                locked, def != null ? def.getKeyHint() : null, assisted,
+                text.getSchemeNames().getOrDefault(t.getKind().name(), t.getKind().name()));
+    }
+
     // ---- Key items (notebooks, manuals, codebooks…) ----
 
     private static final String KEY_FLAG = "key:";
@@ -2651,8 +2722,7 @@ public final class GameSession {
         }
         List<SessionSnapshot.TransmissionView> pendingTransmissions = new ArrayList<>();
         for (Transmission t : transmissions.values()) {
-            pendingTransmissions.add(new SessionSnapshot.TransmissionView(t.getId(), t.getKind().name(),
-                    t.cipherText(), t.getBandId()));
+            pendingTransmissions.add(transmissionView(t));
         }
         List<String> relayLines = new ArrayList<>();
         for (Relay relay : relays.values()) {

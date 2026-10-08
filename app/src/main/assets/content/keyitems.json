@@ -46,20 +46,38 @@
     "name": "Pad page 7",
     "unlocks": "NUMBERS",
     "description": "A page of five-digit groups headed 'PAD 7'. Burn after use. Nobody did.",
-    "text": "ONE-TIME PAD — PAGE 7\n\n12930 48211 70533 91847 26519 30772 85106 44398 61025 79314\n\nSubtract each pair of digits from the message, without borrowing. 01=A … 26=Z, 00=space."
+    "text": "ONE-TIME PAD — PAGE 7\n\n12930 48211 70533 91847 26519 30772 85106 44398 61025 79314\n\nSubtract each pair of digits from the message, without borrowing. 01=A … 26=Z, 00=space.",
+    "pad": "12930 48211 70533 91847 26519 30772 85106 44398 61025 79314"
   },
   {
     "id": "pad_19",
     "name": "Pad page 19",
     "unlocks": "NUMBERS",
     "description": "Another pad page, this one water-stained. 'PAD 19'.",
-    "text": "ONE-TIME PAD — PAGE 19\n\n55102 93847 10264 38819 70215 66431 29908 14572 83360 47129\n\nSubtract each pair of digits from the message, without borrowing. 01=A … 26=Z, 00=space."
+    "text": "ONE-TIME PAD — PAGE 19\n\n55102 93847 10264 38819 70215 66431 29908 14572 83360 47129\n\nSubtract each pair of digits from the message, without borrowing. 01=A … 26=Z, 00=space.",
+    "pad": "55102 93847 10264 38819 70215 66431 29908 14572 83360 47129"
   },
   {
     "id": "field_handbook",
     "name": "Field radio handbook",
     "unlocks": "BOOK",
     "description": "A 1974 field radio handbook. Words underlined in pencil, page after page.",
-    "text": "FIELD RADIO HANDBOOK (1974), the underlined bits.\n\nBook codes give page-line-word: find the page, count the lines, count the words.\n\nWhoever owned this used it a lot. The margins say: 'they use this one too'."
+    "text": "FIELD RADIO HANDBOOK (1974), the underlined bits.\n\n— page 1 —\n1  Chapter one: the field radio\n2  Keep the antenna dry and do not answer every voice\n3  A good operator listens more than talks\n— page 2 —\n1  Repeaters work best under clear skies\n2  Echo returns from the dam on the long band\n3  Seven words is enough for a message\n— page 3 —\n1  Some stations transmit lies on purpose\n2  Learn them, log them, never trust them\n\nBook codes give page-line-word: find the page, count the lines, count the words.",
+    "pages": [
+      [
+        "Chapter one: the field radio",
+        "Keep the antenna dry and do not answer every voice",
+        "A good operator listens more than talks"
+      ],
+      [
+        "Repeaters work best under clear skies",
+        "Echo returns from the dam on the long band",
+        "Seven words is enough for a message"
+      ],
+      [
+        "Some stations transmit lies on purpose",
+        "Learn them, log them, never trust them"
+      ]
+    ]
   }
 ]

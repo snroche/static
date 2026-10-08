@@ -88,8 +88,9 @@ public final class RadioRepository {
     public List<Transmission> pendingTransmissions() {
         List<Transmission> out = new ArrayList<>();
         for (RadioEntities.TransmissionRow r : dao.pendingTransmissions()) {
-            out.add(new Transmission(r.id, r.sourceId, Transmission.Kind.valueOf(r.kind), r.plainText,
-                    r.shift, r.bandId, r.zoneId, r.receivedAtMillis, Transmission.Status.valueOf(r.status)));
+            out.add(new Transmission(r.id, r.sourceId, Transmission.Kind.fromName(r.kind), r.plainText,
+                    r.shift, r.bandId, r.zoneId, r.receivedAtMillis, Transmission.Status.valueOf(r.status),
+                    r.cipherKey));
         }
         return out;
     }
@@ -107,6 +108,7 @@ public final class RadioRepository {
         r.kind = t.getKind().name();
         r.plainText = t.getPlainText();
         r.shift = t.getShift();
+        r.cipherKey = t.getKey();
         r.bandId = t.getBandId();
         r.zoneId = t.getZoneId();
         r.receivedAtMillis = t.getReceivedAtMillis();

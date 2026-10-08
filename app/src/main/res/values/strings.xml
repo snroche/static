@@ -50,8 +50,6 @@
     <string name="transmissions_title">TRANSMISSIONS TO DECODE</string>
     <string name="no_transmissions">None for now.</string>
     <string name="transmission_row">[ %1$s ] %2$s</string>
-    <string name="kind_caesar">CAESAR</string>
-    <string name="kind_morse">MORSE</string>
     <string name="module_line">%1$s: level %2$d of %3$d</string>
     <string name="module_upgrade">[ UPGRADE: %1$s ]</string>
     <string name="relays_line">Relay kits: %1$d (made in the workshop) · Installed: %2$s</string>
@@ -59,8 +57,6 @@
     <string name="zone_relay">Relay %1$d%%</string>
     <string name="zone_intel">There is decoded intel on this zone</string>
 
-    <string name="decode_caesar_title">CAESAR</string>
-    <string name="decode_morse_title">MORSE</string>
     <string name="decode_caesar_help">Turn the dial until the message makes sense.</string>
     <string name="decode_morse_help">Transcribe letter by letter: build each letter with dots and dashes, then tap LETTER.</string>
     <string name="shift_value">Shift: %1$d</string>
@@ -211,6 +207,19 @@
     <string name="inventory_key_line">&#xF14F7; %1$s  [ READ ]</string>
     <string name="inventory_no_keepsakes">No keepsakes yet. They turn up out there, and make good gifts.</string>
     <string name="inventory_no_keys">No key items yet. Notebooks, manuals and codebooks turn up out there: some unlock ciphers.</string>
+    <string name="decode_keyword_hint">type the keyword</string>
+    <string name="decode_title">%1$s</string>
+    <string name="decode_help_atbash">Mirror alphabet: the decoder card flips it for you. Check it, then send.</string>
+    <string name="decode_help_tap">Tap code: row knocks, then column knocks. Tap the letters on the grid.</string>
+    <string name="decode_help_vigenere">Vigenère: type the keyword. The preview decodes as you type.</string>
+    <string name="decode_help_base64">Base64: your notebook decodes it. Check it, then send.</string>
+    <string name="decode_help_playfair">Field cipher: the codebook turns the words into letters. Find the net keyword in the codebook and type it.</string>
+    <string name="decode_help_numbers">Numbers station: your pad page subtracts it for you.</string>
+    <string name="decode_help_book">Book code: you look each word up in the handbook.</string>
+    <string name="decode_locked_title">Unknown scheme</string>
+    <string name="decode_tool">Your notes say: %1$s</string>
+    <string name="decode_letters">Letters: %1$s</string>
+    <string name="transmission_locked">&#xF033E; %1$s</string>
     <string name="gear_title">GEAR</string>
     <string name="gear_line_worn_by">%1$s — %2$s</string>
     <string name="gear_repair">[ REPAIR: %1$s ]</string>

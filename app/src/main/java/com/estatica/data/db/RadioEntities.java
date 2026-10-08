@@ -77,6 +77,11 @@ public final class RadioEntities {
         @ColumnInfo(name = "received_at_millis")
         public long receivedAtMillis;
 
+        /** DB v12: keyword, or the cipher text for pad and book schemes. */
+        @androidx.annotation.Nullable
+        @ColumnInfo(name = "cipher_key")
+        public String cipherKey;
+
         @NonNull
         public String status = "";
     }

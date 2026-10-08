@@ -9,6 +9,19 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Added
+- **Radio depth: seven new schemes**, each with its own on-screen tool. A key item unlocks each one; without it, the transmission stays in the radio list with a lock as "unknown scheme" and a hint at what would help, so you can keep it and decode it later.
+  - **Mirror alphabet** (Atbash): the decoder card flips it for you.
+  - **Tap code**: tap letters on a 5×5 grid (cell wall chart).
+  - **Vigenère**: type the keyword with a live preview. The message hints at the key ("what everyone fears now"). Needs the puzzle notebook.
+  - **Base64** (programmer's notebook).
+  - **Military field cipher**: Playfair read out as NATO words. The field codebook turns the words into letters; you find the net's keyword in its pages and type it.
+  - **Numbers stations**: one-time pad digit groups. Only the matching pad page (7 or 19) breaks them.
+  - **Book code**: page-line-word against the 1974 field handbook, whose pages you can read.
+- **19 new transmissions** spread across those schemes, with lore, stashes, dangers and supplies.
+  - Some only come in high on the dial (position 500, 600, 700 or 800 and up on their band).
+  - Some only on the **deep band**: a sixth antenna level now opens it, for listening only (nothing to scout out there).
+  - Several continue the Voice's trail (Echo-7 relays the Voice; "echo seven is under the dam").
+- **DB 11 → 12:** `transmissions.cipher_key`. Transmissions from old saves keep working, and unknown saved kinds fall back to Caesar instead of crashing. Content 17 → 18.
 - **Key items and the inventory screen:**
   - [ INVENTORY ] in the BUNKER opens four tabs:
     - SUPPLIES: each resource and what it's for.

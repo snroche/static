@@ -609,6 +609,18 @@ public final class TerminalText {
         private String zoneFound;
         /** {name}, {zone}. */
         private String survivorFound;
+        /** Transmission.Kind name to what a locked one looks like and what might help. */
+        private Map<String, String> lockedHints;
+        /** Transmission.Kind name to its display name. */
+        private Map<String, String> schemeNames;
+
+        public Map<String, String> getLockedHints() {
+            return lockedHints != null ? lockedHints : Map.of();
+        }
+
+        public Map<String, String> getSchemeNames() {
+            return schemeNames != null ? schemeNames : Map.of();
+        }
         private String transmissionFound;
         private String nothingThere;
         private String alreadyCaught;

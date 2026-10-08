@@ -195,6 +195,26 @@ public final class ContentValidator {
             check(k.getName() != null && k.getDescription() != null, "key item " + k.getId() + ": name, description");
             check(k.getUnlocks() == null || kinds.contains(k.getUnlocks()), "key item " + k.getId() + ": unknown unlock " + k.getUnlocks());
         }
+        for (SignalsDef.Transmission t : content.getSignals().getTransmissions()) {
+            String where = "transmission " + t.getId();
+            if (t.getKind() == null) {
+                continue;
+            }
+            check(kinds.contains(t.getKind()), where + ": unknown kind " + t.getKind());
+            if ("VIGENERE".equals(t.getKind()) || "PLAYFAIR".equals(t.getKind())) {
+                check(t.getKey() != null && !t.getKey().isBlank(), where + ": needs a keyword");
+            }
+            if ("NUMBERS".equals(t.getKind())) {
+                KeyItemDef pad = t.getKey() != null ? content.keyItem(t.getKey()) : null;
+                check(pad != null && pad.getPad() != null, where + ": key must be a pad page with digits");
+            }
+            if ("BOOK".equals(t.getKind())) {
+                KeyItemDef book = content.keyItem("field_handbook");
+                check(book != null && com.estatica.domain.radio.Ciphers.book(
+                                com.estatica.domain.radio.Cipher.normalize(t.getText()), book.getPages()) != null,
+                        where + ": every word must be in the field handbook");
+            }
+        }
         for (EventDef e : content.getEvents().values()) {
             check(e.getGrantsKey() == null || content.keyItem(e.getGrantsKey()) != null,
                     "event " + e.getId() + ": unknown grantsKey " + e.getGrantsKey());

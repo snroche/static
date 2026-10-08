@@ -126,7 +126,8 @@ final class RadioPanel {
         }
         for (SessionSnapshot.TransmissionView t : radio.transmissions) {
             TextView row = (TextView) inflater.inflate(R.layout.item_decision_option, b.transmissions, false);
-            String kind = res.getString("MORSE".equals(t.kind) ? R.string.kind_morse : R.string.kind_caesar);
+            // Locked ones stay here until you find what they need.
+            String kind = t.unlocked ? t.schemeName : res.getString(R.string.transmission_locked, t.schemeName);
             String preview = t.cipherText.length() > 24 ? t.cipherText.substring(0, 24) + "…" : t.cipherText;
             row.setText(res.getString(R.string.transmission_row, kind, preview));
             row.setOnClickListener(v -> host.openDecoder(t, radio.morseTable));

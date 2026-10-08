@@ -129,7 +129,9 @@ public final class RadioRules {
                 List<SignalsDef.Transmission> options = new ArrayList<>();
                 for (SignalsDef.Transmission t : content.getSignals().getTransmissions()) {
                     boolean bandOk = t.getBand() == null || band.equals(t.getBand());
-                    if (bandOk && !(t.isUnique() && usedUnique.contains(t.getId()))) {
+                    // Some only come in high on the dial.
+                    boolean high = spot.position >= t.getMinPosition();
+                    if (bandOk && high && !(t.isUnique() && usedUnique.contains(t.getId()))) {
                         options.add(t);
                     }
                 }
@@ -176,6 +178,17 @@ public final class RadioRules {
     public Transmission encrypt(SignalsDef.Transmission def, String bandId, String zoneId,
                                 String plainText, GameRandom rng, long now) {
         BandDef band = balance.band(bandId);
+        if (def.getKind() != null) {
+            Transmission.Kind kind = Transmission.Kind.fromName(def.getKind());
+            String clean = Cipher.normalize(plainText);
+            String key = def.getKey();
+            if (kind == Transmission.Kind.NUMBERS) {
+                key = Ciphers.numbers(clean, content.keyItem(def.getKey()).getPad());
+            } else if (kind == Transmission.Kind.BOOK) {
+                key = Ciphers.book(clean, content.keyItem("field_handbook").getPages());
+            }
+            return Transmission.create(def.getId(), kind, plainText, 0, bandId, zoneId, now, key);
+        }
         boolean morse = def.getReward() != SignalsDef.Transmission.Reward.MORSE_TABLE
                 && rng.chance(band.getMorseChance());
         int shift = morse ? 0 : 1 + rng.nextInt(25);

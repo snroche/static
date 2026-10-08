@@ -73,6 +73,30 @@ public final class SignalsDef {
         private String plot;
         /** Only offered once (tutorial, lore). */
         private boolean unique;
+        /** Scheme to use (Transmission.Kind name); null = Caesar or Morse at random. */
+        private String kind;
+        /** Vigenère/Playfair keyword, or the pad key item id (Numbers). */
+        private String key;
+        /** What the operator can work the key out from ("Net KESTREL", "the thing everyone fears"). */
+        private String keyHint;
+        /** Only heard at this dial position or higher on its band. */
+        private int minPosition;
+
+        public String getKind() {
+            return kind;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getKeyHint() {
+            return keyHint;
+        }
+
+        public int getMinPosition() {
+            return minPosition;
+        }
 
         public String getId() {
             return id;

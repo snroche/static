@@ -7,7 +7,19 @@ import java.util.Objects;
 /** An encrypted message caught on the dial, waiting to be decoded (GDD §6.2). */
 public final class Transmission {
 
-    public enum Kind { CAESAR, MORSE }
+    public enum Kind {
+        CAESAR, MORSE, ATBASH, TAP, VIGENERE, BASE64, PLAYFAIR, NUMBERS, BOOK;
+
+        /** Saved kinds from newer versions fall back to Caesar instead of crashing. */
+        public static Kind fromName(String name) {
+            for (Kind k : values()) {
+                if (k.name().equals(name)) {
+                    return k;
+                }
+            }
+            return CAESAR;
+        }
+    }
 
     public enum Status { PENDING, SOLVED }
 
@@ -24,9 +36,20 @@ public final class Transmission {
     private final String zoneId;
     private final long receivedAtMillis;
     private Status status;
+    /**
+     * Vigenère/Playfair: the keyword. Numbers/Book: the cipher text itself (it depends on a pad
+     * page or a book the content holds). Null for the rest.
+     */
+    private final String key;
 
     public Transmission(String id, String sourceId, Kind kind, String plainText, int shift,
                         String bandId, String zoneId, long receivedAtMillis, Status status) {
+        this(id, sourceId, kind, plainText, shift, bandId, zoneId, receivedAtMillis, status, null);
+    }
+
+    public Transmission(String id, String sourceId, Kind kind, String plainText, int shift,
+                        String bandId, String zoneId, long receivedAtMillis, Status status, String key) {
+        this.key = key;
         this.id = Objects.requireNonNull(id);
         this.sourceId = Objects.requireNonNull(sourceId);
         this.kind = Objects.requireNonNull(kind);
@@ -40,17 +63,52 @@ public final class Transmission {
 
     public static Transmission create(String sourceId, Kind kind, String plainText, int shift,
                                       String bandId, String zoneId, long now) {
-        return new Transmission(Ids.newId(), sourceId, kind, Cipher.normalize(plainText), shift,
-                bandId, zoneId, now, Status.PENDING);
+        return create(sourceId, kind, plainText, shift, bandId, zoneId, now, null);
     }
 
-    /** What the operator sees: shifted letters or dots and dashes. */
+    public static Transmission create(String sourceId, Kind kind, String plainText, int shift,
+                                      String bandId, String zoneId, long now, String key) {
+        return new Transmission(Ids.newId(), sourceId, kind, Cipher.normalize(plainText), shift,
+                bandId, zoneId, now, Status.PENDING, key);
+    }
+
+    /** What the operator sees. */
     public String cipherText() {
-        return kind == Kind.CAESAR ? Cipher.caesar(plainText, shift) : Cipher.toMorse(plainText);
+        switch (kind) {
+            case MORSE:
+                return Cipher.toMorse(plainText);
+            case ATBASH:
+                return Ciphers.atbash(plainText);
+            case TAP:
+                return Ciphers.tap(plainText);
+            case VIGENERE:
+                return Ciphers.vigenere(plainText, key != null ? key : "", false);
+            case BASE64:
+                return Ciphers.base64(plainText);
+            case PLAYFAIR:
+                return Ciphers.toNato(Ciphers.playfair(plainText, key != null ? key : "", false));
+            case NUMBERS:
+            case BOOK:
+                return key != null ? key : plainText;
+            default:
+                return Cipher.caesar(plainText, shift);
+        }
     }
 
     public boolean check(String answer) {
+        if (kind == Kind.PLAYFAIR) {
+            // Playfair drops spaces and pads with X: compare letters only, Xs aside.
+            return lettersNoX(answer).equals(lettersNoX(plainText));
+        }
         return Cipher.matches(answer, plainText);
+    }
+
+    private static String lettersNoX(String text) {
+        return Cipher.normalize(text).replace(" ", "").replace("J", "I").replace("X", "");
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public String getId() {

@@ -1,6 +1,7 @@
 package com.estatica.ui.terminal;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.estatica.R;
 import com.estatica.data.session.SessionSnapshot;
@@ -51,6 +52,21 @@ final class DecoderPanel {
         b.tableButton.setOnClickListener(v ->
                 b.table.setVisibility(b.table.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE));
         b.table.setText(morseTable());
+        b.keyInput.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                showKeywordPreview();
+            }
+        });
+        buildTapGrid();
         b.send.setOnClickListener(v -> {
             if (transmission != null) {
                 viewModel.decode(transmission.id, answer());
@@ -68,20 +84,125 @@ final class DecoderPanel {
         shift = 0;
         typed.setLength(0);
         symbol.setLength(0);
-        boolean morse = "MORSE".equals(t.kind);
-        b.title.setText(morse ? R.string.decode_morse_title : R.string.decode_caesar_title);
-        b.instructions.setText(morse ? R.string.decode_morse_help : R.string.decode_caesar_help);
+        b.keyInput.setText("");
+        String kind = t.kind;
+        boolean morse = "MORSE".equals(kind);
+        boolean caesar = "CAESAR".equals(kind);
+        android.content.res.Resources res = b.getRoot().getResources();
+        b.title.setText(t.unlocked ? res.getString(R.string.decode_title, t.schemeName)
+                : res.getString(R.string.decode_locked_title));
         b.cipher.setText(t.cipherText);
-        b.caesarControls.setVisibility(morse ? View.GONE : View.VISIBLE);
-        b.morseControls.setVisibility(morse ? View.VISIBLE : View.GONE);
-        b.tableButton.setVisibility(morseTable ? View.VISIBLE : View.GONE);
+        b.caesarControls.setVisibility(t.unlocked && caesar ? View.VISIBLE : View.GONE);
+        b.morseControls.setVisibility(t.unlocked && morse ? View.VISIBLE : View.GONE);
+        b.tableButton.setVisibility(morse && morseTable ? View.VISIBLE : View.GONE);
         b.table.setVisibility(View.GONE);
-        if (morse) {
+        b.tapControls.setVisibility(t.unlocked && "TAP".equals(kind) ? View.VISIBLE : View.GONE);
+        boolean keyword = "VIGENERE".equals(kind) || "PLAYFAIR".equals(kind);
+        b.keyControls.setVisibility(t.unlocked && keyword ? View.VISIBLE : View.GONE);
+        b.keyHint.setText(t.keyHint != null ? t.keyHint : "");
+        b.locked.setVisibility(t.unlocked ? View.GONE : View.VISIBLE);
+        b.locked.setText(t.lockedHint);
+        b.send.setVisibility(t.unlocked ? View.VISIBLE : View.GONE);
+        b.tool.setVisibility(t.unlocked && t.assisted != null ? View.VISIBLE : View.GONE);
+        if (t.assisted != null) {
+            b.tool.setText("PLAYFAIR".equals(kind) ? res.getString(R.string.decode_letters, t.assisted)
+                    : res.getString(R.string.decode_tool, t.assisted));
+        }
+        b.instructions.setText(help(kind));
+        if (!t.unlocked) {
+            b.answer.setText("");
+        } else if (morse || "TAP".equals(kind)) {
             showMorseAnswer();
-        } else {
+        } else if (caesar) {
             setShift(0);
+        } else if (keyword) {
+            showKeywordPreview();
+        } else {
+            b.answer.setText(t.assisted != null ? t.assisted : "");
         }
         b.getRoot().setVisibility(View.VISIBLE);
+    }
+
+    private static int help(String kind) {
+        switch (kind) {
+            case "MORSE":
+                return R.string.decode_morse_help;
+            case "ATBASH":
+                return R.string.decode_help_atbash;
+            case "TAP":
+                return R.string.decode_help_tap;
+            case "VIGENERE":
+                return R.string.decode_help_vigenere;
+            case "BASE64":
+                return R.string.decode_help_base64;
+            case "PLAYFAIR":
+                return R.string.decode_help_playfair;
+            case "NUMBERS":
+                return R.string.decode_help_numbers;
+            case "BOOK":
+                return R.string.decode_help_book;
+            default:
+                return R.string.decode_caesar_help;
+        }
+    }
+
+    /** Vigenère or Playfair with the keyword typed so far. */
+    private void showKeywordPreview() {
+        if (transmission == null) {
+            return;
+        }
+        String key = b.keyInput.getText().toString();
+        if ("VIGENERE".equals(transmission.kind)) {
+            b.answer.setText(com.estatica.domain.radio.Ciphers.vigenere(transmission.cipherText, key, true));
+        } else if ("PLAYFAIR".equals(transmission.kind) && transmission.assisted != null) {
+            b.answer.setText(key.isBlank() ? transmission.assisted
+                    : com.estatica.domain.radio.Ciphers.playfair(transmission.assisted, key, true));
+        }
+    }
+
+    /** Tap code: a 5×5 grid of letters (C and K share), plus space and erase. */
+    private void buildTapGrid() {
+        android.view.LayoutInflater inflater = android.view.LayoutInflater.from(b.getRoot().getContext());
+        for (int row = 1; row <= 5; row++) {
+            android.widget.LinearLayout line = new android.widget.LinearLayout(b.getRoot().getContext());
+            line.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+            for (int col = 1; col <= 5; col++) {
+                char letter = com.estatica.domain.radio.Ciphers.tapLetter(row, col);
+                TextView cell = (TextView) inflater.inflate(R.layout.item_decision_option, line, false);
+                cell.setText(letter == 'C' ? "C/K" : String.valueOf(letter));
+                cell.setGravity(android.view.Gravity.CENTER);
+                android.widget.LinearLayout.LayoutParams lp =
+                        new android.widget.LinearLayout.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+                cell.setLayoutParams(lp);
+                cell.setOnClickListener(v -> {
+                    typed.append(letter);
+                    showMorseAnswer();
+                });
+                line.addView(cell);
+            }
+            b.tapControls.addView(line);
+        }
+        android.widget.LinearLayout tools = new android.widget.LinearLayout(b.getRoot().getContext());
+        tools.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        TextView space = (TextView) inflater.inflate(R.layout.item_decision_option, tools, false);
+        space.setText(R.string.morse_space);
+        space.setOnClickListener(v -> {
+            if (typed.length() > 0 && typed.charAt(typed.length() - 1) != ' ') {
+                typed.append(' ');
+            }
+            showMorseAnswer();
+        });
+        TextView erase = (TextView) inflater.inflate(R.layout.item_decision_option, tools, false);
+        erase.setText(R.string.morse_erase);
+        erase.setOnClickListener(v -> {
+            if (typed.length() > 0) {
+                typed.setLength(typed.length() - 1);
+            }
+            showMorseAnswer();
+        });
+        tools.addView(space);
+        tools.addView(erase);
+        b.tapControls.addView(tools);
     }
 
     void hide() {
@@ -89,11 +210,17 @@ final class DecoderPanel {
     }
 
     private String answer() {
-        if ("MORSE".equals(transmission.kind)) {
-            commitLetter();
-            return typed.toString();
+        switch (transmission.kind) {
+            case "MORSE":
+                commitLetter();
+                return typed.toString();
+            case "TAP":
+                return typed.toString();
+            case "CAESAR":
+                return Cipher.caesar(transmission.cipherText, -shift);
+            default:
+                return b.answer.getText().toString();
         }
-        return Cipher.caesar(transmission.cipherText, -shift);
     }
 
     private void setShift(int value) {

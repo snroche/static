@@ -16,6 +16,18 @@ public final class KeyItemDef {
     private String text;
     /** Transmission kind it lets you decode (e.g. "PLAYFAIR"), or null. */
     private String unlocks;
+    /** One-time pad digits (pad pages). */
+    private String pad;
+    /** A book's pages, each a list of lines (book cipher). */
+    private java.util.List<java.util.List<String>> pages;
+
+    public String getPad() {
+        return pad;
+    }
+
+    public java.util.List<java.util.List<String>> getPages() {
+        return pages != null ? pages : java.util.List.of();
+    }
 
     public String getId() {
         return id;

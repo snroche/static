@@ -185,6 +185,64 @@
                     android:visibility="gone" />
             </LinearLayout>
 
+            <!-- Locked: what it looks like and what might help. -->
+            <TextView
+                android:id="@+id/locked"
+                style="@style/TerminalText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/danger"
+                android:visibility="gone" />
+
+            <!-- What the key item does for you (mirror, pad, NATO, book). -->
+            <TextView
+                android:id="@+id/tool"
+                style="@style/TerminalText.Dim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
+
+            <!-- Keyword schemes: hint and a keyword field with live preview. -->
+            <LinearLayout
+                android:id="@+id/keyControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/keyHint"
+                    style="@style/TerminalText.Dim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/keyInput"
+                    style="@style/TerminalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/decode_keyword_hint"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapCharacters|textNoSuggestions"
+                    android:maxLines="1"
+                    android:minHeight="48dp"
+                    android:textColorHint="@color/amber_hint"
+                    android:textCursorDrawable="@null" />
+            </LinearLayout>
+
+            <!-- Tap code: a 5×5 grid to tap letters. -->
+            <LinearLayout
+                android:id="@+id/tapControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/send"
                 style="@style/TerminalButton"

@@ -317,16 +317,32 @@ public final class SessionSnapshot {
 
     public static final class TransmissionView {
         public final String id;
-        /** CAESAR or MORSE. */
+        /** Transmission.Kind name. */
         public final String kind;
         public final String cipherText;
         public final String band;
+        /** You have what it takes to work on it (or it needs nothing). */
+        public final boolean unlocked;
+        /** Locked: what it looks like and what might help. Null when unlocked. */
+        public final String lockedHint;
+        /** Where the keyword comes from ("Net KESTREL"), or null. */
+        public final String keyHint;
+        /** What the key item does for you (mirror flipped, pad applied, NATO read out), or null. */
+        public final String assisted;
+        /** Display name of the scheme. */
+        public final String schemeName;
 
-        TransmissionView(String id, String kind, String cipherText, String band) {
+        TransmissionView(String id, String kind, String cipherText, String band, boolean unlocked,
+                         String lockedHint, String keyHint, String assisted, String schemeName) {
             this.id = id;
             this.kind = kind;
             this.cipherText = cipherText;
             this.band = band;
+            this.unlocked = unlocked;
+            this.lockedHint = lockedHint;
+            this.keyHint = keyHint;
+            this.assisted = assisted;
+            this.schemeName = schemeName;
         }
     }
 

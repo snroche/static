@@ -157,7 +157,27 @@
     "assistantCaught": "{name} picked up a signal while you were away.",
     "missionRescue": "Rescue {name}",
     "missionInstall": "Install relay",
-    "missionMaintain": "Repair relay"
+    "missionMaintain": "Repair relay",
+    "schemeNames": {
+      "CAESAR": "Caesar shift",
+      "MORSE": "Morse",
+      "ATBASH": "mirror alphabet",
+      "TAP": "tap code",
+      "VIGENERE": "Vigenère",
+      "BASE64": "Base64",
+      "PLAYFAIR": "military field cipher",
+      "NUMBERS": "numbers station",
+      "BOOK": "book code"
+    },
+    "lockedHints": {
+      "ATBASH": "The letters look scrambled but evenly. Some kind of mirror? A decoder card would help.",
+      "TAP": "Knocks in groups. Rows and columns, maybe. A chart of the grid would help.",
+      "VIGENERE": "Shifted, but not evenly: it changes letter by letter. Somebody's cipher notes would help.",
+      "BASE64": "Letters, digits, '='. Computer stuff. A programmer's notes would help.",
+      "PLAYFAIR": "Military phonetic words, and the letters don't make sense. A field codebook would help.",
+      "NUMBERS": "Five-digit groups. A one-time pad: without the right pad page, it's unbreakable.",
+      "BOOK": "Page-line-word triples. A book code. You'd need the exact book."
+    }
   },
   "base": {
     "blackout": "Blackout: the generator loses {watts} W for {hours} h.",
