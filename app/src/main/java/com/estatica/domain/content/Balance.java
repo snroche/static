@@ -25,6 +25,31 @@ public final class Balance {
     private Pairs pairs;
     private Depletion depletion;
     private Weather weather;
+    private Vignettes vignettes;
+
+    public Vignettes getVignettes() {
+        return vignettes;
+    }
+
+    /** Small moments in the bunker. [placeholder] */
+    public static final class Vignettes {
+        private double intervalHours;
+        private double chance;
+        /** A vignette doesn't repeat for this long. */
+        private double cooldownHours;
+
+        public double getIntervalHours() {
+            return intervalHours;
+        }
+
+        public double getChance() {
+            return chance;
+        }
+
+        public double getCooldownHours() {
+            return cooldownHours;
+        }
+    }
 
     public Weather getWeather() {
         return weather;

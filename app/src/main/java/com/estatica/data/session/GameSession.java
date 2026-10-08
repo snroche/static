@@ -121,6 +121,7 @@ public final class GameSession {
     private com.estatica.domain.bunker.GearRules gearRules;
     private com.estatica.domain.map.RegionMap regionMap;
     private com.estatica.domain.world.WeatherRules weather;
+    private com.estatica.domain.scouts.VignetteRules vignettes;
     /** Every piece of equipment, by id (stock, equipped, lost in zones). */
     private final Map<String, com.estatica.domain.bunker.GearPiece> gear = new HashMap<>();
     private com.estatica.domain.state.GameState state;
@@ -227,6 +228,7 @@ public final class GameSession {
         personas = new com.estatica.domain.scouts.PersonaGenerator(content);
         food = new com.estatica.domain.bunker.FoodRules(content.getBalance().getFood());
         gearRules = new com.estatica.domain.bunker.GearRules(content);
+        vignettes = new com.estatica.domain.scouts.VignetteRules(content, rules);
         gifts = new GiftRules(content, rules);
         grief = new GriefRules(content, rules);
         state = gameStateRepository.loadOrCreate();
@@ -588,6 +590,40 @@ public final class GameSession {
         expireConversations(step);
         maybeStartConversation(step);
         maybeBark(step);
+        maybeVignette(step);
+    }
+
+    /** Thread for moments the whole bunker shares. */
+    public static final String BUNKER_CHAT = LogLine.chatThread("bunker");
+
+    /** Now and then, two people at home have a moment (shared meal, an argument, a song). */
+    private void maybeVignette(Step step) {
+        Balance.Vignettes config = content.getBalance().getVignettes();
+        double last = value("last_vignette");
+        if (last <= 0) {
+            setValue("last_vignette", step.now, step);
+            return;
+        }
+        if (step.now - last < config.getIntervalHours() * HOUR) {
+            return;
+        }
+        setValue("last_vignette", step.now, step);
+        if (!random.chance(config.getChance())) {
+            return;
+        }
+        Set<String> recent = new java.util.HashSet<>();
+        for (com.estatica.domain.content.VignetteDef v : content.getVignettes()) {
+            if (step.now - value("vig:" + v.getId()) < config.getCooldownHours() * HOUR) {
+                recent.add(v.getId());
+            }
+        }
+        boolean night = content.getBalance().getEnergy().isNight(clock.localHour(step.now));
+        com.estatica.domain.scouts.VignetteRules.Moment moment =
+                vignettes.pick(scouts.values(), affinities, night, recent, random, step.now);
+        if (moment != null) {
+            setValue("vig:" + moment.vignette.getId(), step.now, step);
+            step.into(moment.lines, BUNKER_CHAT);
+        }
     }
 
     private static final String KEY_FOOD_AT = "food_at";

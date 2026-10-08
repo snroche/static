@@ -173,6 +173,22 @@ public final class ContentValidator {
         check(food != null && food.getRationsPerScoutPerDay() > 0 && food.getKitchenMaxSaving() >= 0
                         && food.getKitchenMaxSaving() < 1 && food.getHungerHealMultiplier() > 0,
                 "balance.food: rationsPerScoutPerDay > 0, 0 ≤ kitchenMaxSaving < 1, hungerHealMultiplier > 0");
+        check(content.getBalance().getVignettes() != null && content.getBalance().getVignettes().getIntervalHours() > 0,
+                "balance.vignettes: intervalHours > 0");
+        check(content.getVignettes().size() >= 10, "vignettes: at least 10");
+        for (VignetteDef v : content.getVignettes()) {
+            String where = "vignette " + v.getId();
+            check(!v.getLines().isEmpty(), where + ": lines");
+            check(v.getRequires() == null || java.util.Set.of("friends", "rivals").contains(v.getRequires()),
+                    where + ": requires friends or rivals");
+            for (String t : v.getRequiresTrait()) {
+                checkTrait(t, where);
+            }
+            for (VignetteDef.Line l : v.getLines()) {
+                check(l.getText() != null && (l.getWho() == null || java.util.Set.of("a", "b").contains(l.getWho())),
+                        where + ": line who must be a, b or absent");
+            }
+        }
         Balance.Weather weatherBalance = content.getBalance().getWeather();
         check(weatherBalance != null && !weatherBalance.getWeights().isEmpty(), "balance.weather: weights");
         for (String kind : java.util.List.of("CLEAR", "CLOUDY", "RAIN", "FOG", "STORM")) {

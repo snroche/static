@@ -8,7 +8,21 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.6.6] — Icons, highlights, finer map, gear slots, depletion, weather, vignettes — in verification
+
+App 0.6.6 (versionCode 606) · **DB 10 → 11** · **Content 13 → 16**
+
+No release date: not tested on a device. Unsigned release APK: ~1.2 MB.
+
 ### Added
+- **Bunker vignettes:** while people are home, every few hours two of them may have a moment.
+  - Moments: a shared meal, cards on a crate, a song at night, a made-up birthday, a nightmare, a truce.
+  - Friends get friendship scenes and rivals get fights over rations. Some scenes need a trait or happen only at night.
+  - Each one nudges both people's stress and how they get on, and won't repeat for two days.
+  - They show in CHATS under a new "Bunker" chip, with narration plus lines in each person's voice.
+  - 16 to start, in `vignettes.json`. Content 15 → 16: `balance.vignettes`.
 - **Weather and daylight:**
   - Weather outside comes in 3-hour blocks from the game seed: clear, cloudy, rain, fog or a storm. Fronts tend to last.
   - Night follows the device clock, like the air filters.
@@ -637,6 +651,7 @@ No release date yet: it still needs testing on a device or emulator. Once approv
 - Lint reports newer versions of AGP, Room and Lifecycle. The project uses the ones already in the local cache; upgrading is a separate decision.
 
 [Unreleased]: #unreleased
+[0.6.6]: #066--icons-highlights-finer-map-gear-slots-depletion-weather-vignettes--in-verification
 [0.6.5]: #065--interface-bottom-bar-comms-views-decisions-options--in-verification
 [0.6.4]: #064--depth-situations-food-gear-map-pairs--in-verification
 [0.6.3]: #063--tano-removed--in-verification

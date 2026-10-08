@@ -8,6 +8,7 @@ import com.estatica.domain.content.RecipeDef;
 import com.estatica.domain.content.ItemDef;
 import com.estatica.domain.content.TaskDef;
 import com.estatica.domain.content.PeopleDef;
+import com.estatica.domain.content.VignetteDef;
 import com.estatica.domain.content.ResourceDef;
 import com.estatica.domain.content.ScoutTemplate;
 import com.estatica.domain.content.SignalsDef;
@@ -135,6 +136,10 @@ public final class ContentParser {
 
     public List<RecipeDef> parseRecipes(Reader reader) {
         return parseArray(reader, RecipeDef[].class, "recipes.json");
+    }
+
+    public List<VignetteDef> parseVignettes(Reader reader) {
+        return parseArray(reader, VignetteDef[].class, "vignettes.json");
     }
 
     public PeopleDef parsePeople(Reader reader) {

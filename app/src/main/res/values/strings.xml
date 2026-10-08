@@ -145,6 +145,7 @@
     <string name="log_chats">&#xF0B79; CHATS</string>
     <string name="log_unread">%1$s •%2$d</string>
     <string name="log_all">[ ALL ]</string>
+    <string name="log_bunker_chip">Bunker</string>
     <string name="log_chip">[ %1$s ]</string>
     <string name="log_chip_on">[•%1$s ]</string>
     <string name="tab_comms">&#xF028C;\nCOMMS</string>

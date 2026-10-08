@@ -275,6 +275,7 @@ public final class TerminalActivity extends ComponentActivity {
                 addChip(e.thread, e.scoutName);
             }
         } else {
+            addChip(com.estatica.data.session.GameSession.BUNKER_CHAT, getString(R.string.log_bunker_chip));
             for (SessionSnapshot.ScoutView s : snapshot.scouts) {
                 if (!s.dead) {
                     addChip(LogLine.chatThread(s.id), s.name);

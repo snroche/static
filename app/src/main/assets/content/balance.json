@@ -1,5 +1,5 @@
 {
-  "contentVersion": 15,
+  "contentVersion": 16,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -379,6 +379,12 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "vignettes": {
+    "_comment": "Small moments in the bunker while people are home. [placeholder]",
+    "intervalHours": 3,
+    "chance": 0.6,
+    "cooldownHours": 48
   },
   "weather": {
     "_comment": "Weather outside and the dark. Bonuses add to check chances. [placeholder]",

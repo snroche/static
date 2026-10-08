@@ -1,0 +1,230 @@
+[
+  {
+    "id": "cena",
+    "weight": 2,
+    "lines": [
+      {
+        "text": "{a} cooks something that's almost soup. {b} takes seconds."
+      },
+      {
+        "who": "b",
+        "text": "Don't tell anyone, but that was good."
+      }
+    ],
+    "stress": -4,
+    "affinity": 3
+  },
+  {
+    "id": "cartas",
+    "weight": 2,
+    "lines": [
+      {
+        "text": "{a} and {b} play cards on an upturned crate. Nobody wins. Nobody cares."
+      },
+      {
+        "who": "a",
+        "text": "Again. Best of nine."
+      }
+    ],
+    "stress": -3,
+    "affinity": 3
+  },
+  {
+    "id": "guardia_noche",
+    "night": true,
+    "lines": [
+      {
+        "text": "{a} can't sleep. {b} sits up with them by the radio until the static sounds like rain."
+      }
+    ],
+    "stress": -5,
+    "affinity": 4
+  },
+  {
+    "id": "cancion",
+    "night": true,
+    "lines": [
+      {
+        "text": "Late at night, {a} hums something old. After a while, {b} knows the words."
+      },
+      {
+        "who": "b",
+        "text": "My mother used to sing that."
+      }
+    ],
+    "stress": -6,
+    "affinity": 5
+  },
+  {
+    "id": "cumple",
+    "lines": [
+      {
+        "text": "{a} says it's {b}'s birthday. It might not be. Nobody checks."
+      },
+      {
+        "who": "a",
+        "text": "Happy birthday. I made you a candle out of a candle."
+      }
+    ],
+    "stress": -6,
+    "affinity": 4
+  },
+  {
+    "id": "arreglo",
+    "requiresTrait": [
+      "metodo",
+      "gentil",
+      "terca"
+    ],
+    "lines": [
+      {
+        "text": "{a} fixes the leaking pipe over {b}'s bunk without being asked."
+      }
+    ],
+    "stress": -2,
+    "affinity": 3
+  },
+  {
+    "id": "chiste",
+    "requiresTrait": [
+      "sociable",
+      "optimista"
+    ],
+    "lines": [
+      {
+        "text": "{a} tells the worst joke the bunker has ever heard. {b} laughs anyway, then can't stop."
+      }
+    ],
+    "stress": -5,
+    "affinity": 2
+  },
+  {
+    "id": "silencio",
+    "requires": "friends",
+    "lines": [
+      {
+        "text": "{a} and {b} sit in silence for an hour. It's the good kind."
+      }
+    ],
+    "stress": -3,
+    "affinity": 3
+  },
+  {
+    "id": "promesa",
+    "requires": "friends",
+    "lines": [
+      {
+        "text": "{a} and {b} talk about what they'll do when it's over. They make a promise."
+      },
+      {
+        "who": "b",
+        "text": "Deal. You and me."
+      }
+    ],
+    "stress": -4,
+    "affinity": 6
+  },
+  {
+    "id": "pelea_comida",
+    "requires": "rivals",
+    "weight": 2,
+    "lines": [
+      {
+        "text": "{a} says {b} took more than their share. Voices rise. Someone kicks a crate."
+      },
+      {
+        "who": "b",
+        "text": "Count it yourself, then."
+      }
+    ],
+    "stress": 6,
+    "affinity": -4
+  },
+  {
+    "id": "ronquidos",
+    "requires": "rivals",
+    "lines": [
+      {
+        "text": "{b} snores. {a} throws a boot. Things escalate."
+      }
+    ],
+    "stress": 4,
+    "affinity": -3
+  },
+  {
+    "id": "tregua",
+    "requires": "rivals",
+    "lines": [
+      {
+        "text": "{a} leaves half a ration on {b}'s bunk. No note. {b} eats it."
+      },
+      {
+        "who": "b",
+        "text": "...Thanks. I guess."
+      }
+    ],
+    "stress": -2,
+    "affinity": 6
+  },
+  {
+    "id": "discusion_plan",
+    "requiresTrait": [
+      "terca",
+      "calentona",
+      "desconfianza"
+    ],
+    "lines": [
+      {
+        "text": "{a} and {b} argue about the map for an hour. Both are a little right."
+      }
+    ],
+    "stress": 3,
+    "affinity": -1
+  },
+  {
+    "id": "aprender",
+    "requiresTrait": [
+      "gentil",
+      "metodo",
+      "curiosa"
+    ],
+    "lines": [
+      {
+        "text": "{a} teaches {b} how to splint a finger. They practice on each other, badly."
+      }
+    ],
+    "stress": -2,
+    "affinity": 3
+  },
+  {
+    "id": "pesadilla",
+    "night": true,
+    "lines": [
+      {
+        "text": "{b} wakes up shouting. {a} is already there with water."
+      },
+      {
+        "who": "a",
+        "text": "It's alright. You're in the bunker. You're home."
+      }
+    ],
+    "stress": -3,
+    "affinity": 5
+  },
+  {
+    "id": "ventana",
+    "requiresTrait": [
+      "curiosa",
+      "solitaria",
+      "optimista"
+    ],
+    "night": true,
+    "lines": [
+      {
+        "text": "{a} and {b} take turns at the periscope, naming the shapes in the dark."
+      }
+    ],
+    "stress": -3,
+    "affinity": 2
+  }
+]
