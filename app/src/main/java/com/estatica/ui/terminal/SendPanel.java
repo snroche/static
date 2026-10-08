@@ -53,11 +53,16 @@ final class SendPanel {
 
     /** Opens with {@code leadId} already on the team (or empty if null). */
     void open(String leadId) {
+        open(leadId, null);
+    }
+
+    /** @param destinationKey TYPE|zoneId|target already chosen (from the map), or null */
+    void open(String leadId, String destinationKey) {
         team.clear();
         if (leadId != null) {
             team.add(leadId);
         }
-        destination = null;
+        destination = destinationKey;
         b.getRoot().setVisibility(View.VISIBLE);
         render(snapshot);
     }

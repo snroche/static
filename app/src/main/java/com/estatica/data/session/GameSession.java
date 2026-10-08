@@ -1192,7 +1192,7 @@ public final class GameSession {
             if (place != null) {
                 places.add(new SessionSnapshot.PlaceView(zoneId, z.getName(),
                         content.getBalance().bandIndex(z.getBand()), place.ring, place.turn, z.getDanger(), canReach(z),
-                        (int) Math.round(depletion(zoneId, clock.nowMillis()) * 100)));
+                        (int) Math.round(depletion(zoneId, clock.nowMillis()) * 100), z.getIcon(), z.getShortName()));
             }
         }
         List<String> bands = new ArrayList<>();

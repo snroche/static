@@ -64,4 +64,45 @@
     <string name="ic_run" translatable="false">&#xF070E;</string>
     <string name="ic_fork" translatable="false">&#xF0A70;</string>
     <string name="ic_handheart" translatable="false">&#xF10F1;</string>
+    <string name="ic_store" translatable="false">&#xF04DC;</string>
+    <string name="ic_gas" translatable="false">&#xF0298;</string>
+    <string name="ic_pharmacy" translatable="false">&#xF0402;</string>
+    <string name="ic_school" translatable="false">&#xF0474;</string>
+    <string name="ic_laundry" translatable="false">&#xF072A;</string>
+    <string name="ic_hospital" translatable="false">&#xF02E1;</string>
+    <string name="ic_train" translatable="false">&#xF052C;</string>
+    <string name="ic_police" translatable="false">&#xF1167;</string>
+    <string name="ic_gated" translatable="false">&#xF0DD4;</string>
+    <string name="ic_airport" translatable="false">&#xF001D;</string>
+    <string name="ic_dam" translatable="false">&#xF078D;</string>
+    <string name="ic_tower" translatable="false">&#xF043B;</string>
+    <string name="ic_book" translatable="false">&#xF14F7;</string>
+    <string name="ic_notebook" translatable="false">&#xF082E;</string>
+    <string name="ic_key" translatable="false">&#xF030B;</string>
+    <string name="ic_lock" translatable="false">&#xF033E;</string>
+    <string name="ic_unlock" translatable="false">&#xF0FC6;</string>
+    <string name="ic_numbers" translatable="false">&#xF03A0;</string>
+    <string name="ic_code" translatable="false">&#xF0169;</string>
+    <string name="ic_military" translatable="false">&#xF0BC4;</string>
+    <string name="ic_archive" translatable="false">&#xF003C;</string>
+    <string name="ic_search" translatable="false">&#xF0349;</string>
+    <string name="ic_note" translatable="false">&#xF039E;</string>
+    <string name="ic_mirror" translatable="false">&#xF11FD;</string>
+    <string name="ic_grid" translatable="false">&#xF02C1;</string>
+    <string name="ic_supplies" translatable="false">&#xF03D7;</string>
+    <string name="ic_keepsake" translatable="false">&#xF02D2;</string>
+    <string name="ic_send" translatable="false">&#xF048A;</string>
+    <string name="ic_recall" translatable="false">&#xF054D;</string>
+    <string name="ic_info" translatable="false">&#xF02FD;</string>
+    <string name="ic_history" translatable="false">&#xF02DA;</string>
+    <string name="ic_sort" translatable="false">&#xF04BA;</string>
+    <string name="ic_filter" translatable="false">&#xF0236;</string>
+    <string name="ic_repeat" translatable="false">&#xF0456;</string>
+    <string name="ic_envelope" translatable="false">&#xF01F1;</string>
+    <string name="ic_wave" translatable="false">&#xF095B;</string>
+    <string name="ic_calendar" translatable="false">&#xF00F6;</string>
+    <string name="ic_pad" translatable="false">&#xF0221;</string>
+    <string name="ic_morse" translatable="false">&#xF01D8;</string>
+    <string name="ic_tap" translatable="false">&#xF0741;</string>
+    <string name="ic_headset" translatable="false">&#xF02CE;</string>
 </resources>

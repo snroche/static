@@ -553,10 +553,15 @@ public final class SessionSnapshot {
         public final boolean reachable;
         /** How picked-over it is, 0–100. */
         public final int depleted;
+        /** Map glyph, or null; and the short label. */
+        public final String icon;
+        public final String shortName;
 
         PlaceView(String zoneId, String name, int ring, double ringPosition, double turn, int danger,
-                  boolean reachable, int depleted) {
+                  boolean reachable, int depleted, String icon, String shortName) {
             this.depleted = depleted;
+            this.icon = icon;
+            this.shortName = shortName;
             this.zoneId = zoneId;
             this.name = name;
             this.ring = ring;

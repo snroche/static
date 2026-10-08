@@ -26,6 +26,18 @@ public final class ZoneDef {
     private List<String> transit;
     /** Scouting ground for a band: not a place on the map, never listed as a zone. */
     private boolean wilds;
+    /** Map glyph (Nerd Font) and a short label for the map. */
+    private String icon;
+    private String shortName;
+
+    public String getIcon() {
+        return icon;
+    }
+
+    /** Short map label; the full name when there is none. */
+    public String getShortName() {
+        return shortName != null ? shortName : name;
+    }
 
     public boolean isWilds() {
         return wilds;

@@ -730,6 +730,12 @@ public final class TerminalActivity extends ComponentActivity {
                 mapPanel.hide();
                 showPanel(Panel.SCOUT_SECTOR);
             }
+
+            @Override
+            public void sendTo(SessionSnapshot.PlaceView place) {
+                sendPanel.open(null, Mission.Type.EXPLORE.name() + "|" + place.zoneId + "|");
+                updateBack();
+            }
         });
     }
 

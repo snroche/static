@@ -181,9 +181,10 @@
     <string name="panel_map_title">REGION MAP</string>
     <string name="map_description" tools:ignore="PluralsCandidate">Region map: %1$d places found, %2$d sectors left to scout.</string>
     <string name="map_hint">Tap a ? to send someone to scout it. Places show up as they\'re found.</string>
-    <string name="map_scout">[ SEND SOMEONE ]</string>
+    <string name="map_scout">[ SEND SOMEONE TO SCOUT ]</string>
+    <string name="map_send">[ SEND SOMEONE HERE ]</string>
     <string name="map_legend">&#xF068A; bunker · ? unexplored · ?! something on the radio · ○ picked over · … someone\'s out there · · out of reach</string>
-    <string name="map_place">%1$s · danger %2$d. Dispatch from the crew card.</string>
+    <string name="map_place">%1$s · danger %2$d.</string>
     <string name="map_place_far">%1$s · danger %2$d. Out of reach: the antenna can\'t get that far.</string>
     <string name="map_sector_unknown">The %1$s. Nobody\'s been there.</string>
     <string name="map_sector_heard">The %1$s. The radio picked up something from there.</string>

@@ -9,6 +9,13 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Changed
+- **Readable map:**
+  - Each place has its own icon (store, gas station, pharmacy, school, laundry, hospital, trains, police, gated community, airport, dam, antenna) and a short label ("Hospital", "Trains").
+  - Labels go to the right, left, above or below their icon, whichever spot doesn't overlap anything. If none is free the label is skipped, and tapping the place shows the full name.
+  - Picked-over places are dimmed; out-of-reach places are dimmer.
+  - The layout is worked out only when the map changes, not on every frame.
+- **Send from the map:** tapping a reachable place shows [ SEND SOMEONE HERE ], which opens the SEND screen with that destination already picked.
+- Font re-subset with icons for the coming features (104 icons, ~150 KB per weight). Zones get `icon` and `shortName` fields; old saves are unaffected.
 - **Static instead of cut-off words:** a bad signal no longer chops words ("i found some—"). Letters drop out as dots and dashes and words keep their shape, so you can still piece it together: "i f·u-d s·me r-ti·ns". The worse the signal, the more letters go.
 
 ### Fixed

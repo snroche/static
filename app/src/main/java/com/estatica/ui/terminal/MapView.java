@@ -10,6 +10,9 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -72,8 +75,75 @@ public final class MapView extends View {
         this.listener = listener;
     }
 
+    /** A place label where it fits, computed when the map or the size changes (not per frame). */
+    private static final class Label {
+        final String text;
+        final float x;
+        final float y;
+        final boolean reachable;
+
+        Label(String text, float x, float y, boolean reachable) {
+            this.text = text;
+            this.x = x;
+            this.y = y;
+            this.reachable = reachable;
+        }
+    }
+
+    private final List<Label> labels = new ArrayList<>();
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
+        layoutLabels();
+    }
+
+    /** Right, left, above or below each icon: the first spot that doesn't cover anything; else none. */
+    private void layoutLabels() {
+        labels.clear();
+        if (map == null || getWidth() == 0) {
+            return;
+        }
+        float iconSize = sp(15);
+        float h = sp(10);
+        text.setTextSize(h);
+        List<android.graphics.RectF> taken = new ArrayList<>();
+        for (SessionSnapshot.PlaceView p : map.places) {
+            float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
+            float px = x(radius, p.turn);
+            float py = y(radius, p.turn);
+            taken.add(new android.graphics.RectF(px - iconSize / 2, py - iconSize / 2, px + iconSize / 2, py + iconSize / 2));
+        }
+        for (SessionSnapshot.PlaceView p : map.places) {
+            float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
+            float px = x(radius, p.turn);
+            float py = y(radius, p.turn);
+            float w = text.measureText(p.shortName);
+            float gap = iconSize / 2 + 2 * dp;
+            float[][] spots = {
+                    {px + gap + w / 2, py + h / 3},
+                    {px - gap - w / 2, py + h / 3},
+                    {px, py - gap},
+                    {px, py + gap + h},
+            };
+            for (float[] spot : spots) {
+                android.graphics.RectF box = new android.graphics.RectF(spot[0] - w / 2, spot[1] - h, spot[0] + w / 2, spot[1] + 2 * dp);
+                boolean free = box.left >= 0 && box.right <= getWidth() && box.top >= 0 && box.bottom <= getHeight();
+                for (android.graphics.RectF other : taken) {
+                    free &= !android.graphics.RectF.intersects(box, other);
+                }
+                if (free) {
+                    labels.add(new Label(p.shortName, spot[0], spot[1], p.reachable));
+                    taken.add(box);
+                    break;
+                }
+            }
+        }
+    }
+
     void setMap(SessionSnapshot.MapView map, String selectedSector) {
         this.map = map;
+        layoutLabels();
         this.selectedSector = selectedSector;
         setContentDescription(describe(map));
         invalidate();
@@ -189,39 +259,33 @@ public final class MapView extends View {
                 line.setColor(hint);
             }
         }
-        // Places found.
-        text.setTextSize(sp(10));
+        // Places found: their icon, and the labels laid out in layoutLabels().
+        float iconSize = sp(15);
         for (SessionSnapshot.PlaceView p : map.places) {
             float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
             float px = x(radius, p.turn);
             float py = y(radius, p.turn);
-            // Picked over: a hollow ring instead of a solid dot.
-            if (p.depleted >= 50) {
-                line.setColor(p.reachable ? bright : dim);
-                canvas.drawCircle(px, py, 3.5f * dp, line);
-                line.setColor(hint);
+            // Picked over: dim. Out of reach: dimmer.
+            int color = !p.reachable ? hint : p.depleted >= 50 ? dim : bright;
+            if (p.icon != null) {
+                text.setTextSize(iconSize);
+                text.setColor(color);
+                canvas.drawText(p.icon, px, py + iconSize / 3, text);
             } else {
-                dot.setColor(p.reachable ? bright : dim);
+                dot.setColor(color);
                 canvas.drawCircle(px, py, 3.5f * dp, dot);
             }
-            text.setColor(p.reachable ? amber : dim);
-            canvas.drawText(shortName(p.name), px, py - 6 * dp, text);
+        }
+        text.setTextSize(sp(10));
+        for (Label label : labels) {
+            text.setColor(label.reachable ? amber : dim);
+            canvas.drawText(label.text, label.x, label.y, text);
         }
         // The bunker.
         dot.setColor(bright);
         canvas.drawCircle(cx(), cy(), 5 * dp, dot);
         line.setColor(bright);
         canvas.drawCircle(cx(), cy(), 9 * dp, line);
-    }
-
-    /** First word, or two short ones: the map is small. */
-    private static String shortName(String name) {
-        String[] words = name.split(" ");
-        String out = words[0];
-        if (words.length > 1 && out.length() + words[1].length() < 12) {
-            out += " " + words[1];
-        }
-        return out.length() > 13 ? out.substring(0, 12) + "." : out;
     }
 
     @SuppressLint("ClickableViewAccessibility") // Taps are mirrored by the panel's buttons.

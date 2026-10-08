@@ -15,6 +15,9 @@ final class MapPanel {
 
         /** Pick who goes to scout this sector. */
         void pickScout(SessionSnapshot.SectorView sector);
+
+        /** Open the SEND screen with this place as the destination. */
+        void sendTo(SessionSnapshot.PlaceView place);
     }
 
     private final PanelMapBinding b;
@@ -42,7 +45,9 @@ final class MapPanel {
                     info += " " + res.getString(R.string.zone_depleted_long, place.depleted);
                 }
                 b.mapInfo.setText(info);
-                b.mapAction.setVisibility(View.GONE);
+                b.mapAction.setText(R.string.map_send);
+                b.mapAction.setVisibility(place.reachable ? View.VISIBLE : View.GONE);
+                b.mapAction.setOnClickListener(place.reachable ? v -> host.sendTo(place) : null);
                 redraw();
             }
         });
@@ -96,6 +101,7 @@ final class MapPanel {
             canScout = true;
         }
         b.mapInfo.setText(state);
+        b.mapAction.setText(R.string.map_scout);
         b.mapAction.setVisibility(canScout ? View.VISIBLE : View.GONE);
         b.mapAction.setOnClickListener(canScout ? v -> host.pickScout(sector) : null);
         redraw();
