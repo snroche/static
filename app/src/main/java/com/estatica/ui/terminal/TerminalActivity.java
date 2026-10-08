@@ -358,7 +358,43 @@ public final class TerminalActivity extends ComponentActivity {
         };
     }
 
+    /** Chips above the input: tap one to fill it in. */
+    private void renderSuggestions() {
+        binding.suggestions.removeAllViews();
+        if (!binding.input.hasFocus()) {
+            binding.suggestScroll.setVisibility(View.GONE);
+            return;
+        }
+        List<String> options = viewModel.suggest(binding.input.getText().toString());
+        for (String option : options) {
+            TextView chip = (TextView) getLayoutInflater().inflate(R.layout.item_decision_option,
+                    binding.suggestions, false);
+            chip.setText(getString(R.string.log_chip, option.trim()));
+            chip.setOnClickListener(v -> {
+                binding.input.setText(option);
+                binding.input.setSelection(option.length());
+            });
+            binding.suggestions.addView(chip);
+        }
+        binding.suggestScroll.setVisibility(options.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
     private void setUpInput() {
+        binding.input.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                renderSuggestions();
+            }
+        });
+        binding.input.setOnFocusChangeListener((v, focused) -> renderSuggestions());
         binding.input.setOnEditorActionListener((v, actionId, event) -> {
             boolean send = actionId == EditorInfo.IME_ACTION_SEND
                     || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
@@ -704,6 +740,12 @@ public final class TerminalActivity extends ComponentActivity {
             public void onEquip(SessionSnapshot.ScoutView scout) {
                 select(scout);
                 showPanel(Panel.GEAR);
+            }
+
+            @Override
+            public void onRecall(SessionSnapshot.ScoutView scout) {
+                viewModel.recall(scout.id);
+                selectTab(Tab.COMMS);
             }
 
             @Override

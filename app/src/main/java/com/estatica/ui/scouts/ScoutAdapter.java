@@ -36,6 +36,10 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
 
         void onEquip(ScoutView scout);
 
+        /** Call them home from the field. */
+        default void onRecall(ScoutView scout) {
+        }
+
         /** Long-press on a card: explain what's on it. */
         default void onInfo(CharSequence cardText) {
         }
@@ -134,6 +138,7 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
             action(b.gift, s.canGift, v -> listener.onGift(s));
             action(b.taskButton, s.canAssignTask, v -> listener.onTask(s));
             action(b.equipButton, s.canEquip, v -> listener.onEquip(s));
+            action(b.recallButton, s.canRecall, v -> listener.onRecall(s));
             // The empty bunk stays on the roster, dimmed (GDD §5.5).
             b.getRoot().setAlpha(s.dead ? 0.5f : 1f);
         }

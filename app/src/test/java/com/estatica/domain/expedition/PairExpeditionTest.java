@@ -173,4 +173,20 @@ public class PairExpeditionTest {
         }
         assertTrue(bare < fresh);
     }
+
+    @Test
+    public void recalledTheyHeadStraightHomeOnce() {
+        Scout mara = TestScouts.custom("mara", 6, 0, 0, T0);
+        Expedition e = engine.dispatch(mara, content.zone("hospital"), 3, T0).expedition;
+        engine.advance(e, mara, List.of(), T0 + 60_000);
+        assertFalse(engine.recall(e, mara, T0 + 60_000).isEmpty());
+        assertTrue(e.isAborted());
+        assertTrue("a second recall does nothing", engine.recall(e, mara, T0 + 70_000).isEmpty());
+        long t = T0 + 60_000;
+        while (e.isActive()) {
+            t += 60_000;
+            engine.advance(e, mara, List.of(), t);
+        }
+        assertEquals(ScoutStatus.IDLE, mara.getStatus());
+    }
 }

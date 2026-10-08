@@ -20,6 +20,8 @@ public final class SessionSnapshot {
     public final BaseView base;
     /** Scouts out right now, for the expedition strip. */
     public final List<ExpeditionView> expeditions;
+    /** Key items: notebooks, manuals, codebooks (read-only, they unlock things). */
+    public final List<KeyItemView> keyItems;
     /** Term to explanation, for long-press info (traits, stats, resources, places, gear…). */
     public final java.util.Map<String, String> glossary;
     /** Weather outside now (WeatherRules.Weather name) and its display name. */
@@ -44,11 +46,12 @@ public final class SessionSnapshot {
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
                     List<MissionView> missions, RadioView radio, BaseView base,
                     List<ExpeditionView> expeditions, double foodDaysLeft, boolean hungry,
-                    MapView map, java.util.Map<String, String> glossary, String weather, String weatherName,
+                    MapView map, List<KeyItemView> keyItems, java.util.Map<String, String> glossary, String weather, String weatherName,
                     List<String> placeNames, List<String> resourceNames, List<String> dangerWords,
                     List<String> goodWords, long nextWakeAtMillis) {
         this.map = map;
         this.glossary = glossary;
+        this.keyItems = Collections.unmodifiableList(keyItems);
         this.weather = weather;
         this.weatherName = weatherName;
         this.placeNames = placeNames;
@@ -104,6 +107,8 @@ public final class SessionSnapshot {
         /** Every slot, empty or not. */
         public final List<SlotView> slots;
         public final boolean canEquip;
+        /** Out in the field and not already heading home. */
+        public final boolean canRecall;
         /** "Friends with Tano", "Friction with Irene"… */
         public final List<String> relations;
         /** Mood label. */
@@ -119,6 +124,7 @@ public final class SessionSnapshot {
             this.mood = b.mood;
             this.moodKey = b.moodKey;
             this.habits = Collections.unmodifiableList(b.habits);
+            this.canRecall = b.canRecall;
             this.relationKinds = Collections.unmodifiableMap(b.relationKinds);
             this.relations = Collections.unmodifiableList(b.relations);
             this.gear = b.gear;
@@ -176,6 +182,7 @@ public final class SessionSnapshot {
             String mood;
             String moodKey;
             List<String> habits;
+            boolean canRecall;
             java.util.Map<String, String> relationKinds = new java.util.HashMap<>();
         }
     }
@@ -578,6 +585,22 @@ public final class SessionSnapshot {
             this.turn = turn;
             this.danger = danger;
             this.reachable = reachable;
+        }
+    }
+
+    /** A key item: something you keep and read, never use up. */
+    public static final class KeyItemView {
+        public final String id;
+        public final String name;
+        public final String description;
+        /** What's written in it (readable), or null. */
+        public final String text;
+
+        KeyItemView(String id, String name, String description, String text) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.text = text;
         }
     }
 

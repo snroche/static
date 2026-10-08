@@ -1196,6 +1196,11 @@ public final class GameSession {
         return glossary;
     }
 
+    /** Filled by the key items system. */
+    private List<SessionSnapshot.KeyItemView> keyItemViews() {
+        return new ArrayList<>();
+    }
+
     private List<String> placeNames() {
         List<String> out = new ArrayList<>();
         for (ZoneDef z : content.getZones().values()) {
@@ -1899,6 +1904,29 @@ public final class GameSession {
         return step.commit();
     }
 
+    /** Calls someone home from the field (and whoever is with them). */
+    @WorkerThread
+    public List<LogLine> recall(String scoutId) {
+        Step step = new Step();
+        advance(step);
+        for (Expedition e : active.values()) {
+            if (e.involves(scoutId)) {
+                Scout lead = scouts.get(e.getScoutId());
+                List<LogLine> said = engine.recall(e, lead, step.now);
+                if (!said.isEmpty()) {
+                    step.expeditions.add(e);
+                    step.into(said, LogLine.expeditionThread(e.getId()));
+                    ExpeditionEngine.Party team = party(e);
+                    Map<String, String> vars = new HashMap<>();
+                    vars.put("who", lead.getName() + (team.partner != null ? " + " + team.partner.getName() : ""));
+                    step.system(content.getTerminal().getExpedition().getSummaryRecalled(), vars, lead);
+                }
+                break;
+            }
+        }
+        return step.commit();
+    }
+
     /** Takes off whatever a scout wears in a slot. */
     @WorkerThread
     public List<LogLine> unequip(String scoutId, String slot) {
@@ -2400,6 +2428,8 @@ public final class GameSession {
             }
             b.gear = worn.isEmpty() ? null : String.join(", ", worn);
             b.canEquip = home;
+            Expedition out = byScout.get(s.getId());
+            b.canRecall = s.isAlive() && out != null && !out.isAborted();
             b.moodKey = rules.mood(s);
             b.mood = content.getTerminal().getMoods().get(b.moodKey);
             b.habits = new ArrayList<>();
@@ -2571,7 +2601,7 @@ public final class GameSession {
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
                 radioView(), baseView(now), expeditionViews,
                 food.daysLeft(mouths(), kitchenSaving(), resources.getOrDefault("rations", 0), foodCarryNow(now)),
-                value(KEY_HUNGRY) > 0, mapView(), glossary(), weather.at(now).name(),
+                value(KEY_HUNGRY) > 0, mapView(), keyItemViews(), glossary(), weather.at(now).name(),
                 content.getTerminal().getWeather().getNames().getOrDefault(weather.at(now).name(), ""),
                 placeNames(), resourceNames(),
                 content.getTerminal().getHighlight().getDanger(), content.getTerminal().getHighlight().getGood(),

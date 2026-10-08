@@ -9,6 +9,20 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Added
+- **Console commands**, with aliases (`help` lists them all):
+  - `crew`, `scout <name>`
+  - `send <name> [+name] <place>`, `recall <name>`
+  - `places`, `map`
+  - `inventory`, `power`, `food`
+  - `weather`, `time`
+  - `radio`, `decode <n> <answer>`
+  - `goals`, `name <new>`
+  - `clear` empties the screen only; scrolling up still shows the log.
+
+  Names and places match by their first letters and ignore accents. Wording lives in `terminal.json → console`.
+- **Suggestion chips above the input:** while typing they complete commands, then names, then places. With an empty input they show your recent commands.
+- **[RECALL]** on a crew card while that person is out (and `recall <name>`). The order takes the usual radio delay to arrive, then they head straight home, and SYSTEM logs "Called Mara home."
+- **Send again:** SEND opened from someone who has been out before starts with their last team and destination, so a repeat trip is one tap. This is remembered while the app is open.
 - **Long-press explanations:** long-press a log line, a crew card, the status bar, the expedition strip, a bunker module, the decision card or the map's place info to open an INFO sheet explaining every known term in it.
   - It covers traits, stats, moods, resources (and what they're for), gear, places, bands, modules, power consumers, and terms like Bond, Trust, Stress, Reserve, Picked over and Bad feeling.
   - The glossary is built from content: `terminal.json` → `glossary`, `statDescriptions`, `moodDescriptions`; `resources.json` → `use`; band descriptions in `balance.json`.

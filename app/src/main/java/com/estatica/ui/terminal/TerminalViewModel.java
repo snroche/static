@@ -55,6 +55,8 @@ public final class TerminalViewModel extends ViewModel {
     private final MutableLiveData<OptionsState> options = new MutableLiveData<>();
     /** Seq of the latest urgent line revealed, whatever view is open (beep + vibration). */
     private final MutableLiveData<Long> alerts = new MutableLiveData<>();
+    /** What the player typed lately, newest last (for suggestions). */
+    private final List<String> history = new ArrayList<>();
     /** New game: the next thing typed is the operator's name. */
     private boolean awaitingName;
     /** Base typewriter delay from balance.json; the options speed scales it. */
@@ -279,6 +281,17 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
+    /** Completions for the console input, from the latest snapshot. */
+    List<String> suggest(String typed) {
+        return com.estatica.data.session.ConsoleCommands.suggest(typed, snapshot.getValue(), history);
+    }
+
+    void recall(String scoutId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.recall(scoutId)));
+        }
+    }
+
     void unequip(String scoutId, String slot) {
         if (ready) {
             run(step -> step.animated.addAll(session.unequip(scoutId, slot)));
@@ -400,9 +413,48 @@ public final class TerminalViewModel extends ViewModel {
             });
             return;
         }
+        history.remove(command);
+        history.add(command);
+        if (history.size() > 20) {
+            history.remove(0);
+        }
+        String first = command.split("\\s+")[0];
+        if ("clear".equals(com.estatica.data.session.ConsoleCommands.command(first))) {
+            // Clears the screen, not the log: older lines are still there when you scroll up.
+            window.clear();
+            hasOlder = true;
+            publish();
+            return;
+        }
         String setting = applySetting(command);
         if (setting != null) {
             refreshOptions();
+        }
+        if (setting == null && com.estatica.data.session.ConsoleCommands.command(first) != null) {
+            run(step -> {
+                step.animated.addAll(session.catchUp());
+                List<LogLine> drafts = new ArrayList<>();
+                drafts.add(LogLine.draft(clock.nowMillis(), LogChannel.OPERATOR, null, command));
+                List<LogLine> answer = new com.estatica.data.session.ConsoleCommands(session).run(command, clock.nowMillis());
+                if (answer == null) {
+                    CommandInterpreter interpreter = new CommandInterpreter(session.content().getTerminal());
+                    drafts.addAll(systemLines(interpreter.respond(command, baseVars()), Map.of()));
+                    step.animated.addAll(session.log(drafts));
+                } else {
+                    step.animated.addAll(session.log(drafts));
+                    // Actions (send, decode…) already saved their lines; read-outs are new drafts.
+                    List<LogLine> unsaved = new ArrayList<>();
+                    for (LogLine l : answer) {
+                        if (l.getSeq() == LogLine.UNSAVED) {
+                            unsaved.add(l);
+                        } else {
+                            step.animated.add(l);
+                        }
+                    }
+                    step.animated.addAll(session.log(unsaved));
+                }
+            });
+            return;
         }
         run(step -> {
             step.animated.addAll(session.catchUp());

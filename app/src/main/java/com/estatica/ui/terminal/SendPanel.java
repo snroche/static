@@ -38,6 +38,9 @@ final class SendPanel {
     private final List<String> team = new ArrayList<>();
     /** Destination key: TYPE|zoneId|target. */
     private String destination;
+    /** Last trip per scout (team, destination), to send the same again in one tap. */
+    private final java.util.Map<String, List<String>> lastTeam = new java.util.HashMap<>();
+    private final java.util.Map<String, String> lastDestination = new java.util.HashMap<>();
 
     SendPanel(com.estatica.databinding.PanelSendBinding binding, TerminalViewModel viewModel, Host host) {
         this.b = binding;
@@ -59,7 +62,11 @@ final class SendPanel {
     /** @param destinationKey TYPE|zoneId|target already chosen (from the map), or null */
     void open(String leadId, String destinationKey) {
         team.clear();
-        if (leadId != null) {
+        if (leadId != null && destinationKey == null && lastTeam.containsKey(leadId)) {
+            // Send again: same team, same place (changeable).
+            team.addAll(lastTeam.get(leadId));
+            destinationKey = lastDestination.get(leadId);
+        } else if (leadId != null) {
             team.add(leadId);
         }
         destination = destinationKey;
@@ -136,6 +143,9 @@ final class SendPanel {
             note(inflater, b.sendWhere, res.getString(R.string.zones_none));
         }
 
+        if (destination != null && !destinationAvailable(destination)) {
+            destination = null; // gone since last time (out of reach, mission over)
+        }
         boolean ready = !team.isEmpty() && destination != null;
         b.sendGo.setAlpha(ready ? 1f : 0.4f);
         b.sendGo.setEnabled(ready);
@@ -174,6 +184,20 @@ final class SendPanel {
         return parts[1];
     }
 
+    private boolean destinationAvailable(String key) {
+        for (SessionSnapshot.MissionView m : snapshot.missions) {
+            if ((m.type + "|" + m.zoneId + "|" + (m.target != null ? m.target : "")).equals(key)) {
+                return true;
+            }
+        }
+        for (SessionSnapshot.ZoneView z : snapshot.zones) {
+            if ((Mission.Type.EXPLORE.name() + "|" + z.id + "|").equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String mark(String key) {
         return key.equals(destination) ? "•" : " ";
     }
@@ -198,6 +222,10 @@ final class SendPanel {
             return;
         }
         host.beforeSend();
+        for (String id : team) {
+            lastTeam.put(id, new ArrayList<>(team));
+            lastDestination.put(id, destination);
+        }
         String[] parts = destination.split("\\|", -1);
         viewModel.dispatch(team.get(0), parts[1], Mission.Type.valueOf(parts[0]),
                 parts[2].isEmpty() ? null : parts[2], team.size() > 1 ? team.get(1) : null);

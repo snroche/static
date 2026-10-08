@@ -168,10 +168,17 @@
             android:layout_height="wrap_content"
             android:text="@string/equip_button" />
 
+        <TextView
+            android:id="@+id/recallButton"
+            style="@style/TerminalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recall_button" />
+
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="dispatch,talk,gift,taskButton,equipButton"
+            app:constraint_referenced_ids="dispatch,recallButton,talk,gift,taskButton,equipButton"
             app:flow_horizontalBias="0"
             app:flow_horizontalGap="4dp"
             app:flow_horizontalStyle="packed"

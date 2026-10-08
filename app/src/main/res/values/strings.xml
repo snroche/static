@@ -127,6 +127,7 @@
     <string name="hud_blackout">&#xF0026; blackout</string>
     <string name="hud_resource">%1$s %2$d</string>
     <string name="send_title">SEND OUT</string>
+    <string name="recall_button">[RECALL]</string>
     <string name="send_team_title">WHO GOES (one or two; the first leads)</string>
     <string name="send_where_title">WHERE</string>
     <string name="send_member">[%1$s] %2$s%3$s · %4$s</string>

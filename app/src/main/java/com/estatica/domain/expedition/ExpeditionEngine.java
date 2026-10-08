@@ -225,6 +225,25 @@ public final class ExpeditionEngine {
         return out;
     }
 
+    /**
+     * The operator calls them home. The order takes the usual radio delay to arrive; from then
+     * on they head straight back. Nothing happens if they're already on their way.
+     *
+     * @return what they say, or an empty list if there was nothing to recall
+     */
+    public List<LogLine> recall(Expedition expedition, Scout scout, long now) {
+        if (!expedition.isActive() || expedition.isAborted()) {
+            return List.of();
+        }
+        long arrives = now + expedition.getMission().getOrderDelayMillis();
+        expedition.abortToReturn(Math.max(arrives, expedition.getCursorAtMillis()));
+        VoiceDef voice = content.voice(scout.getVoiceId());
+        List<LogLine> lines = new ArrayList<>();
+        lines.add(radio(arrives, scout, say(voice, scout, "goingHome",
+                GameRandom.fromState(expedition.getRngState()), vars(scout))));
+        return lines;
+    }
+
     /** Whether the situation can come up for this scout (event requirements). */
     public boolean fits(Scout scout, EventDef event) {
         return rules.fits(scout, event.getRequiresTrait(), event.getRequiresBackground());

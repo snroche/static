@@ -34,12 +34,17 @@
   "unknownCommand": "Unknown command: '{input}'. Try 'help'.",
   "commands": {
     "help": [
-      "Available commands:",
-      "  help           shows this list",
-      "  status         operator and bunker status",
-      "  sound          turns sound on or off",
-      "  notifications  turns notifications on or off",
-      "[ RADIO ] dial and decoding · [ BUNKER ] power, workshop, modules · [ CREW ] your scouts and the [MAP]."
+      "Commands:",
+      "  crew · scout <name>        who's who and how they are",
+      "  send <name> [+name] <place> send people out",
+      "  recall <name>              call someone home",
+      "  places · map               where you can go, what's been mapped",
+      "  inventory · power · food   the bunker",
+      "  weather · time             outside",
+      "  radio · decode <n> <text>  transmissions waiting",
+      "  goals · status · name <x>  the rest",
+      "  sound · notifications · clear",
+      "Tip: long-press anything for an explanation."
     ],
     "status": [
       "Operator {operator} (#{operatorId})",
@@ -98,7 +103,8 @@
       "UNSURE": "could go either way",
       "BAD": "bad feeling",
       "LOST": "lost in the static"
-    }
+    },
+    "summaryRecalled": "Called {who} home. The order's on its way."
   },
   "bunker": {
     "retreatLabel": "Come back to the bunker",
@@ -350,5 +356,44 @@
     "Intel": "Decoded information about a zone: a stash (more loot) or its dangers (better odds).",
     "Band": "How far the radio reaches. Short, medium, long, deep: farther is slower and more dangerous, and has better finds.",
     "Personal mission": "Something a scout needs to do for themselves. Asked at bond level 4. Brings peace and a lot of bond."
+  },
+  "console": {
+    "usage": "Usage: {usage}",
+    "nothing": "nothing",
+    "day": "day",
+    "night": "night",
+    "crewHeader": "Crew: {alive} alive, {home} at home.",
+    "crewLine": "{name} · {where} · {mood} · stress {stress} · bond {bond}/{levels}",
+    "crewDead": "{name} · fallen",
+    "noSuchScout": "Nobody called '{input}'.",
+    "scoutHeader": "{name} · {status}",
+    "scoutVitals": "Mood {mood} · stress {stress} · trust {trust} · bond {bond}/{levels}",
+    "scoutTraits": "Traits: {traits}",
+    "scoutGear": "Wearing: {gear}",
+    "scoutTask": "Task: {task}",
+    "cantGo": "{name} can't go right now.",
+    "noSuchPlace": "No place called '{input}' within reach. Try: places",
+    "placesNone": "No places known yet. Scout around the bunker: open MAP.",
+    "placesHeader": "Places within reach:",
+    "placeLine": "{name} · {band} · danger {danger} · {min}–{max} min{extra}",
+    "placeDepleted": " · picked over {pct}%",
+    "mapRing": "{band}: {scouted}/{total} sectors mapped, {heard} with something on the radio, {places} places found.",
+    "mapRingFar": "{band}: out of reach. {places} places known.",
+    "invSupplies": "Supplies: {list}",
+    "invGear": "Gear in the bunker: {list}",
+    "invKeepsakes": "Keepsakes: {list}",
+    "invKeys": "Key items: {list}",
+    "power": "Power: {used}/{available} W used · reserve {reserve}/{capacity}",
+    "powerBlackout": "Blackout. Reserve {reserve}/{capacity}.",
+    "powerLine": "  {name}: {effective}/{max} W",
+    "food": "Food for about {days} days.",
+    "foodHungry": "No food left. Everyone at home is hungry.",
+    "foodNobody": "Nobody's eating.",
+    "weather": "Outside: {weather}, {daytime}.",
+    "radioNone": "No transmissions waiting.",
+    "radioHeader": "Transmissions waiting ({n}). Decode with: decode <number> <answer>",
+    "radioLine": "[{n}] {kind} · {band} · {text}",
+    "goal": "{label}: {progress}/{target}",
+    "time": "It's {time}, {daytime}."
   }
 }

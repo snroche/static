@@ -80,6 +80,13 @@ public final class TerminalText {
     private Map<String, List<String>> commands;
     /** Stat key to display name. */
     private Map<String, String> statNames;
+    /** Console command read-outs and errors. */
+    private Map<String, String> console;
+
+    public Map<String, String> getConsole() {
+        return console != null ? console : Map.of();
+    }
+
     /** Stat key to what it does. */
     private Map<String, String> statDescriptions;
     /** Mood key to what it means. */
@@ -206,6 +213,12 @@ public final class TerminalText {
         private String summaryHurt;
         /** {name}, {zone}. */
         private String summaryDied;
+        /** {who}. */
+        private String summaryRecalled;
+
+        public String getSummaryRecalled() {
+            return summaryRecalled;
+        }
 
         public String getSummaryDeparted() {
             return summaryDeparted;
