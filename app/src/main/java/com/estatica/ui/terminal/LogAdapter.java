@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.estatica.R;
-import com.estatica.databinding.ItemLogLineBinding;
+import com.estatica.databinding.ItemLogEntryBinding;
 import com.estatica.domain.log.LogLine;
 
 import java.util.List;
@@ -32,6 +32,8 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
     private long typingSeq = TerminalUiState.NO_TYPING;
     private int typedChars;
     private Highlighter highlighter = Highlighter.NONE;
+    /** Lines the player tapped to see when they happened. */
+    private final java.util.Set<Long> showingTime = new java.util.HashSet<>();
 
     /** Long-press on a line. */
     interface LineListener {
@@ -86,9 +88,19 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemLogLineBinding binding = ItemLogLineBinding.inflate(
+        ItemLogEntryBinding binding = ItemLogEntryBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
         Holder holder = new Holder(binding);
+        binding.text.setOnClickListener(v -> {
+            int position = holder.getBindingAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                long seq = getItem(position).getSeq();
+                if (!showingTime.remove(seq)) {
+                    showingTime.add(seq);
+                }
+                notifyItemChanged(position, PAYLOAD_TYPING);
+            }
+        });
         binding.text.setOnLongClickListener(v -> {
             int position = holder.getBindingAdapterPosition();
             if (lineListener != null && position != RecyclerView.NO_POSITION) {
@@ -102,7 +114,10 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.bind(getItem(position), typingSeq, typedChars, highlighter);
+        LogLine line = getItem(position);
+        LogLine previous = position > 0 ? getItem(position - 1) : null;
+        holder.bind(line, typingSeq, typedChars, highlighter, showingTime.contains(line.getSeq()),
+                previous == null || !sameDay(previous.getTimestampMillis(), line.getTimestampMillis()));
     }
 
     @Override
@@ -110,6 +125,15 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
         // Full and payload binds are equally cheap (one setText); the payload only avoids
         // a change animation.
         onBindViewHolder(holder, position);
+    }
+
+    private static boolean sameDay(long a, long b) {
+        java.util.Calendar x = java.util.Calendar.getInstance();
+        x.setTimeInMillis(a);
+        java.util.Calendar y = java.util.Calendar.getInstance();
+        y.setTimeInMillis(b);
+        return x.get(java.util.Calendar.YEAR) == y.get(java.util.Calendar.YEAR)
+                && x.get(java.util.Calendar.DAY_OF_YEAR) == y.get(java.util.Calendar.DAY_OF_YEAR);
     }
 
     private void notifyTypingLine() {
@@ -135,7 +159,7 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
 
     static final class Holder extends RecyclerView.ViewHolder {
 
-        private final ItemLogLineBinding binding;
+        private final ItemLogEntryBinding binding;
         private final int colorDefault;
         private final int colorOperator;
         private final int colorAlert;
@@ -144,7 +168,7 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
         private final String walkie;
         private final String alertIcon;
 
-        Holder(ItemLogLineBinding binding) {
+        Holder(ItemLogEntryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             android.content.Context c = binding.getRoot().getContext();
@@ -157,7 +181,15 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
             alertIcon = c.getString(R.string.ic_alert);
         }
 
-        void bind(LogLine line, long typingSeq, int typedChars, Highlighter highlighter) {
+        void bind(LogLine line, long typingSeq, int typedChars, Highlighter highlighter, boolean withTime,
+                  boolean newDay) {
+            android.content.Context c = binding.getRoot().getContext();
+            binding.day.setVisibility(newDay ? android.view.View.VISIBLE : android.view.View.GONE);
+            if (newDay) {
+                String day = new java.text.SimpleDateFormat("EEEE d MMMM", java.util.Locale.getDefault())
+                        .format(new java.util.Date(line.getTimestampMillis()));
+                binding.day.setText(c.getString(R.string.log_day, day));
+            }
             String text = line.getText();
             String shown = line.getSeq() == typingSeq
                     ? text.substring(0, Math.min(typedChars, text.length())) + CURSOR
@@ -167,6 +199,12 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
             int body = out.length();
             out.append(shown);
             highlighter.apply(out, body);
+            if (withTime) {
+                int start = out.length();
+                out.append("  ").append(android.text.format.DateFormat.getTimeFormat(c)
+                        .format(new java.util.Date(line.getTimestampMillis())));
+                out.setSpan(new ForegroundColorSpan(colorOperator), start, out.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
             binding.text.setText(out);
             binding.text.setTextColor(colorFor(line));
         }

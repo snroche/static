@@ -81,8 +81,10 @@ public final class TerminalViewModel extends ViewModel {
     /** What the COMMS screen is showing. */
     private LogView view = LogView.SYSTEM;
     private String focus;
-    /** Newest seq the player has seen, per view. */
+    /** Newest seq the player has seen, per view, and per thread (expedition or chat). */
     private final long[] seenSeq = new long[LogView.values().length];
+    private final Map<String, Long> seenThread = new HashMap<>();
+    private long seenBaseline;
     private int windowMax;
     private int pageSize;
     private int charMillis;
@@ -598,6 +600,7 @@ public final class TerminalViewModel extends ViewModel {
         // What was there before this session counts as seen.
         long newest = recent.isEmpty() ? 0 : recent.get(recent.size() - 1).getSeq();
         java.util.Arrays.fill(seenSeq, newest);
+        seenBaseline = newest;
         ready = true;
         apply(step);
     }
@@ -666,6 +669,15 @@ public final class TerminalViewModel extends ViewModel {
         if (!visible.isEmpty()) {
             seenSeq[view.ordinal()] = Math.max(seenSeq[view.ordinal()], visible.get(visible.size() - 1).getSeq());
         }
+        for (LogLine line : visible) {
+            seenThread.merge(line.getThread(), line.getSeq(), Math::max);
+        }
+        Map<String, Integer> unreadByThread = new HashMap<>();
+        for (LogLine line : window) {
+            if (line.getSeq() > seenThread.getOrDefault(line.getThread(), seenBaseline)) {
+                unreadByThread.merge(line.getThread(), 1, Integer::sum);
+            }
+        }
         int[] unread = new int[LogView.values().length];
         for (LogLine line : window) {
             for (LogView v : LogView.values()) {
@@ -674,7 +686,7 @@ public final class TerminalViewModel extends ViewModel {
                 }
             }
         }
-        state.setValue(new TerminalUiState(visible, typingSeq, charMillis, view, focus, unread));
+        state.setValue(new TerminalUiState(visible, typingSeq, charMillis, view, focus, unread, unreadByThread));
     }
 
     /** Switches the COMMS view (and optionally narrows it to one expedition or chat). */

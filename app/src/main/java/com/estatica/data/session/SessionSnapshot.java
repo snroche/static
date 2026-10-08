@@ -109,6 +109,8 @@ public final class SessionSnapshot {
         public final boolean canEquip;
         /** Out in the field and not already heading home. */
         public final boolean canRecall;
+        /** Has any injury. */
+        public final boolean hurt;
         /** "Friends with Tano", "Friction with Irene"… */
         public final List<String> relations;
         /** Mood label. */
@@ -125,6 +127,7 @@ public final class SessionSnapshot {
             this.moodKey = b.moodKey;
             this.habits = Collections.unmodifiableList(b.habits);
             this.canRecall = b.canRecall;
+            this.hurt = b.hurt;
             this.relationKinds = Collections.unmodifiableMap(b.relationKinds);
             this.relations = Collections.unmodifiableList(b.relations);
             this.gear = b.gear;
@@ -183,6 +186,7 @@ public final class SessionSnapshot {
             String moodKey;
             List<String> habits;
             boolean canRecall;
+            boolean hurt;
             java.util.Map<String, String> relationKinds = new java.util.HashMap<>();
         }
     }

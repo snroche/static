@@ -2537,6 +2537,7 @@ public final class GameSession {
             b.canEquip = home;
             Expedition out = byScout.get(s.getId());
             b.canRecall = s.isAlive() && out != null && !out.isAborted();
+            b.hurt = s.getInjury() != com.estatica.domain.scouts.Injury.NONE;
             b.moodKey = rules.mood(s);
             b.mood = content.getTerminal().getMoods().get(b.moodKey);
             b.habits = new ArrayList<>();

@@ -19,9 +19,12 @@ final class TerminalUiState {
     final String focus;
     /** Lines not seen yet, per view (index = LogView ordinal). */
     final int[] unread;
+    /** Lines not seen yet, per thread (for the chips). */
+    final java.util.Map<String, Integer> unreadByThread;
 
     TerminalUiState(List<LogLine> lines, long typingSeq, int typewriterCharMillis, LogView view, String focus,
-                    int[] unread) {
+                    int[] unread, java.util.Map<String, Integer> unreadByThread) {
+        this.unreadByThread = unreadByThread;
         this.lines = Collections.unmodifiableList(lines);
         this.typingSeq = typingSeq;
         this.typewriterCharMillis = typewriterCharMillis;

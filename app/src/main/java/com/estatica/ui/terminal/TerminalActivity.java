@@ -246,6 +246,10 @@ public final class TerminalActivity extends ComponentActivity {
             adapter.startTyping(state.typingSeq);
         }
         renderLogTabs(state);
+        lastUnread = state.unreadByThread;
+        if (logView != LogView.SYSTEM) {
+            renderLogChips();
+        }
         adapter.submitList(state.lines, () -> {
             if (newTypingLine) {
                 LogLine line = findLine(state, state.typingSeq);
@@ -312,10 +316,69 @@ public final class TerminalActivity extends ComponentActivity {
         }
     }
 
+    private java.util.Map<String, Integer> lastUnread = java.util.Map.of();
+
+    /** Crew filter: ALL, HOME, AWAY, HURT, STRESSED. */
+    private String crewFilter = "ALL";
+
+    /** Home first, then out there, the fallen last; then the filter. */
+    private List<SessionSnapshot.ScoutView> crewList(SessionSnapshot snapshot) {
+        List<SessionSnapshot.ScoutView> out = new ArrayList<>();
+        for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+            boolean keep;
+            switch (crewFilter) {
+                case "HOME":
+                    keep = !s.dead && s.awayAt == null;
+                    break;
+                case "AWAY":
+                    keep = !s.dead && s.awayAt != null;
+                    break;
+                case "HURT":
+                    keep = !s.dead && s.hurt;
+                    break;
+                case "STRESSED":
+                    keep = !s.dead && s.stress >= 45;
+                    break;
+                default:
+                    keep = true;
+            }
+            if (keep) {
+                out.add(s);
+            }
+        }
+        out.sort(java.util.Comparator.comparingInt(s -> s.dead ? 2 : s.awayAt != null ? 1 : 0));
+        return out;
+    }
+
+    private void renderCrewFilters() {
+        binding.crewFilters.removeAllViews();
+        String[] filters = {"ALL", "HOME", "AWAY", "HURT", "STRESSED"};
+        int[] labels = {R.string.crew_filter_all, R.string.crew_filter_home, R.string.crew_filter_away,
+                R.string.crew_filter_hurt, R.string.crew_filter_stressed};
+        for (int i = 0; i < filters.length; i++) {
+            String f = filters[i];
+            TextView chip = (TextView) getLayoutInflater().inflate(R.layout.item_decision_option, binding.crewFilters, false);
+            String label = getString(labels[i]);
+            boolean on = f.equals(crewFilter);
+            chip.setText(on ? getString(R.string.log_chip_on, label) : getString(R.string.log_chip, label));
+            chip.setTextColor(ContextCompat.getColor(this, on ? R.color.amber_bright : R.color.amber_dim));
+            chip.setOnClickListener(v -> {
+                crewFilter = f;
+                if (snapshot != null) {
+                    scoutAdapter.submitList(crewList(snapshot));
+                }
+                renderCrewFilters();
+            });
+            binding.crewFilters.addView(chip);
+        }
+    }
+
     private void addChip(String thread, String label) {
         TextView chip = (TextView) getLayoutInflater().inflate(R.layout.item_decision_option, binding.logChips, false);
         boolean selected = thread == null ? logFocus == null : thread.equals(logFocus);
+        int unread = thread == null ? 0 : lastUnread.getOrDefault(thread, 0);
         chip.setText(thread == null ? label
+                : unread > 0 && !selected ? getString(R.string.log_chip_unread, label, unread)
                 : getString(selected ? R.string.log_chip_on : R.string.log_chip, label));
         chip.setTextColor(ContextCompat.getColor(this, selected ? R.color.amber_bright : R.color.amber_dim));
         chip.setOnClickListener(v -> switchLog(logView, thread));
@@ -469,7 +532,8 @@ public final class TerminalActivity extends ComponentActivity {
         if (logView != LogView.SYSTEM) {
             renderLogChips();
         }
-        scoutAdapter.submitList(snapshot.scouts);
+        scoutAdapter.submitList(crewList(snapshot));
+        renderCrewFilters();
         radioPanel.render(snapshot);
         bunkerPanel.render(snapshot);
         mapPanel.render(snapshot);
@@ -972,6 +1036,7 @@ public final class TerminalActivity extends ComponentActivity {
         }
         binding.panel.setVisibility(View.VISIBLE);
         binding.panelExtra.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
+        binding.crewFiltersScroll.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
         // The recipe picker opens over the bunker panel and returns to it.
         binding.panelClose.setText(target == Panel.SCOUTS ? R.string.panel_close : R.string.panel_back);
         if (target == Panel.SCOUTS) {

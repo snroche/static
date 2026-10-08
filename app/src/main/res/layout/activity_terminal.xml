@@ -331,6 +331,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Crew filters: who to show. -->
+        <HorizontalScrollView
+            android:id="@+id/crewFiltersScroll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:scrollbars="none"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/panelClose">
+
+            <LinearLayout
+                android:id="@+id/crewFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/panelList"
             android:layout_width="0dp"
@@ -341,7 +360,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/panelClose" />
+            app:layout_constraintTop_toBottomOf="@id/crewFiltersScroll" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include

@@ -9,6 +9,11 @@ When they change, each entry lists the three independent versions:
 ## [Unreleased]
 
 ### Added
+- **Log details:**
+  - Tap a line to see when it happened.
+  - "──── Tuesday 8 October ────" separators between days.
+  - Unread counts on each expedition and person chip in COMMS ("[ Mara •3 ]"), not just on the three views.
+- **Crew sorting and filters:** people at home first, then those out, the fallen last. Filter chips: all · home · away · hurt · stressed.
 - **Radio depth: seven new schemes**, each with its own on-screen tool. A key item unlocks each one; without it, the transmission stays in the radio list with a lock as "unknown scheme" and a hint at what would help, so you can keep it and decode it later.
   - **Mirror alphabet** (Atbash): the decoder card flips it for you.
   - **Tap code**: tap letters on a 5×5 grid (cell wall chart).
@@ -707,6 +712,7 @@ No release date yet: it still needs testing on a device or emulator. Once approv
 - Lint reports newer versions of AGP, Room and Lifecycle. The project uses the ones already in the local cache; upgrading is a separate decision.
 
 [Unreleased]: #unreleased
+[0.6.7]: #067--readable-map-info-console-key-items-radio-depth--in-verification
 [0.6.6]: #066--icons-highlights-finer-map-gear-slots-depletion-weather-vignettes--in-verification
 [0.6.5]: #065--interface-bottom-bar-comms-views-decisions-options--in-verification
 [0.6.4]: #064--depth-situations-food-gear-map-pairs--in-verification

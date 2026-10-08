@@ -64,7 +64,7 @@ Rules:
 | 8 | 0.6.4 | Pair expeditions: `expeditions.partner_id` |
 | 9 | 0.6.5 | Operator name: `game_state.operator_name` |
 | 10 | 0.6.5 | Log threads: `log_lines.thread` (+ index) |
-| 11 | 0.6.7 | Places run dry: `expeditions.loot_factor` |
+| 11 | 0.6.6 | Places run dry: `expeditions.loot_factor` |
 | 12 | 0.6.7 | Ciphers: `transmissions.cipher_key` |
 
 `MigrationsTest` (JVM) compares each migration's SQL against the exported schemas. When adding a migration, extend that test.
