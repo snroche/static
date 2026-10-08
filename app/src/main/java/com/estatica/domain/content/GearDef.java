@@ -8,6 +8,21 @@ import java.util.Map;
  */
 public final class GearDef {
 
+    /** Where it's worn: one piece per slot. */
+    public enum Slot { HEAD, NECK, BODY, HANDS, BELT, BACK, FEET }
+
+    private Slot slot;
+    /** Shorter expeditions (boots); 1 = no change. */
+    private double durationMultiplier = 1.0;
+
+    public Slot getSlot() {
+        return slot != null ? slot : Slot.BODY;
+    }
+
+    public double getDurationMultiplier() {
+        return durationMultiplier;
+    }
+
     private String id;
     private String name;
     private String description;

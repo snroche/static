@@ -60,7 +60,7 @@ public final class TerminalActivity extends ComponentActivity {
 
     private Tab tab = Tab.COMMS;
 
-    private enum Panel { NONE, SCOUTS, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR }
+    private enum Panel { NONE, SCOUTS, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR, GEAR_SLOT }
 
     private ActivityTerminalBinding binding;
     private TerminalViewModel viewModel;
@@ -85,6 +85,8 @@ public final class TerminalActivity extends ComponentActivity {
     private OptionsPanel optionsPanel;
     private boolean hapticsOn = true;
     private SendPanel sendPanel;
+    /** Gear slot being changed (GearDef.Slot name). */
+    private String pendingSlot;
     /** Sector the scout picker is for. */
     private SessionSnapshot.SectorView pendingSector;
 
@@ -101,6 +103,8 @@ public final class TerminalActivity extends ComponentActivity {
             } else if (panel == Panel.RECIPES) {
                 showPanel(Panel.NONE);
                 bunkerPanel.show();
+            } else if (panel == Panel.GEAR_SLOT) {
+                showPanel(Panel.GEAR);
             } else if (sendPanel.isShown()) {
                 sendPanel.hide();
             } else if (panel == Panel.GIFTS || panel == Panel.TASKS
@@ -781,8 +785,18 @@ public final class TerminalActivity extends ComponentActivity {
                 viewModel.assignTask(selectedScoutId, row.key);
                 break;
             case GEAR:
-                viewModel.equip(selectedScoutId, row.key);
-                break;
+                // A slot: show what fits in it.
+                pendingSlot = row.key;
+                showPanel(Panel.GEAR_SLOT);
+                return;
+            case GEAR_SLOT:
+                if (KEY_TAKE_OFF.equals(row.key)) {
+                    viewModel.unequip(selectedScoutId, pendingSlot);
+                } else {
+                    viewModel.equip(selectedScoutId, row.key);
+                }
+                showPanel(Panel.GEAR); // back to the slots to keep dressing them
+                return;
             case SCOUT_SECTOR:
                 requestNotificationPermission();
                 viewModel.scoutSector(row.key, pendingSector.id);
@@ -798,6 +812,38 @@ public final class TerminalActivity extends ComponentActivity {
         }
         // Done choosing: back to the log to see what happens.
         selectTab(Tab.COMMS);
+    }
+
+    private static final String KEY_TAKE_OFF = "off";
+
+    private SessionSnapshot.ScoutView scoutById(String id) {
+        if (snapshot != null) {
+            for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+                if (s.id.equals(id)) {
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static int slotIcon(String slot) {
+        switch (slot) {
+            case "HEAD":
+                return R.string.ic_head;
+            case "NECK":
+                return R.string.ic_neck;
+            case "HANDS":
+                return R.string.ic_hands;
+            case "BELT":
+                return R.string.ic_gear;
+            case "BACK":
+                return R.string.ic_back;
+            case "FEET":
+                return R.string.ic_feet;
+            default:
+                return R.string.ic_body;
+        }
     }
 
     private void showPanel(Panel target) {
@@ -855,16 +901,49 @@ public final class TerminalActivity extends ComponentActivity {
                     rows.add(new PickerAdapter.Row(task.id, task.name, null, task.description, true));
                 }
                 break;
-            case GEAR:
+            case GEAR: {
                 binding.panelTitle.setText(getString(R.string.panel_gear_title, selectedScoutName));
-                rows.add(new PickerAdapter.Row(null, getString(R.string.gear_none), null, null, true));
-                for (SessionSnapshot.ItemView gear : snapshot.base.gearStock) {
-                    rows.add(new PickerAdapter.Row(gear.id, gear.name, null, gear.description, true));
+                SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
+                if (who != null) {
+                    for (SessionSnapshot.SlotView slot : who.slots) {
+                        int free = 0;
+                        for (SessionSnapshot.ItemView piece : snapshot.base.gearStock) {
+                            free += slot.slot.equals(piece.slot) ? 1 : 0;
+                        }
+                        String title = getString(R.string.gear_slot_title, getString(slotIcon(slot.slot)), slot.name);
+                        String meta = slot.label != null ? slot.label : getString(R.string.gear_slot_empty);
+                        String extra = free > 0 ? getString(R.string.gear_slot_spare, free) : null;
+                        rows.add(new PickerAdapter.Row(slot.slot, title, meta, extra, true));
+                    }
                 }
-                if (snapshot.base.gearStock.isEmpty()) {
+                break;
+            }
+            case GEAR_SLOT: {
+                SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
+                SessionSnapshot.SlotView current = null;
+                if (who != null) {
+                    for (SessionSnapshot.SlotView slot : who.slots) {
+                        if (slot.slot.equals(pendingSlot)) {
+                            current = slot;
+                        }
+                    }
+                }
+                binding.panelTitle.setText(getString(R.string.gear_slot_pick_title,
+                        current != null ? current.name : pendingSlot, selectedScoutName));
+                if (current != null && current.pieceId != null) {
+                    rows.add(new PickerAdapter.Row(KEY_TAKE_OFF, getString(R.string.gear_take_off), current.label,
+                            null, true));
+                }
+                for (SessionSnapshot.ItemView piece : snapshot.base.gearStock) {
+                    if (pendingSlot.equals(piece.slot)) {
+                        rows.add(new PickerAdapter.Row(piece.id, piece.name, null, piece.description, true));
+                    }
+                }
+                if (rows.isEmpty() || (rows.size() == 1 && KEY_TAKE_OFF.equals(rows.get(0).key))) {
                     rows.add(new PickerAdapter.Row("-", getString(R.string.gear_empty), null, null, false));
                 }
                 break;
+            }
             case RECIPES:
                 binding.panelTitle.setText(R.string.panel_recipes_title);
                 for (SessionSnapshot.RecipeView r : snapshot.base.recipes) {

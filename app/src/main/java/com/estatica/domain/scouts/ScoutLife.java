@@ -29,8 +29,9 @@ public final class ScoutLife {
     private double stressCarry;
     /** Equipped gear piece id, or null (older saves: a gear.json id, converted on load). */
     private String gearId;
-    /** The equipped piece itself, attached on load. */
-    private com.estatica.domain.bunker.GearPiece gear;
+    /** Equipped pieces by slot, attached on load. */
+    private final java.util.Map<com.estatica.domain.content.GearDef.Slot, com.estatica.domain.bunker.GearPiece> gear =
+            new java.util.EnumMap<>(com.estatica.domain.content.GearDef.Slot.class);
 
     public ScoutLife(int bond, String taskId, Set<String> flags, long lastTalkAtMillis,
                      long lastInitiatedAtMillis, long lastDecayAtMillis, double taskXpCarry,
@@ -54,20 +55,30 @@ public final class ScoutLife {
         return gearId;
     }
 
+    /** Legacy column (one piece); slots live on the pieces' location now. */
     public void setGearId(String gearId) {
         this.gearId = gearId;
-        if (gear != null && !gear.getId().equals(gearId)) {
-            gear = null;
-        }
     }
 
-    public com.estatica.domain.bunker.GearPiece getGear() {
-        return gear;
+    /** Everything worn, in slot order. */
+    public java.util.List<com.estatica.domain.bunker.GearPiece> getEquipped() {
+        return new java.util.ArrayList<>(gear.values());
     }
 
-    public void setGear(com.estatica.domain.bunker.GearPiece piece) {
-        this.gear = piece;
-        this.gearId = piece != null ? piece.getId() : null;
+    public com.estatica.domain.bunker.GearPiece getGear(com.estatica.domain.content.GearDef.Slot slot) {
+        return gear.get(slot);
+    }
+
+    /** Puts a piece in a slot. @return what was there, or null */
+    public com.estatica.domain.bunker.GearPiece wear(com.estatica.domain.content.GearDef.Slot slot, com.estatica.domain.bunker.GearPiece piece) {
+        return piece == null ? gear.remove(slot) : gear.put(slot, piece);
+    }
+
+    /** Takes everything off. @return what they had on */
+    public java.util.List<com.estatica.domain.bunker.GearPiece> takeAllOff() {
+        java.util.List<com.estatica.domain.bunker.GearPiece> out = new java.util.ArrayList<>(gear.values());
+        gear.clear();
+        return out;
     }
 
     public double getStressCarry() {

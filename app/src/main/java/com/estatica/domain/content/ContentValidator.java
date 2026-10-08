@@ -277,6 +277,7 @@ public final class ContentValidator {
             }
         }
         for (GearDef gear : content.getGear().values()) {
+            check(gear.getDurationMultiplier() > 0, "gear " + gear.getId() + ": durationMultiplier > 0");
             ResourceDef stock = content.getResources().get(gear.getId());
             check(stock != null && stock.getKind() == ResourceDef.Kind.GEAR,
                     "gear " + gear.getId() + ": needs a GEAR resource with the same id");

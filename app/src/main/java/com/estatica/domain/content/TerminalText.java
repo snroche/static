@@ -429,6 +429,13 @@ public final class TerminalText {
             return directions != null ? directions : java.util.List.of();
         }
 
+        /** GearDef.Slot name to display name ("Head"). */
+        private java.util.Map<String, String> slotNames;
+
+        public java.util.Map<String, String> getSlotNames() {
+            return slotNames != null ? slotNames : java.util.Map.of();
+        }
+
         /** COMMON, UNCOMMON, RARE to display name. */
         private java.util.Map<String, String> rarities;
 

@@ -5,19 +5,22 @@
     "description": "Wits +1: sees what others miss.",
     "statBonus": {
       "wits": 1
-    }
+    },
+    "slot": "HANDS"
   },
   {
     "id": "gear_mochila",
     "name": "Reinforced backpack",
     "description": "Brings back 25% more loot.",
-    "lootMultiplier": 1.25
+    "lootMultiplier": 1.25,
+    "slot": "BACK"
   },
   {
     "id": "gear_botiquin",
     "name": "First-aid kit",
     "description": "The first injury is one level less severe. Used up.",
-    "absorbsInjury": true
+    "absorbsInjury": true,
+    "slot": "BELT"
   },
   {
     "id": "gear_chaleco",
@@ -25,12 +28,60 @@
     "description": "Endurance +2.",
     "statBonus": {
       "endurance": 2
-    }
+    },
+    "slot": "BODY"
   },
   {
     "id": "gear_radio",
     "name": "Portable radio",
     "description": "Their signal comes through cleaner: less noise and fewer lost hints.",
-    "noiseFactor": 0.6
+    "noiseFactor": 0.6,
+    "slot": "NECK"
+  },
+  {
+    "id": "gear_casco",
+    "name": "Helmet",
+    "slot": "HEAD",
+    "description": "Endurance +1: takes a knock so the head doesn't.",
+    "statBonus": {
+      "endurance": 1
+    }
+  },
+  {
+    "id": "gear_amuleto",
+    "name": "Lucky charm",
+    "slot": "NECK",
+    "description": "Nerve +1. It's probably nothing. Probably.",
+    "statBonus": {
+      "nerve": 1
+    }
+  },
+  {
+    "id": "gear_botas",
+    "name": "Soft boots",
+    "slot": "FEET",
+    "description": "Stealth +1 and expeditions 10% shorter.",
+    "statBonus": {
+      "stealth": 1
+    },
+    "durationMultiplier": 0.9
+  },
+  {
+    "id": "gear_cinturon",
+    "name": "Tool belt",
+    "slot": "BELT",
+    "description": "Craft +1: the right tool, always at hand.",
+    "statBonus": {
+      "craft": 1
+    }
+  },
+  {
+    "id": "gear_guantes",
+    "name": "Work gloves",
+    "slot": "HANDS",
+    "description": "Craft +1: grip on anything, cuts on nothing.",
+    "statBonus": {
+      "craft": 1
+    }
   }
 ]

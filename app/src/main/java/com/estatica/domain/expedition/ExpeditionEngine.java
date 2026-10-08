@@ -605,12 +605,13 @@ public final class ExpeditionEngine {
             }
             return;
         }
-        GearDef gear = rules.gearOf(scout);
-        if (incoming != Injury.NONE && gear != null && gear.isAbsorbsInjury()) {
+        com.estatica.domain.bunker.GearPiece kit = rules.injuryAbsorber(scout);
+        if (incoming != Injury.NONE && kit != null) {
             // Used up: one level less of damage.
+            GearDef gear = content.gear(kit.getGearId());
             incoming = incoming.better();
-            rules.pieceOf(scout).moveTo(com.estatica.domain.bunker.GearPiece.GONE);
-            scout.getLife().setGear(null);
+            scout.getLife().wear(gear.getSlot(), null);
+            kit.moveTo(com.estatica.domain.bunker.GearPiece.GONE);
             Map<String, String> gearVars = vars(scout);
             gearVars.put("gear", gear.getName().toLowerCase(Locale.ROOT));
             out.line(system(at, TextTemplate.format(content.getTerminal().getBase().getGearSaved(), gearVars), scout));

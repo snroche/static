@@ -8,6 +8,13 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+### Added
+- **Gear slots:** every scout has seven slots (head, neck, body, hands, belt, back, feet), one piece each, and the effects of everything worn add up.
+  - **Gear screen:** [GEAR] on a crew card opens it. It lists the slots with what's in them and how many spare pieces in the bunker fit each one. Tap a slot to put something on or take it off; whatever was there goes back to the bunker.
+  - **Five new pieces:** helmet (head), lucky charm (neck), soft boots (feet: Stealth +1 and 10 % shorter trips), tool belt (belt) and work gloves (hands). The workshop can make four of them; the charm only turns up on expeditions.
+  - Wear applies to every piece worn. The first-aid kit is used up from whichever slot holds it. A dead scout's whole outfit stays where they fell.
+  - No save change: a piece's location says who wears it.
+
 ### Changed
 - **Finer outer rings on the map:** the short band has 8 sectors, the medium 12, the long 16. Farther rings cover more ground, so there's more to scout. Sectors are named by 16 compass points ("north-northeast · long band"). Places keep being placed per save from the game seed: same places, different spots each game.
 - **Terminal font with icons:** JetBrains Mono Nerd Font (SIL OFL, license in `assets/licenses/`), subset to the characters and ~60 icons the game uses (~140 KB per weight; the APK grew ~30 KB).

@@ -38,9 +38,8 @@ public final class ScoutRules {
         for (TraitDef trait : traitsOf(scout)) {
             value += trait.statBonus(type.key());
         }
-        GearDef gear = gearOf(scout);
-        if (gear != null) {
-            value += com.estatica.domain.bunker.GearRules.statBonus(gear, pieceOf(scout), type.key());
+        for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
+            value += com.estatica.domain.bunker.GearRules.statBonus(content.gear(piece.getGearId()), piece, type.key());
         }
         return Math.max(0, value);
     }
@@ -58,32 +57,71 @@ public final class ScoutRules {
         for (TraitDef trait : traitsOf(scout)) {
             m *= trait.getLootMultiplier();
         }
-        GearDef gear = gearOf(scout);
-        if (gear != null) {
-            m *= com.estatica.domain.bunker.GearRules.lootMultiplier(gear, pieceOf(scout));
+        for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
+            m *= com.estatica.domain.bunker.GearRules.lootMultiplier(content.gear(piece.getGearId()), piece);
         }
         return m;
     }
 
-    /** Equipped piece, broken or not, or null. */
-    public com.estatica.domain.bunker.GearPiece pieceOf(Scout scout) {
-        return scout.getLife().getGear();
+    /** Pieces worn that still work (broken ones do nothing). */
+    public List<com.estatica.domain.bunker.GearPiece> working(Scout scout) {
+        List<com.estatica.domain.bunker.GearPiece> out = new ArrayList<>();
+        for (com.estatica.domain.bunker.GearPiece piece : scout.getLife().getEquipped()) {
+            if (!piece.isBroken() && content.gear(piece.getGearId()) != null) {
+                out.add(piece);
+            }
+        }
+        return out;
     }
 
-    /** What the equipped piece does, or null if there is none or it's broken. */
-    public GearDef gearOf(Scout scout) {
-        com.estatica.domain.bunker.GearPiece piece = pieceOf(scout);
-        return piece == null || piece.isBroken() ? null : content.gear(piece.getGearId());
+    /** A working piece that absorbs an injury (first-aid kit), or null. */
+    public com.estatica.domain.bunker.GearPiece injuryAbsorber(Scout scout) {
+        for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
+            if (content.gear(piece.getGearId()).isAbsorbsInjury()) {
+                return piece;
+            }
+        }
+        return null;
     }
 
-    /** Noise multiplier from a portable radio (1 without one). */
+    /**
+     * Puts a piece on in its slot; whatever was there goes back to the bunker.
+     *
+     * @return the piece taken off, or null
+     */
+    public com.estatica.domain.bunker.GearPiece equip(Scout scout, com.estatica.domain.bunker.GearPiece piece) {
+        GearDef def = content.gear(piece.getGearId());
+        com.estatica.domain.bunker.GearPiece old = scout.getLife().wear(def.getSlot(), piece);
+        if (old != null) {
+            old.moveTo(com.estatica.domain.bunker.GearPiece.BUNKER);
+        }
+        piece.moveTo(com.estatica.domain.bunker.GearPiece.carriedBy(scout.getId()));
+        return old;
+    }
+
+    /** Takes off whatever is in a slot and puts it back in the bunker. @return it, or null */
+    public com.estatica.domain.bunker.GearPiece unequip(Scout scout, GearDef.Slot slot) {
+        com.estatica.domain.bunker.GearPiece old = scout.getLife().wear(slot, null);
+        if (old != null) {
+            old.moveTo(com.estatica.domain.bunker.GearPiece.BUNKER);
+        }
+        return old;
+    }
+
+    /** Noise multiplier from radios worn (1 without). */
     public double gearNoiseFactor(Scout scout) {
-        GearDef gear = gearOf(scout);
-        return gear == null ? 1.0 : com.estatica.domain.bunker.GearRules.noiseFactor(gear, pieceOf(scout));
+        double factor = 1.0;
+        for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
+            factor *= com.estatica.domain.bunker.GearRules.noiseFactor(content.gear(piece.getGearId()), piece);
+        }
+        return factor;
     }
 
     public double durationMultiplier(Scout scout) {
         double m = 1.0;
+        for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
+            m *= content.gear(piece.getGearId()).getDurationMultiplier();
+        }
         for (TraitDef trait : traitsOf(scout)) {
             m *= trait.getDurationMultiplier();
         }

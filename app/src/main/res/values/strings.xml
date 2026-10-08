@@ -108,8 +108,12 @@
     <string name="nobody_on_guard">nobody</string>
     <string name="equip_button">[ GEAR ]</string>
     <string name="scout_gear">Gear: %1$s</string>
-    <string name="panel_gear_title">What does %1$s carry?</string>
-    <string name="gear_none">Nothing (return it to the bunker)</string>
+    <string name="panel_gear_title">%1$s\'s gear</string>
+    <string name="gear_slot_title">%1$s %2$s</string>
+    <string name="gear_slot_empty">— empty —</string>
+    <string name="gear_slot_spare">%1$d in the bunker fit here</string>
+    <string name="gear_slot_pick_title">%1$s · %2$s</string>
+    <string name="gear_take_off">Take it off</string>
     <string name="gear_empty">No gear yet. It turns up on expeditions or gets built in the workshop.</string>
 
     <string name="goals_title">GOALS</string>

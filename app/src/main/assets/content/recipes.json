@@ -73,5 +73,47 @@
     "output": "gear_radio",
     "minutes": 10,
     "minWorkshopLevel": 3
+  },
+  {
+    "id": "casco",
+    "name": "Helmet",
+    "inputs": {
+      "scrap": 4,
+      "parts": 1
+    },
+    "output": "gear_casco",
+    "minutes": 8,
+    "minWorkshopLevel": 2
+  },
+  {
+    "id": "guantes",
+    "name": "Work gloves",
+    "inputs": {
+      "scrap": 2,
+      "components": 1
+    },
+    "output": "gear_guantes",
+    "minutes": 4
+  },
+  {
+    "id": "botas",
+    "name": "Soft boots",
+    "inputs": {
+      "scrap": 3,
+      "components": 1
+    },
+    "output": "gear_botas",
+    "minutes": 6
+  },
+  {
+    "id": "cinturon",
+    "name": "Tool belt",
+    "inputs": {
+      "scrap": 3,
+      "components": 2
+    },
+    "output": "gear_cinturon",
+    "minutes": 6,
+    "minWorkshopLevel": 2
   }
 ]

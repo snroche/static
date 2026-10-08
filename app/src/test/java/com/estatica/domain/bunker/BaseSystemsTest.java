@@ -180,21 +180,49 @@ public class BaseSystemsTest {
         Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
         int wits = rules.effectiveStat(s, StatType.WITS);
         double loot = rules.lootMultiplier(s);
-        s.getLife().setGear(piece("gear_linterna", GearPiece.Rarity.COMMON));
+        rules.equip(s, piece("gear_linterna", GearPiece.Rarity.COMMON));
         assertEquals(wits + 1, rules.effectiveStat(s, StatType.WITS));
-        s.getLife().setGear(piece("gear_mochila", GearPiece.Rarity.COMMON));
+        rules.equip(s, piece("gear_mochila", GearPiece.Rarity.COMMON));
         assertEquals(loot * 1.25, rules.lootMultiplier(s), 1e-9);
+    }
+
+    @Test
+    public void slotsStackAndTheSameSlotSwaps() {
+        Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
+        int craft = rules.effectiveStat(s, StatType.CRAFT);
+        GearPiece gloves = piece("gear_guantes", GearPiece.Rarity.COMMON);
+        GearPiece belt = piece("gear_cinturon", GearPiece.Rarity.COMMON);
+        rules.equip(s, gloves);
+        rules.equip(s, belt);
+        assertEquals("hands and belt add up", craft + 2, rules.effectiveStat(s, StatType.CRAFT));
+        GearPiece light = piece("gear_linterna", GearPiece.Rarity.COMMON);
+        GearPiece old = rules.equip(s, light);
+        assertEquals("the flashlight takes the gloves' slot", gloves, old);
+        assertTrue(gloves.isInBunker());
+        assertEquals(craft + 1, rules.effectiveStat(s, StatType.CRAFT));
+        assertEquals(2, s.getLife().getEquipped().size());
+        rules.unequip(s, com.estatica.domain.content.GearDef.Slot.BELT);
+        assertEquals(craft, rules.effectiveStat(s, StatType.CRAFT));
+        assertTrue(belt.isInBunker());
+    }
+
+    @Test
+    public void bootsShortenTheTrip() {
+        Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
+        double before = rules.durationMultiplier(s);
+        rules.equip(s, piece("gear_botas", GearPiece.Rarity.COMMON));
+        assertEquals(before * 0.9, rules.durationMultiplier(s), 1e-9);
     }
 
     @Test
     public void rarerGearDoesMore() {
         Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
         int endurance = rules.effectiveStat(s, StatType.ENDURANCE);
-        s.getLife().setGear(piece("gear_chaleco", GearPiece.Rarity.RARE));
+        rules.equip(s, piece("gear_chaleco", GearPiece.Rarity.RARE));
         assertEquals(endurance + 4, rules.effectiveStat(s, StatType.ENDURANCE));
-        s.getLife().setGear(piece("gear_mochila", GearPiece.Rarity.UNCOMMON));
+        rules.equip(s, piece("gear_mochila", GearPiece.Rarity.UNCOMMON));
         assertTrue(rules.lootMultiplier(s) > rules.lootMultiplier(TestScouts.custom("irene", 5, 0, 0, T0)) * 1.25);
-        s.getLife().setGear(piece("gear_radio", GearPiece.Rarity.RARE));
+        rules.equip(s, piece("gear_radio", GearPiece.Rarity.RARE));
         assertTrue(rules.gearNoiseFactor(s) < 0.6);
     }
 
@@ -204,7 +232,7 @@ public class BaseSystemsTest {
         Scout s = TestScouts.custom("irene", 5, 0, 0, T0);
         int wits = rules.effectiveStat(s, StatType.WITS);
         GearPiece light = piece("gear_linterna", GearPiece.Rarity.COMMON);
-        s.getLife().setGear(light);
+        rules.equip(s, light);
         int trips = 0;
         while (!light.isBroken()) {
             gearRules.wear(light, false);
@@ -255,10 +283,10 @@ public class BaseSystemsTest {
         for (long seed = 0; seed < 200 && used == 0; seed++) {
             Scout s = TestScouts.custom("mara", 2, 0, 0, T0);
             GearPiece kit = piece("gear_botiquin", GearPiece.Rarity.COMMON);
-            s.getLife().setGear(kit);
+            rules.equip(s, kit);
             Expedition e = engine.dispatch(s, content.zone("escuela"), seed, T0).expedition;
             ExpeditionResult r = engine.advance(e, s, List.of(), T0 + 3 * HOUR);
-            if (s.getLife().getGear() == null) {
+            if (s.getLife().getEquipped().isEmpty()) {
                 used++;
                 assertTrue("used up", kit.isGone());
                 boolean announced = false;

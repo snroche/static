@@ -279,6 +279,12 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
+    void unequip(String scoutId, String slot) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.unequip(scoutId, slot)));
+        }
+    }
+
     void repairGear(String pieceId) {
         if (ready) {
             run(step -> step.animated.addAll(session.repairGear(pieceId)));

@@ -165,7 +165,7 @@
     "craftDone": "Workshop: {item} is ready.",
     "craftNoSlot": "No free workbenches in the workshop.",
     "equipped": "{name} is carrying the {gear}.",
-    "unequipped": "{name} left their gear in the bunker.",
+    "unequipped": "{name} takes off the {gear}. It goes back to the bunker.",
     "gearSaved": "The {gear} saved {name} from something worse.",
     "reserveLow": "The power reserve isn't enough to lock onto the signal.",
     "reserveRecharged": "Reserve recharged with a battery.",
@@ -203,7 +203,16 @@
       "west-northwest",
       "northwest",
       "north-northwest"
-    ]
+    ],
+    "slotNames": {
+      "HEAD": "Head",
+      "NECK": "Neck",
+      "BODY": "Body",
+      "HANDS": "Hands",
+      "BELT": "Belt",
+      "BACK": "Back",
+      "FEET": "Feet"
+    }
   },
   "story": {
     "personalAvailable": "{name} asked you for something: \"{title}\". It shows up as a mission when dispatching.",

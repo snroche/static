@@ -90,8 +90,10 @@ public final class SessionSnapshot {
         public final boolean canAssignTask;
         /** Zone name while away, else null. */
         public final String awayAt;
-        /** Equipped gear name, or null. */
+        /** Everything worn, as one line, or null. */
         public final String gear;
+        /** Every slot, empty or not. */
+        public final List<SlotView> slots;
         public final boolean canEquip;
         /** "Friends with Tano", "Friction with Irene"… */
         public final List<String> relations;
@@ -111,6 +113,7 @@ public final class SessionSnapshot {
             this.relationKinds = Collections.unmodifiableMap(b.relationKinds);
             this.relations = Collections.unmodifiableList(b.relations);
             this.gear = b.gear;
+            this.slots = b.slots != null ? Collections.unmodifiableList(b.slots) : List.of();
             this.canEquip = b.canEquip;
             this.id = b.id;
             this.name = b.name;
@@ -158,6 +161,7 @@ public final class SessionSnapshot {
             boolean canAssignTask;
             String awayAt;
             String gear;
+            List<SlotView> slots;
             boolean canEquip;
             List<String> relations;
             String mood;
@@ -552,6 +556,23 @@ public final class SessionSnapshot {
         }
     }
 
+    /** One gear slot on a scout. */
+    public static final class SlotView {
+        /** GearDef.Slot name. */
+        public final String slot;
+        public final String name;
+        /** Null if empty. */
+        public final String pieceId;
+        public final String label;
+
+        SlotView(String slot, String name, String pieceId, String label) {
+            this.slot = slot;
+            this.name = name;
+            this.pieceId = pieceId;
+            this.label = label;
+        }
+    }
+
     /** One piece of equipment in the bunker or on someone. */
     public static final class GearView {
         public final String id;
@@ -602,11 +623,18 @@ public final class SessionSnapshot {
         public final String id;
         public final String name;
         public final String description;
+        /** Gear only: the slot it goes in (GearDef.Slot name), else null. */
+        public final String slot;
 
         ItemView(String id, String name, String description) {
+            this(id, name, description, null);
+        }
+
+        ItemView(String id, String name, String description, String slot) {
             this.id = id;
             this.name = name;
             this.description = description;
+            this.slot = slot;
         }
     }
 

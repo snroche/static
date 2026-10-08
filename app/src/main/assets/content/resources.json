@@ -67,5 +67,30 @@
     "id": "gear_radio",
     "name": "Portable radio",
     "kind": "GEAR"
+  },
+  {
+    "id": "gear_casco",
+    "name": "Helmet",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_amuleto",
+    "name": "Lucky charm",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_botas",
+    "name": "Soft boots",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_cinturon",
+    "name": "Tool belt",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_guantes",
+    "name": "Work gloves",
+    "kind": "GEAR"
   }
 ]
