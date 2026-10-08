@@ -42,7 +42,7 @@
       "[ RADIO ] dial and decoding · [ BUNKER ] power, workshop, modules · [ CREW ] your scouts and the [MAP]."
     ],
     "status": [
-      "Operator #{operator}",
+      "Operator {operator} (#{operatorId})",
       "In the bunker for {age}.",
       "Terminal v{version}.",
       "Scouts: {scouts}.",
@@ -205,5 +205,15 @@
     "diaryLore": "TRANSMISSIONS",
     "diaryZones": "ZONES",
     "diaryUnknownFragment": "??? (fragment not found)"
-  }
+  },
+  "askName": [
+    "Before anything else: who's on the radio?",
+    "Type your name. It's what the crew will call you."
+  ],
+  "nameSet": [
+    "Copy that, {operator}. Welcome to the bunker.",
+    "They'll hear your voice. Make it count."
+  ],
+  "nameChanged": "The crew will call you {operator} from now on.",
+  "defaultOperatorName": "Operator"
 }

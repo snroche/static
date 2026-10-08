@@ -8,6 +8,14 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
+### Added
+- **Your name:** a new game asks who's on the radio, and the crew calls you by it.
+  - The terminal greets you by name, and `status` shows it.
+  - Closer scouts use it in their own voice ("Off I go, Sam. Put the kettle on.").
+  - Any line can use `{operator}`.
+  - Change it any time in options. **DB 8 → 9:** `game_state.operator_name`.
+- **Options screen** (⚙ in the header): your name, sound, vibration, notifications, text speed (slow / normal / fast / instant) and the CRT scanlines. The typed commands `sound` and `notifications` still work.
+
 ### Changed
 - **Bottom bar navigation:** COMMS · CREW · MAP · RADIO · BUNKER replace the top buttons.
   - The selected tab is bright and bracketed.

@@ -17,6 +17,9 @@ public final class Settings {
 
     private static final String SOUND = "sound";
     private static final String NOTIFICATIONS = "notifications";
+    private static final String HAPTICS = "haptics";
+    private static final String TEXT_SPEED = "text_speed";
+    private static final String CRT = "crt";
 
     private final SharedPreferences prefs;
 
@@ -33,6 +36,36 @@ public final class Settings {
     public boolean toggleSound() {
         boolean value = !isSoundOn();
         prefs.edit().putBoolean(SOUND, value).apply();
+        return value;
+    }
+
+    public boolean isHapticsOn() {
+        return prefs.getBoolean(HAPTICS, true);
+    }
+
+    public boolean toggleHaptics() {
+        boolean value = !isHapticsOn();
+        prefs.edit().putBoolean(HAPTICS, value).apply();
+        return value;
+    }
+
+    /** 0 slow … 3 instant; 1 is the default. */
+    public int getTextSpeed() {
+        return prefs.getInt(TEXT_SPEED, 1);
+    }
+
+    public void setTextSpeed(int speed) {
+        prefs.edit().putInt(TEXT_SPEED, speed).apply();
+    }
+
+    /** CRT scanlines over the screen. */
+    public boolean isCrtOn() {
+        return prefs.getBoolean(CRT, true);
+    }
+
+    public boolean toggleCrt() {
+        boolean value = !isCrtOn();
+        prefs.edit().putBoolean(CRT, value).apply();
         return value;
     }
 

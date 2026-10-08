@@ -17,6 +17,13 @@ import com.estatica.databinding.PanelRadioBinding;
  */
 final class RadioPanel {
 
+    private boolean haptics = true;
+
+    void setHaptics(boolean on) {
+        haptics = on;
+    }
+
+
     interface Host {
         void openDecoder(SessionSnapshot.TransmissionView transmission, boolean morseTable);
 
@@ -156,7 +163,9 @@ final class RadioPanel {
             }
         }
         if (tick > lastTick) {
-            b.dial.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+            if (haptics) {
+                b.dial.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+            }
         }
         lastTick = tick;
     }

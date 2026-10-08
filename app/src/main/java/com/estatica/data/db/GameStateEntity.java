@@ -33,4 +33,9 @@ public class GameStateEntity {
     /** balance.json contentVersion this save was last written with. Added in DB v2. */
     @ColumnInfo(name = "content_version", defaultValue = "1")
     public int contentVersion = 1;
+
+    /** DB v9: what the crew calls the operator; null until they say. */
+    @androidx.annotation.Nullable
+    @ColumnInfo(name = "operator_name")
+    public String operatorName;
 }

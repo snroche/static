@@ -9,6 +9,16 @@ public final class GameState {
     private final long createdAtMillis;
     private final long lastSeenAtMillis;
     private final boolean newGame;
+    /** Null until the operator gives one. */
+    private String operatorName;
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
 
     public GameState(String operatorId, long rngSeed, long rngState, long createdAtMillis,
                      long lastSeenAtMillis, boolean newGame) {

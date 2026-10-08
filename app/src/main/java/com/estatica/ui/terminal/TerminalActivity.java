@@ -82,6 +82,8 @@ public final class TerminalActivity extends ComponentActivity {
     private DecoderPanel decoderPanel;
     private BunkerPanel bunkerPanel;
     private MapPanel mapPanel;
+    private OptionsPanel optionsPanel;
+    private boolean hapticsOn = true;
     /** Destination chosen, waiting for "who goes along?": TYPE|zoneId|target. */
     private String pendingDispatch;
     /** Sector the scout picker is for. */
@@ -90,7 +92,9 @@ public final class TerminalActivity extends ComponentActivity {
     private final OnBackPressedCallback closePanelOnBack = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
-            if (decoderPanel.isShown()) {
+            if (optionsPanel.isShown()) {
+                optionsPanel.hide();
+            } else if (decoderPanel.isShown()) {
                 decoderPanel.hide();
             } else if (panel == Panel.SCOUT_SECTOR) {
                 showPanel(Panel.NONE);
@@ -122,6 +126,26 @@ public final class TerminalActivity extends ComponentActivity {
         viewModel = new ViewModelProvider(this).get(TerminalViewModel.class);
         sound = new SoundEngine(settings.isSoundOn());
         viewModel.getSoundOn().observe(this, sound::setEnabled);
+        optionsPanel = new OptionsPanel(binding.optionsPanel, viewModel, () -> {
+            optionsPanel.hide();
+            updateBack();
+        }, viewModel.appVersion());
+        binding.optionsButton.setOnClickListener(v -> {
+            if (optionsPanel.isShown()) {
+                optionsPanel.hide();
+            } else {
+                optionsPanel.show();
+            }
+            updateBack();
+        });
+        viewModel.getOptions().observe(this, o -> {
+            optionsPanel.render(o);
+            hapticsOn = o.haptics;
+            if (radioPanel != null) {
+                radioPanel.setHaptics(o.haptics);
+            }
+            binding.scanlines.setVisibility(o.crt ? View.VISIBLE : View.GONE);
+        });
         setUpLog();
         setUpInput();
         setUpPanel();
@@ -180,7 +204,9 @@ public final class TerminalActivity extends ComponentActivity {
             LogLine line = findLine(state, state.typingSeq);
             if (line != null && line.getChannel() == LogChannel.ALERT) {
                 // GDD §2: short haptic when an urgent message arrives.
-                binding.getRoot().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                if (hapticsOn) {
+                    binding.getRoot().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
                 sound.beep();
             }
         }
@@ -404,6 +430,7 @@ public final class TerminalActivity extends ComponentActivity {
     /** Switches the screen above the bottom bar. */
     private void selectTab(Tab target) {
         tab = target;
+        optionsPanel.hide();
         showPanel(Panel.NONE);
         radioPanel.hide();
         decoderPanel.hide();
@@ -584,7 +611,8 @@ public final class TerminalActivity extends ComponentActivity {
     }
 
     private void updateBack() {
-        closePanelOnBack.setEnabled(tab != Tab.COMMS || panel != Panel.NONE || decoderPanel.isShown());
+        closePanelOnBack.setEnabled(tab != Tab.COMMS || panel != Panel.NONE || decoderPanel.isShown()
+                || optionsPanel.isShown());
     }
 
     private void select(SessionSnapshot.ScoutView scout) {

@@ -24,4 +24,18 @@ public class VoiceRendererTest {
         assertEquals("It's real easy, but the mess is elsewhere. Veryyy.",
                 VoiceRenderer.render(voice, "It's very easy, but the problem is elsewhere. Veryyy.", Map.of()));
     }
+
+    @Test
+    public void theOperatorsNameFillsInWhereverItFits() {
+        VoiceDef voice = TestContent.get().voice("formal");
+        try {
+            VoiceRenderer.setOperatorName("Sam");
+            assertEquals("Copy that, Sam.", VoiceRenderer.render(voice, "Copy that, {operator}.", Map.of()));
+            assertEquals("Copy that, Lee.", VoiceRenderer.render(voice, "Copy that, {operator}.", Map.of("operator", "Lee")));
+            VoiceRenderer.setOperatorName("  ");
+            assertEquals("Copy that, Operator.", VoiceRenderer.render(voice, "Copy that, {operator}.", Map.of()));
+        } finally {
+            VoiceRenderer.setOperatorName(null);
+        }
+    }
 }

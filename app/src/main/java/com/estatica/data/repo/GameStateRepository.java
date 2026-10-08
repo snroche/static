@@ -41,8 +41,10 @@ public final class GameStateRepository {
             dao.upsert(e);
             created = true;
         }
-        return new GameState(e.operatorUuid, e.rngSeed, e.rngState, e.createdAtMillis,
+        GameState state = new GameState(e.operatorUuid, e.rngSeed, e.rngState, e.createdAtMillis,
                 e.lastSeenAtMillis, created);
+        state.setOperatorName(e.operatorName);
+        return state;
     }
 
     @WorkerThread
@@ -53,6 +55,11 @@ public final class GameStateRepository {
     @WorkerThread
     public void saveContentVersion(int version) {
         dao.updateContentVersion(version);
+    }
+
+    @WorkerThread
+    public void saveOperatorName(String name) {
+        dao.updateOperatorName(name);
     }
 
     @WorkerThread

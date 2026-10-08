@@ -255,6 +255,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider" />
 
+    <include
+        android:id="@+id/optionsPanel"
+        layout="@layout/panel_options"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
+
     <!-- Bottom bar: where you are and where you can go. -->
     <View
         android:id="@+id/bottomDivider"
@@ -313,6 +324,7 @@
     </LinearLayout>
 
     <com.estatica.ui.terminal.ScanlineOverlayView
+        android:id="@+id/scanlines"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

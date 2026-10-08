@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Options: the operator's name and device settings (GDD §9). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/terminal_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    tools:ignore="Overdraw">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TerminalText.Bright"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:accessibilityHeading="true"
+            android:text="@string/options_title"
+            tools:targetApi="28" />
+
+        <TextView
+            android:id="@+id/optionsClose"
+            style="@style/TerminalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="@string/panel_close" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingBottom="12dp">
+
+            <TextView
+                style="@style/TerminalText.Dim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/options_name_label" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TerminalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:text="@string/input_prompt" />
+
+                <EditText
+                    android:id="@+id/optionsName"
+                    style="@style/TerminalText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/options_name_hint"
+                    android:imeOptions="actionDone|flagNoExtractUi"
+                    android:importantForAutofill="no"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLength="16"
+                    android:maxLines="1"
+                    android:minHeight="48dp"
+                    android:paddingHorizontal="8dp"
+                    android:textColorHint="@color/amber_hint"
+                    android:textCursorDrawable="@null" />
+
+                <TextView
+                    android:id="@+id/optionsNameSave"
+                    style="@style/TerminalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/options_name_save" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/optionsSound"
+                style="@style/TerminalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical|start" />
+
+            <TextView
+                android:id="@+id/optionsHaptics"
+                style="@style/TerminalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start" />
+
+            <TextView
+                android:id="@+id/optionsNotifications"
+                style="@style/TerminalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start" />
+
+            <TextView
+                android:id="@+id/optionsTextSpeed"
+                style="@style/TerminalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start" />
+
+            <TextView
+                android:id="@+id/optionsCrt"
+                style="@style/TerminalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start" />
+
+            <TextView
+                android:id="@+id/optionsVersion"
+                style="@style/TerminalText.Dim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

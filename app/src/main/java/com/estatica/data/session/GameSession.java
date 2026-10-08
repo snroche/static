@@ -230,6 +230,7 @@ public final class GameSession {
         grief = new GriefRules(content, rules);
         state = gameStateRepository.loadOrCreate();
         random = GameRandom.fromState(state.getRngState());
+        com.estatica.domain.scouts.VoiceRenderer.setOperatorName(state.getOperatorName());
         newGame = state.isNewGame();
         lastSeenAtMillis = state.getLastSeenAtMillis();
 
@@ -334,6 +335,27 @@ public final class GameSession {
 
     public String operatorId() {
         return state.getOperatorId();
+    }
+
+    /** Null until the operator says what to call them. */
+    public String operatorName() {
+        return state.getOperatorName();
+    }
+
+    /** Sets what the crew calls the operator (trimmed, at most 16 characters). */
+    @WorkerThread
+    public String setOperatorName(String name) {
+        String clean = name == null ? "" : name.trim().replaceAll("\\s+", " ");
+        if (clean.length() > 16) {
+            clean = clean.substring(0, 16).trim();
+        }
+        if (clean.isEmpty()) {
+            return state.getOperatorName();
+        }
+        state.setOperatorName(clean);
+        gameStateRepository.saveOperatorName(clean);
+        com.estatica.domain.scouts.VoiceRenderer.setOperatorName(clean);
+        return clean;
     }
 
     public long createdAtMillis() {

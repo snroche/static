@@ -15,10 +15,25 @@ public final class VoiceRenderer {
 
     private static final Locale TEXT_LOCALE = Locale.ENGLISH;
 
+    /** What the crew calls the operator; {@code {operator}} in any line. Set by the session. */
+    private static volatile String operatorName = "Operator";
+
     private VoiceRenderer() {
     }
 
+    public static void setOperatorName(String name) {
+        operatorName = name == null || name.isBlank() ? "Operator" : name;
+    }
+
+    public static String operatorName() {
+        return operatorName;
+    }
+
     public static String render(VoiceDef voice, String template, Map<String, String> vars) {
+        if (template.contains("{operator}") && !vars.containsKey("operator")) {
+            vars = new java.util.HashMap<>(vars);
+            vars.put("operator", operatorName);
+        }
         String text = TextTemplate.format(template, vars);
         Map<String, String> replacements = voice.getReplacements();
         if (replacements != null) {

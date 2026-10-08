@@ -52,6 +52,11 @@ public final class TerminalViewModel extends ViewModel {
     private final NotificationScheduler notifications;
     private final Settings settings;
     private final MutableLiveData<Boolean> soundOn = new MutableLiveData<>();
+    private final MutableLiveData<OptionsState> options = new MutableLiveData<>();
+    /** New game: the next thing typed is the operator's name. */
+    private boolean awaitingName;
+    /** Base typewriter delay from balance.json; the options speed scales it. */
+    private int baseCharMillis;
     private final LogRepository logRepository;
     private final GameClock clock;
     private final ExecutorService game;
@@ -117,6 +122,76 @@ public final class TerminalViewModel extends ViewModel {
 
     LiveData<Boolean> getSoundOn() {
         return soundOn;
+    }
+
+    String appVersion() {
+        return appVersion;
+    }
+
+    LiveData<OptionsState> getOptions() {
+        return options;
+    }
+
+    private void publishOptions(String name) {
+        options.setValue(new OptionsState(name, settings.isSoundOn(), settings.isHapticsOn(),
+                settings.areNotificationsOn(), settings.getTextSpeed(), settings.isCrtOn()));
+    }
+
+    private void refreshOptions() {
+        game.execute(() -> {
+            String name = session.operatorName();
+            main.post(() -> publishOptions(name));
+        });
+    }
+
+    private int scaledCharMillis() {
+        int speed = Math.max(0, Math.min(OptionsState.TEXT_SPEEDS.length - 1, settings.getTextSpeed()));
+        return Math.max(1, (int) Math.round(baseCharMillis * OptionsState.TEXT_SPEEDS[speed]));
+    }
+
+    // ---- Options (device settings and the operator's name) ----
+
+    void toggleSoundOption() {
+        soundOn.setValue(settings.toggleSound());
+        refreshOptions();
+    }
+
+    void toggleNotificationsOption() {
+        if (!settings.toggleNotifications()) {
+            notifications.cancelAll();
+        }
+        refreshOptions();
+    }
+
+    void toggleHapticsOption() {
+        settings.toggleHaptics();
+        refreshOptions();
+    }
+
+    void cycleTextSpeed() {
+        settings.setTextSpeed((settings.getTextSpeed() + 1) % OptionsState.TEXT_SPEEDS.length);
+        charMillis = scaledCharMillis();
+        refreshOptions();
+    }
+
+    void toggleCrtOption() {
+        settings.toggleCrt();
+        refreshOptions();
+    }
+
+    /** From the options screen. */
+    void rename(String name) {
+        if (!ready) {
+            return;
+        }
+        run(step -> {
+            String set = session.setOperatorName(name);
+            Map<String, String> vars = baseVars();
+            vars.put("operator", set != null ? set : "");
+            step.animated.addAll(session.log(systemLines(
+                    List.of(session.content().getTerminal().getNameChanged()), vars)));
+            main.post(() -> publishOptions(set));
+        });
     }
 
     LiveData<TerminalUiState> getState() {
@@ -227,9 +302,13 @@ public final class TerminalViewModel extends ViewModel {
         Map<String, String> vars = baseVars();
         vars.put("elapsed", ElapsedFormatter.format(
                 clock.nowMillis() - session.lastSeenAtMillis(), text.getElapsedUnits()));
-        List<String> templates = session.takeNewGame()
+        List<String> templates = new ArrayList<>(session.takeNewGame()
                 ? text.getBoot()
-                : session.random().pick(text.getReconnect());
+                : session.random().pick(text.getReconnect()));
+        String name = session.operatorName();
+        if (name == null) {
+            templates.addAll(text.getAskName());
+        }
         Step step = new Step();
         step.animated.addAll(session.log(systemLines(templates, vars)));
         // What happened while the app was closed is dumped at once (GDD §4.3).
@@ -240,7 +319,12 @@ public final class TerminalViewModel extends ViewModel {
         int page = content.getBalance().getUi().getLogPageSize();
         int typeMillis = content.getBalance().getUi().getTypewriterCharMillis();
         boolean older = recent.size() == windowLines;
-        main.post(() -> onSessionLoaded(recent, step, windowLines, page, typeMillis, older));
+        main.post(() -> {
+            awaitingName = name == null;
+            baseCharMillis = typeMillis;
+            publishOptions(name);
+            onSessionLoaded(recent, step, windowLines, page, scaledCharMillis(), older);
+        });
     }
 
     private void tick(Step step) {
@@ -250,7 +334,9 @@ public final class TerminalViewModel extends ViewModel {
     private Map<String, String> baseVars() {
         Map<String, String> vars = new HashMap<>();
         vars.put("version", appVersion);
-        vars.put("operator", session.operatorId().substring(0, 8).toUpperCase(Locale.ROOT));
+        String name = session.operatorName();
+        vars.put("operator", name != null ? name : session.content().getTerminal().getDefaultOperatorName());
+        vars.put("operatorId", session.operatorId().substring(0, 8).toUpperCase(Locale.ROOT));
         vars.put("age", ElapsedFormatter.format(clock.nowMillis() - session.createdAtMillis(),
                 session.content().getTerminal().getElapsedUnits()));
         vars.put("scouts", session.describeScouts());
@@ -284,7 +370,23 @@ public final class TerminalViewModel extends ViewModel {
         if (!ready || command.isEmpty()) {
             return;
         }
+        if (awaitingName) {
+            awaitingName = false;
+            run(step -> {
+                List<LogLine> drafts = new ArrayList<>();
+                drafts.add(LogLine.draft(clock.nowMillis(), LogChannel.OPERATOR, null, command));
+                String set = session.setOperatorName(command);
+                Map<String, String> vars = baseVars();
+                drafts.addAll(systemLines(session.content().getTerminal().getNameSet(), vars));
+                step.animated.addAll(session.log(drafts));
+                main.post(() -> publishOptions(set));
+            });
+            return;
+        }
         String setting = applySetting(command);
+        if (setting != null) {
+            refreshOptions();
+        }
         run(step -> {
             step.animated.addAll(session.catchUp());
             List<LogLine> drafts = new ArrayList<>();

@@ -133,6 +133,23 @@
     <string name="tab_bunker_alert">BUNKER\n!</string>
     <string name="tab_selected">[%1$s]</string>
     <string name="options_button">⚙</string>
+    <string name="options_title">OPTIONS</string>
+    <string name="options_name_label">What the crew calls you</string>
+    <string name="options_name_hint">your name</string>
+    <string name="options_name_save">[ SAVE ]</string>
+    <string name="options_toggle">[%1$s] %2$s</string>
+    <string name="options_sound">Sound</string>
+    <string name="options_haptics">Vibration</string>
+    <string name="options_notifications">Notifications (situations and returns)</string>
+    <string name="options_crt">CRT scanlines</string>
+    <string name="options_text_speed">Text speed: %1$s</string>
+    <string-array name="options_text_speeds">
+        <item>slow</item>
+        <item>normal</item>
+        <item>fast</item>
+        <item>instant</item>
+    </string-array>
+    <string name="options_version">STATIC v%1$s</string>
     <string name="options_description">Options</string>
     <string name="panel_map_title">REGION MAP</string>
     <string name="map_description" tools:ignore="PluralsCandidate">Region map: %1$d places found, %2$d sectors left to scout.</string>

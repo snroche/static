@@ -10,7 +10,8 @@
       ],
       "departure@close": [
         "heading out. save me a spot by the radio.",
-        "going. talk to me while i walk, ok?"
+        "going. talk to me while i walk, ok?",
+        "heading out, {operator}. talk soon."
       ],
       "arrival": [
         "i'm in. lock it.",
@@ -19,7 +20,8 @@
       ],
       "arrival@close": [
         "back. missed you a little. don't tell anyone.",
-        "home. you kept the kettle on?"
+        "home. you kept the kettle on?",
+        "back, {operator}. still here."
       ],
       "oddsGood": [
         "easy.",
@@ -72,7 +74,8 @@
       ],
       "initiate": [
         "got a minute?",
-        "hey. you there?"
+        "hey. you there?",
+        "{operator}? got a minute?"
       ],
       "initiate@close": [
         "got a minute? it's important."
@@ -83,7 +86,8 @@
       ],
       "goingHome": [
         "thanks. coming back.",
-        "on my way. thanks for getting it."
+        "on my way. thanks for getting it.",
+        "ok, {operator}. coming home."
       ],
       "findItem": [
         "found something: {item}. keeping it.",
@@ -167,7 +171,8 @@
       ],
       "departure@close": [
         "Off I go, brother. Put the kettle on.",
-        "Back before you miss me, brother."
+        "Back before you miss me, brother.",
+        "Off I go, {operator}. Put the kettle on."
       ],
       "arrival": [
         "Made it, boss. In one piece, too.",
@@ -175,7 +180,8 @@
         "Home sweet bunker, boss."
       ],
       "arrival@close": [
-        "I'm back, brother! Did you miss me?"
+        "I'm back, brother! Did you miss me?",
+        "{operator}! Told you I'd make it back."
       ],
       "oddsGood": [
         "Piece of cake.",
@@ -228,14 +234,16 @@
       ],
       "initiate": [
         "Boss, got a minute?",
-        "Hey, boss. Fancy a chat?"
+        "Hey, boss. Fancy a chat?",
+        "Hey, {operator}. Fancy a chat?"
       ],
       "askReturn": [
         "Boss, I want to come home. Please.",
         "I can't take any more, boss. Can I come back?"
       ],
       "goingHome": [
-        "Thanks, boss. Back in a flash."
+        "Thanks, boss. Back in a flash.",
+        "Copy that, {operator}. Back in a flash."
       ],
       "findItem": [
         "Look what I found: {item}.",
@@ -311,7 +319,8 @@
       ],
       "departure@close": [
         "Heading out. I'll call you as soon as I arrive.",
-        "I'm off. Stay close to the radio, will you?"
+        "I'm off. Stay close to the radio, will you?",
+        "I'm leaving now, {operator}. I'll report regularly."
       ],
       "arrival": [
         "Operator, I'm back at the bunker.",
@@ -319,7 +328,8 @@
         "Back inside. Logging the trip now."
       ],
       "arrival@close": [
-        "I'm back. It's good to hear you."
+        "I'm back. It's good to hear you.",
+        "I'm back, {operator}. Safe and sound."
       ],
       "oddsGood": [
         "I consider it viable.",
@@ -368,7 +378,8 @@
         "You told me \"{memory}\". Don't blame yourself."
       ],
       "initiate": [
-        "Operator, do you have a moment?"
+        "Operator, do you have a moment?",
+        "{operator}, may I have a word?"
       ],
       "initiate@close": [
         "Do you have a moment? I need to talk."
@@ -378,7 +389,8 @@
         "I want to come home. Please."
       ],
       "goingHome": [
-        "Understood. Returning. Thank you."
+        "Understood. Returning. Thank you.",
+        "Understood, {operator}. Returning."
       ],
       "findItem": [
         "Personal item found: {item}. Bringing it.",
@@ -456,7 +468,8 @@
         "Home. Over and out."
       ],
       "arrival@close": [
-        "Back. Good to hear you. Over."
+        "Back. Good to hear you. Over.",
+        "RETURNED. ALL WELL, {operator}."
       ],
       "oddsGood": [
         "Viable.",
@@ -495,13 +508,15 @@
         "Order received: \"{memory}\". No hard feelings."
       ],
       "initiate": [
-        "Operator. One minute. Over."
+        "Operator. One minute. Over.",
+        "{operator}. REQUEST WORD. OVER."
       ],
       "askReturn": [
         "Requesting return. Please."
       ],
       "goingHome": [
-        "Returning. Thanks."
+        "Returning. Thanks.",
+        "COPY {operator}. RETURNING."
       ],
       "findItem": [
         "Item: {item}. Bringing it."
@@ -553,6 +568,9 @@
       "carryHome": [
         "{other} DOWN. CARRYING. RETURNING. OVER.",
         "HAVE {other}. COMING HOME. KEEP LINE OPEN."
+      ],
+      "departure@close": [
+        "DEPARTING. {operator} KEEP LINE OPEN."
       ]
     }
   },
@@ -574,7 +592,8 @@
         "Made it. Did I miss anything?"
       ],
       "arrival@close": [
-        "I'm back! Did you save me something?"
+        "I'm back! Did you save me something?",
+        "{operator}! I'm back! Did you see that?"
       ],
       "oddsGood": [
         "Easy, I could do it with my eyes closed.",
@@ -615,13 +634,15 @@
         "You said \"{memory}\"... it's ok... it's ok."
       ],
       "initiate": [
-        "Hey, got a sec?"
+        "Hey, got a sec?",
+        "{operator}, you got a sec?"
       ],
       "askReturn": [
         "I want to come back. Please. For real."
       ],
       "goingHome": [
-        "Thanks. Coming back."
+        "Thanks. Coming back.",
+        "Ok ok, {operator}. Coming back."
       ],
       "findItem": [
         "Look: {item}. I'm keeping it, right?"
@@ -675,6 +696,9 @@
       "carryHome": [
         "I've got {other}! I've got them! We're coming back, ok? Ok?",
         "{other}'s hurt bad, man. I'm carrying them. Don't hang up."
+      ],
+      "departure@close": [
+        "Going, {operator}! Don't miss me too much."
       ]
     }
   },
@@ -688,7 +712,8 @@
         "Going, going. Don't you worry about this old woman."
       ],
       "departure@close": [
-        "Off I go, sweetheart. Eat something while I'm out."
+        "Off I go, sweetheart. Eat something while I'm out.",
+        "I'm off, {operator} dear. Eat something while I'm out."
       ],
       "arrival": [
         "I'm back, dear. Put the water on.",
@@ -728,13 +753,15 @@
         "You told me \"{memory}\"... that's all right, dear. That's all right."
       ],
       "initiate": [
-        "Dear, do you have a little minute?"
+        "Dear, do you have a little minute?",
+        "{operator}, dear, sit with me a moment."
       ],
       "askReturn": [
         "Sweetheart, I want to come back. Please."
       ],
       "goingHome": [
-        "Thank you, dear. Coming home."
+        "Thank you, dear. Coming home.",
+        "Alright, {operator}. I'm coming home."
       ],
       "findItem": [
         "Look what I found: {item}."
@@ -786,6 +813,9 @@
       "carryHome": [
         "I've got {other}, dear. Nobody's staying out here. We're coming home.",
         "Hold on, {other}. Lean on me. We're going home."
+      ],
+      "arrival@close": [
+        "I'm home, {operator}. Did you eat?"
       ]
     }
   }

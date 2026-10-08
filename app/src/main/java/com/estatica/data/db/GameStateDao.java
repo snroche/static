@@ -22,4 +22,7 @@ public interface GameStateDao {
 
     @Query("UPDATE game_state SET content_version = :version WHERE id = 1")
     void updateContentVersion(int version);
+
+    @Query("UPDATE game_state SET operator_name = :name WHERE id = 1")
+    void updateOperatorName(String name);
 }

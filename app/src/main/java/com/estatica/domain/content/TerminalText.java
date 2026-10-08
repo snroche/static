@@ -6,6 +6,31 @@ import java.util.Map;
 /** Terminal texts from {@code assets/content/terminal.json}. Filled by Gson. */
 public final class TerminalText {
 
+    /** New game: asking the operator's name. */
+    private List<String> askName;
+    /** {operator}: after they answer. */
+    private List<String> nameSet;
+    /** {operator}: renamed from the options screen. */
+    private String nameChanged;
+    /** Used until the operator gives a name. */
+    private String defaultOperatorName;
+
+    public List<String> getAskName() {
+        return askName != null ? askName : List.of();
+    }
+
+    public List<String> getNameSet() {
+        return nameSet != null ? nameSet : List.of();
+    }
+
+    public String getNameChanged() {
+        return nameChanged;
+    }
+
+    public String getDefaultOperatorName() {
+        return defaultOperatorName != null ? defaultOperatorName : "Operator";
+    }
+
     private List<String> boot;
     private List<List<String>> reconnect;
     private ElapsedUnits elapsedUnits;
