@@ -19,6 +19,13 @@ public final class ResourceDef {
         return name;
     }
 
+    /** Nerd Font glyph for the status bar, or null. */
+    private String icon;
+
+    public String getIcon() {
+        return icon;
+    }
+
     public String getShortName() {
         return shortName;
     }

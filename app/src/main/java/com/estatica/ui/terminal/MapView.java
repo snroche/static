@@ -55,7 +55,8 @@ public final class MapView extends View {
         dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
         line.setStyle(Paint.Style.STROKE);
         line.setStrokeWidth(dp);
-        text.setTypeface(Typeface.MONOSPACE);
+        Typeface terminal = androidx.core.content.res.ResourcesCompat.getFont(context, R.font.terminal);
+        text.setTypeface(terminal != null ? terminal : Typeface.MONOSPACE);
         text.setTextAlign(Paint.Align.CENTER);
         dot.setStyle(Paint.Style.FILL);
     }

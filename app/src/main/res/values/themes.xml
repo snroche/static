@@ -12,7 +12,7 @@
     </style>
 
     <style name="TerminalText">
-        <item name="android:fontFamily">monospace</item>
+        <item name="android:fontFamily">@font/terminal</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/amber</item>
         <item name="android:lineSpacingMultiplier">1.15</item>
@@ -36,6 +36,18 @@
         <item name="android:textSize">13sp</item>
         <item name="android:paddingStart">4dp</item>
         <item name="android:paddingEnd">4dp</item>
+    </style>
+
+    <!-- Panel title: inverse video, like a terminal's title bar. -->
+    <style name="TerminalHeader" parent="TerminalText.Bright">
+        <item name="android:background">@color/amber</item>
+        <item name="android:textColor">@color/terminal_bg</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:shadowRadius">0</item>
     </style>
 
     <!-- Bottom bar tab: centered, 48dp touch target; the selected one is bright. -->

@@ -26,13 +26,13 @@
     <string name="scout_habits">Noticed: %1$s</string>
     <string name="card_name_open">▾ %1$s</string>
     <string name="card_name_closed">▸ %1$s</string>
-    <string name="scout_summary">%1$s · %2$s · stress %3$s bond %4$s</string>
+    <string name="scout_summary">%1$s · %2$s · &#xF1338;%3$s &#xF02D1;%4$s</string>
     <string name="card_expand_description">Show details for %1$s</string>
     <string name="inventory_empty">No objects in the bunker.</string>
 
-    <string name="decision_header">⚠ %1$s · %2$s</string>
+    <string name="decision_header">&#xF0026; %1$s · %2$s</string>
     <string name="decision_deadline">Orders by %1$s, or they decide alone. Tap the name for the full radio log.</string>
-    <string name="decision_talk_header">%1$s wants to talk</string>
+    <string name="decision_talk_header">&#xF0B79; %1$s wants to talk</string>
     <string name="decision_talk_deadline">Answer by %1$s, or the moment passes.</string>
     <string name="decision_talk_open">No rush. Tap the name for the whole chat.</string>
     <string name="decision_count">%1$d/%2$d</string>
@@ -116,10 +116,11 @@
     <string name="goal_line">%1$s %2$s (%3$d/%4$d)</string>
 
     <!-- Status bar and expedition strip -->
-    <string name="hud_power">⚡%1$d/%2$dW</string>
-    <string name="hud_reserve">◈%1$d/%2$d</string>
-    <string name="hud_night">☾</string>
-    <string name="hud_blackout">⚠ blackout</string>
+    <string name="hud_power">&#xF0241;%1$d/%2$dW</string>
+    <string name="hud_reserve">&#xF0079;%1$d/%2$d</string>
+    <string name="hud_day">&#xF0599;</string>
+    <string name="hud_night">&#xF0594;</string>
+    <string name="hud_blackout">&#xF0026; blackout</string>
     <string name="hud_resource">%1$s %2$d</string>
     <string name="send_title">SEND OUT</string>
     <string name="send_team_title">WHO GOES (one or two; the first leads)</string>
@@ -135,25 +136,25 @@
     <string name="send_go">[ SEND ]</string>
     <string name="partner_friends">they get on: works better together</string>
     <string name="partner_rivals">rivals: they\'ll argue the whole way</string>
-    <string name="log_system">SYSTEM</string>
-    <string name="log_expeditions">EXPEDITIONS</string>
-    <string name="log_chats">CHATS</string>
+    <string name="log_system">&#xF018D; SYSTEM</string>
+    <string name="log_expeditions">&#xF0D7F; EXPEDITIONS</string>
+    <string name="log_chats">&#xF0B79; CHATS</string>
     <string name="log_unread">%1$s •%2$d</string>
     <string name="log_all">[ ALL ]</string>
     <string name="log_chip">[ %1$s ]</string>
     <string name="log_chip_on">[•%1$s ]</string>
-    <string name="tab_comms">COMMS</string>
-    <string name="tab_comms_badge">COMMS\n●%1$d</string>
-    <string name="tab_crew">CREW</string>
-    <string name="tab_crew_count">CREW\n%1$d/%2$d</string>
-    <string name="tab_map">MAP</string>
-    <string name="tab_map_badge">MAP\n?%1$d</string>
-    <string name="tab_radio">RADIO</string>
-    <string name="tab_radio_badge">RADIO\n•%1$d</string>
-    <string name="tab_bunker">BUNKER</string>
-    <string name="tab_bunker_alert">BUNKER\n!</string>
+    <string name="tab_comms">&#xF028C;\nCOMMS</string>
+    <string name="tab_comms_badge">&#xF028C; ●%1$d\nCOMMS</string>
+    <string name="tab_crew">&#xF0849;\nCREW</string>
+    <string name="tab_crew_count">&#xF0849; %1$d/%2$d\nCREW</string>
+    <string name="tab_map">&#xF0352;\nMAP</string>
+    <string name="tab_map_badge">&#xF0352; ?%1$d\nMAP</string>
+    <string name="tab_radio">&#xF043B;\nRADIO</string>
+    <string name="tab_radio_badge">&#xF043B; •%1$d\nRADIO</string>
+    <string name="tab_bunker">&#xF068A;\nBUNKER</string>
+    <string name="tab_bunker_alert">&#xF068A; !\nBUNKER</string>
     <string name="tab_selected">[%1$s]</string>
-    <string name="options_button">⚙</string>
+    <string name="options_button">&#xF0493;</string>
     <string name="options_title">OPTIONS</string>
     <string name="options_name_label">What the crew calls you</string>
     <string name="options_name_hint">your name</string>
@@ -176,7 +177,7 @@
     <string name="map_description" tools:ignore="PluralsCandidate">Region map: %1$d places found, %2$d sectors left to scout.</string>
     <string name="map_hint">Tap a ? to send someone to scout it. Places show up as they\'re found.</string>
     <string name="map_scout">[ SEND SOMEONE ]</string>
-    <string name="map_legend">◉ bunker · ? unexplored · ?! something on the radio · … someone\'s out there · · out of reach</string>
+    <string name="map_legend">&#xF068A; bunker · ? unexplored · ?! something on the radio · … someone\'s out there · · out of reach</string>
     <string name="map_place">%1$s · danger %2$d. Dispatch from the crew card.</string>
     <string name="map_place_far">%1$s · danger %2$d. Out of reach: the antenna can\'t get that far.</string>
     <string name="map_sector_unknown">The %1$s. Nobody\'s been there.</string>
@@ -190,12 +191,12 @@
     <string name="gear_title">GEAR</string>
     <string name="gear_line_worn_by">%1$s — %2$s</string>
     <string name="gear_repair">[ REPAIR: %1$s ]</string>
-    <string name="hud_food">food ~%1$sd</string>
-    <string name="hud_hungry">⚠ hungry</string>
+    <string name="hud_food">&#xF025C; ~%1$sd</string>
+    <string name="hud_hungry">&#xF05F3; hungry</string>
     <string name="hud_description">Status: %1$s</string>
-    <string name="expedition_line">%1$s → %2$s %3$s %4$d%% · back ~%5$s</string>
-    <string name="expedition_waiting">%1$s → %2$s · ⚠ waiting for orders</string>
-    <string name="expedition_order_sent">%1$s → %2$s · order on its way</string>
+    <string name="expedition_line">&#xF0D7F; %1$s → %2$s %3$s %4$d%% · back ~%5$s</string>
+    <string name="expedition_waiting">&#xF0026; %1$s → %2$s · waiting for orders</string>
+    <string name="expedition_order_sent">&#xF043A; %1$s → %2$s · order on its way</string>
 
     <string name="notification_channel">Transmissions</string>
     <string name="notification_channel_description">Situations that need orders, and scouts coming home.</string>

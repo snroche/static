@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JetBrains Mono Nerd Font, subset to the characters and icons the game uses. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font
+        android:font="@font/terminal_regular"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+    <font
+        android:font="@font/terminal_bold"
+        android:fontStyle="normal"
+        android:fontWeight="700" />
+</font-family>

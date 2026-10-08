@@ -6,6 +6,26 @@ import java.util.Map;
 /** Terminal texts from {@code assets/content/terminal.json}. Filled by Gson. */
 public final class TerminalText {
 
+    /** Words the terminal colors: danger in red, good news in green. */
+    private Highlight highlight;
+
+    public Highlight getHighlight() {
+        return highlight != null ? highlight : new Highlight();
+    }
+
+    public static final class Highlight {
+        private List<String> danger;
+        private List<String> good;
+
+        public List<String> getDanger() {
+            return danger != null ? danger : List.of();
+        }
+
+        public List<String> getGood() {
+            return good != null ? good : List.of();
+        }
+    }
+
     /** New game: asking the operator's name. */
     private List<String> askName;
     /** {operator}: after they answer. */

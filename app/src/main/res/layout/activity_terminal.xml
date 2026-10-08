@@ -8,7 +8,7 @@
     <!-- Header: name of the game and options. Navigation lives in the bottom bar. -->
     <TextView
         android:id="@+id/headerTitle"
-        style="@style/TerminalText.Bright"
+        style="@style/TerminalHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -281,7 +281,7 @@
 
         <TextView
             android:id="@+id/panelTitle"
-            style="@style/TerminalText.Bright"
+            style="@style/TerminalHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"

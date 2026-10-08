@@ -139,6 +139,8 @@ public final class TerminalActivity extends ComponentActivity {
         });
         viewModel.getOptions().observe(this, o -> {
             optionsPanel.render(o);
+            operatorName = o.operatorName;
+            refreshHighlighter();
             hapticsOn = o.haptics;
             if (radioPanel != null) {
                 radioPanel.setHaptics(o.haptics);
@@ -364,8 +366,36 @@ public final class TerminalActivity extends ComponentActivity {
 
     // ---- Decisions (situation orders and conversation answers) ----
 
+    private String vocabulary = "";
+    private Highlighter highlighter = Highlighter.NONE;
+    private String operatorName;
+
+    /** Rebuilds the highlighter when the words it knows change (someone joined, a rename). */
+    private void refreshHighlighter() {
+        if (snapshot == null) {
+            return;
+        }
+        List<String> names = new ArrayList<>();
+        for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+            names.add(s.name);
+        }
+        if (operatorName != null) {
+            names.add(operatorName);
+        }
+        String key = names + "|" + snapshot.placeNames.size() + "|" + snapshot.resourceNames.size();
+        if (key.equals(vocabulary)) {
+            return;
+        }
+        vocabulary = key;
+        highlighter = new Highlighter(names, snapshot.placeNames, snapshot.resourceNames, snapshot.dangerWords,
+                snapshot.goodWords, ContextCompat.getColor(this, R.color.amber_bright),
+                ContextCompat.getColor(this, R.color.danger), ContextCompat.getColor(this, R.color.good));
+        adapter.setHighlighter(highlighter);
+    }
+
     private void renderSnapshot(SessionSnapshot snapshot) {
         this.snapshot = snapshot;
+        refreshHighlighter();
         if (logView != LogView.SYSTEM) {
             renderLogChips();
         }
@@ -395,9 +425,7 @@ public final class TerminalActivity extends ComponentActivity {
             hud.append(getString(R.string.hud_power, base.used, base.available));
         }
         hud.append("  ").append(getString(R.string.hud_reserve, base.reserve, base.reserveCapacity));
-        if (base.night) {
-            hud.append("  ").append(getString(R.string.hud_night));
-        }
+        hud.append("  ").append(getString(base.night ? R.string.hud_night : R.string.hud_day));
         StringBuilder supplies = new StringBuilder();
         for (SessionSnapshot.ResourceView r : snapshot.resources) {
             if (r.shortName == null) {
@@ -406,7 +434,7 @@ public final class TerminalActivity extends ComponentActivity {
             if (supplies.length() > 0) {
                 supplies.append("  ");
             }
-            supplies.append(getString(R.string.hud_resource, r.shortName, r.amount));
+            supplies.append(getString(R.string.hud_resource, r.icon != null ? r.icon : r.shortName, r.amount));
         }
         if (snapshot.hungry) {
             supplies.append("  ").append(getString(R.string.hud_hungry));
@@ -573,7 +601,7 @@ public final class TerminalActivity extends ComponentActivity {
         binding.decisionDeadline.setText(order ? getString(R.string.decision_deadline, deadline)
                 : deadline != null ? getString(R.string.decision_talk_deadline, deadline)
                 : getString(R.string.decision_talk_open));
-        binding.decisionSituation.setText(String.join("\n", decision.situation));
+        binding.decisionSituation.setText(highlighter.apply(String.join("\n", decision.situation)));
         binding.decisionSituation.setVisibility(decision.situation.isEmpty() ? View.GONE : View.VISIBLE);
         binding.decisionOptions.removeAllViews();
         LayoutInflater inflater = getLayoutInflater();

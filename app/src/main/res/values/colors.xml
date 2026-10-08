@@ -6,6 +6,9 @@
     <color name="amber_bright">#FFD066</color>
     <color name="amber_hint">#664600</color>
     <color name="terminal_bg">#000000</color>
+    <!-- Accents: danger (death, injury, bad odds) and good news (loot, returns). -->
+    <color name="danger">#FF5A3C</color>
+    <color name="good">#9CFF6E</color>
     <!-- Phosphor glow behind the text. -->
     <color name="amber_glow">#66FFB000</color>
 </resources>

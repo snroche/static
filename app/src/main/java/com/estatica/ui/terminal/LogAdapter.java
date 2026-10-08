@@ -1,5 +1,12 @@
 package com.estatica.ui.terminal;
 
+import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -24,6 +31,14 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
 
     private long typingSeq = TerminalUiState.NO_TYPING;
     private int typedChars;
+    private Highlighter highlighter = Highlighter.NONE;
+
+    /** New vocabulary (someone joined, a place was found): redraw with it. */
+    @SuppressLint("NotifyDataSetChanged")
+    void setHighlighter(Highlighter highlighter) {
+        this.highlighter = highlighter;
+        notifyDataSetChanged();
+    }
 
     LogAdapter() {
         super(DIFF);
@@ -67,7 +82,7 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.bind(getItem(position), typingSeq, typedChars);
+        holder.bind(getItem(position), typingSeq, typedChars, highlighter);
     }
 
     @Override
@@ -104,36 +119,67 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
         private final int colorDefault;
         private final int colorOperator;
         private final int colorAlert;
+        private final int colorBright;
+        private final int colorBackground;
+        private final String walkie;
+        private final String alertIcon;
 
         Holder(ItemLogLineBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            colorDefault = ContextCompat.getColor(binding.getRoot().getContext(), R.color.amber);
-            colorOperator = ContextCompat.getColor(binding.getRoot().getContext(), R.color.amber_dim);
-            colorAlert = ContextCompat.getColor(binding.getRoot().getContext(), R.color.amber_bright);
+            android.content.Context c = binding.getRoot().getContext();
+            colorDefault = ContextCompat.getColor(c, R.color.amber);
+            colorOperator = ContextCompat.getColor(c, R.color.amber_dim);
+            colorAlert = ContextCompat.getColor(c, R.color.amber_bright);
+            colorBright = ContextCompat.getColor(c, R.color.amber_bright);
+            colorBackground = ContextCompat.getColor(c, R.color.terminal_bg);
+            walkie = c.getString(R.string.ic_walkie);
+            alertIcon = c.getString(R.string.ic_alert);
         }
 
-        // Prefixes are symbols or speaker names, not translatable sentences.
-        @SuppressLint("SetTextI18n")
-        void bind(LogLine line, long typingSeq, int typedChars) {
+        void bind(LogLine line, long typingSeq, int typedChars, Highlighter highlighter) {
             String text = line.getText();
             String shown = line.getSeq() == typingSeq
                     ? text.substring(0, Math.min(typedChars, text.length())) + CURSOR
                     : text;
-            binding.text.setText(prefix(line) + shown);
+            SpannableStringBuilder out = new SpannableStringBuilder();
+            prefix(line, out);
+            int body = out.length();
+            out.append(shown);
+            highlighter.apply(out, body);
+            binding.text.setText(out);
             binding.text.setTextColor(colorFor(line));
         }
 
-        private static String prefix(LogLine line) {
+        /** Who's talking, with a glyph: › system, walkie + name, inverse ⚠ for alerts, ❯ for you. */
+        private void prefix(LogLine line, SpannableStringBuilder out) {
             switch (line.getChannel()) {
                 case OPERATOR:
-                    return "> ";
+                    span(out, "❯ ", new ForegroundColorSpan(colorOperator));
+                    break;
                 case RADIO:
-                    return line.getSpeaker() != null ? line.getSpeaker() + ": " : "";
+                    span(out, walkie + " ", new ForegroundColorSpan(colorOperator));
+                    if (line.getSpeaker() != null) {
+                        span(out, line.getSpeaker(), new StyleSpan(Typeface.BOLD), new ForegroundColorSpan(colorBright));
+                        out.append(": ");
+                    }
+                    break;
                 case ALERT:
-                    return "!! ";
+                    span(out, " " + alertIcon + " ", new BackgroundColorSpan(colorAlert),
+                            new ForegroundColorSpan(colorBackground), new StyleSpan(Typeface.BOLD));
+                    out.append(' ');
+                    break;
                 default:
-                    return "";
+                    span(out, "› ", new ForegroundColorSpan(colorOperator));
+                    break;
+            }
+        }
+
+        private static void span(SpannableStringBuilder out, String text, Object... spans) {
+            int start = out.length();
+            out.append(text);
+            for (Object span : spans) {
+                out.setSpan(span, start, out.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 

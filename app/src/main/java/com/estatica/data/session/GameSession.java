@@ -1063,6 +1063,28 @@ public final class GameSession {
         }
     }
 
+    private List<String> placeNames() {
+        List<String> out = new ArrayList<>();
+        for (ZoneDef z : content.getZones().values()) {
+            out.add(z.getName());
+        }
+        for (ZoneDef z : content.getWilds()) {
+            out.add(z.getName());
+        }
+        return out;
+    }
+
+    private List<String> resourceNames() {
+        List<String> out = new ArrayList<>();
+        for (com.estatica.domain.content.ResourceDef r : content.getResources().values()) {
+            out.add(r.getName());
+        }
+        for (com.estatica.domain.content.ItemDef i : content.getItems().values()) {
+            out.add(i.getName());
+        }
+        return out;
+    }
+
     private SessionSnapshot.MapView mapView() {
         List<SessionSnapshot.SectorView> sectors = new ArrayList<>();
         for (com.estatica.domain.map.RegionMap.Sector s : regionMap.sectors()) {
@@ -2395,7 +2417,7 @@ public final class GameSession {
         List<SessionSnapshot.ResourceView> resourceViews = new ArrayList<>();
         for (ResourceDef r : content.getResources().values()) {
             resourceViews.add(new SessionSnapshot.ResourceView(r.getName(), resources.getOrDefault(r.getId(), 0),
-                    r.getShortName()));
+                    r.getShortName(), r.getIcon()));
         }
 
         List<SessionSnapshot.ItemView> inventory = new ArrayList<>();
@@ -2430,7 +2452,9 @@ public final class GameSession {
         return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
                 radioView(), baseView(now), expeditionViews,
                 food.daysLeft(mouths(), kitchenSaving(), resources.getOrDefault("rations", 0), foodCarryNow(now)),
-                value(KEY_HUNGRY) > 0, mapView(), nextWake);
+                value(KEY_HUNGRY) > 0, mapView(), placeNames(), resourceNames(),
+                content.getTerminal().getHighlight().getDanger(), content.getTerminal().getHighlight().getGood(),
+                nextWake);
     }
 
     private SessionSnapshot.RadioView radioView() {

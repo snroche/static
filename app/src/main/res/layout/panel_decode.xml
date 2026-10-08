@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/TerminalText.Bright"
+            style="@style/TerminalHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"

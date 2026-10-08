@@ -20,6 +20,12 @@ public final class SessionSnapshot {
     public final BaseView base;
     /** Scouts out right now, for the expedition strip. */
     public final List<ExpeditionView> expeditions;
+    /** Words the terminal highlights: every place name and resource name. */
+    public final List<String> placeNames;
+    public final List<String> resourceNames;
+    public final List<String> dangerWords;
+    public final List<String> goodWords;
+
     /** The region around the bunker: sectors and the places found so far. */
     public final MapView map;
     /** How long the rations last at the current rate (infinite if nobody eats). */
@@ -33,8 +39,13 @@ public final class SessionSnapshot {
                     List<ResourceView> resources, List<ItemView> inventory, List<TaskView> tasks,
                     List<MissionView> missions, RadioView radio, BaseView base,
                     List<ExpeditionView> expeditions, double foodDaysLeft, boolean hungry,
-                    MapView map, long nextWakeAtMillis) {
+                    MapView map, List<String> placeNames, List<String> resourceNames, List<String> dangerWords,
+                    List<String> goodWords, long nextWakeAtMillis) {
         this.map = map;
+        this.placeNames = placeNames;
+        this.resourceNames = resourceNames;
+        this.dangerWords = dangerWords;
+        this.goodWords = goodWords;
         this.expeditions = Collections.unmodifiableList(expeditions);
         this.foodDaysLeft = foodDaysLeft;
         this.hungry = hungry;
@@ -463,11 +474,14 @@ public final class SessionSnapshot {
         public final int amount;
         /** Three-letter label for the status bar, or null. */
         public final String shortName;
+        /** Icon glyph for the status bar, or null. */
+        public final String icon;
 
-        ResourceView(String name, int amount, String shortName) {
+        ResourceView(String name, int amount, String shortName, String icon) {
             this.name = name;
             this.amount = amount;
             this.shortName = shortName;
+            this.icon = icon;
         }
     }
 

@@ -2,39 +2,46 @@
   {
     "id": "scrap",
     "name": "Scrap",
-    "shortName": "SCR"
+    "shortName": "SCR",
+    "icon": "󰛸"
   },
   {
     "id": "components",
     "name": "Components",
-    "shortName": "CMP"
+    "shortName": "CMP",
+    "icon": "󰘚"
   },
   {
     "id": "rations",
     "name": "Rations",
-    "shortName": "RAT"
+    "shortName": "RAT",
+    "icon": "󰉛"
   },
   {
     "id": "batteries",
     "name": "Batteries",
-    "shortName": "BAT"
+    "shortName": "BAT",
+    "icon": "󰂄"
   },
   {
     "id": "medicine",
     "name": "Medicine",
-    "shortName": "MED"
+    "shortName": "MED",
+    "icon": "󰛯"
   },
   {
     "id": "relay_kit",
     "name": "Relay kits",
     "kind": "KIT",
-    "shortName": "KIT"
+    "shortName": "KIT",
+    "icon": "󰀃"
   },
   {
     "id": "parts",
     "name": "Parts",
     "kind": "PART",
-    "shortName": "PRT"
+    "shortName": "PRT",
+    "icon": "󰣖"
   },
   {
     "id": "gear_linterna",

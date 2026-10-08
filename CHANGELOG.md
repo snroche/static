@@ -8,7 +8,15 @@ When they change, each entry lists the three independent versions:
 
 ## [Unreleased]
 
-_Nothing yet._
+### Changed
+- **Terminal font with icons:** JetBrains Mono Nerd Font (SIL OFL, license in `assets/licenses/`), subset to the characters and ~60 icons the game uses (~140 KB per weight; the APK grew ~30 KB).
+  - **Icons appear in:** the bottom bar tabs, the ⚙ options button, the status bar (power, reserve, day/night, each resource, food), the COMMS views, the expedition strip, the crew cards (stress, bond) and the decision cards.
+  - **Glyphs:** ⚠ ✝ ☾ in content became icons the font has.
+- **Highlighted text:**
+  - Names (crew and yours) are bold and bright, places bright and underlined, numbers bold.
+  - Danger in red (died, injury, bad feeling, hungry, raid…) and good news in green (back, found, repaired…). Both word lists live in `terminal.json → highlight`, and resource names are green.
+  - Radio lines start with a walkie icon and the speaker in bold. Alerts have an inverse-video ⚠ tag, your commands a ❯, and system lines a dim ›.
+  - Panel titles are inverse-video title bars.
 
 ## [0.6.5] — Interface: bottom bar, COMMS views, decisions, options — in verification
 

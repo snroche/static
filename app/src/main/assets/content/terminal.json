@@ -88,11 +88,11 @@
     "pairJoins": "{name} goes along with {other}.",
     "carriedMemory": "the day {name} carried me home",
     "summaryDeparted": "{who} left for {zone}.",
-    "summaryOrders": "⚠ {who} needs orders at {zone}.",
+    "summaryOrders": "󰀦 {who} needs orders at {zone}.",
     "summaryReturned": "{who} back from {zone}: {loot}.",
     "summaryReturnedEmpty": "{who} back from {zone}, empty-handed.",
     "summaryHurt": "{name}: {injury}.",
-    "summaryDied": "✝ {name} died at {zone}.",
+    "summaryDied": "󰥓 {name} died at {zone}.",
     "hintLabels": {
       "GOOD": "looks easy",
       "UNSURE": "could go either way",
@@ -227,5 +227,53 @@
     "They'll hear your voice. Make it count."
   ],
   "nameChanged": "The crew will call you {operator} from now on.",
-  "defaultOperatorName": "Operator"
+  "defaultOperatorName": "Operator",
+  "highlight": {
+    "danger": [
+      "died",
+      "dead",
+      "dying",
+      "death",
+      "injury",
+      "injured",
+      "hurt",
+      "bleeding",
+      "critical",
+      "serious",
+      "broke",
+      "broken",
+      "falling apart",
+      "bad feeling",
+      "hungry",
+      "ran out",
+      "raid",
+      "raiders",
+      "stole",
+      "blackout",
+      "signal lost",
+      "lost",
+      "rivals",
+      "argue",
+      "trap",
+      "sniper",
+      "gas",
+      "pack"
+    ],
+    "good": [
+      "back",
+      "found",
+      "repaired",
+      "rescued",
+      "recovered",
+      "looks easy",
+      "as good as new",
+      "friends",
+      "inseparable",
+      "safe",
+      "mapped",
+      "food again",
+      "made it",
+      "home"
+    ]
+  }
 }
