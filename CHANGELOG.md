@@ -10,6 +10,24 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.6.8] — Static in stretches, colors, tidier screen — in verification
+
+App 0.6.8 (versionCode 608) · DB 12 (no change) · Content 18 (no change)
+
+### Changed
+- **Static comes in stretches:** a dropped signal now eats a run of 2–4 letters inside a word ("s··-·ations") instead of scattered single letters, drawn in a dim burnt amber so it reads as noise.
+- **Expedition progress** moved out of the header: it shows only in COMMS → EXPEDITIONS, and only the picked team when a chip is selected.
+- **Bigger icons:** the options button (top right) and the supply icons on the status bar.
+- **Status bar explains itself:** tap it for what power, reserve, food, weather and each supply are for.
+- **More color:**
+  - Field radio, bunker chats and your own commands each have their own tone.
+  - Every person keeps their own name color.
+  - The status bar turns green, amber or red with the state of power, reserve, supplies and food; weather has its own color.
+  - Expedition progress lines are colored too.
+
+### Fixed
+- **Release builds failed** since the Nerd Font icons arrived: aapt2 stored characters beyond U+FFFF as invalid UTF-8 and the resource shrinker crashed. The bundled font now also maps every icon in the private area U+E000–F8FF (U+E000 + icon − U+F0000), XML resources use those, and a test keeps it that way. JSON content keeps the original codepoints.
+
 ## [0.6.7] — Readable map, info, console, key items, radio depth — in verification
 
 App 0.6.7 (versionCode 607) · **DB 11 → 12** · **Content 16 → 18**

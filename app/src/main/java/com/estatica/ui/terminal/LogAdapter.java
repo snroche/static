@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.estatica.R;
 import com.estatica.databinding.ItemLogEntryBinding;
+import com.estatica.domain.log.LogChannel;
 import com.estatica.domain.log.LogLine;
 
 import java.util.List;
@@ -165,6 +166,10 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
         private final int colorAlert;
         private final int colorBright;
         private final int colorBackground;
+        private final int colorRadio;
+        private final int colorChat;
+        private final int colorStatic;
+        private final int[] voices;
         private final String walkie;
         private final String alertIcon;
 
@@ -173,7 +178,15 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
             this.binding = binding;
             android.content.Context c = binding.getRoot().getContext();
             colorDefault = ContextCompat.getColor(c, R.color.amber);
-            colorOperator = ContextCompat.getColor(c, R.color.amber_dim);
+            colorOperator = ContextCompat.getColor(c, R.color.operator_text);
+            colorRadio = ContextCompat.getColor(c, R.color.radio_voice);
+            colorChat = ContextCompat.getColor(c, R.color.chat_voice);
+            colorStatic = ContextCompat.getColor(c, R.color.static_noise);
+            int[] ids = {R.color.voice_1, R.color.voice_2, R.color.voice_3, R.color.voice_4, R.color.voice_5, R.color.voice_6};
+            voices = new int[ids.length];
+            for (int i = 0; i < ids.length; i++) {
+                voices[i] = ContextCompat.getColor(c, ids[i]);
+            }
             colorAlert = ContextCompat.getColor(c, R.color.amber_bright);
             colorBright = ContextCompat.getColor(c, R.color.amber_bright);
             colorBackground = ContextCompat.getColor(c, R.color.terminal_bg);
@@ -199,6 +212,9 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
             int body = out.length();
             out.append(shown);
             highlighter.apply(out, body);
+            if (line.getChannel() == LogChannel.RADIO) {
+                dimStatic(out, body);
+            }
             if (withTime) {
                 int start = out.length();
                 out.append("  ").append(android.text.format.DateFormat.getTimeFormat(c)
@@ -218,7 +234,8 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
                 case RADIO:
                     span(out, walkie + " ", new ForegroundColorSpan(colorOperator));
                     if (line.getSpeaker() != null) {
-                        span(out, line.getSpeaker(), new StyleSpan(Typeface.BOLD), new ForegroundColorSpan(colorBright));
+                        span(out, line.getSpeaker(), new StyleSpan(Typeface.BOLD),
+                                new ForegroundColorSpan(voiceOf(line.getSpeaker())));
                         out.append(": ");
                     }
                     break;
@@ -247,8 +264,40 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
                     return colorOperator;
                 case ALERT:
                     return colorAlert;
+                case RADIO:
+                    return line.getThread().startsWith(LogLine.CHAT_PREFIX) ? colorChat : colorRadio;
                 default:
                     return colorDefault;
+            }
+        }
+
+        /** Each person keeps the same name color. */
+        private int voiceOf(String speaker) {
+            return voices[Math.floorMod(speaker.hashCode(), voices.length)];
+        }
+
+        /** Dots and dashes where the signal dropped, in a dim burnt amber: noise, not words. */
+        private void dimStatic(SpannableStringBuilder out, int from) {
+            int i = from;
+            while (i < out.length()) {
+                char ch = out.charAt(i);
+                if (ch != '·' && ch != '-') {
+                    i++;
+                    continue;
+                }
+                int end = i;
+                boolean dot = false;
+                while (end < out.length() && (out.charAt(end) == '·' || out.charAt(end) == '-')) {
+                    dot |= out.charAt(end) == '·';
+                    end++;
+                }
+                // A lone dash between spaces is punctuation; anything with a dot, or inside a word, is static.
+                boolean inWord = (i > from && Character.isLetterOrDigit(out.charAt(i - 1)))
+                        || (end < out.length() && Character.isLetterOrDigit(out.charAt(end)));
+                if (dot || inWord) {
+                    out.setSpan(new ForegroundColorSpan(colorStatic), i, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                i = end;
             }
         }
     }

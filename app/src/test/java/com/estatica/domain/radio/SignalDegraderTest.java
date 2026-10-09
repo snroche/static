@@ -38,4 +38,14 @@ public class SignalDegraderTest {
             }
         }
     }
+
+    @Test
+    public void staticComesInStretchesNotScatteredLetters() {
+        String out = SignalDegrader.degrade("frequencies everywhere", 1.0, GameRandom.fromSeed(5));
+        for (String word : out.split(" ")) {
+            // The faded part is one run of static, not letters sprinkled here and there.
+            String marks = word.replaceAll("[^·-]", "#").replaceAll("#+", "#");
+            assertTrue(word, marks.replaceAll("[^·-]+", " ").trim().split(" ").length == 1);
+        }
+    }
 }

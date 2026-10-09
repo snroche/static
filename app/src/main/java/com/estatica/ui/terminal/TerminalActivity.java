@@ -149,7 +149,7 @@ public final class TerminalActivity extends ComponentActivity {
                 updateBack();
             }
         });
-        infoSheet.explainOnLongPress(binding.hud);
+        binding.hud.setOnClickListener(v -> explainHud());
         infoSheet.explainOnLongPress(binding.expeditionStrip);
         infoSheet.explainOnLongPress(binding.decisionSituation);
         infoSheet.explainOnLongPress(binding.mapPanel.mapInfo);
@@ -290,6 +290,7 @@ public final class TerminalActivity extends ComponentActivity {
         logFocus = focus;
         viewModel.setLogView(view, focus);
         renderLogChips();
+        renderExpeditions(snapshot);
         followTail();
     }
 
@@ -550,50 +551,109 @@ public final class TerminalActivity extends ComponentActivity {
 
     // ---- Status bar, expedition strip and button badges ----
 
-    /** "⚡120/180W ◈40/100 ☾ · SCR 12 CMP 3 RAT 8 …" — static text, no ticking. */
+    /** "⚡120/180W ◈40/100 ☾ · SCR 12 CMP 3 RAT 8 …" — static text, no ticking, colored by state. */
     private void renderHud(SessionSnapshot snapshot) {
         SessionSnapshot.BaseView base = snapshot.base;
-        StringBuilder hud = new StringBuilder();
+        android.text.SpannableStringBuilder hud = new android.text.SpannableStringBuilder();
         if (base.blackout) {
-            hud.append(getString(R.string.hud_blackout));
+            colored(hud, getString(R.string.hud_blackout), R.color.danger);
         } else {
-            hud.append(getString(R.string.hud_power, base.used, base.available));
+            colored(hud, getString(R.string.hud_power, base.used, base.available),
+                    base.used * 10 >= base.available * 9 ? R.color.amber_bright : R.color.good);
         }
-        hud.append("  ").append(getString(R.string.hud_reserve, base.reserve, base.reserveCapacity));
-        hud.append("  ").append(getString(base.night ? R.string.hud_night : R.string.hud_day))
-                .append(' ').append(getString(weatherIcon(snapshot.weather))).append(' ').append(snapshot.weatherName);
-        StringBuilder supplies = new StringBuilder();
+        hud.append("  ");
+        int reserveShare = base.reserveCapacity == 0 ? 0 : base.reserve * 100 / base.reserveCapacity;
+        colored(hud, getString(R.string.hud_reserve, base.reserve, base.reserveCapacity),
+                reserveShare < 20 ? R.color.danger : reserveShare < 50 ? R.color.amber : R.color.good);
+        hud.append("  ").append(getString(base.night ? R.string.hud_night : R.string.hud_day)).append(' ');
+        colored(hud, getString(weatherIcon(snapshot.weather)) + ' ' + snapshot.weatherName, weatherColor(snapshot.weather));
+        boolean first = true;
         for (SessionSnapshot.ResourceView r : snapshot.resources) {
             if (r.shortName == null) {
                 continue;
             }
-            if (supplies.length() > 0) {
-                supplies.append("  ");
+            hud.append(first ? "\n" : "  ");
+            first = false;
+            if (r.icon != null) {
+                int start = hud.length();
+                hud.append(r.icon);
+                hud.setSpan(new android.text.style.RelativeSizeSpan(1.35f), start, hud.length(),
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                colored(hud, " " + r.amount, r.amount == 0 ? R.color.danger : R.color.amber);
+            } else {
+                hud.append(getString(R.string.hud_resource, r.shortName, r.amount));
             }
-            supplies.append(getString(R.string.hud_resource, r.icon != null ? r.icon : r.shortName, r.amount));
         }
+        hud.append(first ? "\n" : "  ");
         if (snapshot.hungry) {
-            supplies.append("  ").append(getString(R.string.hud_hungry));
+            colored(hud, getString(R.string.hud_hungry), R.color.danger);
         } else if (!Double.isInfinite(snapshot.foodDaysLeft)) {
-            supplies.append("  ").append(getString(R.string.hud_food,
-                    String.format(java.util.Locale.ENGLISH, "%.1f", snapshot.foodDaysLeft)));
-        }
-        if (supplies.length() > 0) {
-            hud.append('\n').append(supplies);
+            colored(hud, getString(R.string.hud_food, String.format(java.util.Locale.ENGLISH, "%.1f", snapshot.foodDaysLeft)),
+                    snapshot.foodDaysLeft < 1 ? R.color.danger : snapshot.foodDaysLeft < 3 ? R.color.amber_bright : R.color.good);
         }
         binding.hud.setText(hud);
         binding.hud.setContentDescription(getString(R.string.hud_description, hud));
     }
 
-    /** One line per scout out: progress bar and estimated return, or the waiting state. */
+    private void colored(android.text.SpannableStringBuilder out, String text, int color) {
+        int start = out.length();
+        out.append(text);
+        out.setSpan(new android.text.style.ForegroundColorSpan(ContextCompat.getColor(this, color)), start, out.length(),
+                android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    /** Tap on the status bar: what each number and icon means. */
+    private void explainHud() {
+        if (snapshot == null) {
+            return;
+        }
+        StringBuilder text = new StringBuilder();
+        text.append(getString(R.string.ic_power)).append(' ').append(getString(R.string.hud_info_power)).append("\n\n");
+        text.append(getString(R.string.ic_battery)).append(' ').append(getString(R.string.hud_info_reserve)).append("\n\n");
+        text.append(getString(R.string.ic_rations)).append(' ').append(getString(R.string.hud_info_food)).append("\n\n");
+        text.append(getString(weatherIcon(snapshot.weather))).append(' ').append(getString(R.string.hud_info_weather));
+        for (SessionSnapshot.ResourceView r : snapshot.resources) {
+            text.append("\n\n").append(getString(R.string.hud_info_resource, r.icon != null ? r.icon : "·",
+                    r.name.toUpperCase(java.util.Locale.ROOT), r.amount));
+            String use = snapshot.glossary.get(r.name);
+            if (use != null) {
+                text.append('\n').append(use);
+            }
+        }
+        infoSheet.showText(getString(R.string.hud_info_title), text.toString());
+        updateBack();
+    }
+
+    private static int weatherColor(String weather) {
+        switch (weather) {
+            case "CLOUDY":
+                return R.color.weather_cloudy;
+            case "RAIN":
+                return R.color.weather_rain;
+            case "FOG":
+                return R.color.weather_fog;
+            case "STORM":
+                return R.color.weather_storm;
+            default:
+                return R.color.weather_clear;
+        }
+    }
+
+    /**
+     * One line per scout out: progress bar and estimated return, or the waiting state. Only in
+     * COMMS > EXPEDITIONS, and only the focused team when a chip is picked.
+     */
     private void renderExpeditions(SessionSnapshot snapshot) {
-        if (snapshot.expeditions.isEmpty()) {
+        if (snapshot == null || tab != Tab.COMMS || logView != LogView.EXPEDITIONS) {
             binding.expeditionStrip.setVisibility(View.GONE);
             return;
         }
         java.text.DateFormat time = DateFormat.getTimeFormat(this);
         StringBuilder strip = new StringBuilder();
         for (SessionSnapshot.ExpeditionView e : snapshot.expeditions) {
+            if (logFocus != null && !logFocus.equals(e.thread)) {
+                continue;
+            }
             if (strip.length() > 0) {
                 strip.append('\n');
             }
@@ -605,6 +665,9 @@ public final class TerminalActivity extends ComponentActivity {
                 strip.append(getString(R.string.expedition_line, e.scoutName, e.zoneName,
                         progressBar(e.percent), e.percent, time.format(new Date(e.returnAtMillis))));
             }
+        }
+        if (strip.length() == 0) {
+            strip.append(getString(R.string.expedition_none));
         }
         binding.expeditionStrip.setText(strip);
         binding.expeditionStrip.setVisibility(View.VISIBLE);
@@ -694,6 +757,7 @@ public final class TerminalActivity extends ComponentActivity {
         if (snapshot != null) {
             renderBadges(snapshot);
         }
+        renderExpeditions(snapshot);
         updateBack();
     }
 

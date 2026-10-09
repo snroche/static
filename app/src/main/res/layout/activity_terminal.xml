@@ -30,6 +30,7 @@
         android:minWidth="48dp"
         android:gravity="center"
         android:text="@string/options_button"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,20 +48,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/optionsButton" />
 
-    <!-- Expeditions in progress, one per line. -->
-    <TextView
-        android:id="@+id/expeditionStrip"
-        style="@style/TerminalText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="2dp"
-        android:textSize="13sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hud" />
-
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
@@ -70,7 +57,7 @@
         android:background="@color/amber_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/expeditionStrip" />
+        app:layout_constraintTop_toBottomOf="@id/hud" />
 
     <!-- COMMS views: what the bunker reports, the field radio, conversations. -->
     <LinearLayout
@@ -127,6 +114,22 @@
             android:orientation="horizontal" />
     </HorizontalScrollView>
 
+    <!-- Expeditions in progress, one per line: only in COMMS > EXPEDITIONS. -->
+    <TextView
+        android:id="@+id/expeditionStrip"
+        style="@style/TerminalText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="2dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/signal"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logChipsScroll" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/log"
         android:layout_width="0dp"
@@ -139,7 +142,7 @@
         app:layout_constraintBottom_toTopOf="@id/decisionPanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logChipsScroll" />
+        app:layout_constraintTop_toBottomOf="@id/expeditionStrip" />
 
     <!-- Decision card: who, where, what they see, and the orders with their gut feeling. -->
     <LinearLayout

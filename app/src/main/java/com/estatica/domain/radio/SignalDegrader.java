@@ -2,10 +2,13 @@ package com.estatica.domain.radio;
 
 import com.estatica.core.GameRandom;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Static over a transmission: letters drop out and become dots and dashes, but the words keep
- * their shape, so a careful listener can still piece it together ("i found some rations" →
- * "i f·u-d s·me r-ti·ns"). Deterministic for a given RNG state.
+ * Static over a transmission: stretches of a word fade into dots and dashes, but the words
+ * keep their shape, so a careful listener can still piece it together ("i found some rations"
+ * → "i found s·-e r··-·ns"). Deterministic for a given RNG state.
  */
 public final class SignalDegrader {
 
@@ -39,29 +42,25 @@ public final class SignalDegrader {
         return out.toString();
     }
 
-    /** Keeps the first letter and the punctuation; some other letters turn into static. */
+    /**
+     * Keeps the first letter and the punctuation; a stretch of the rest (2–4 letters, longer
+     * with more static) drops out as dots and dashes, the way a signal fades for a moment.
+     */
     private static String breakUp(String word, double intensity, GameRandom rng) {
         char[] chars = word.toCharArray();
-        double loss = Math.min(MAX_LOSS, intensity * MAX_LOSS);
-        boolean first = true;
-        boolean lostAny = false;
-        int lastLetter = -1;
+        List<Integer> letterAt = new ArrayList<>();
         for (int i = 0; i < chars.length; i++) {
-            if (!Character.isLetterOrDigit(chars[i])) {
-                continue;
-            }
-            if (first) {
-                first = false; // the first letter always comes through
-                continue;
-            }
-            lastLetter = i;
-            if (rng.chance(loss)) {
-                chars[i] = STATIC[rng.nextInt(STATIC.length)];
-                lostAny = true;
+            if (Character.isLetterOrDigit(chars[i])) {
+                letterAt.add(i);
             }
         }
-        if (!lostAny && lastLetter > 0) {
-            chars[lastLetter] = STATIC[rng.nextInt(STATIC.length)];
+        // Everything after the first letter can fade.
+        int fadeable = letterAt.size() - 1;
+        int max = Math.max(2, Math.min(4, (int) Math.round(fadeable * MAX_LOSS * Math.max(0.4, intensity))));
+        int length = Math.min(fadeable, 2 + rng.nextInt(Math.max(1, max - 1)));
+        int start = 1 + rng.nextInt(Math.max(1, fadeable - length + 1));
+        for (int k = start; k < start + length && k < letterAt.size(); k++) {
+            chars[letterAt.get(k)] = STATIC[rng.nextInt(STATIC.length)];
         }
         return new String(chars);
     }

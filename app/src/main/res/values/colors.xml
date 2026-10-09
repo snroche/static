@@ -9,6 +9,26 @@
     <!-- Accents: danger (death, injury, bad odds) and good news (loot, returns). -->
     <color name="danger">#FF5A3C</color>
     <color name="good">#9CFF6E</color>
+    <!-- Log voices: field radio, chats in the bunker, what you type, static. -->
+    <color name="radio_voice">#FFE0A3</color>
+    <color name="chat_voice">#F2C38B</color>
+    <color name="operator_text">#9FC3CF</color>
+    <color name="static_noise">#7A5A1F</color>
+    <!-- Transmissions and expedition progress. -->
+    <color name="signal">#7FD8E6</color>
+    <!-- Name colors, one per person (picked by name). -->
+    <color name="voice_1">#FFD066</color>
+    <color name="voice_2">#8FE3B0</color>
+    <color name="voice_3">#9EC8FF</color>
+    <color name="voice_4">#F7A8C8</color>
+    <color name="voice_5">#D7B3FF</color>
+    <color name="voice_6">#FFB58A</color>
+    <!-- Weather. -->
+    <color name="weather_clear">#FFE27A</color>
+    <color name="weather_cloudy">#B9B2A1</color>
+    <color name="weather_rain">#7FB2E6</color>
+    <color name="weather_fog">#9A9A9A</color>
+    <color name="weather_storm">#C9A2FF</color>
     <!-- Phosphor glow behind the text. -->
     <color name="amber_glow">#66FFB000</color>
 </resources>
