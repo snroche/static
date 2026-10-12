@@ -182,6 +182,28 @@ public final class TerminalText {
         private String dispatched;
         /** {n}, {label}, {hint}. */
         private String optionLine;
+        /** An option's label with what it does to the trip: {label}, {time}. */
+        private String optionTimeMore;
+        private String optionTimeLess;
+        /** After it resolves: {name}, {time}. */
+        private String timeLost;
+        private String timeSaved;
+
+        public String getOptionTimeMore() {
+            return optionTimeMore;
+        }
+
+        public String getOptionTimeLess() {
+            return optionTimeLess;
+        }
+
+        public String getTimeLost() {
+            return timeLost;
+        }
+
+        public String getTimeSaved() {
+            return timeSaved;
+        }
         /** {name}. */
         private String awaitingOrders;
         /** {name}, {stat}, {value}. */
@@ -601,6 +623,46 @@ public final class TerminalText {
 
     /** System lines about the dial, decoding, relays and rescues. All are templates. */
     public static final class RadioText {
+        /** Locked onto a station: {frequency}, {station}, {line}. */
+        private String stationHeard;
+        /** Something creepy came in and the crew heard it. */
+        private String crewUneasy;
+        /** The radio assistant caught a bulletin: {name}, {station}, {time}, {line}. */
+        private String assistantBulletin;
+        /** Station schedules: {time}, {length}, {hours}. */
+        private String scheduleAlways;
+        private String scheduleDaily;
+        private String scheduleEvery;
+        private String scheduleNight;
+
+        public String getAssistantBulletin() {
+            return assistantBulletin;
+        }
+
+        public String getScheduleAlways() {
+            return scheduleAlways;
+        }
+
+        public String getScheduleDaily() {
+            return scheduleDaily;
+        }
+
+        public String getScheduleEvery() {
+            return scheduleEvery;
+        }
+
+        public String getScheduleNight() {
+            return scheduleNight;
+        }
+
+        public String getStationHeard() {
+            return stationHeard;
+        }
+
+        public String getCrewUneasy() {
+            return crewUneasy;
+        }
+
         private String staticNoise;
         private String hintLost;
         /** {delay}. */
@@ -791,6 +853,41 @@ public final class TerminalText {
         private String conversationExpired;
         /** {name}. */
         private String bondUp;
+        /** Treatment: {healer}, {name}, {injury}, {cost}. */
+        private String treatAsk;
+        private String treatYes;
+        private String treatNo;
+        private String treatDone;
+        private String treatEager;
+        private String treatNoMedicine;
+
+        public String getTreatAsk() {
+            return treatAsk;
+        }
+
+        public String getTreatYes() {
+            return treatYes;
+        }
+
+        public String getTreatNo() {
+            return treatNo;
+        }
+
+        public String getTreatDone() {
+            return treatDone;
+        }
+
+        public String getTreatEager() {
+            return treatEager;
+        }
+
+        public String getTreatNoMedicine() {
+            return treatNoMedicine;
+        }
+        /** Bond went up without a new level: {name}, {progress}, {level}. */
+        private String bondWarmer;
+        /** Bond went down: {name}, {progress}, {level}. */
+        private String bondCooler;
         /** {name}, {trait}. */
         private String traitRevealed;
         /** {name}, {trait}. */
@@ -836,6 +933,14 @@ public final class TerminalText {
 
         public String getBondUp() {
             return bondUp;
+        }
+
+        public String getBondWarmer() {
+            return bondWarmer;
+        }
+
+        public String getBondCooler() {
+            return bondCooler;
         }
 
         public String getTraitRevealed() {

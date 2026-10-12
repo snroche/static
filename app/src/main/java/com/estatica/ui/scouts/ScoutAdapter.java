@@ -51,6 +51,12 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
     private final Listener listener;
     /** Cards the player opened; kept across snapshot rebinds. */
     private final Set<String> expanded = new HashSet<>();
+    /** Showing one person in full (the crew tile was tapped): always open, no toggle. */
+    private boolean alwaysOpen;
+
+    public void setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+    }
 
     public ScoutAdapter(Listener listener) {
         super(DIFF);
@@ -66,7 +72,11 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         ScoutView scout = getItem(position);
-        holder.bind(scout, listener, expanded.contains(scout.id));
+        holder.bind(scout, listener, alwaysOpen || expanded.contains(scout.id));
+        holder.b.moreButton.setOnClickListener(v -> holder.b.header.performClick());
+        if (alwaysOpen) {
+            holder.b.moreButton.setVisibility(View.GONE);
+        }
         View.OnLongClickListener explain = v -> {
             listener.onInfo(holder.cardText());
             return true;
@@ -74,6 +84,9 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
         holder.b.header.setOnLongClickListener(explain);
         holder.b.details.setOnLongClickListener(explain);
         holder.b.header.setOnClickListener(v -> {
+            if (alwaysOpen) {
+                return;
+            }
             if (!expanded.remove(scout.id)) {
                 expanded.add(scout.id);
             }
@@ -118,7 +131,9 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
                     : s.status);
             b.stats.setText(statBlock(s));
             b.vitals.setText(res.getString(R.string.scout_vitals, s.stress, s.trust, s.injury));
-            b.bond.setText(res.getString(R.string.scout_bond, bar(s.bondLevel, s.bondLevels)));
+            b.bond.setText(s.bondLevel >= s.bondLevels
+                    ? res.getString(R.string.scout_bond_max, bar(s.bondLevel, s.bondLevels))
+                    : res.getString(R.string.scout_bond, bar(s.bondLevel, s.bondLevels), s.bondProgress));
             optional(b.mood, s.dead || s.mood == null ? null : res.getString(R.string.scout_mood, s.mood));
             optional(b.habits, s.habits.isEmpty() ? null
                     : res.getString(R.string.scout_habits, String.join("; ", s.habits)));
@@ -134,10 +149,22 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
             optional(b.bio, s.bio);
 
             action(b.dispatch, s.canDispatch, v -> listener.onDispatch(s));
-            action(b.talk, s.canTalk, v -> listener.onTalk(s));
-            action(b.gift, s.canGift, v -> listener.onGift(s));
-            action(b.taskButton, s.canAssignTask, v -> listener.onTask(s));
-            action(b.equipButton, s.canEquip, v -> listener.onEquip(s));
+            // Not in the mood yet: still shown, dimmed, with when they will be.
+            boolean later = !s.canTalk && s.talkReadyAtMillis > 0;
+            action(b.talk, s.canTalk || later, v -> listener.onTalk(s));
+            b.talk.setText(later ? res.getString(R.string.talk_button_later,
+                    android.text.format.DateFormat.getTimeFormat(b.getRoot().getContext())
+                            .format(new java.util.Date(s.talkReadyAtMillis)))
+                    : res.getString(R.string.talk_button));
+            b.talk.setAlpha(later ? 0.5f : 1f);
+            // The rest lives on the open card.
+            action(b.gift, open && s.canGift, v -> listener.onGift(s));
+            action(b.taskButton, open && s.canAssignTask, v -> listener.onTask(s));
+            action(b.equipButton, open && s.canEquip, v -> listener.onEquip(s));
+            boolean hasMore = s.canGift || s.canAssignTask || s.canEquip;
+            b.moreButton.setVisibility(hasMore ? View.VISIBLE : View.GONE);
+            b.moreButton.setText(open ? R.string.less_button : R.string.more_button);
+            b.moreButton.setContentDescription(res.getString(R.string.more_description, s.name));
             action(b.recallButton, s.canRecall, v -> listener.onRecall(s));
             // The empty bunk stays on the roster, dimmed (GDD §5.5).
             b.getRoot().setAlpha(s.dead ? 0.5f : 1f);

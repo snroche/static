@@ -70,12 +70,20 @@
                 android:visibility="gone" />
 
             <TextView
+                style="@style/TerminalText.Bright"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/map_legend_title" />
+
+            <TextView
                 style="@style/TerminalText.Dim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="2dp"
                 android:text="@string/map_legend"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

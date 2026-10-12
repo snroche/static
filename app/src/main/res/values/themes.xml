@@ -61,6 +61,22 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
+    <!-- Section button (radio, bunker): one line, shrinks to fit, brackets drawn when selected. -->
+    <style name="TerminalSection" parent="TerminalText.Bright">
+        <item name="android:background">@drawable/bg_terminal_button</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:autoSizeTextType">uniform</item>
+        <item name="android:autoSizeMinTextSize">8sp</item>
+        <item name="android:autoSizeMaxTextSize">13sp</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <!-- Text button: [ LABEL ], 48dp touch target. -->
     <style name="TerminalButton" parent="TerminalText.Bright">
         <item name="android:background">@drawable/bg_terminal_button</item>

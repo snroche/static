@@ -185,6 +185,15 @@
                     android:visibility="gone" />
             </LinearLayout>
 
+            <!-- Morse with the manual: a keyboard of letters with their codes. Built in code. -->
+            <LinearLayout
+                android:id="@+id/morseKeyboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
             <!-- Locked: what it looks like and what might help. -->
             <TextView
                 android:id="@+id/locked"

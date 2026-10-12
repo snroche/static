@@ -28,17 +28,36 @@ public final class TimelineGenerator {
     /** @param eventFits filters the zone's situations by who is going (event requirements) */
     public static List<Segment> generate(ZoneDef zone, double durationMultiplier, GameRandom rng,
                                          java.util.function.Predicate<String> eventFits) {
+        return generate(zone, durationMultiplier, rng, zone.getEvents(), eventFits, id -> false);
+    }
+
+    /**
+     * @param events  candidate situations (the zone's own plus common ones for its band)
+     * @param recent  situations seen lately: they only come up once the fresh ones run out
+     */
+    public static List<Segment> generate(ZoneDef zone, double durationMultiplier, GameRandom rng,
+                                         List<String> events, java.util.function.Predicate<String> eventFits,
+                                         java.util.function.Predicate<String> recent) {
         int[] range = zone.getDurationMinutes();
         long total = Math.max(MIN_TOTAL_MILLIS, Math.round(
                 rng.nextIntInclusive(range[0], range[1]) * MINUTE * durationMultiplier));
 
         List<String> eventPool = new ArrayList<>();
-        for (String id : zone.getEvents()) {
+        for (String id : events) {
             if (eventFits.test(id)) {
                 eventPool.add(id);
             }
         }
         shuffle(eventPool, rng);
+        // Stable: fresh ones first, each group still shuffled.
+        List<String> fresh = new ArrayList<>();
+        List<String> stale = new ArrayList<>();
+        for (String id : eventPool) {
+            (recent.test(id) ? stale : fresh).add(id);
+        }
+        eventPool.clear();
+        eventPool.addAll(fresh);
+        eventPool.addAll(stale);
         int situations = Math.min(eventPool.size(),
                 rng.nextIntInclusive(zone.getSituations()[0], zone.getSituations()[1]));
         int finds = rng.nextIntInclusive(zone.getFinds()[0], zone.getFinds()[1]);

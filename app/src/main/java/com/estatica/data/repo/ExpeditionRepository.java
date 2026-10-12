@@ -30,6 +30,18 @@ public final class ExpeditionRepository {
         this.dao = dao;
     }
 
+    /** Who went on each of these expeditions: id to {lead, partner (nullable)}. */
+    @WorkerThread
+    public Map<String, String[]> teams(List<String> ids) {
+        Map<String, String[]> out = new LinkedHashMap<>();
+        if (!ids.isEmpty()) {
+            for (ExpeditionEntity e : dao.byIds(ids)) {
+                out.put(e.id, new String[]{e.scoutId, e.partnerId});
+            }
+        }
+        return out;
+    }
+
     @WorkerThread
     public List<Expedition> loadActive() {
         List<Expedition> out = new ArrayList<>();

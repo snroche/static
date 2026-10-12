@@ -7,6 +7,12 @@ import java.util.Map;
 public final class ModuleDef {
 
     private String id;
+    /** What each level above the first adds (battery bank: reserve; pantry: food saved; barricades: defense). */
+    private double perLevel;
+
+    public double getPerLevel() {
+        return perLevel;
+    }
     private String name;
     private String description;
     /** What each level does, level 1 first. */

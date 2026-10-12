@@ -8,7 +8,7 @@ import com.estatica.domain.log.LogLine;
 
 import org.junit.Test;
 
-/** COMMS views: system summaries, field radio and chats never mix. */
+/** COMMS views: system, field radio and chats never mix; ALL views show the overview only. */
 public class LogViewTest {
 
     private static LogLine line(String thread) {
@@ -17,15 +17,27 @@ public class LogViewTest {
 
     @Test
     public void eachLineShowsInExactlyOneView() {
-        LogLine system = LogLine.draft(0, LogChannel.SYSTEM, null, "Mara back from the store.");
+        LogLine system = LogLine.draft(0, LogChannel.SYSTEM, null, "The workshop produced 1 component.");
+        LogLine summary = line(LogLine.summaryThread("e1"));
         LogLine radio = line(LogLine.expeditionThread("e1"));
-        LogLine chat = line(LogLine.chatThread("s1"));
+        LogLine bunker = line(LogView.BUNKER_CHAT);
         assertTrue(LogView.SYSTEM.shows(system, null));
         assertFalse(LogView.EXPEDITIONS.shows(system, null));
-        assertTrue(LogView.EXPEDITIONS.shows(radio, null));
+        assertTrue(LogView.EXPEDITIONS.shows(summary, null));
+        assertFalse(LogView.SYSTEM.shows(summary, null));
         assertFalse(LogView.SYSTEM.shows(radio, null));
-        assertTrue(LogView.CHATS.shows(chat, null));
-        assertFalse(LogView.EXPEDITIONS.shows(chat, null));
+        assertTrue(LogView.CHATS.shows(bunker, null));
+        assertFalse(LogView.EXPEDITIONS.shows(bunker, null));
+    }
+
+    @Test
+    public void allShowsTheOverviewNotEveryThread() {
+        // EXPEDITIONS → ALL: departures, returns and calls for orders, not the whole radio log.
+        assertFalse(LogView.EXPEDITIONS.shows(line(LogLine.expeditionThread("e1")), null));
+        // CHATS → ALL: what happens between the crew, not one-on-one chats.
+        assertFalse(LogView.CHATS.shows(line(LogLine.chatThread("s1")), null));
+        // Personal chats still count towards the CHATS badge.
+        assertTrue(LogView.CHATS.counts(line(LogLine.chatThread("s1"))));
     }
 
     @Test
@@ -41,6 +53,6 @@ public class LogViewTest {
     @Test
     public void threadSurvivesCopies() {
         LogLine l = line(LogLine.chatThread("s1")).withSeq(42);
-        assertTrue(LogView.CHATS.shows(l, null));
+        assertTrue(LogView.CHATS.shows(l, LogLine.chatThread("s1")));
     }
 }

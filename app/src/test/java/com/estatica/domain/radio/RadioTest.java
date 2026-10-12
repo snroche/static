@@ -92,18 +92,20 @@ public class RadioTest {
     }
 
     @Test
-    public void distanceAddsNoiseAndDelayThatRelaysAndTheRadioReduce() {
+    public void distanceAddsNoiseThatRelaysAndTheRadioReduce() {
         ZoneDef near = content.zone("almacen");
         ZoneDef far = content.zone("hospital");
         Map<String, Relay> none = new HashMap<>();
         assertEquals(0, rules.quality(near, none, 1).noise, 1e-9);
         RadioRules.Quality raw = rules.quality(far, none, 1);
-        assertTrue(raw.noise > 0 && raw.orderDelayMillis > 0);
+        assertTrue(raw.noise > 0);
+        // Radio waves don't take minutes: orders arrive at once on every band.
+        assertEquals(0, raw.orderDelayMillis);
 
         Map<String, Relay> relays = new HashMap<>();
         relays.put("hospital", Relay.installed("hospital", 0));
         RadioRules.Quality relayed = rules.quality(far, relays, 1);
-        assertTrue(relayed.noise < raw.noise && relayed.orderDelayMillis < raw.orderDelayMillis);
+        assertTrue(relayed.noise < raw.noise);
         assertTrue(rules.quality(far, none, 3).noise < raw.noise);
     }
 

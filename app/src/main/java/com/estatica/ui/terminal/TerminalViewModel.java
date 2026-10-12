@@ -512,6 +512,12 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
+    void treat(String offerId, int choice) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.treat(offerId, choice)));
+        }
+    }
+
     void answer(String conversationId, int choice) {
         if (ready) {
             run(step -> step.animated.addAll(session.answer(conversationId, choice)));
@@ -638,7 +644,7 @@ public final class TerminalViewModel extends ViewModel {
             window.add(next.line);
             // One beep per event: the system summary, not its copy in the expedition thread.
             if (next.animate && next.line.getChannel() == LogChannel.ALERT
-                    && LogLine.SYSTEM_THREAD.equals(next.line.getThread())) {
+                    && (LogLine.SYSTEM_THREAD.equals(next.line.getThread()) || LogLine.isSummary(next.line.getThread()))) {
                 alerts.setValue(next.line.getSeq());
             }
             // Only what's on screen gets the typewriter; the rest just arrives.
@@ -681,7 +687,7 @@ public final class TerminalViewModel extends ViewModel {
         int[] unread = new int[LogView.values().length];
         for (LogLine line : window) {
             for (LogView v : LogView.values()) {
-                if (line.getSeq() > seenSeq[v.ordinal()] && v.shows(line, null)) {
+                if (line.getSeq() > seenSeq[v.ordinal()] && v.counts(line)) {
                     unread[v.ordinal()]++;
                 }
             }

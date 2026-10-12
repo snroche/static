@@ -40,10 +40,11 @@ public class ContentParserTest {
         GameContent content = TestContent.get();
         for (String eventId : content.getEvents().keySet()) {
             boolean used = content.getZones().values().stream()
-                    .anyMatch(z -> z.getEvents().contains(eventId))
+                    .anyMatch(z -> z.getEvents().contains(eventId)
+                            || content.event(eventId).getBands().contains(z.getBand()))
                     || content.getStory().getPersonalMissions().stream()
                     .anyMatch(m -> m.getEvent().equals(eventId));
-            assertTrue("event not used by any zone or personal mission: " + eventId, used);
+            assertTrue("event not used by any zone, band or personal mission: " + eventId, used);
         }
     }
 

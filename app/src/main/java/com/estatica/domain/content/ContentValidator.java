@@ -1,6 +1,7 @@
 package com.estatica.domain.content;
 
 import com.estatica.domain.radio.SignalField;
+import com.estatica.domain.radio.Transmission;
 import com.estatica.domain.scouts.Injury;
 import com.estatica.domain.scouts.ScoutStatus;
 import com.estatica.domain.scouts.StatType;
@@ -14,6 +15,11 @@ import java.util.Map;
  * value ranges. Collects every problem, so one test run shows them all.
  */
 public final class ContentValidator {
+
+    /** Sounds the radio can make while tuned (SoundEngine). */
+    private static final java.util.Set<String> AUDIO =
+            java.util.Set.of("NONE", "VOICE", "WHISPER", "MORSE", "DATA", "MUSIC", "BREATH", "CARRIER",
+                    "VOICE_F", "CHILD", "PREACHER", "CHOIR", "ORGAN", "WALTZ", "NUMBERS");
 
     /** Phrase keys every voice must define (used by the expedition engine). */
     public static final List<String> REQUIRED_PHRASES = List.of(
@@ -431,6 +437,22 @@ public final class ContentValidator {
             }
             check(rare.getText() != null && !rare.getText().isEmpty(), "rare " + rare.getId() + ": text");
             checkResources(rare.getResources(), "rare " + rare.getId());
+            check(AUDIO.contains(rare.getAudio()), "rare " + rare.getId() + ": unknown audio " + rare.getAudio());
+        }
+        java.util.Set<String> stationIds = new java.util.HashSet<>();
+        for (SignalsDef.Station st : signals.getStations()) {
+            String where = "station " + st.getId();
+            check(st.getId() != null && stationIds.add(st.getId()), where + ": duplicate or missing id");
+            checkBand(st.getBand(), where);
+            check(st.getPosition() >= 0 && st.getPosition() < content.getBalance().getRadio().getDialMax(),
+                    where + ": position off the dial");
+            check(!st.getLines().isEmpty(), where + ": lines");
+            check(st.getName() != null, where + ": name");
+            check(AUDIO.contains(st.getAudio()), where + ": unknown audio " + st.getAudio());
+        }
+        for (Transmission.Kind scheme : Transmission.Kind.values()) {
+            List<String> teasers = signals.teasers("TRANSMISSION", scheme.name());
+            check(teasers != null && !teasers.isEmpty(), "signals: teasers for " + scheme);
         }
         for (SignalsDef.Transmission t : signals.getTransmissions()) {
             String where = "transmission " + t.getId();
@@ -483,7 +505,15 @@ public final class ContentValidator {
         for (EventDef e : content.getEvents().values()) {
             String where = "event " + e.getId();
             check(e.getIntro() != null && !e.getIntro().isEmpty(), where + ": intro");
+            for (String band : e.getBands()) {
+                checkBand(band, where);
+            }
             List<EventDef.Option> options = e.getOptions();
+            if (options != null) {
+                for (EventDef.Option o : options) {
+                    check(Math.abs(o.getTime()) <= 0.5, where + "/" + o.getId() + ": time is a share of the trip, ±0.5 at most");
+                }
+            }
             // Anyone sees the open options plus the ones that fit them: 2–4 open, 6 at most in all.
             long open = options == null ? 0 : options.stream()
                     .filter(o -> o.getRequiresTrait().isEmpty() && o.getRequiresBackground() == null).count();

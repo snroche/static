@@ -36,6 +36,8 @@ final class SendPanel {
     private SessionSnapshot snapshot;
     /** Ticked scout ids, lead first. */
     private final List<String> team = new ArrayList<>();
+    /** The operator already saw the "they're hurt" warning for this team and place. */
+    private boolean hurtWarned;
     /** Destination key: TYPE|zoneId|target. */
     private String destination;
     /** Last trip per scout (team, destination), to send the same again in one tap. */
@@ -62,6 +64,7 @@ final class SendPanel {
     /** @param destinationKey TYPE|zoneId|target already chosen (from the map), or null */
     void open(String leadId, String destinationKey) {
         team.clear();
+        hurtWarned = false;
         if (leadId != null && destinationKey == null && lastTeam.containsKey(leadId)) {
             // Send again: same team, same place (changeable).
             team.addAll(lastTeam.get(leadId));
@@ -133,8 +136,8 @@ final class SendPanel {
             if (z.intel) {
                 label.append(" · ").append(res.getString(R.string.zone_intel));
             }
-            if (z.depleted >= 15) {
-                label.append(" · ").append(res.getString(R.string.zone_depleted, z.depleted));
+            if (z.depleted >= 15 && z.refillIn != null) {
+                label.append(" · ").append(res.getString(R.string.zone_depleted, z.depleted, z.refillIn));
             }
             row(inflater, b.sendWhere, label.toString(), key.equals(destination), v -> choose(key));
             any = true;
@@ -149,7 +152,30 @@ final class SendPanel {
         boolean ready = !team.isEmpty() && destination != null;
         b.sendGo.setAlpha(ready ? 1f : 0.4f);
         b.sendGo.setEnabled(ready);
-        b.sendSummary.setText(summary(res));
+        String hurt = hurtWarning(res);
+        b.sendGo.setText(hurt != null && hurtWarned ? R.string.send_go_anyway : R.string.send_go);
+        if (hurt == null) {
+            b.sendSummary.setText(summary(res));
+        } else {
+            android.text.SpannableStringBuilder text = new android.text.SpannableStringBuilder(summary(res)).append('\n');
+            int from = text.length();
+            text.append(hurt);
+            text.setSpan(new android.text.style.ForegroundColorSpan(androidx.core.content.ContextCompat.getColor(
+                    b.getRoot().getContext(), R.color.danger)), from, text.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            b.sendSummary.setText(text);
+        }
+    }
+
+    /** "Mara is hurt (light injury)…", or null if everyone going is fine. */
+    private String hurtWarning(Resources res) {
+        List<String> hurt = new ArrayList<>();
+        for (String id : team) {
+            SessionSnapshot.ScoutView s = scout(id);
+            if (s != null && s.hurt) {
+                hurt.add(res.getString(R.string.send_hurt_who, s.name, s.injury));
+            }
+        }
+        return hurt.isEmpty() ? null : res.getString(R.string.send_hurt_warning, String.join(", ", hurt));
     }
 
     private String summary(Resources res) {
@@ -203,6 +229,7 @@ final class SendPanel {
     }
 
     private void toggle(String id) {
+        hurtWarned = false;
         if (!team.remove(id)) {
             if (team.size() >= MAX_TEAM) {
                 team.remove(team.size() - 1); // swap the partner
@@ -213,6 +240,7 @@ final class SendPanel {
     }
 
     private void choose(String key) {
+        hurtWarned = false;
         destination = key.equals(destination) ? null : key;
         render(snapshot);
     }
@@ -221,6 +249,13 @@ final class SendPanel {
         if (team.isEmpty() || destination == null) {
             return;
         }
+        if (!hurtWarned && hurtWarning(b.getRoot().getResources()) != null) {
+            // First tap only warns: the second one sends them anyway.
+            hurtWarned = true;
+            render(snapshot);
+            return;
+        }
+        hurtWarned = false;
         host.beforeSend();
         for (String id : team) {
             lastTeam.put(id, new ArrayList<>(team));

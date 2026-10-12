@@ -26,6 +26,14 @@ public final class DialogueDef {
     /** Template id of the scout, or null for anyone. */
     private String scout;
     private int minBondLevel;
+    /** Only below this bond level (shy, early talks). Null for no limit. */
+    private Integer maxBondLevel;
+    /** Trust range (0–100), each end nullable: trust-based talks. */
+    private Integer minTrust;
+    private Integer maxTrust;
+    /** Stress range (0–100), each end nullable. */
+    private Integer minStress;
+    private Integer maxStress;
     private List<String> requiresFlags;
     private List<String> forbidsFlags;
     /** Stat key to minimum value. */
@@ -66,6 +74,26 @@ public final class DialogueDef {
 
     public int getMinBondLevel() {
         return minBondLevel;
+    }
+
+    public Integer getMaxBondLevel() {
+        return maxBondLevel;
+    }
+
+    public Integer getMinTrust() {
+        return minTrust;
+    }
+
+    public Integer getMaxTrust() {
+        return maxTrust;
+    }
+
+    public Integer getMinStress() {
+        return minStress;
+    }
+
+    public Integer getMaxStress() {
+        return maxStress;
     }
 
     public List<String> getRequiresFlags() {

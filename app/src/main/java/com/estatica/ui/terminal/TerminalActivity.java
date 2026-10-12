@@ -60,7 +60,13 @@ public final class TerminalActivity extends ComponentActivity {
 
     private Tab tab = Tab.COMMS;
 
-    private enum Panel { NONE, SCOUTS, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR, GEAR_SLOT }
+    private enum Panel { NONE, SCOUTS, SCOUT_DETAIL, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR, GEAR_SLOT }
+
+    /** Crew grid, and the one person shown in full. */
+    private com.estatica.ui.scouts.CrewTileAdapter crewTiles;
+    private androidx.recyclerview.widget.GridLayoutManager crewGrid;
+    private LinearLayoutManager panelLinear;
+    private boolean filtersOpen;
 
     private ActivityTerminalBinding binding;
     private TerminalViewModel viewModel;
@@ -113,7 +119,9 @@ public final class TerminalActivity extends ComponentActivity {
                 showPanel(Panel.GEAR);
             } else if (sendPanel.isShown()) {
                 sendPanel.hide();
-            } else if (panel == Panel.GIFTS || panel == Panel.TASKS
+            } else if (panel == Panel.DIARY && tab == Tab.COMMS) {
+                showPanel(Panel.NONE);
+            } else if (panel == Panel.SCOUT_DETAIL || panel == Panel.GIFTS || panel == Panel.TASKS
                     || panel == Panel.DIARY || panel == Panel.GEAR) {
                 showPanel(Panel.SCOUTS);
             } else {
@@ -192,6 +200,11 @@ public final class TerminalActivity extends ComponentActivity {
         binding.logTabSystem.setOnClickListener(v -> switchLog(LogView.SYSTEM, null));
         binding.logTabExpeditions.setOnClickListener(v -> switchLog(LogView.EXPEDITIONS, null));
         binding.logTabChats.setOnClickListener(v -> switchLog(LogView.CHATS, null));
+        binding.logTabDiary.setOnClickListener(v -> {
+            viewModel.loadDiary();
+            showPanel(Panel.DIARY);
+            updateBack();
+        });
         viewModel.getSnapshot().observe(this, this::renderSnapshot);
         viewModel.getDiary().observe(this, entries -> {
             if (panel == Panel.DIARY) {
@@ -277,7 +290,8 @@ public final class TerminalActivity extends ComponentActivity {
             text = getString(R.string.log_unread, text, unread);
         }
         boolean selected = state.view == which;
-        view.setText(selected ? getString(R.string.tab_selected, text) : text);
+        view.setText(text);
+        BracketDrawable.mark(view, selected);
         view.setTextColor(ContextCompat.getColor(this, selected ? R.color.amber_bright : R.color.amber_dim));
     }
 
@@ -288,6 +302,7 @@ public final class TerminalActivity extends ComponentActivity {
         typewriter.skip(); // the line being typed may not be in the new view
         logView = view;
         logFocus = focus;
+        adapter.setSeparateThreads(view == LogView.EXPEDITIONS && focus == null);
         viewModel.setLogView(view, focus);
         renderLogChips();
         renderExpeditions(snapshot);
@@ -307,8 +322,11 @@ public final class TerminalActivity extends ComponentActivity {
             for (SessionSnapshot.ExpeditionView e : snapshot.expeditions) {
                 addChip(e.thread, e.scoutName);
             }
+            // Back home (or not): their log stays a few hours after you got the news.
+            for (SessionSnapshot.DoneLog d : snapshot.doneLogs) {
+                addChip(d.thread, getString(R.string.log_chip_done, d.who));
+            }
         } else {
-            addChip(com.estatica.data.session.GameSession.BUNKER_CHAT, getString(R.string.log_bunker_chip));
             for (SessionSnapshot.ScoutView s : snapshot.scouts) {
                 if (!s.dead) {
                     addChip(LogLine.chatThread(s.id), s.name);
@@ -326,6 +344,9 @@ public final class TerminalActivity extends ComponentActivity {
     private List<SessionSnapshot.ScoutView> crewList(SessionSnapshot snapshot) {
         List<SessionSnapshot.ScoutView> out = new ArrayList<>();
         for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+            if (s.dead) {
+                continue; // the fallen live in the Diary
+            }
             boolean keep;
             switch (crewFilter) {
                 case "HOME":
@@ -366,9 +387,10 @@ public final class TerminalActivity extends ComponentActivity {
             chip.setOnClickListener(v -> {
                 crewFilter = f;
                 if (snapshot != null) {
-                    scoutAdapter.submitList(crewList(snapshot));
+                    crewTiles.submitList(crewList(snapshot));
                 }
                 renderCrewFilters();
+                renderFilterButton();
             });
             binding.crewFilters.addView(chip);
         }
@@ -529,11 +551,21 @@ public final class TerminalActivity extends ComponentActivity {
     private void renderSnapshot(SessionSnapshot snapshot) {
         this.snapshot = snapshot;
         infoSheet.setGlossary(snapshot.glossary);
+        java.util.Set<String> awaiting = new java.util.HashSet<>();
+        for (SessionSnapshot.PendingDecision d : snapshot.pending) {
+            if (d.kind == SessionSnapshot.PendingDecision.Kind.ORDER) {
+                awaiting.add(d.id);
+            }
+        }
+        adapter.setAwaiting(awaiting);
         refreshHighlighter();
         if (logView != LogView.SYSTEM) {
             renderLogChips();
         }
-        scoutAdapter.submitList(crewList(snapshot));
+        crewTiles.submitList(crewList(snapshot));
+        if (panel == Panel.SCOUT_DETAIL) {
+            showScoutDetail();
+        }
         renderCrewFilters();
         radioPanel.render(snapshot);
         bunkerPanel.render(snapshot);
@@ -721,7 +753,9 @@ public final class TerminalActivity extends ComponentActivity {
 
     private void tabLabel(TextView view, Tab which, String label) {
         boolean selected = tab == which;
-        view.setText(selected ? getString(R.string.tab_selected, label) : label);
+        // One tall bracket around both lines (icon and name), not characters beside the text.
+        view.setText(label);
+        BracketDrawable.mark(view, selected);
         view.setTextColor(ContextCompat.getColor(this, selected ? R.color.amber_bright : R.color.amber_dim));
         view.setSelected(selected);
     }
@@ -792,14 +826,17 @@ public final class TerminalActivity extends ComponentActivity {
         }
         shownDecisionId = decision.id;
         boolean order = decision.kind == SessionSnapshot.PendingDecision.Kind.ORDER;
+        boolean treat = decision.kind == SessionSnapshot.PendingDecision.Kind.TREAT;
         binding.decisionHeader.setText(order
                 ? getString(R.string.decision_header, decision.scoutName, decision.place)
+                : treat ? getString(R.string.decision_treat_header, decision.scoutName)
                 : getString(R.string.decision_talk_header, decision.scoutName));
         binding.decisionHeader.setOnClickListener(v -> switchLog(
                 order ? LogView.EXPEDITIONS : LogView.CHATS, decision.thread));
         String deadline = decision.deadlineMillis < 0 ? null
                 : DateFormat.getTimeFormat(this).format(new Date(decision.deadlineMillis));
         binding.decisionDeadline.setText(order ? getString(R.string.decision_deadline, deadline)
+                : treat ? getString(R.string.decision_treat_open)
                 : deadline != null ? getString(R.string.decision_talk_deadline, deadline)
                 : getString(R.string.decision_talk_open));
         binding.decisionSituation.setText(highlighter.apply(String.join("\n", decision.situation)));
@@ -833,6 +870,8 @@ public final class TerminalActivity extends ComponentActivity {
                 shownDecisionId = null;
                 if (order) {
                     viewModel.order(decision.id, option);
+                } else if (decision.kind == SessionSnapshot.PendingDecision.Kind.TREAT) {
+                    viewModel.treat(decision.id, option);
                 } else {
                     viewModel.answer(decision.id, option);
                 }
@@ -901,7 +940,14 @@ public final class TerminalActivity extends ComponentActivity {
             }
         });
         pickerAdapter = new PickerAdapter(this::onPick);
-        binding.panelList.setLayoutManager(new LinearLayoutManager(this));
+        crewTiles = new com.estatica.ui.scouts.CrewTileAdapter(scout -> {
+            select(scout);
+            showPanel(Panel.SCOUT_DETAIL);
+            updateBack();
+        });
+        crewGrid = new androidx.recyclerview.widget.GridLayoutManager(this, 2);
+        panelLinear = new LinearLayoutManager(this);
+        binding.panelList.setLayoutManager(panelLinear);
         binding.panelList.setItemAnimator(null);
         binding.tabComms.setOnClickListener(v -> selectTab(Tab.COMMS));
         binding.tabCrew.setOnClickListener(v -> selectTab(Tab.CREW));
@@ -922,8 +968,9 @@ public final class TerminalActivity extends ComponentActivity {
             }
         });
         binding.panelExtra.setOnClickListener(v -> {
-            viewModel.loadDiary();
-            showPanel(Panel.DIARY);
+            filtersOpen = !filtersOpen;
+            binding.crewFiltersScroll.setVisibility(filtersOpen ? View.VISIBLE : View.GONE);
+            renderFilterButton();
         });
         mapPanel = new MapPanel(binding.mapPanel, new MapPanel.Host() {
             @Override
@@ -1100,16 +1147,55 @@ public final class TerminalActivity extends ComponentActivity {
         }
         binding.panel.setVisibility(View.VISIBLE);
         binding.panelExtra.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
-        binding.crewFiltersScroll.setVisibility(target == Panel.SCOUTS ? View.VISIBLE : View.GONE);
+        binding.crewFiltersScroll.setVisibility(target == Panel.SCOUTS && filtersOpen ? View.VISIBLE : View.GONE);
         // The recipe picker opens over the bunker panel and returns to it.
-        binding.panelClose.setText(target == Panel.SCOUTS ? R.string.panel_close : R.string.panel_back);
+        boolean top = target == Panel.SCOUTS || (target == Panel.DIARY && tab == Tab.COMMS);
+        binding.panelClose.setText(top ? R.string.panel_close : R.string.panel_back);
         if (target == Panel.SCOUTS) {
             binding.panelTitle.setText(R.string.panel_scouts_title);
-            binding.panelList.setAdapter(scoutAdapter);
+            renderFilterButton();
+            binding.panelList.setLayoutManager(crewGrid);
+            binding.panelList.setAdapter(crewTiles);
+            return;
+        }
+        binding.panelList.setLayoutManager(panelLinear);
+        if (target == Panel.SCOUT_DETAIL) {
+            showScoutDetail();
             return;
         }
         binding.panelList.setAdapter(pickerAdapter);
         renderPanel();
+    }
+
+    /** One person in full: their card, always open, with every action. */
+    private void showScoutDetail() {
+        SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
+        if (who == null || who.dead) {
+            showPanel(Panel.SCOUTS);
+            return;
+        }
+        binding.panelTitle.setText(who.name);
+        scoutAdapter.setAlwaysOpen(true);
+        if (binding.panelList.getAdapter() != scoutAdapter) {
+            binding.panelList.setAdapter(scoutAdapter);
+        }
+        scoutAdapter.submitList(List.of(who));
+    }
+
+    /** "[ FILTER ▾ ]", or the active filter's name. */
+    private void renderFilterButton() {
+        String label = getString(R.string.crew_filter_button);
+        if (!"ALL".equals(crewFilter)) {
+            int[] labels = {R.string.crew_filter_home, R.string.crew_filter_away, R.string.crew_filter_hurt,
+                    R.string.crew_filter_stressed};
+            String[] keys = {"HOME", "AWAY", "HURT", "STRESSED"};
+            for (int i = 0; i < keys.length; i++) {
+                if (keys[i].equals(crewFilter)) {
+                    label = getString(R.string.crew_filter_button_on, getString(labels[i]));
+                }
+            }
+        }
+        binding.panelExtra.setText(label);
     }
 
     /** Fills the picker for the current panel from the latest snapshot / diary. */
@@ -1259,6 +1345,9 @@ public final class TerminalActivity extends ComponentActivity {
     protected void onStart() {
         super.onStart();
         viewModel.onForeground();
+        if (radioPanel.isShown()) {
+            radioPanel.show(); // the static comes back with the screen
+        }
     }
 
     @Override
@@ -1266,6 +1355,7 @@ public final class TerminalActivity extends ComponentActivity {
         super.onStop();
         // Don't keep animating off-screen: finish the active line now.
         typewriter.skip();
+        sound.stopRadio();
         viewModel.onBackground();
     }
 

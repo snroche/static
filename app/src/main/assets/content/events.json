@@ -11,6 +11,7 @@
         "label": "Scare it off",
         "stat": "endurance",
         "difficulty": 5,
+        "time": -0.06,
         "risk": "RISKY",
         "success": {
           "text": [
@@ -30,6 +31,7 @@
         "label": "Go around it slowly",
         "stat": "stealth",
         "difficulty": 5,
+        "time": 0.12,
         "success": {
           "text": [
             "I went around the side. It didn't even move."
@@ -47,6 +49,7 @@
         "label": "Give it some food",
         "stat": "wits",
         "difficulty": 4,
+        "time": 0.05,
         "success": {
           "text": [
             "I tossed it half a cracker. It followed me a while, then stayed behind."
@@ -183,6 +186,7 @@
         "label": "Throw something and listen",
         "stat": "wits",
         "difficulty": 5,
+        "time": 0.05,
         "success": {
           "text": [
             "Threw a stone. Nothing moved. Just water."
@@ -207,6 +211,7 @@
         "label": "Get out of there",
         "stat": "nerve",
         "difficulty": 2,
+        "time": -0.06,
         "success": {
           "text": [
             "Leaving. It's not worth it."
@@ -313,6 +318,7 @@
         "label": "Leave it, check the shop",
         "stat": "stealth",
         "difficulty": 4,
+        "time": 0.08,
         "success": {
           "text": [
             "There were batteries on the counter. Still good, I think."
@@ -337,6 +343,7 @@
         "label": "Drain it the right way",
         "stat": "craft",
         "difficulty": 3,
+        "time": 0.1,
         "requiresBackground": "mechanic",
         "success": {
           "text": [
@@ -431,6 +438,7 @@
         "label": "Keep going",
         "stat": "nerve",
         "difficulty": 1,
+        "time": -0.08,
         "success": {
           "text": [
             "Moving on. I don't like that backpack sitting there alone."
@@ -473,6 +481,7 @@
         "label": "Check the cargo straps",
         "stat": "endurance",
         "difficulty": 3,
+        "time": 0.08,
         "requiresBackground": "trucker",
         "success": {
           "text": [
@@ -507,6 +516,7 @@
         "label": "Take it",
         "stat": "stealth",
         "difficulty": 5,
+        "time": -0.04,
         "success": {
           "text": [
             "Unplugged it and I'm bringing it. It has batteries inside."
@@ -544,6 +554,7 @@
         "label": "Listen for a while",
         "stat": "wits",
         "difficulty": 6,
+        "time": 0.12,
         "success": {
           "text": [
             "There are numbers in the static. Someone is counting."
@@ -671,6 +682,7 @@
         "label": "Talk to them",
         "stat": "nerve",
         "difficulty": 5,
+        "time": 0.06,
         "success": {
           "text": [
             "I talked calmly. They said they were heading south. We left each other alone."
@@ -690,6 +702,7 @@
         "label": "Hide",
         "stat": "stealth",
         "difficulty": 5,
+        "time": 0.1,
         "success": {
           "text": [
             "Got behind some furniture until they left."
@@ -768,6 +781,7 @@
         "label": "Ask if they're hurt",
         "stat": "wits",
         "difficulty": 3,
+        "time": 0.1,
         "requiresBackground": "nurse",
         "success": {
           "text": [
@@ -801,6 +815,7 @@
         "label": "Cross carefully",
         "stat": "stealth",
         "difficulty": 6,
+        "time": -0.06,
         "risk": "RISKY",
         "success": {
           "text": [
@@ -829,6 +844,7 @@
         "label": "Find another way",
         "stat": "wits",
         "difficulty": 5,
+        "time": 0.15,
         "success": {
           "text": [
             "Found a service ladder. Took longer, but I made it."
@@ -861,6 +877,7 @@
         "label": "Get up somewhere high",
         "stat": "endurance",
         "difficulty": 6,
+        "time": 0.15,
         "success": {
           "text": [
             "Climbed a dumpster. Waited for them to leave."
@@ -879,6 +896,7 @@
         "label": "Circle downwind",
         "stat": "stealth",
         "difficulty": 7,
+        "time": 0.12,
         "success": {
           "text": [
             "They didn't even smell me. I'm through."
@@ -924,6 +942,7 @@
         "label": "Slip past between the cars",
         "stat": "stealth",
         "difficulty": 5,
+        "time": -0.08,
         "requiresTrait": [
           "pies_ligeros"
         ],
@@ -953,6 +972,7 @@
         "label": "Talk to them",
         "stat": "nerve",
         "difficulty": 7,
+        "time": 0.08,
         "success": {
           "text": [
             "I offered information to get past. They took it."
@@ -971,6 +991,7 @@
         "label": "Wait for them to leave",
         "stat": "stealth",
         "difficulty": 6,
+        "time": 0.18,
         "success": {
           "text": [
             "They left. I'm keeping what they dropped."
@@ -996,6 +1017,7 @@
         "label": "Rob them while they aren't looking",
         "stat": "stealth",
         "difficulty": 8,
+        "time": -0.1,
         "risk": "RISKY",
         "success": {
           "text": [
@@ -1028,6 +1050,7 @@
         "label": "Look for the ambush first",
         "stat": "wits",
         "difficulty": 5,
+        "time": 0.1,
         "requiresTrait": [
           "desconfianza"
         ],
@@ -1048,6 +1071,7 @@
         "label": "Stare them down",
         "stat": "nerve",
         "difficulty": 6,
+        "time": -0.06,
         "requiresTrait": [
           "calentona"
         ],
@@ -1086,6 +1110,7 @@
         "label": "Cover your face and run through",
         "stat": "endurance",
         "difficulty": 7,
+        "time": -0.1,
         "risk": "RISKY",
         "success": {
           "text": [
@@ -1113,6 +1138,7 @@
         "label": "Find the valve and shut it",
         "stat": "craft",
         "difficulty": 6,
+        "time": 0.08,
         "success": {
           "text": [
             "Shut the valve. The air's clearing slowly."
@@ -1137,6 +1163,7 @@
         "label": "Find another way in",
         "stat": "wits",
         "difficulty": 5,
+        "time": 0.15,
         "success": {
           "text": [
             "There's a window on the far side. Went in that way."
@@ -1154,6 +1181,7 @@
         "label": "Wet cloth, slow breaths",
         "stat": "endurance",
         "difficulty": 4,
+        "time": 0.06,
         "requiresBackground": "nurse",
         "success": {
           "text": [
@@ -1228,6 +1256,7 @@
         "label": "Go in through the roof",
         "stat": "endurance",
         "difficulty": 7,
+        "time": 0.06,
         "risk": "RISKY",
         "success": {
           "text": [
@@ -1259,6 +1288,7 @@
         "label": "Leave it",
         "stat": "nerve",
         "difficulty": 1,
+        "time": -0.06,
         "success": {
           "text": [
             "Leaving it. Whatever's rolling can keep rolling."
@@ -1315,6 +1345,7 @@
         "label": "Read what you can",
         "stat": "wits",
         "difficulty": 6,
+        "time": 0.12,
         "success": {
           "text": [
             "Reports from before. One folder says \"Project Echo\". I'm keeping the important parts in my head."
@@ -1358,6 +1389,7 @@
         "label": "Sort it like a library",
         "stat": "wits",
         "difficulty": 4,
+        "time": 0.15,
         "requiresBackground": "teacher",
         "success": {
           "text": [
@@ -1387,6 +1419,7 @@
         "label": "Help him",
         "stat": "wits",
         "difficulty": 5,
+        "time": 0.06,
         "success": {
           "text": [
             "I bandaged his leg. He told me where he'd stashed supplies."
@@ -1439,6 +1472,7 @@
         "label": "Keep walking",
         "stat": "nerve",
         "difficulty": 4,
+        "time": -0.05,
         "success": {
           "text": [
             "Moving on. Not looking back."
@@ -1457,6 +1491,7 @@
         "label": "Treat him properly",
         "stat": "wits",
         "difficulty": 3,
+        "time": 0.12,
         "requiresBackground": "nurse",
         "success": {
           "text": [
@@ -1489,6 +1524,7 @@
         "label": "Stay with him a while",
         "stat": "nerve",
         "difficulty": 3,
+        "time": 0.2,
         "requiresTrait": [
           "gentil"
         ],
@@ -1545,6 +1581,7 @@
         "label": "Rig a hook and fish it out",
         "stat": "craft",
         "difficulty": 5,
+        "time": 0.1,
         "success": {
           "text": [
             "Pulled it over with a wire. Dry inside."
@@ -1603,6 +1640,7 @@
         "label": "Step over them carefully",
         "stat": "stealth",
         "difficulty": 4,
+        "time": -0.05,
         "success": {
           "text": [
             "Stepping over, slow and easy."
@@ -1620,6 +1658,7 @@
         "label": "Find where the power comes from",
         "stat": "craft",
         "difficulty": 7,
+        "time": 0.1,
         "success": {
           "text": [
             "A battery bank in the machine room. Still holding some charge."
@@ -1680,6 +1719,7 @@
         "label": "Smoke them out and go through",
         "stat": "wits",
         "difficulty": 5,
+        "time": -0.05,
         "success": {
           "text": [
             "Stunned them with wet rags and fire. I'm through."
@@ -1698,6 +1738,7 @@
         "label": "Find another way in",
         "stat": "stealth",
         "difficulty": 5,
+        "time": 0.15,
         "success": {
           "text": [
             "Through the bathroom window. Slower, but in one piece."
@@ -1724,6 +1765,7 @@
         "label": "Try combinations",
         "stat": "wits",
         "difficulty": 7,
+        "time": 0.15,
         "success": {
           "text": [
             "Seven, three, one, nine. It opened. I don't know why I tried those numbers."
@@ -1784,6 +1826,7 @@
         "label": "Listen to the lock",
         "stat": "wits",
         "difficulty": 5,
+        "time": 0.1,
         "requiresTrait": [
           "curiosa"
         ],
@@ -1825,6 +1868,7 @@
         "label": "Copy the marks",
         "stat": "wits",
         "difficulty": 4,
+        "time": 0.08,
         "success": {
           "text": [
             "Copied all of it. Some streets are crossed out: places to avoid, I think."
@@ -1844,6 +1888,7 @@
         "label": "Tear it down and bring it",
         "stat": "stealth",
         "difficulty": 3,
+        "time": -0.04,
         "success": {
           "text": [
             "Bringing it rolled up."
@@ -1896,6 +1941,7 @@
         "label": "Take cover and wait for night",
         "stat": "nerve",
         "difficulty": 6,
+        "time": 0.3,
         "success": {
           "text": [
             "Waited hours. They left. Moving on."
@@ -1913,6 +1959,7 @@
         "label": "Run for the next building",
         "stat": "endurance",
         "difficulty": 7,
+        "time": -0.1,
         "success": {
           "text": [
             "Made it. Breathing."
@@ -1952,6 +1999,7 @@
         "label": "Count the shots, then move",
         "stat": "nerve",
         "difficulty": 5,
+        "time": 0.1,
         "requiresTrait": [
           "sangre_fria"
         ],
@@ -1980,6 +2028,7 @@
         "label": "Move the rubble",
         "stat": "endurance",
         "difficulty": 6,
+        "time": 0.15,
         "success": {
           "text": [
             "Opened a gap. There was something useful underneath."
@@ -2005,6 +2054,7 @@
         "label": "Get out through the vents",
         "stat": "stealth",
         "difficulty": 6,
+        "time": -0.05,
         "success": {
           "text": [
             "Crawled through the duct. I'm out."
@@ -2030,6 +2080,7 @@
         "label": "Drive them off with fire",
         "stat": "craft",
         "difficulty": 5,
+        "time": -0.05,
         "success": {
           "text": [
             "They scattered. The storeroom is clear."
@@ -2054,6 +2105,7 @@
         "label": "Stay still until they pass",
         "stat": "nerve",
         "difficulty": 6,
+        "time": 0.12,
         "success": {
           "text": [
             "They went right past me. Didn't even look."
@@ -2105,6 +2157,7 @@
         "label": "Don't open it",
         "stat": "wits",
         "difficulty": 3,
+        "time": -0.05,
         "success": {
           "text": [
             "Jammed from the inside. Better not to know."
@@ -2181,6 +2234,7 @@
         "label": "Go around it",
         "stat": "stealth",
         "difficulty": 4,
+        "time": 0.1,
         "success": {
           "text": [
             "Avoided it. Whoever set it can't be far."
@@ -2200,6 +2254,7 @@
         "label": "Trace every wire first",
         "stat": "craft",
         "difficulty": 4,
+        "time": 0.12,
         "requiresTrait": [
           "metodo"
         ],
@@ -2228,6 +2283,7 @@
         "label": "Find shelter and wait",
         "stat": "wits",
         "difficulty": 6,
+        "time": 0.25,
         "success": {
           "text": [
             "Got inside a bus. It passed in two hours."
@@ -2245,6 +2301,7 @@
         "label": "Keep going by compass",
         "stat": "nerve",
         "difficulty": 8,
+        "time": -0.05,
         "success": {
           "text": [
             "Came out right on target. No idea how."
@@ -2265,6 +2322,7 @@
         "label": "Go by memory: they know this road",
         "stat": "wits",
         "difficulty": 4,
+        "time": -0.08,
         "requiresBackground": "trucker",
         "success": {
           "text": [
@@ -2292,6 +2350,7 @@
         "label": "Run across",
         "stat": "endurance",
         "difficulty": 7,
+        "time": -0.1,
         "success": {
           "text": [
             "Made it. Nobody fired."
@@ -2310,6 +2369,7 @@
         "label": "Wait for dark",
         "stat": "stealth",
         "difficulty": 6,
+        "time": 0.3,
         "success": {
           "text": [
             "At night, slowly. Made it."
@@ -2392,6 +2452,7 @@
         "label": "Strip the avionics",
         "stat": "craft",
         "difficulty": 5,
+        "time": 0.1,
         "requiresBackground": "mechanic",
         "success": {
           "text": [
@@ -2458,6 +2519,7 @@
         "label": "Get away over the top",
         "stat": "endurance",
         "difficulty": 6,
+        "time": -0.05,
         "success": {
           "text": [
             "Went up the service stairs. You can see everything from up here."
@@ -2514,6 +2576,7 @@
         "label": "Stop the turbine first",
         "stat": "wits",
         "difficulty": 8,
+        "time": 0.1,
         "success": {
           "text": [
             "Stopped it. Now I can take my time."
@@ -2580,6 +2643,7 @@
         "label": "Look at it from below with whatever you have",
         "stat": "wits",
         "difficulty": 6,
+        "time": -0.04,
         "success": {
           "text": [
             "From down here you can tell: it's a relay. Someone maintains it."
@@ -2597,6 +2661,7 @@
         "label": "Climb fast, don't look down",
         "stat": "endurance",
         "difficulty": 5,
+        "time": -0.1,
         "requiresTrait": [
           "imprudencia"
         ],
@@ -2629,6 +2694,7 @@
         "label": "Approach and bargain",
         "stat": "nerve",
         "difficulty": 8,
+        "time": 0.08,
         "success": {
           "text": [
             "We traded news. They gave me food."
@@ -2655,6 +2721,7 @@
         "label": "Watch them from a distance",
         "stat": "stealth",
         "difficulty": 6,
+        "time": 0.15,
         "success": {
           "text": [
             "They have radios. They're listening to the same thing we are."
@@ -2672,6 +2739,7 @@
         "label": "Rob them at night",
         "stat": "stealth",
         "difficulty": 9,
+        "time": 0.2,
         "success": {
           "text": [
             "Took batteries and medicine."
@@ -2731,6 +2799,7 @@
         "label": "Play them a song",
         "stat": "nerve",
         "difficulty": 5,
+        "time": 0.1,
         "requiresBackground": "musician",
         "success": {
           "text": [
@@ -3008,6 +3077,7 @@
         "label": "Write down the marked frequencies",
         "stat": "wits",
         "difficulty": 5,
+        "time": 0.08,
         "success": {
           "text": [
             "Frequencies marked in pencil. One says \"VOICE\" and it's underlined three times."
@@ -3026,6 +3096,7 @@
         "label": "Strip the rig",
         "stat": "craft",
         "difficulty": 6,
+        "time": 0.1,
         "success": {
           "text": [
             "Tubes, coils. For the workshop."
@@ -3059,6 +3130,7 @@
         "label": "Make a fire and wait",
         "stat": "craft",
         "difficulty": 4,
+        "time": 0.2,
         "success": {
           "text": [
             "A small fire in a drum. It passes."
@@ -3077,6 +3149,7 @@
         "label": "Keep walking to stay warm",
         "stat": "endurance",
         "difficulty": 6,
+        "time": -0.08,
         "success": {
           "text": [
             "Walked all night. Made it in one piece."
@@ -3096,6 +3169,7 @@
         "label": "Cook something hot",
         "stat": "craft",
         "difficulty": 3,
+        "time": 0.15,
         "requiresBackground": "cook",
         "success": {
           "text": [
@@ -3456,6 +3530,7 @@
         "label": "Mark it and move on",
         "stat": "nerve",
         "difficulty": 1,
+        "time": -0.04,
         "success": {
           "text": [
             "Marked it. It'll bother me all night."
@@ -3505,6 +3580,7 @@
         "label": "Leave it",
         "stat": "nerve",
         "difficulty": 2,
+        "time": -0.05,
         "success": {
           "text": [
             "Walked away. It'll stay with me."
@@ -3532,6 +3608,7 @@
         "label": "Take the good stuff",
         "stat": "wits",
         "difficulty": 3,
+        "time": -0.04,
         "success": {
           "text": [
             "Antibiotics, sutures, saline. The good stuff."
@@ -3556,6 +3633,7 @@
         "label": "Take everything",
         "stat": "endurance",
         "difficulty": 5,
+        "time": 0.1,
         "success": {
           "text": [
             "Heavy, but it's all useful."
@@ -3653,6 +3731,7 @@
         "label": "Fix it enough to strip it",
         "stat": "craft",
         "difficulty": 4,
+        "time": 0.12,
         "success": {
           "text": [
             "Freed the shaft. Got the good parts off."
@@ -3716,6 +3795,7 @@
         "label": "Play one song",
         "stat": "nerve",
         "difficulty": 3,
+        "time": 0.06,
         "success": {
           "text": [
             "Played the whole thing. Echoed off everything. Worth it."
@@ -3798,6 +3878,7 @@
         "label": "Just look at the yard a while",
         "stat": "nerve",
         "difficulty": 2,
+        "time": 0.1,
         "success": {
           "text": [
             "Thirty years. Every track still where I left it."
@@ -3859,6 +3940,7 @@
         "label": "Leave it",
         "stat": "nerve",
         "difficulty": 1,
+        "time": -0.04,
         "success": {
           "text": [
             "Not worth it."
@@ -3886,6 +3968,7 @@
         "label": "Find the key",
         "stat": "wits",
         "difficulty": 3,
+        "time": 0.12,
         "success": {
           "text": [
             "Taped under the prep table. Every kitchen in the world."
@@ -3910,6 +3993,7 @@
         "label": "Force the door",
         "stat": "endurance",
         "difficulty": 6,
+        "time": -0.05,
         "success": {
           "text": [
             "Took the hinges off. Still got food."
@@ -3964,6 +4048,7 @@
         "label": "Sit and read for ten minutes",
         "stat": "nerve",
         "difficulty": 2,
+        "time": 0.1,
         "success": {
           "text": [
             "Ten minutes of quiet. Nobody needs to know."
@@ -4026,6 +4111,7 @@
         "label": "Think better of it",
         "stat": "wits",
         "difficulty": 2,
+        "time": -0.05,
         "success": {
           "text": [
             "Fine. Fine. Next time."
@@ -4056,6 +4142,7 @@
         "label": "Talk them down",
         "stat": "nerve",
         "difficulty": 5,
+        "time": 0.1,
         "success": {
           "text": [
             "Split it, shook hands.",
@@ -4082,6 +4169,7 @@
         "label": "Keep walking",
         "stat": "nerve",
         "difficulty": 2,
+        "time": -0.04,
         "success": {
           "text": [
             "Not my fight."
@@ -4455,6 +4543,2179 @@
             "Leaving it."
           ],
           "stress": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "susp_footsteps",
+    "intro": [
+      "Someone's walking behind me. When I stop, they stop.",
+      "I can hear them breathing."
+    ],
+    "options": [
+      {
+        "id": "turn",
+        "label": "Turn around, fast",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Nobody. Just a coat on a hook, swinging. Swinging without wind."
+          ],
+          "stress": 3
+        },
+        "failure": {
+          "text": [
+            "Nobody there. But the steps keep going after I stop. I ran."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "hide",
+        "label": "Duck into a doorway and wait",
+        "stat": "stealth",
+        "difficulty": 4,
+        "time": 0.12,
+        "success": {
+          "text": [
+            "They walked past. Bare feet. I didn't look up. I'm not sorry."
+          ]
+        },
+        "failure": {
+          "text": [
+            "They stopped right outside the door. For a long time. Then left."
+          ],
+          "stress": 7
+        }
+      },
+      {
+        "id": "keep",
+        "label": "Keep walking, don't look back",
+        "stat": "endurance",
+        "difficulty": 3,
+        "time": -0.05,
+        "success": {
+          "text": [
+            "The steps faded around the corner. I kept going."
+          ]
+        },
+        "failure": {
+          "text": [
+            "They followed me all the way to the edge. I could feel them looking."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "susp_radio_room",
+    "intro": [
+      "There's a radio in this house, on. Playing static.",
+      "Under the static, someone is saying my name."
+    ],
+    "options": [
+      {
+        "id": "listen",
+        "label": "Listen closer",
+        "stat": "wits",
+        "difficulty": 5,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "It's an old tape loop. Someone recorded a lot of names. Mine's just a common one. Right?"
+          ],
+          "stress": 4
+        },
+        "failure": {
+          "text": [
+            "It knows things. It said what I had for breakfast. I pulled the plug and it kept talking."
+          ],
+          "stress": 9
+        }
+      },
+      {
+        "id": "unplug",
+        "label": "Pull the plug and take the parts",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Unplugged. Silence. Good parts in it, too."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Unplugged it. It went quiet. Then it said 'thank you'. I left the parts."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Leave the house",
+        "stat": "nerve",
+        "difficulty": 2,
+        "time": -0.05,
+        "success": {
+          "text": [
+            "Closed the door behind me. Didn't look back."
+          ]
+        },
+        "failure": {
+          "text": [
+            "When I got outside the radio was louder. I hadn't heard it get louder."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "susp_mannequins",
+    "intro": [
+      "A shop full of mannequins. They're all facing the door.",
+      "I'm pretty sure some of them were facing the wall when I came in."
+    ],
+    "options": [
+      {
+        "id": "search",
+        "label": "Search the back room quick",
+        "stat": "stealth",
+        "difficulty": 5,
+        "time": -0.05,
+        "success": {
+          "text": [
+            "Grabbed what I could. Didn't turn around until I was outside."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 3
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Something knocked over behind me while I searched. I grabbed nothing and ran."
+          ],
+          "stress": 7
+        }
+      },
+      {
+        "id": "count",
+        "label": "Count them, eyes on them, back out",
+        "stat": "nerve",
+        "difficulty": 4,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "Fourteen. Fourteen when I left too. I counted twice."
+          ],
+          "stress": 2
+        },
+        "failure": {
+          "text": [
+            "Fourteen. Then fifteen. I didn't stay to count again."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "susp_child_voice",
+    "intro": [
+      "A kid's voice from a basement: 'help me, it's dark'.",
+      "It sounds exactly like the voice on the medium band."
+    ],
+    "options": [
+      {
+        "id": "go_down",
+        "label": "Go down with the light",
+        "stat": "nerve",
+        "difficulty": 6,
+        "time": 0.1,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "A cassette player on a step, on repeat. Batteries still good. Took them."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "memory": "the voice in the basement"
+        },
+        "failure": {
+          "text": [
+            "Nobody down there. The voice came from behind me after I went down. I don't remember climbing out."
+          ],
+          "stress": 10,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "call",
+        "label": "Call down, don't go",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "It stopped answering. Then it laughed. A recording. Has to be."
+          ],
+          "stress": 3
+        },
+        "failure": {
+          "text": [
+            "It answered with my voice. Exactly my voice."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "walk",
+        "label": "Walk away",
+        "stat": "endurance",
+        "difficulty": 2,
+        "time": -0.05,
+        "success": {
+          "text": [
+            "I walked away. It kept calling for a block. I'll hear it tonight."
+          ],
+          "stress": 2
+        },
+        "failure": {
+          "text": [
+            "I walked away. It said 'you came last time'. I've never been here."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "susp_shapes_fog",
+    "intro": [
+      "Shapes in the fog. Tall. Standing still in a line across the road.",
+      "Might be posts. Posts don't lean."
+    ],
+    "options": [
+      {
+        "id": "around",
+        "label": "Go the long way around",
+        "stat": "endurance",
+        "difficulty": 4,
+        "time": 0.15,
+        "success": {
+          "text": [
+            "Long way. My legs hate you. The rest of me thanks you."
+          ]
+        },
+        "failure": {
+          "text": [
+            "The long way had more of them. Closer."
+          ],
+          "stress": 7
+        }
+      },
+      {
+        "id": "through",
+        "label": "Walk straight through, quiet",
+        "stat": "stealth",
+        "difficulty": 6,
+        "time": -0.1,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Posts. Just posts, leaning. I touched one to be sure. I wish I hadn't: it was warm."
+          ],
+          "stress": 3
+        },
+        "failure": {
+          "text": [
+            "Halfway through, one of them turned its head. I ran and fell."
+          ],
+          "stress": 9,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "wait",
+        "label": "Wait for the fog to lift",
+        "stat": "nerve",
+        "difficulty": 3,
+        "time": 0.25,
+        "success": {
+          "text": [
+            "When it lifted, the road was empty. All of them gone. Posts don't walk."
+          ],
+          "stress": 4
+        },
+        "failure": {
+          "text": [
+            "Waited an hour. The line got closer every time I blinked."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_vending",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A vending machine, glass cracked, two cans still inside."
+    ],
+    "options": [
+      {
+        "id": "smash",
+        "label": "Smash the glass",
+        "stat": "endurance",
+        "difficulty": 3,
+        "time": -0.04,
+        "success": {
+          "text": [
+            "Two cans of peaches. Still sealed. Party tonight."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Cut my hand on the glass. The cans rolled under the machine."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "pick",
+        "label": "Pick the lock on the back",
+        "stat": "craft",
+        "difficulty": 4,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "Opened like a book. Cans, and the coin box: good scrap."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The lock's rusted solid. Wasted my time."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_bicycle",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A bicycle chained to a post. Tires flat, chain good."
+    ],
+    "options": [
+      {
+        "id": "strip",
+        "label": "Strip it for parts",
+        "stat": "craft",
+        "difficulty": 3,
+        "time": 0.06,
+        "success": {
+          "text": [
+            "Chain, gears, cables. All of it useful."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The bolts are fused. Got a sore wrist, nothing else."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "ride",
+        "label": "Pump the tires and ride it a while",
+        "stat": "endurance",
+        "difficulty": 4,
+        "time": -0.12,
+        "success": {
+          "text": [
+            "Flew down three blocks. Felt like being twelve."
+          ],
+          "stress": -4
+        },
+        "failure": {
+          "text": [
+            "Front tire burst. Walked it back to where I started."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_crows",
+    "bands": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "Crows. Hundreds, on every wire, all watching me."
+    ],
+    "options": [
+      {
+        "id": "still",
+        "label": "Stand still until they settle",
+        "stat": "nerve",
+        "difficulty": 4,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "They lost interest. One followed me for a block, though."
+          ]
+        },
+        "failure": {
+          "text": [
+            "They all took off at once. The noise. Anything nearby heard it."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "through",
+        "label": "Walk right under them",
+        "stat": "stealth",
+        "difficulty": 5,
+        "time": -0.05,
+        "success": {
+          "text": [
+            "Not one moved. I don't like that either."
+          ]
+        },
+        "failure": {
+          "text": [
+            "They dove. Pecked my neck and scalp. Just scratches."
+          ],
+          "stress": 6,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_pharmacy_cart",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A shopping cart on its side, full of pill bottles. Labels faded."
+    ],
+    "options": [
+      {
+        "id": "sort",
+        "label": "Sort them, read what you can",
+        "stat": "wits",
+        "difficulty": 5,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "Antibiotics and painkillers. The real thing."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Can't read half of them. Took nothing: not worth the risk."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "grab",
+        "label": "Grab a handful and go",
+        "stat": "endurance",
+        "difficulty": 2,
+        "time": -0.04,
+        "success": {
+          "text": [
+            "Something in here will be useful. Probably."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Vitamins. All vitamins. Great."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_laundry_line",
+    "bands": [
+      "short"
+    ],
+    "intro": [
+      "Clean laundry on a line between two balconies. Someone hung it recently."
+    ],
+    "options": [
+      {
+        "id": "knock",
+        "label": "Call out to whoever lives here",
+        "stat": "nerve",
+        "difficulty": 4,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "An old man waves from the window. Trades me a jar of beans for news."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "A door slams. Then silence. Then a dog, inside, very big."
+          ],
+          "stress": 5
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone and move on",
+        "stat": "stealth",
+        "difficulty": 2,
+        "time": -0.04,
+        "success": {
+          "text": [
+            "Somebody's still living here. That's... good. I think."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Felt eyes on my back for two blocks."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_school_bus",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A school bus, doors open, backpacks still on the seats."
+    ],
+    "options": [
+      {
+        "id": "search",
+        "label": "Check the backpacks",
+        "stat": "wits",
+        "difficulty": 3,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "Snacks, a flashlight, batteries. And a drawing I folded into my pocket."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Just notebooks. I couldn't stop reading the names."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "engine",
+        "label": "Check the engine for parts",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "The battery's dead but the alternator's fine. Coming with me."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Engine's been stripped already."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "skip",
+        "label": "Don't go in",
+        "stat": "nerve",
+        "difficulty": 2,
+        "time": -0.04,
+        "success": {
+          "text": [
+            "Some places you just don't go in."
+          ]
+        },
+        "failure": {
+          "text": [
+            "I went in anyway in my head. All day."
+          ],
+          "stress": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_dog_friend",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A dog, skinny, wagging. It wants to follow me."
+    ],
+    "options": [
+      {
+        "id": "feed",
+        "label": "Share a ration",
+        "stat": "nerve",
+        "difficulty": 1,
+        "time": 0.04,
+        "success": {
+          "text": [
+            "It ate and walked beside me a while. Then it barked at a doorway: someone had stashed cans there."
+          ],
+          "stress": -5,
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "memory": "the dog that walked with me"
+        },
+        "failure": {
+          "text": [
+            "It ate and ran off. Fair."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "shoo",
+        "label": "Shoo it away",
+        "stat": "endurance",
+        "difficulty": 2,
+        "time": -0.03,
+        "success": {
+          "text": [
+            "It left. Looked back twice."
+          ]
+        },
+        "failure": {
+          "text": [
+            "It kept following and barking. Had to hide."
+          ],
+          "stress": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_collapsed_bridge",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "The footbridge is down. The river underneath is low, but fast."
+    ],
+    "options": [
+      {
+        "id": "wade",
+        "label": "Wade across",
+        "stat": "endurance",
+        "difficulty": 5,
+        "time": -0.12,
+        "success": {
+          "text": [
+            "Soaked to the waist, but across."
+          ]
+        },
+        "failure": {
+          "text": [
+            "The current took my feet. Banged my knee on a rock."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "upstream",
+        "label": "Walk upstream to the next bridge",
+        "stat": "endurance",
+        "difficulty": 3,
+        "time": 0.2,
+        "success": {
+          "text": [
+            "Long way. Found a dry crossing."
+          ]
+        },
+        "failure": {
+          "text": [
+            "The next bridge was down too. Back to the start."
+          ],
+          "stress": 5
+        }
+      },
+      {
+        "id": "rope",
+        "label": "Rig a line from the wreckage",
+        "stat": "craft",
+        "difficulty": 5,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "Took a while, but the line held. I'll leave it for next time."
+          ],
+          "stress": -2
+        },
+        "failure": {
+          "text": [
+            "The line slipped. Gave up and walked around."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_checkpoint",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "An old army checkpoint. Sandbags, a barrier, nobody. A rifle rack, empty."
+    ],
+    "options": [
+      {
+        "id": "search",
+        "label": "Search the booth",
+        "stat": "wits",
+        "difficulty": 4,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "Radio batteries and a logbook. Last entry: 'they're not coming back for us'."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Rats. Nothing but rats."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "through",
+        "label": "Walk straight through",
+        "stat": "stealth",
+        "difficulty": 3,
+        "time": -0.05,
+        "success": {
+          "text": [
+            "Nothing. Kept going."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Tripped a can-alarm. Hid for twenty minutes."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_stairwell",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "The stairwell is pitch black. Something drips, far above."
+    ],
+    "options": [
+      {
+        "id": "light",
+        "label": "Use the flashlight",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Just water. A whole floor of storage at the top."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The light caught something on the landing. It moved. I didn't stay."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "dark",
+        "label": "Climb in the dark, by touch",
+        "stat": "stealth",
+        "difficulty": 5,
+        "time": -0.04,
+        "success": {
+          "text": [
+            "Quiet all the way up. Found a stash by feel."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Missed a step. Twisted my ankle."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_trader",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "A lone trader with a handcart. Wants batteries, offers food."
+    ],
+    "options": [
+      {
+        "id": "trade",
+        "label": "Trade fairly",
+        "stat": "wits",
+        "difficulty": 3,
+        "time": 0.06,
+        "success": {
+          "text": [
+            "A fair deal. They even threw in a tip about the road ahead."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "They short-changed me and I noticed too late."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "haggle",
+        "label": "Haggle hard",
+        "stat": "nerve",
+        "difficulty": 5,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "Got the better end. They laughed about it. I liked them."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 4
+            },
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "They packed up and left. No deal."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "pass",
+        "label": "Wave and keep walking",
+        "stat": "stealth",
+        "difficulty": 1,
+        "time": -0.03,
+        "success": {
+          "text": [
+            "Nodded and moved on."
+          ]
+        },
+        "failure": {
+          "text": [
+            "They followed a while, asking. Annoying."
+          ],
+          "stress": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_greenhouse",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A rooftop greenhouse. Most of it dead. Some tomatoes, gone wild."
+    ],
+    "options": [
+      {
+        "id": "pick",
+        "label": "Pick what's ripe",
+        "stat": "wits",
+        "difficulty": 2,
+        "time": 0.06,
+        "success": {
+          "text": [
+            "Small, sour, real tomatoes. I almost cried."
+          ],
+          "stress": -4,
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "All rotten under the leaves."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "seeds",
+        "label": "Collect seeds properly",
+        "stat": "craft",
+        "difficulty": 4,
+        "time": 0.12,
+        "success": {
+          "text": [
+            "Seeds in a twist of paper. Someone at home will know what to do."
+          ],
+          "stress": -6,
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 1
+            }
+          ],
+          "memory": "seeds from the rooftop greenhouse"
+        },
+        "failure": {
+          "text": [
+            "Dropped them through a crack in the floor."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_alarm_car",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "I bumped a car and its alarm went off. After all these years."
+    ],
+    "options": [
+      {
+        "id": "kill",
+        "label": "Pop the hood and kill it",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Silenced. And look: a battery that still works."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Couldn't find the wire. It screamed for a full minute."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "run",
+        "label": "Run and hide",
+        "stat": "endurance",
+        "difficulty": 3,
+        "time": -0.04,
+        "success": {
+          "text": [
+            "Two blocks away, under a truck. Nothing came."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Something came. I didn't see it. I heard it sniffing."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_supermarket",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A supermarket. The front's been looted to the floor. The loading bay hasn't."
+    ],
+    "options": [
+      {
+        "id": "bay",
+        "label": "Pry open the loading bay",
+        "stat": "endurance",
+        "difficulty": 5,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "Crates. Real ones. Flour gone hard, but cans."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Pulled something in my back."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "shelves",
+        "label": "Check under the shelves",
+        "stat": "wits",
+        "difficulty": 3,
+        "time": 0.04,
+        "success": {
+          "text": [
+            "Things roll under shelves. Three cans and a lighter."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Glass and mouse droppings."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_body_note",
+    "bands": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "A body against a wall, long gone. A note pinned to the jacket."
+    ],
+    "options": [
+      {
+        "id": "read",
+        "label": "Read the note",
+        "stat": "nerve",
+        "difficulty": 3,
+        "time": 0.06,
+        "success": {
+          "text": [
+            "'Tell Ana I tried.' And a key taped underneath. It opened a locker nearby."
+          ],
+          "stress": 3,
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 1
+            }
+          ],
+          "memory": "the note that said 'tell Ana I tried'"
+        },
+        "failure": {
+          "text": [
+            "I couldn't. I just couldn't."
+          ],
+          "stress": 5
+        }
+      },
+      {
+        "id": "cover",
+        "label": "Cover them and move on",
+        "stat": "nerve",
+        "difficulty": 1,
+        "time": 0.03,
+        "success": {
+          "text": [
+            "Put my coat over the face. It felt right."
+          ],
+          "stress": -2
+        },
+        "failure": {
+          "text": [
+            "Couldn't look away for a long time."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_hail",
+    "bands": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "Hail. Sudden, hard, the size of marbles."
+    ],
+    "options": [
+      {
+        "id": "shelter",
+        "label": "Get under cover and wait",
+        "stat": "nerve",
+        "difficulty": 1,
+        "time": 0.15,
+        "success": {
+          "text": [
+            "Waited it out in a bus stop. Ice everywhere after."
+          ]
+        },
+        "failure": {
+          "text": [
+            "The roof I picked leaked. Soaked and cold."
+          ],
+          "stress": 3
+        }
+      },
+      {
+        "id": "push",
+        "label": "Keep moving",
+        "stat": "endurance",
+        "difficulty": 5,
+        "time": -0.06,
+        "success": {
+          "text": [
+            "Ugly, but I made good time."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Got hit in the head. Seeing stars."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_gas_station_ghost",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "A gas station. The lights are on. Somebody's got a generator here."
+    ],
+    "options": [
+      {
+        "id": "approach",
+        "label": "Call out first",
+        "stat": "nerve",
+        "difficulty": 4,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "A woman with a shotgun and a kind face. Gave me water and a tip."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "A shot over my head. I left fast."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "sneak",
+        "label": "Sneak around the back",
+        "stat": "stealth",
+        "difficulty": 5,
+        "time": 0.04,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Their spare fuel cans. I took one. I'm not proud."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "A dog. A big dog. I ran."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "avoid",
+        "label": "Give it a wide berth",
+        "stat": "endurance",
+        "difficulty": 2,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "Not my business."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Longer way around than I thought."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_radio_tower_small",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A cell tower, with a maintenance cabinet at the base."
+    ],
+    "options": [
+      {
+        "id": "open",
+        "label": "Open the cabinet",
+        "stat": "craft",
+        "difficulty": 4,
+        "time": 0.06,
+        "success": {
+          "text": [
+            "Circuit boards, good copper, a backup battery."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Shocked myself. Some cell's still charged."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "climb",
+        "label": "Climb a few meters to look around",
+        "stat": "endurance",
+        "difficulty": 4,
+        "time": -0.08,
+        "success": {
+          "text": [
+            "Saw the whole district from up there. Easier route back."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Froze halfway. Came down slow."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_kids_drawing",
+    "bands": [
+      "short"
+    ],
+    "intro": [
+      "Chalk on the sidewalk: a hopscotch, and an arrow, fresh. 'FOOD →'"
+    ],
+    "options": [
+      {
+        "id": "follow",
+        "label": "Follow the arrow",
+        "stat": "wits",
+        "difficulty": 4,
+        "time": 0.06,
+        "success": {
+          "text": [
+            "A little cache in a mailbox. Someone's leaving it for strangers."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The arrow led to an empty lot. Then I found another arrow pointing back at me."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it",
+        "stat": "nerve",
+        "difficulty": 2,
+        "time": -0.03,
+        "success": {
+          "text": [
+            "Arrows lead places. I'm not going to that place."
+          ]
+        },
+        "failure": {
+          "text": [
+            "I'll wonder about it all night."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_mall_escalator",
+    "bands": [
+      "medium"
+    ],
+    "intro": [
+      "The mall's escalator is stopped, and something's moving at the top of it."
+    ],
+    "options": [
+      {
+        "id": "wait",
+        "label": "Hide and wait",
+        "stat": "stealth",
+        "difficulty": 3,
+        "time": 0.12,
+        "success": {
+          "text": [
+            "A family of foxes. They left. I took the stairs."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Whatever it was came down. I left through the cinema."
+          ],
+          "stress": 5
+        }
+      },
+      {
+        "id": "shout",
+        "label": "Make yourself big and loud",
+        "stat": "nerve",
+        "difficulty": 5,
+        "time": -0.04,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Foxes. They scattered. The electronics shop up there was untouched."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "It wasn't foxes. I ran. It didn't follow. Yet."
+          ],
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_train_horn",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "Far off, a train horn. There are no trains."
+    ],
+    "options": [
+      {
+        "id": "toward",
+        "label": "Head toward it",
+        "stat": "wits",
+        "difficulty": 5,
+        "time": 0.15,
+        "success": {
+          "text": [
+            "An old horn on a timer, on a pole. Wired to a car battery. Mine now."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Walked toward it for an hour. It kept being far away."
+          ],
+          "stress": 7
+        }
+      },
+      {
+        "id": "away",
+        "label": "Head the other way",
+        "stat": "endurance",
+        "difficulty": 3,
+        "time": 0.04,
+        "success": {
+          "text": [
+            "Whatever it is, it can blow its horn without me."
+          ]
+        },
+        "failure": {
+          "text": [
+            "It blew again. Closer."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_flooded_tunnel",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "The underpass is flooded knee-deep. The road beyond is the fast way."
+    ],
+    "options": [
+      {
+        "id": "wade",
+        "label": "Wade through",
+        "stat": "endurance",
+        "difficulty": 4,
+        "time": -0.12,
+        "success": {
+          "text": [
+            "Cold and disgusting. Fast."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Something brushed my leg. I sprinted the rest."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "over",
+        "label": "Go over the top, along the railings",
+        "stat": "stealth",
+        "difficulty": 5,
+        "time": -0.06,
+        "success": {
+          "text": [
+            "Balanced the whole way. Dry feet."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Slipped and went in anyway."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "around",
+        "label": "Take the long road",
+        "stat": "endurance",
+        "difficulty": 2,
+        "time": 0.18,
+        "success": {
+          "text": [
+            "Long. Boring. Dry."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Long, boring and it rained."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_farmhouse",
+    "bands": [
+      "long"
+    ],
+    "intro": [
+      "A farmhouse with smoke from the chimney. Chickens in the yard."
+    ],
+    "options": [
+      {
+        "id": "trade",
+        "label": "Knock and offer a trade",
+        "stat": "nerve",
+        "difficulty": 4,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "Eggs! Real eggs. They asked about the radio. I told them how to find you."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Nobody answered. The chickens stared at me."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "steal",
+        "label": "Grab a chicken and run",
+        "stat": "stealth",
+        "difficulty": 6,
+        "time": -0.04,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Got one. I'm a terrible person. A fed terrible person."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Farmer with a pitchfork. I'm faster. Barely."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_wind_turbine",
+    "bands": [
+      "long"
+    ],
+    "intro": [
+      "A small wind turbine on a farm, still spinning."
+    ],
+    "options": [
+      {
+        "id": "parts",
+        "label": "Take the controller",
+        "stat": "craft",
+        "difficulty": 5,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "Charge controller, intact. The workshop will love this."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Wrong panel. Spent an hour on nothing."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "charge",
+        "label": "Hook up the batteries you carry and wait",
+        "stat": "wits",
+        "difficulty": 3,
+        "time": 0.2,
+        "success": {
+          "text": [
+            "Charged everything I had. Slow, but free."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The wiring's fried. Waited for nothing."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_highway_wreck",
+    "bands": [
+      "long"
+    ],
+    "intro": [
+      "A pileup across all lanes of the highway. Dozens of cars."
+    ],
+    "options": [
+      {
+        "id": "search",
+        "label": "Search the trunks",
+        "stat": "wits",
+        "difficulty": 4,
+        "time": 0.15,
+        "success": {
+          "text": [
+            "Spare parts, a first aid kit, canned food. Somebody was ready."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Already picked clean. Long ago."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "over",
+        "label": "Climb over and keep going",
+        "stat": "endurance",
+        "difficulty": 3,
+        "time": -0.06,
+        "success": {
+          "text": [
+            "Car roofs all the way across. Quick."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Fell between two cars."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_lights_hill",
+    "bands": [
+      "long"
+    ],
+    "intro": [
+      "At dusk, lights on a hill. Lots of them. Like a town."
+    ],
+    "options": [
+      {
+        "id": "look",
+        "label": "Get closer and look",
+        "stat": "stealth",
+        "difficulty": 6,
+        "time": 0.12,
+        "success": {
+          "text": [
+            "Candles in jars, on graves. Hundreds. Someone tends them."
+          ],
+          "stress": 4,
+          "memory": "the hill of candles"
+        },
+        "failure": {
+          "text": [
+            "Someone was waiting by the lights. They saw me."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "note",
+        "label": "Mark it on the map and move on",
+        "stat": "wits",
+        "difficulty": 2,
+        "time": -0.03,
+        "success": {
+          "text": [
+            "Marked. The radio will want to know about this."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Lost the bearing in the dark."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_quiet_road",
+    "bands": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "intro": [
+      "The road is too quiet. No birds. No wind."
+    ],
+    "options": [
+      {
+        "id": "listen",
+        "label": "Stop and listen",
+        "stat": "nerve",
+        "difficulty": 4,
+        "time": 0.05,
+        "success": {
+          "text": [
+            "There. A voice, far off. Someone singing. Then the birds came back."
+          ],
+          "stress": -2
+        },
+        "failure": {
+          "text": [
+            "Something, far behind me, stopped walking when I stopped."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "hurry",
+        "label": "Hurry through",
+        "stat": "endurance",
+        "difficulty": 3,
+        "time": -0.06,
+        "success": {
+          "text": [
+            "Got through. Didn't look back."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Ran out of breath halfway. The quiet waited."
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_pigeon_coop",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A rooftop pigeon coop. A few birds still live there."
+    ],
+    "options": [
+      {
+        "id": "eggs",
+        "label": "Take a few eggs",
+        "stat": "stealth",
+        "difficulty": 3,
+        "time": 0.05,
+        "success": {
+          "text": [
+            "Four eggs, wrapped in my scarf. Careful now."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Broke them all climbing down."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "message",
+        "label": "There's a band on one bird's leg",
+        "stat": "wits",
+        "difficulty": 4,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "A message: coordinates and 'supplies, take what you need'."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 1
+            }
+          ],
+          "memory": "the message on the pigeon's leg"
+        },
+        "failure": {
+          "text": [
+            "Couldn't catch it."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_hospital_bed",
+    "bands": [
+      "medium"
+    ],
+    "intro": [
+      "A hospital bed in the middle of the street. Clean sheets. Nobody around."
+    ],
+    "options": [
+      {
+        "id": "check",
+        "label": "Check under the sheets",
+        "stat": "nerve",
+        "difficulty": 5,
+        "time": 0.04,
+        "success": {
+          "text": [
+            "A medkit, tucked in neatly. Like a gift."
+          ],
+          "stress": 4,
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Under the sheets: nothing. On the pillow: my name."
+          ],
+          "stress": 9
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Don't touch it",
+        "stat": "stealth",
+        "difficulty": 2,
+        "time": -0.03,
+        "success": {
+          "text": [
+            "Walked around it. Wide."
+          ]
+        },
+        "failure": {
+          "text": [
+            "When I looked back, the sheets were folded down."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "c_storm_drain",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "intro": [
+      "A storm drain grate, pried open. Rungs go down into the dark."
+    ],
+    "options": [
+      {
+        "id": "down",
+        "label": "Go down",
+        "stat": "nerve",
+        "difficulty": 5,
+        "time": 0.08,
+        "success": {
+          "text": [
+            "Someone's old hideout. Blankets, cans, a camp stove."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Water rushing somewhere below. I lost my footing."
+          ],
+          "stress": 4,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "cover",
+        "label": "Put the grate back and mark it",
+        "stat": "craft",
+        "difficulty": 2,
+        "time": 0.02,
+        "success": {
+          "text": [
+            "Covered. Whatever's down there, stays there."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Too heavy. Left it open."
+          ],
+          "stress": 4
         }
       }
     ]

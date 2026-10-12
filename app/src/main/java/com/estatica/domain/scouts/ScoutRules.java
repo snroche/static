@@ -228,6 +228,18 @@ public final class ScoutRules {
         return Math.max(1, level);
     }
 
+    /** How far into the current bond level, 0–100 (100 at the top level). */
+    public int bondProgress(Scout scout) {
+        int[] thresholds = content.getBalance().getBond().getLevelThresholds();
+        int level = bondLevel(scout);
+        if (level >= thresholds.length) {
+            return 100;
+        }
+        int from = thresholds[level - 1];
+        int to = thresholds[level];
+        return (int) Math.max(0, Math.min(99, (scout.getLife().getBond() - from) * 100L / Math.max(1, to - from)));
+    }
+
     /** @return levels gained (negative if lost) */
     public int addBond(Scout scout, int delta) {
         int before = bondLevel(scout);
@@ -355,6 +367,12 @@ public final class ScoutRules {
             scout.setInjury(scout.getInjury().better());
         }
         scout.setHealProgressHours(scout.getInjury() == Injury.NONE ? 0 : progress);
+    }
+
+    /** Treated in the infirmary on the spot: the injury is gone. */
+    public void treat(Scout scout) {
+        scout.setInjury(Injury.NONE);
+        scout.setHealProgressHours(0);
     }
 
     public void markDeparted(Scout scout, long atMillis) {

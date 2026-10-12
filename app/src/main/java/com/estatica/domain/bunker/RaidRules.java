@@ -78,12 +78,18 @@ public final class RaidRules {
     }
 
     public Result resolve(Collection<Scout> scouts, Map<String, Integer> resources, int antennaLevel, GameRandom rng) {
+        return resolve(scouts, resources, antennaLevel, 0, rng);
+    }
+
+    /** @param fortification barricades: defense that holds even with nobody on guard */
+    public Result resolve(Collection<Scout> scouts, Map<String, Integer> resources, int antennaLevel,
+                          int fortification, GameRandom rng) {
         EnergyDef.Raids raids = content.getBalance().getEnergy().getRaids();
         List<Scout> guards = guards(scouts);
-        int defense = defense(guards);
+        int defense = defense(guards) + fortification;
         int attack = raids.getBaseStrength() + raids.getStrengthPerAntennaLevel() * antennaLevel
                 + rng.nextInt(raids.getStrengthVariance() + 1);
-        if (!guards.isEmpty() && defense >= attack) {
+        if ((!guards.isEmpty() || fortification > 0) && defense >= attack) {
             for (Scout g : guards) {
                 rules.trainXp(g, StatType.ENDURANCE, GUARD_XP);
             }

@@ -2719,5 +2719,1334 @@
         "revealHidden": true
       }
     ]
+  },
+  {
+    "id": "init_radio_hum",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "The radio hums even when it's off. Did you know that?",
+      "I've been listening to it hum for an hour."
+    ],
+    "choices": [
+      {
+        "label": "Come sit with me. I'll turn it on.",
+        "reply": [
+          "Yeah. Ok. Just for a bit."
+        ],
+        "bond": 3,
+        "stress": -3
+      },
+      {
+        "label": "Go get some sleep.",
+        "reply": [
+          "Sleep. Right. I'll try."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "init_counted_cans",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "I counted the cans again. Don't ask why.",
+      "Same number as yesterday. That's good, right?"
+    ],
+    "choices": [
+      {
+        "label": "It's good. You're keeping us honest.",
+        "reply": [
+          "Someone has to."
+        ],
+        "bond": 2,
+        "stress": -2
+      },
+      {
+        "label": "Counting won't make more of them.",
+        "reply": [
+          "I know. It's just... something to do with my hands."
+        ],
+        "bond": 1,
+        "stress": 1
+      }
+    ]
+  },
+  {
+    "id": "init_rain_dream",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "I dreamed about rain. Real rain. Not the grey stuff.",
+      "I was standing in it and nobody told me to come inside."
+    ],
+    "choices": [
+      {
+        "label": "Tell me about it.",
+        "reply": [
+          "It was warm. That's all I remember. It was warm.",
+          "Thanks for asking."
+        ],
+        "bond": 3,
+        "stress": -3,
+        "memory": "you asked me about my rain dream"
+      },
+      {
+        "label": "Dreams are dreams.",
+        "reply": [
+          "Yeah."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "init_before",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "What did you do? Before, I mean. You never say."
+    ],
+    "choices": [
+      {
+        "label": "I fixed radios. Funny, huh.",
+        "reply": [
+          "Figures. You've got radio hands."
+        ],
+        "bond": 3
+      },
+      {
+        "label": "I don't talk about before.",
+        "reply": [
+          "Fair. Me neither, mostly."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "Ask me another day.",
+        "reply": [
+          "I'll hold you to that."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "init_bad_joke",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "I've got a joke. It's terrible. Want it?"
+    ],
+    "choices": [
+      {
+        "label": "Go on.",
+        "reply": [
+          "Why did the radio operator cross the road?",
+          "...I forgot the end. That's the joke now."
+        ],
+        "bond": 3,
+        "stress": -4
+      },
+      {
+        "label": "Not now.",
+        "reply": [
+          "Your loss. It was a great joke."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "init_sky",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "Sometimes I forget what color the sky was.",
+      "Blue, right? It was blue."
+    ],
+    "choices": [
+      {
+        "label": "Blue. And orange at the end of the day.",
+        "reply": [
+          "Orange. Yeah. I remember now."
+        ],
+        "bond": 3,
+        "stress": -2
+      },
+      {
+        "label": "You'll see it again.",
+        "reply": [
+          "You sound sure."
+        ],
+        "bond": 2,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "init_thanks",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "Nothing. Just... thanks. For keeping the radio on."
+    ],
+    "choices": [
+      {
+        "label": "Always.",
+        "reply": [
+          "I know. That's why I said it."
+        ],
+        "bond": 3
+      },
+      {
+        "label": "It's my job.",
+        "reply": [
+          "Still."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "init_vent_noise",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "There's a sound in the vents at night.",
+      "Like someone dragging a nail. Slow. Then it stops when I listen."
+    ],
+    "choices": [
+      {
+        "label": "I'll check the filters tomorrow.",
+        "reply": [
+          "Thanks. Probably a loose panel. Probably."
+        ],
+        "bond": 2,
+        "stress": -2
+      },
+      {
+        "label": "It's the pipes cooling down.",
+        "reply": [
+          "Pipes don't stop when you listen."
+        ],
+        "stress": 2
+      },
+      {
+        "label": "I hear it too.",
+        "reply": [
+          "...I wish you hadn't said that."
+        ],
+        "bond": 2,
+        "stress": 3
+      }
+    ]
+  },
+  {
+    "id": "init_hands",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "Can you just talk for a bit? About anything.",
+      "I don't care what. I just want to hear a voice that isn't static."
+    ],
+    "choices": [
+      {
+        "label": "Let me tell you about the first radio I ever built.",
+        "reply": [
+          "...Keep going. Don't stop."
+        ],
+        "bond": 4,
+        "stress": -5,
+        "memory": "you talked to me until the bad feeling passed"
+      },
+      {
+        "label": "I can't right now.",
+        "reply": [
+          "Ok. Another time."
+        ],
+        "bond": -1
+      }
+    ]
+  },
+  {
+    "id": "init_write_down",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "I've started writing down everyone's name.",
+      "In case. You know. In case someone has to remember."
+    ],
+    "choices": [
+      {
+        "label": "Put yours on it too.",
+        "reply": [
+          "...I hadn't thought of that. Ok."
+        ],
+        "bond": 3,
+        "stress": -1
+      },
+      {
+        "label": "Nobody's going to need that list.",
+        "reply": [
+          "I hope you're right."
+        ],
+        "bond": 1,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "stranger_what_to_call",
+    "kind": "INITIATED",
+    "maxBondLevel": 1,
+    "priority": 2,
+    "lines": [
+      "So. What do I call you?",
+      "Everyone here just says 'the radio'."
+    ],
+    "choices": [
+      {
+        "label": "Whatever feels right.",
+        "reply": [
+          "I'll think of something."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Operator is fine.",
+        "reply": [
+          "Operator it is. Very official."
+        ],
+        "bond": 1,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "stranger_quiet",
+    "kind": "INITIATED",
+    "maxBondLevel": 1,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "It's quieter here than I expected.",
+      "I thought bunkers would be... louder. People yelling."
+    ],
+    "choices": [
+      {
+        "label": "We yell sometimes. You'll see.",
+        "reply": [
+          "Good. I hate quiet."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Quiet keeps us alive.",
+        "reply": [
+          "That's a creepy thing to say. True, though."
+        ],
+        "bond": 1,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "bond_share_food",
+    "kind": "INITIATED",
+    "minBondLevel": 2,
+    "priority": 2,
+    "lines": [
+      "I saved you half of mine. Don't argue."
+    ],
+    "choices": [
+      {
+        "label": "Thank you. Really.",
+        "reply": [
+          "Eat it before I change my mind."
+        ],
+        "bond": 4,
+        "memory": "I shared my food with you"
+      },
+      {
+        "label": "Keep it, you need it more.",
+        "reply": [
+          "...Fine. But I offered."
+        ],
+        "bond": 2,
+        "stress": -1
+      }
+    ]
+  },
+  {
+    "id": "bond_name_a_star",
+    "kind": "INITIATED",
+    "minBondLevel": 2,
+    "priority": 2,
+    "lines": [
+      "Before, I named a star after my dog.",
+      "I can't see it from here. I check anyway, through the hatch."
+    ],
+    "choices": [
+      {
+        "label": "What was the dog's name?",
+        "reply": [
+          "Chispa. She was an idiot. The best idiot."
+        ],
+        "bond": 4,
+        "memory": "you asked about Chispa"
+      },
+      {
+        "label": "We'll go look at it someday.",
+        "reply": [
+          "Someday. Ok."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "bond_teach_me",
+    "kind": "INITIATED",
+    "minBondLevel": 3,
+    "priority": 2,
+    "lines": [
+      "Teach me something about the radio.",
+      "So when you're tired I can cover for you."
+    ],
+    "choices": [
+      {
+        "label": "Sit. This dial is the whole world.",
+        "reply": [
+          "The whole world. On a dial. Show me."
+        ],
+        "bond": 4,
+        "trust": 3,
+        "memory": "you taught me how the dial works"
+      },
+      {
+        "label": "You'd break it.",
+        "reply": [
+          "Wow. Ok."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "bond_if_i_dont",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "priority": 3,
+    "lines": [
+      "If I don't come back one day...",
+      "Don't keep my bunk empty. Give it to someone. Promise me."
+    ],
+    "choices": [
+      {
+        "label": "I promise.",
+        "reply": [
+          "Good. Now forget I said it."
+        ],
+        "bond": 5,
+        "memory": "you promised to give my bunk away"
+      },
+      {
+        "label": "You're coming back. Every time.",
+        "reply": [
+          "You can't promise that."
+        ],
+        "bond": 3,
+        "trust": 2
+      },
+      {
+        "label": "Don't talk like that.",
+        "reply": [
+          "Somebody has to."
+        ],
+        "bond": 1,
+        "stress": 2
+      }
+    ]
+  },
+  {
+    "id": "bond_after_this",
+    "kind": "INITIATED",
+    "minBondLevel": 4,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "When this is over, what will you do?",
+      "I mean it. Out loud. Say it."
+    ],
+    "choices": [
+      {
+        "label": "Sleep for a week. Then find a beach.",
+        "reply": [
+          "A beach. I'm coming. Don't argue."
+        ],
+        "bond": 5,
+        "stress": -4,
+        "memory": "we planned the beach"
+      },
+      {
+        "label": "I don't think it'll be over.",
+        "reply": [
+          "Then we'll make it over."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "trust_why_there",
+    "kind": "INITIATED",
+    "maxTrust": 30,
+    "priority": 2,
+    "lines": [
+      "Why did you send me there? Be honest."
+    ],
+    "choices": [
+      {
+        "label": "Because I thought you'd make it.",
+        "reply": [
+          "...Ok. Next time, tell me that before."
+        ],
+        "bond": 1,
+        "trust": 5
+      },
+      {
+        "label": "Because someone had to go.",
+        "reply": [
+          "Someone. Right. Good to know."
+        ],
+        "bond": -2,
+        "trust": 1
+      },
+      {
+        "label": "I made a bad call. I'm sorry.",
+        "reply": [
+          "That's... more than I expected."
+        ],
+        "bond": 3,
+        "trust": 3
+      }
+    ]
+  },
+  {
+    "id": "trust_real_odds",
+    "kind": "INITIATED",
+    "maxTrust": 40,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "Next time, give me the real odds.",
+      "Not what you think I can take."
+    ],
+    "choices": [
+      {
+        "label": "Deal. No more sugar.",
+        "reply": [
+          "Deal."
+        ],
+        "bond": 1,
+        "trust": 5,
+        "memory": "you promised me the real odds"
+      },
+      {
+        "label": "I give you what I know.",
+        "reply": [
+          "Then know more."
+        ],
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "trust_are_we_ok",
+    "kind": "INITIATED",
+    "minTrust": 30,
+    "maxTrust": 55,
+    "priority": 2,
+    "lines": [
+      "We're ok, right? After last time?"
+    ],
+    "choices": [
+      {
+        "label": "We're ok.",
+        "reply": [
+          "Good. I didn't sleep."
+        ],
+        "bond": 2,
+        "trust": 3,
+        "stress": -3
+      },
+      {
+        "label": "That depends on you.",
+        "reply": [
+          "...Right."
+        ],
+        "trust": -1,
+        "stress": 2
+      }
+    ]
+  },
+  {
+    "id": "trust_anywhere",
+    "kind": "INITIATED",
+    "minTrust": 75,
+    "priority": 2,
+    "lines": [
+      "I'd go anywhere you sent me.",
+      "That scares me a little. Should it?"
+    ],
+    "choices": [
+      {
+        "label": "It should. Keep asking questions.",
+        "reply": [
+          "Ok. I'll keep asking. You keep answering."
+        ],
+        "bond": 3,
+        "trust": 2,
+        "memory": "you told me to keep asking questions"
+      },
+      {
+        "label": "I won't send you anywhere I wouldn't go.",
+        "reply": [
+          "You don't go anywhere. You're in here."
+        ],
+        "bond": 2,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "trust_you_pick",
+    "kind": "INITIATED",
+    "minTrust": 65,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "Next trip, you pick. I'll just go.",
+      "I don't want to think about it this time."
+    ],
+    "choices": [
+      {
+        "label": "I'll pick somewhere quiet.",
+        "reply": [
+          "Quiet. Yeah. Thanks."
+        ],
+        "bond": 2,
+        "trust": 2,
+        "stress": -3
+      },
+      {
+        "label": "Think with me. Two heads.",
+        "reply": [
+          "...Ok. Two heads."
+        ],
+        "bond": 3,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "trust_door_heard",
+    "kind": "TALK",
+    "minTrust": 60,
+    "priority": 3,
+    "lines": [
+      "I heard what you told the last one out there.",
+      "You stayed on the radio the whole way back."
+    ],
+    "choices": [
+      {
+        "label": "I'd do the same for you.",
+        "reply": [
+          "I know. That's why I'm still here."
+        ],
+        "bond": 3,
+        "trust": 2
+      },
+      {
+        "label": "Just doing my job.",
+        "reply": [
+          "Sure. Your job."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "trust_low_talk",
+    "kind": "TALK",
+    "maxTrust": 35,
+    "priority": 3,
+    "lines": [
+      "I'll be honest. I'm not sure about you yet."
+    ],
+    "choices": [
+      {
+        "label": "That's fair. Watch me.",
+        "reply": [
+          "I will."
+        ],
+        "bond": 1,
+        "trust": 3
+      },
+      {
+        "label": "You don't have to be.",
+        "reply": [
+          "I do, actually. You're the voice in my ear."
+        ],
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "stress_shaking",
+    "kind": "INITIATED",
+    "minStress": 60,
+    "repeatable": true,
+    "priority": 2,
+    "lines": [
+      "My hands won't stop shaking. Look.",
+      "I'm fine. I'm fine. I just need a minute."
+    ],
+    "choices": [
+      {
+        "label": "Breathe with me. In. Out.",
+        "reply": [
+          "...In. Out. Ok. Better."
+        ],
+        "bond": 4,
+        "stress": -8,
+        "memory": "you breathed with me when I couldn't"
+      },
+      {
+        "label": "Take tomorrow off.",
+        "reply": [
+          "Yeah. Maybe."
+        ],
+        "bond": 2,
+        "stress": -4
+      },
+      {
+        "label": "We all shake. Keep going.",
+        "reply": [
+          "Right. Keep going."
+        ],
+        "stress": 2
+      }
+    ]
+  },
+  {
+    "id": "stress_cant_sleep",
+    "kind": "INITIATED",
+    "minStress": 50,
+    "repeatable": true,
+    "priority": 2,
+    "lines": [
+      "Every time I close my eyes I'm back out there."
+    ],
+    "choices": [
+      {
+        "label": "Stay up with me then. I'm on shift.",
+        "reply": [
+          "Ok. Talk to me about anything else."
+        ],
+        "bond": 3,
+        "stress": -6
+      },
+      {
+        "label": "Try the infirmary. Something for sleep.",
+        "reply": [
+          "I'll try."
+        ],
+        "bond": 1,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "calm_good_day",
+    "kind": "INITIATED",
+    "maxStress": 15,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "Is it weird that today was good?",
+      "Nothing happened. Nobody got hurt. I fixed a hinge."
+    ],
+    "choices": [
+      {
+        "label": "Not weird. Hold on to it.",
+        "reply": [
+          "Holding on."
+        ],
+        "bond": 3,
+        "stress": -2
+      },
+      {
+        "label": "Don't jinx it.",
+        "reply": [
+          "Too late."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "trait_optimist_plan",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "optimista"
+    ],
+    "priority": 2,
+    "lines": [
+      "I made a list of things we'll have again. Want to hear it?",
+      "Bread. Hot showers. Bad TV."
+    ],
+    "choices": [
+      {
+        "label": "Add music.",
+        "reply": [
+          "Music! Obviously. Number one."
+        ],
+        "bond": 3,
+        "stress": -3
+      },
+      {
+        "label": "Lists don't feed us.",
+        "reply": [
+          "They feed something."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "trait_fearful_dark",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "miedo"
+    ],
+    "priority": 2,
+    "lines": [
+      "Can you leave the radio light on tonight?",
+      "Just the little one."
+    ],
+    "choices": [
+      {
+        "label": "It stays on. Every night.",
+        "reply": [
+          "Thank you. Don't tell the others."
+        ],
+        "bond": 4,
+        "stress": -5,
+        "memory": "you left the light on for me"
+      },
+      {
+        "label": "We need the power.",
+        "reply": [
+          "...Right. The power."
+        ],
+        "stress": 3
+      }
+    ]
+  },
+  {
+    "id": "trait_curious_signal",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "curiosa"
+    ],
+    "priority": 2,
+    "lines": [
+      "That signal yesterday. The one that just breathed.",
+      "Can we find where it comes from? Please?"
+    ],
+    "choices": [
+      {
+        "label": "Some things are better not found.",
+        "reply": [
+          "That's exactly what makes me want to find it."
+        ],
+        "bond": 1,
+        "stress": 1
+      },
+      {
+        "label": "Help me look tonight.",
+        "reply": [
+          "Yes. Yes. I'll bring coffee. Well. The brown water."
+        ],
+        "bond": 4,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "trait_loner_space",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "solitaria"
+    ],
+    "priority": 2,
+    "repeatable": true,
+    "lines": [
+      "I'm going to sit in the storage room for a while.",
+      "Not because of you. I just need walls that don't talk."
+    ],
+    "choices": [
+      {
+        "label": "Take your time. I'll knock if I need you.",
+        "reply": [
+          "Thanks for getting it."
+        ],
+        "bond": 4,
+        "stress": -4
+      },
+      {
+        "label": "Don't disappear on us.",
+        "reply": [
+          "I'm in a closet. Not the moon."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "trait_sociable_party",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "sociable"
+    ],
+    "priority": 2,
+    "lines": [
+      "We should have a party. A small one.",
+      "Music, whatever's left in the cans, everyone in one room."
+    ],
+    "choices": [
+      {
+        "label": "Do it. I'll play something on the radio.",
+        "reply": [
+          "Yes! Leave it to me."
+        ],
+        "bond": 4,
+        "stress": -4,
+        "memory": "you let us have a party"
+      },
+      {
+        "label": "Not a good time.",
+        "reply": [
+          "It's never a good time. That's the point."
+        ],
+        "stress": 1
+      }
+    ]
+  },
+  {
+    "id": "trait_stubborn_way",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "terca"
+    ],
+    "priority": 2,
+    "lines": [
+      "I did it my way out there. It worked.",
+      "So don't tell me it was wrong."
+    ],
+    "choices": [
+      {
+        "label": "It worked. Good call.",
+        "reply": [
+          "...Thanks. I expected a fight."
+        ],
+        "bond": 3,
+        "trust": 2
+      },
+      {
+        "label": "It worked this time.",
+        "reply": [
+          "It'll work next time too."
+        ],
+        "trust": -1
+      }
+    ]
+  },
+  {
+    "id": "trait_hothead_sorry",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "calentona"
+    ],
+    "priority": 2,
+    "repeatable": true,
+    "lines": [
+      "I yelled earlier. At the door. At nobody.",
+      "Sorry you heard that."
+    ],
+    "choices": [
+      {
+        "label": "Better at the door than at someone.",
+        "reply": [
+          "Yeah. The door can take it."
+        ],
+        "bond": 3,
+        "stress": -3
+      },
+      {
+        "label": "Keep it down. Sound carries.",
+        "reply": [
+          "...Right. Sound carries."
+        ],
+        "stress": 2
+      }
+    ]
+  },
+  {
+    "id": "trait_reckless_jump",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "imprudencia"
+    ],
+    "priority": 2,
+    "lines": [
+      "I jumped a gap today. Two floors. Nobody saw.",
+      "Except you. Through the radio. Did you hear me laugh?"
+    ],
+    "choices": [
+      {
+        "label": "Don't do that again.",
+        "reply": [
+          "No promises."
+        ],
+        "bond": 1,
+        "trust": 1
+      },
+      {
+        "label": "I heard. You scared me.",
+        "reply": [
+          "Sorry. Kind of. It was great."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "trait_distrust_voice",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "desconfianza"
+    ],
+    "priority": 2,
+    "lines": [
+      "When the static talks... how do you know it's really one of us?"
+    ],
+    "choices": [
+      {
+        "label": "Code word. Let's make one.",
+        "reply": [
+          "...Ok. Ours. Nobody else's."
+        ],
+        "bond": 4,
+        "trust": 4,
+        "memory": "we made a code word"
+      },
+      {
+        "label": "I know their voices.",
+        "reply": [
+          "Voices can be copied."
+        ],
+        "bond": 1,
+        "stress": 2
+      }
+    ]
+  },
+  {
+    "id": "trait_method_checklist",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "metodo"
+    ],
+    "priority": 2,
+    "lines": [
+      "I wrote a checklist for going out. Twelve steps.",
+      "Can you read it back to me over the radio next time?"
+    ],
+    "choices": [
+      {
+        "label": "Every step. Every time.",
+        "reply": [
+          "Good. Step one: come back."
+        ],
+        "bond": 3,
+        "trust": 3
+      },
+      {
+        "label": "Twelve is a lot.",
+        "reply": [
+          "Twelve is the right amount."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "trait_gentle_care",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "gentil"
+    ],
+    "priority": 2,
+    "repeatable": true,
+    "lines": [
+      "Have you eaten? You haven't. I can tell.",
+      "Here. Don't make me sit here until you finish."
+    ],
+    "choices": [
+      {
+        "label": "Thank you. I forgot.",
+        "reply": [
+          "I know. That's why I came."
+        ],
+        "bond": 4,
+        "memory": "you made sure I ate"
+      },
+      {
+        "label": "I'm fine.",
+        "reply": [
+          "You're not. Eat."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "trait_loyal_stay",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "lealtad"
+    ],
+    "priority": 2,
+    "lines": [
+      "Whatever happens, I'm staying.",
+      "Even if the others leave. Just so you know."
+    ],
+    "choices": [
+      {
+        "label": "I know. Thank you.",
+        "reply": [
+          "Good."
+        ],
+        "bond": 4,
+        "trust": 2
+      },
+      {
+        "label": "Nobody's leaving.",
+        "reply": [
+          "Ok. But if."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "trait_cold_ask",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "sangre_fria"
+    ],
+    "priority": 2,
+    "lines": [
+      "You looked worried earlier. You shouldn't let them see that."
+    ],
+    "choices": [
+      {
+        "label": "I'll work on it.",
+        "reply": [
+          "Good. They need you calm."
+        ],
+        "bond": 1,
+        "trust": 2
+      },
+      {
+        "label": "They should see it. It's real.",
+        "reply": [
+          "...Maybe you're right. Maybe."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "trait_light_feet_race",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "pies_ligeros"
+    ],
+    "priority": 2,
+    "repeatable": true,
+    "lines": [
+      "I timed the corridor. Eight seconds end to end.",
+      "Bet I could do seven."
+    ],
+    "choices": [
+      {
+        "label": "Go. I'm counting.",
+        "reply": [
+          "...Seven point four. Next time."
+        ],
+        "bond": 3,
+        "stress": -3
+      },
+      {
+        "label": "Save your legs.",
+        "reply": [
+          "My legs are fine."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "talk_what_next",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "What's the plan? For real, not for the others."
+    ],
+    "choices": [
+      {
+        "label": "Hold on. Get stronger. Then reach further.",
+        "reply": [
+          "Further. With that antenna? Ok. I'm in."
+        ],
+        "bond": 2,
+        "trust": 2
+      },
+      {
+        "label": "I don't know yet.",
+        "reply": [
+          "Thanks for not lying."
+        ],
+        "bond": 2,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "talk_food_dream",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "If you could eat anything right now. Anything."
+    ],
+    "choices": [
+      {
+        "label": "Empanadas. A dozen.",
+        "reply": [
+          "A dozen! Monster. I'd take two."
+        ],
+        "bond": 2,
+        "stress": -2
+      },
+      {
+        "label": "Don't. You'll make me hungry.",
+        "reply": [
+          "Too late for both of us."
+        ],
+        "bond": 1,
+        "stress": -1
+      }
+    ]
+  },
+  {
+    "id": "talk_stars",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "Do you think anyone else is looking up right now?",
+      "Out there. Another bunker."
+    ],
+    "choices": [
+      {
+        "label": "I'm sure of it.",
+        "reply": [
+          "That helps. Weirdly."
+        ],
+        "bond": 2,
+        "stress": -2
+      },
+      {
+        "label": "If they are, we'll hear them.",
+        "reply": [
+          "Keep the radio on, then."
+        ],
+        "bond": 2,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "talk_voice_again",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "The Voice was on again last night. Counting.",
+      "It counted past where it usually stops."
+    ],
+    "choices": [
+      {
+        "label": "I'll listen tonight.",
+        "reply": [
+          "Don't listen alone."
+        ],
+        "bond": 2,
+        "stress": 1
+      },
+      {
+        "label": "It's a recording. It can't change.",
+        "reply": [
+          "Then why did it change?"
+        ],
+        "stress": 3
+      }
+    ]
+  },
+  {
+    "id": "talk_game",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "Want to play something? I made dice out of bolts."
+    ],
+    "choices": [
+      {
+        "label": "Deal me in.",
+        "reply": [
+          "You lose. Every time. Fair warning."
+        ],
+        "bond": 3,
+        "stress": -3
+      },
+      {
+        "label": "Later.",
+        "reply": [
+          "Later never comes in here."
+        ]
+      }
+    ]
   }
 ]

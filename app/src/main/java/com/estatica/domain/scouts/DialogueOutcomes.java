@@ -21,9 +21,16 @@ public final class DialogueOutcomes {
         TerminalText.BunkerText text = content.getTerminal().getBunker();
         Map<String, String> vars = new HashMap<>();
         vars.put("name", scout.getName());
-        if (rules.addBond(scout, delta) > 0) {
+        int levels = rules.addBond(scout, delta);
+        String template = levels > 0 ? text.getBondUp()
+                : delta > 0 ? text.getBondWarmer()
+                : delta < 0 ? text.getBondCooler() : null;
+        if (template != null) {
+            // Every change shows, not just level-ups: talking to someone always lands somewhere.
+            vars.put("progress", String.valueOf(rules.bondProgress(scout)));
+            vars.put("level", String.valueOf(rules.bondLevel(scout)));
             lines.add(LogLine.draft(now, LogChannel.SYSTEM, null,
-                    TextTemplate.format(text.getBondUp(), vars), scout.getId()));
+                    TextTemplate.format(template, vars), scout.getId()));
         }
         String revealed = rules.revealHiddenIfDue(scout);
         if (revealed != null) {

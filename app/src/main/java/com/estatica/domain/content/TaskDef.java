@@ -24,6 +24,12 @@ public final class TaskDef {
     private Conversion conversion;
     /** Sweeps the dial while the operator is away (radio assistant). */
     private boolean passiveSweep;
+    /** Can treat someone's injury on the spot, for medicine. */
+    private boolean treats;
+
+    public boolean isTreats() {
+        return treats;
+    }
     /** Defends the bunker against raids. */
     private boolean guards;
     /** Kitchen: fraction of the crew's rations this person saves (capped in balance). */

@@ -75,10 +75,16 @@
       "initiate": [
         "got a minute?",
         "hey. you there?",
-        "{operator}? got a minute?"
+        "{operator}? got a minute?",
+        "you busy?",
+        "can i sit here a sec?",
+        "so. um.",
+        "don't freak out, i just want to talk."
       ],
       "initiate@close": [
-        "got a minute? it's important."
+        "got a minute? it's important.",
+        "hey you. come here a sec.",
+        "i saved you a spot. talk to me?"
       ],
       "askReturn": [
         "i want to go home. please.",
@@ -235,7 +241,11 @@
       "initiate": [
         "Boss, got a minute?",
         "Hey, boss. Fancy a chat?",
-        "Hey, {operator}. Fancy a chat?"
+        "Hey, {operator}. Fancy a chat?",
+        "Oi, boss. Spare a minute for your favourite?",
+        "Boss! Quick word, yeah?",
+        "Got a sec? Won't bite.",
+        "Psst. Boss. Over here."
       ],
       "askReturn": [
         "Boss, I want to come home. Please.",
@@ -305,6 +315,10 @@
       "carryHome": [
         "Got {other} on my back, boss. We're coming home. Both of us.",
         "Nobody's dying today. I've got {other}. Heading back."
+      ],
+      "initiate@close": [
+        "Boss, mate, sit down a sec.",
+        "Oi, {operator}. You and me. Chat. Now."
       ]
     }
   },
@@ -379,10 +393,15 @@
       ],
       "initiate": [
         "Operator, do you have a moment?",
-        "{operator}, may I have a word?"
+        "{operator}, may I have a word?",
+        "Excuse the interruption, Operator.",
+        "If you can spare a moment, I'd appreciate it.",
+        "Operator, a word, when convenient."
       ],
       "initiate@close": [
-        "Do you have a moment? I need to talk."
+        "Do you have a moment? I need to talk.",
+        "I would like to talk, {operator}. Just talk.",
+        "Operator, I'd value your company for a moment."
       ],
       "askReturn": [
         "Operator, requesting to return. Please.",
@@ -509,7 +528,10 @@
       ],
       "initiate": [
         "Operator. One minute. Over.",
-        "{operator}. REQUEST WORD. OVER."
+        "{operator}. REQUEST WORD. OVER.",
+        "OPERATOR. TALK. NOW IF POSSIBLE. OVER.",
+        "REQUEST. FIVE MINUTES. OVER.",
+        "QUERY. YOU FREE. OVER."
       ],
       "askReturn": [
         "Requesting return. Please."
@@ -571,6 +593,10 @@
       ],
       "departure@close": [
         "DEPARTING. {operator} KEEP LINE OPEN."
+      ],
+      "initiate@close": [
+        "{operator}. JUST TALK. NO REPORT. OVER.",
+        "OFF THE RECORD. OVER."
       ]
     }
   },
@@ -635,7 +661,11 @@
       ],
       "initiate": [
         "Hey, got a sec?",
-        "{operator}, you got a sec?"
+        "{operator}, you got a sec?",
+        "Hey. Hey. Hey. You busy?",
+        "Can I ask you something? It's dumb.",
+        "Yo, you got a minute or what?",
+        "Don't laugh but I wanna talk."
       ],
       "askReturn": [
         "I want to come back. Please. For real."
@@ -699,6 +729,10 @@
       ],
       "departure@close": [
         "Going, {operator}! Don't miss me too much."
+      ],
+      "initiate@close": [
+        "You're not busy, right? Good. Sit.",
+        "{operator}! C'mere a sec."
       ]
     }
   },
@@ -754,7 +788,10 @@
       ],
       "initiate": [
         "Dear, do you have a little minute?",
-        "{operator}, dear, sit with me a moment."
+        "{operator}, dear, sit with me a moment.",
+        "Come, come, sit by me, love.",
+        "Have you eaten? Sit, we'll talk.",
+        "Dear, a moment for an old one?"
       ],
       "askReturn": [
         "Sweetheart, I want to come back. Please."
@@ -816,6 +853,10 @@
       ],
       "arrival@close": [
         "I'm home, {operator}. Did you eat?"
+      ],
+      "initiate@close": [
+        "{operator}, sweetheart, sit. Tell me how you are.",
+        "I made tea. Well. Hot water. Sit with me."
       ]
     }
   }

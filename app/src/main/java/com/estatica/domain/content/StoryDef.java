@@ -12,6 +12,72 @@ public final class StoryDef {
     private List<Chapter> chapters;
     private List<PersonalMission> personalMissions;
     private Objectives objectives;
+    /** Things that happen in the bunker at night (suspense). Nullable in older content. */
+    private List<Omen> omens;
+
+    public List<Omen> getOmens() {
+        return omens != null ? omens : List.of();
+    }
+
+    /**
+     * Something wrong in the bunker: a knock on the hatch, a voice in the vents. They get worse
+     * as the Voice's story moves forward ({@code minPlot}). Nobody is ever hurt by one; they
+     * only cost a little stress and some sleep.
+     */
+    public static final class Omen {
+        private String id;
+        /** Only at night. */
+        private boolean night;
+        /** Plot fragments found before it can happen. */
+        private int minPlot;
+        private int weight = 1;
+        /** System lines ({name}: someone at home, if any). */
+        private List<String> lines;
+        /** What someone at home says after, in the bunker chat. Nullable. */
+        private List<String> reaction;
+        /** Stress for everyone at home. */
+        private int stress;
+        /** Comes as an alert: beep and vibration. */
+        private boolean alert;
+        /** Needs someone at home (for {name} and the reaction). */
+        private boolean needsCrew;
+
+        public String getId() {
+            return id;
+        }
+
+        public boolean isNight() {
+            return night;
+        }
+
+        public int getMinPlot() {
+            return minPlot;
+        }
+
+        public int getWeight() {
+            return Math.max(1, weight);
+        }
+
+        public List<String> getLines() {
+            return lines != null ? lines : List.of();
+        }
+
+        public List<String> getReaction() {
+            return reaction != null ? reaction : List.of();
+        }
+
+        public int getStress() {
+            return stress;
+        }
+
+        public boolean isAlert() {
+            return alert;
+        }
+
+        public boolean isNeedsCrew() {
+            return needsCrew;
+        }
+    }
 
     public List<Chapter> getChapters() {
         return chapters;

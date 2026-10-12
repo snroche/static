@@ -22,6 +22,8 @@ final class DecoderPanel {
     private final TerminalViewModel viewModel;
     private SessionSnapshot.TransmissionView transmission;
     private int shift;
+    /** Morse with the manual: tap letters instead of building them. */
+    private boolean keyboard;
     private final StringBuilder typed = new StringBuilder();
     private final StringBuilder symbol = new StringBuilder();
 
@@ -67,6 +69,7 @@ final class DecoderPanel {
             }
         });
         buildTapGrid();
+        buildMorseKeyboard();
         b.send.setOnClickListener(v -> {
             if (transmission != null) {
                 viewModel.decode(transmission.id, answer());
@@ -93,8 +96,11 @@ final class DecoderPanel {
                 : res.getString(R.string.decode_locked_title));
         b.cipher.setText(t.cipherText);
         b.caesarControls.setVisibility(t.unlocked && caesar ? View.VISIBLE : View.GONE);
-        b.morseControls.setVisibility(t.unlocked && morse ? View.VISIBLE : View.GONE);
-        b.tableButton.setVisibility(morse && morseTable ? View.VISIBLE : View.GONE);
+        // With the manual, Morse is a letter keyboard; without it, the dot/dash pad.
+        keyboard = morse && morseTable;
+        b.morseControls.setVisibility(t.unlocked && morse && !keyboard ? View.VISIBLE : View.GONE);
+        b.morseKeyboard.setVisibility(t.unlocked && keyboard ? View.VISIBLE : View.GONE);
+        b.tableButton.setVisibility(View.GONE);
         b.table.setVisibility(View.GONE);
         b.tapControls.setVisibility(t.unlocked && "TAP".equals(kind) ? View.VISIBLE : View.GONE);
         boolean keyword = "VIGENERE".equals(kind) || "PLAYFAIR".equals(kind);
@@ -108,7 +114,7 @@ final class DecoderPanel {
             b.tool.setText("PLAYFAIR".equals(kind) ? res.getString(R.string.decode_letters, t.assisted)
                     : res.getString(R.string.decode_tool, t.assisted));
         }
-        b.instructions.setText(help(kind));
+        b.instructions.setText(keyboard ? R.string.decode_morse_keyboard_help : help(kind));
         if (!t.unlocked) {
             b.answer.setText("");
         } else if (morse || "TAP".equals(kind)) {
@@ -243,13 +249,133 @@ final class DecoderPanel {
         Character letter = Cipher.letter(symbol.toString());
         typed.append(letter != null ? letter : '?');
         symbol.setLength(0);
+        autoSpace();
         showMorseAnswer();
+    }
+
+    /** Morse groups in the cipher, word breaks as "/". */
+    private String[] groups() {
+        return transmission.cipherText.trim().split("\\s+");
+    }
+
+    /** Index of the group the next letter decodes, or -1 past the end. */
+    private int currentGroup() {
+        int letters = 0;
+        for (int i = 0; i < typed.length(); i++) {
+            letters += typed.charAt(i) == ' ' ? 0 : 1;
+        }
+        String[] groups = groups();
+        for (int i = 0; i < groups.length; i++) {
+            if (!"/".equals(groups[i]) && letters-- == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /** After the last letter of a word, the space goes in by itself. */
+    private void autoSpace() {
+        if (!"MORSE".equals(transmission.kind) || typed.length() == 0 || typed.charAt(typed.length() - 1) == ' ') {
+            return;
+        }
+        int next = currentGroup();
+        String[] groups = groups();
+        if (next > 0 && "/".equals(groups[next - 1])) {
+            typed.append(' ');
+        }
+    }
+
+    /** The cipher with the group being decoded lit up. */
+    private void highlightCipher() {
+        if (!"MORSE".equals(transmission.kind)) {
+            return;
+        }
+        int current = currentGroup();
+        android.text.SpannableStringBuilder out = new android.text.SpannableStringBuilder();
+        String[] groups = groups();
+        int bright = androidx.core.content.ContextCompat.getColor(b.getRoot().getContext(), R.color.amber_bright);
+        int dim = androidx.core.content.ContextCompat.getColor(b.getRoot().getContext(), R.color.amber_dim);
+        for (int i = 0; i < groups.length; i++) {
+            if (i > 0) {
+                out.append(' ');
+            }
+            int start = out.length();
+            out.append(groups[i]);
+            int color = i == current ? bright : current >= 0 && i < current ? dim : 0;
+            if (color != 0) {
+                out.setSpan(new android.text.style.ForegroundColorSpan(color), start, out.length(),
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            if (i == current) {
+                out.setSpan(new android.text.style.UnderlineSpan(), start, out.length(),
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                out.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, out.length(),
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        b.cipher.setText(out);
+    }
+
+    /** A–Z, each with its code, four to a row; then space and erase. */
+    private void buildMorseKeyboard() {
+        android.view.LayoutInflater inflater = android.view.LayoutInflater.from(b.getRoot().getContext());
+        android.widget.LinearLayout line = null;
+        for (char c = 'A'; c <= 'Z'; c++) {
+            if ((c - 'A') % 4 == 0) {
+                line = new android.widget.LinearLayout(b.getRoot().getContext());
+                line.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+                b.morseKeyboard.addView(line);
+            }
+            char letter = c;
+            TextView key = (TextView) inflater.inflate(R.layout.item_decision_option, line, false);
+            key.setText(b.getRoot().getResources().getString(R.string.morse_key, String.valueOf(letter), Cipher.code(letter)));
+            key.setGravity(android.view.Gravity.CENTER);
+            key.setLayoutParams(new android.widget.LinearLayout.LayoutParams(0,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            key.setContentDescription(String.valueOf(letter));
+            key.setOnClickListener(v -> {
+                typed.append(letter);
+                autoSpace();
+                showMorseAnswer();
+            });
+            line.addView(key);
+        }
+        TextView space = (TextView) inflater.inflate(R.layout.item_decision_option, line, false);
+        space.setText(R.string.morse_space);
+        space.setLayoutParams(new android.widget.LinearLayout.LayoutParams(0,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        space.setOnClickListener(v -> {
+            if (typed.length() > 0 && typed.charAt(typed.length() - 1) != ' ') {
+                typed.append(' ');
+            }
+            showMorseAnswer();
+        });
+        TextView erase = (TextView) inflater.inflate(R.layout.item_decision_option, line, false);
+        erase.setText(R.string.morse_erase);
+        erase.setContentDescription(b.getRoot().getResources().getString(R.string.erase_description));
+        erase.setLayoutParams(new android.widget.LinearLayout.LayoutParams(0,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        erase.setOnClickListener(v -> {
+            // An auto-space goes with the letter before it.
+            if (typed.length() > 0 && typed.charAt(typed.length() - 1) == ' ') {
+                typed.setLength(typed.length() - 1);
+            }
+            if (typed.length() > 0) {
+                typed.setLength(typed.length() - 1);
+            }
+            showMorseAnswer();
+        });
+        line.addView(space);
+        line.addView(erase);
     }
 
     // Typed letters plus the symbols of the letter in progress: no translatable text here.
     @android.annotation.SuppressLint("SetTextI18n")
     private void showMorseAnswer() {
         b.answer.setText(typed + (symbol.length() > 0 ? "[" + symbol + "]" : "_"));
+        if (transmission != null) {
+            highlightCipher();
+        }
     }
 
     private static String morseTable() {

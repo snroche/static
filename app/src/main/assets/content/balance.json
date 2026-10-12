@@ -1,5 +1,5 @@
 {
-  "contentVersion": 18,
+  "contentVersion": 21,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -53,8 +53,8 @@
       85
     ],
     "max": 100,
-    "talkCooldownHours": 4,
-    "initiatedCooldownHours": 6,
+    "talkCooldownMinutes": 45,
+    "initiatedCooldownHours": 3,
     "initiatedExpireHours": 12,
     "neglectGraceHours": 48,
     "neglectPerDay": 3,
@@ -89,6 +89,8 @@
   "bands": [
     {
       "id": "short",
+      "baseKHz": 3000,
+      "stepKHz": 1,
       "name": "Short band",
       "minMinutes": 1,
       "maxMinutes": 5,
@@ -108,12 +110,14 @@
     },
     {
       "id": "medium",
+      "baseKHz": 7000,
+      "stepKHz": 1,
       "name": "Medium band",
       "minMinutes": 15,
       "maxMinutes": 60,
       "unlockAntennaLevel": 2,
       "noise": 0.12,
-      "orderDelaySeconds": 60,
+      "orderDelaySeconds": 0,
       "tuneRadius": 40,
       "signalsPerWindow": 3,
       "signalWeights": {
@@ -127,12 +131,14 @@
     },
     {
       "id": "long",
+      "baseKHz": 14000,
+      "stepKHz": 1,
       "name": "Long band",
       "minMinutes": 120,
       "maxMinutes": 360,
       "unlockAntennaLevel": 4,
       "noise": 0.25,
-      "orderDelaySeconds": 300,
+      "orderDelaySeconds": 0,
       "tuneRadius": 25,
       "signalsPerWindow": 2,
       "signalWeights": {
@@ -146,12 +152,14 @@
     },
     {
       "id": "deep",
+      "baseKHz": 21000,
+      "stepKHz": 1,
       "name": "Deep band",
       "minMinutes": 480,
       "maxMinutes": 720,
       "unlockAntennaLevel": 6,
       "noise": 0.4,
-      "orderDelaySeconds": 900,
+      "orderDelaySeconds": 0,
       "tuneRadius": 15,
       "signalsPerWindow": 1,
       "signalWeights": {
@@ -286,10 +294,10 @@
         }
       ],
       "levels": [
-        "Basic signal: far reports break up and orders arrive late.",
-        "Less static, faster orders.",
+        "Basic signal: far reports break up and odds get lost in the static.",
+        "Less static: you hear more of what they say out there.",
         "Clean signal on most bands.",
-        "Clearest signal: orders arrive almost at once."
+        "Clearest signal: even the deep band comes through."
       ]
     },
     {
@@ -363,6 +371,102 @@
         "Room for 6.",
         "Room for 7.",
         "Room for 8."
+      ]
+    },
+    {
+      "id": "battery_bank",
+      "name": "Battery bank",
+      "description": "Racks of salvaged cells: more stored power, and each battery charges more of it.",
+      "startLevel": 1,
+      "perLevel": 8,
+      "upgradeCosts": [
+        {
+          "scrap": 8,
+          "components": 4,
+          "batteries": 2
+        },
+        {
+          "scrap": 12,
+          "components": 6,
+          "batteries": 4
+        },
+        {
+          "scrap": 16,
+          "components": 10,
+          "batteries": 6,
+          "parts": 2
+        },
+        {
+          "scrap": 22,
+          "components": 14,
+          "batteries": 8,
+          "parts": 4
+        }
+      ],
+      "levels": [
+        "A few cells wired together.",
+        "+8 reserve; each battery charges 1 more.",
+        "+16 reserve; each battery charges 2 more.",
+        "+24 reserve; each battery charges 3 more.",
+        "+32 reserve; each battery charges 4 more."
+      ]
+    },
+    {
+      "id": "pantry",
+      "name": "Pantry",
+      "description": "Sealed shelves and a cold corner: food lasts longer.",
+      "startLevel": 1,
+      "perLevel": 0.06,
+      "upgradeCosts": [
+        {
+          "scrap": 8,
+          "components": 2
+        },
+        {
+          "scrap": 14,
+          "components": 4,
+          "parts": 1
+        },
+        {
+          "scrap": 20,
+          "components": 6,
+          "parts": 2
+        }
+      ],
+      "levels": [
+        "Crates on the floor.",
+        "Shelves and lids: 6% less food eaten.",
+        "Sealed bins: 12% less.",
+        "A cold room: 18% less."
+      ]
+    },
+    {
+      "id": "barricades",
+      "name": "Barricades",
+      "description": "Steel plates and a second door. Raids have to get through them first, even with nobody on guard.",
+      "startLevel": 1,
+      "perLevel": 3,
+      "upgradeCosts": [
+        {
+          "scrap": 12,
+          "components": 2
+        },
+        {
+          "scrap": 18,
+          "components": 4,
+          "parts": 1
+        },
+        {
+          "scrap": 26,
+          "components": 6,
+          "parts": 3
+        }
+      ],
+      "levels": [
+        "Just the hatch.",
+        "Plates on the hatch: +3 defense.",
+        "A second door: +6 defense.",
+        "A killing corridor: +9 defense."
       ]
     }
   ],
@@ -443,6 +547,22 @@
       "resourcesTargeted": 2,
       "seriousMargin": 5
     }
+  },
+  "treatment": {
+    "_comment": "Infirmary treats an injury on the spot: medicine per level healed. [placeholder]",
+    "medicinePerLevel": 2,
+    "declineCooldownHours": 6,
+    "eagerTraits": [
+      "gentil",
+      "imprudencia",
+      "calentona"
+    ]
+  },
+  "omens": {
+    "_comment": "Night scares in the bunker. [placeholder]",
+    "intervalHours": 5,
+    "chance": 0.35,
+    "cooldownHours": 72
   },
   "vignettes": {
     "_comment": "Small moments in the bunker while people are home. [placeholder]",
@@ -558,7 +678,7 @@
   "food": {
     "_comment": "The bunker eats. [placeholder]",
     "rationsPerScoutPerDay": 1.0,
-    "kitchenMaxSaving": 0.4,
+    "kitchenMaxSaving": 0.55,
     "hungerStressPerHour": 1.5,
     "hungerHealMultiplier": 0.5,
     "lowFoodDays": 1.0

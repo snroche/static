@@ -98,6 +98,10 @@ public final class SessionSnapshot {
         public final List<String> gifts;
         public final boolean canDispatch;
         public final boolean canTalk;
+        /** At home but still tired of talking: when they'll want to again. 0 otherwise. */
+        public final long talkReadyAtMillis;
+        /** How far into the current bond level, 0–100. */
+        public final int bondProgress;
         public final boolean canGift;
         public final boolean canAssignTask;
         /** Zone name while away, else null. */
@@ -151,6 +155,8 @@ public final class SessionSnapshot {
             this.gifts = Collections.unmodifiableList(b.gifts);
             this.canDispatch = b.canDispatch;
             this.canTalk = b.canTalk;
+            this.talkReadyAtMillis = b.talkReadyAtMillis;
+            this.bondProgress = b.bondProgress;
             this.canGift = b.canGift;
             this.canAssignTask = b.canAssignTask;
             this.awayAt = b.awayAt;
@@ -175,6 +181,8 @@ public final class SessionSnapshot {
             List<String> gifts;
             boolean canDispatch;
             boolean canTalk;
+            long talkReadyAtMillis;
+            int bondProgress;
             boolean canGift;
             boolean canAssignTask;
             String awayAt;
@@ -204,7 +212,7 @@ public final class SessionSnapshot {
     }
 
     public static final class PendingDecision {
-        public enum Kind { ORDER, TALK }
+        public enum Kind { ORDER, TALK, TREAT }
 
         public final Kind kind;
         /** Expedition id (ORDER) or conversation id (TALK). */
@@ -251,6 +259,8 @@ public final class SessionSnapshot {
         public final boolean intel;
         /** How picked-over it is, 0–100. */
         public final int depleted;
+        /** "2 d 4 h" until it's full again, or null if it's untouched. */
+        public String refillIn;
 
         ZoneView(String id, String name, String description, int danger, int minMinutes, int maxMinutes,
                  String band, int relay, boolean intel, int depleted) {
@@ -298,6 +308,8 @@ public final class SessionSnapshot {
         public final int progress;
         public final int target;
         public final boolean weekly;
+        /** "2 rations", what finishing it pays. */
+        public String reward = "";
 
         GoalView(String label, int progress, int target, boolean weekly) {
             this.label = label;
@@ -312,10 +324,14 @@ public final class SessionSnapshot {
         public final String name;
         public final boolean unlocked;
 
-        BandView(String id, String name, boolean unlocked) {
+        /** Frequency at each dial position, for the readout under the dial. */
+        public final java.util.function.IntFunction<String> frequency;
+
+        BandView(String id, String name, boolean unlocked, java.util.function.IntFunction<String> frequency) {
             this.id = id;
             this.name = name;
             this.unlocked = unlocked;
+            this.frequency = frequency;
         }
     }
 
@@ -377,7 +393,35 @@ public final class SessionSnapshot {
         }
     }
 
+    /** A station you've heard: where it is and when it's on. */
+    public static final class StationView {
+        public final String id;
+        public final String name;
+        public final String bandId;
+        public final int position;
+        /** "3.520 MHz · Short band". */
+        public final String where;
+        /** "daily at 19:00, for 1 h". */
+        public final String schedule;
+        public final boolean onAir;
+        /** Leaves something each airing. */
+        public final boolean bulletin;
+
+        StationView(String id, String name, String bandId, int position, String where, String schedule,
+                    boolean onAir, boolean bulletin) {
+            this.id = id;
+            this.name = name;
+            this.bandId = bandId;
+            this.position = position;
+            this.where = where;
+            this.schedule = schedule;
+            this.onAir = onAir;
+            this.bulletin = bulletin;
+        }
+    }
+
     public static final class RadioView {
+        public final List<StationView> stations;
         public final List<BandView> bands;
         public final int dialMax;
         public final List<TransmissionView> transmissions;
@@ -387,7 +431,8 @@ public final class SessionSnapshot {
         public final List<String> relays;
 
         RadioView(List<BandView> bands, int dialMax, List<TransmissionView> transmissions,
-                  boolean morseTable, int relayKits, List<String> relays) {
+                  boolean morseTable, int relayKits, List<String> relays, List<StationView> stations) {
+            this.stations = Collections.unmodifiableList(stations);
             this.bands = Collections.unmodifiableList(bands);
             this.dialMax = dialMax;
             this.transmissions = Collections.unmodifiableList(transmissions);
@@ -408,6 +453,10 @@ public final class SessionSnapshot {
         public final List<ConsumerView> consumers;
         public final int reserve;
         public final int reserveCapacity;
+        /** Reserve one battery adds (bigger with the battery bank). */
+        public int rechargePer;
+        /** Batteries in stock. */
+        public int batteries;
         public final boolean canRecharge;
         public final List<ModuleView> modules;
         public final int slots;
@@ -509,11 +558,29 @@ public final class SessionSnapshot {
         public final double strength;
         public final String text;
         public final boolean lockable;
+        /** "7.215 MHz". */
+        public final String frequency;
+        /** A station's name, or null. */
+        public final String station;
+        /** What it sounds like (SoundEngine.Audio name): NONE, VOICE, VOICE_F, CHILD, MUSIC… */
+        public final String audio;
+        /** Reserve it costs to lock on (0: free). */
+        public final int cost;
 
-        public Tuning(double strength, String text, boolean lockable) {
+        public Tuning(double strength, String text, boolean lockable, String frequency, String station,
+                      String audio, int cost) {
             this.strength = strength;
             this.text = text;
             this.lockable = lockable;
+            this.frequency = frequency;
+            this.station = station;
+            this.audio = audio;
+            this.cost = cost;
+        }
+
+        /** Nothing but static. */
+        public static Tuning quiet(String text, String frequency) {
+            return new Tuning(0, text, false, frequency, null, "NONE", 0);
         }
     }
 
@@ -539,8 +606,11 @@ public final class SessionSnapshot {
         public final List<PlaceView> places;
         /** Ring labels, inner first. */
         public final List<String> bands;
+        /** How much of its loot a picked-over place gets back per day, in percent. */
+        public final int refillPercentPerDay;
 
-        MapView(List<SectorView> sectors, List<PlaceView> places, List<String> bands) {
+        MapView(List<SectorView> sectors, List<PlaceView> places, List<String> bands, int refillPercentPerDay) {
+            this.refillPercentPerDay = refillPercentPerDay;
             this.sectors = Collections.unmodifiableList(sectors);
             this.places = Collections.unmodifiableList(places);
             this.bands = Collections.unmodifiableList(bands);
@@ -592,10 +662,13 @@ public final class SessionSnapshot {
         /** Map glyph, or null; and the short label. */
         public final String icon;
         public final String shortName;
+        /** "2 d 4 h" until it's full again, or null if it's untouched. */
+        public final String refillIn;
 
         PlaceView(String zoneId, String name, int ring, double ringPosition, double turn, int danger,
-                  boolean reachable, int depleted, String icon, String shortName) {
+                  boolean reachable, int depleted, String icon, String shortName, String refillIn) {
             this.depleted = depleted;
+            this.refillIn = refillIn;
             this.icon = icon;
             this.shortName = shortName;
             this.zoneId = zoneId;
@@ -662,6 +735,20 @@ public final class SessionSnapshot {
     }
 
     /** One expedition in progress. */
+    /** A finished expedition whose log chip is still shown: thread and who went. */
+    public static final class DoneLog {
+        public final String thread;
+        public final String who;
+
+        DoneLog(String thread, String who) {
+            this.thread = thread;
+            this.who = who;
+        }
+    }
+
+    /** Finished expeditions whose chips stay in COMMS a while longer. */
+    public List<DoneLog> doneLogs = List.of();
+
     public static final class ExpeditionView {
         /** Log thread of this expedition. */
         public final String thread;

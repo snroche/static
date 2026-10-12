@@ -127,7 +127,8 @@
         android:textSize="13sp" />
     </LinearLayout>
 
-    <!-- Actions wrap onto a second line on narrow screens. -->
+    <!-- Actions wrap onto a second line on narrow screens. Gift, task and gear only show
+         on an open card, so a closed one has two or three buttons. -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -169,6 +170,13 @@
             android:text="@string/equip_button" />
 
         <TextView
+            android:id="@+id/moreButton"
+            style="@style/TerminalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/more_button" />
+
+        <TextView
             android:id="@+id/recallButton"
             style="@style/TerminalButton"
             android:layout_width="wrap_content"
@@ -178,7 +186,7 @@
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="dispatch,recallButton,talk,gift,taskButton,equipButton"
+            app:constraint_referenced_ids="dispatch,recallButton,talk,gift,taskButton,equipButton,moreButton"
             app:flow_horizontalBias="0"
             app:flow_horizontalGap="4dp"
             app:flow_horizontalStyle="packed"

@@ -6,19 +6,23 @@
     <string name="log_description">Radio log</string>
     <string name="panel_close">[ CLOSE ]</string>
     <string name="panel_back">[ BACK ]</string>
-    <string name="panel_diary_button">[ DIARY ]</string>
     <string name="panel_scouts_title">CREW</string>
     <string name="panel_gift_title">What do you give %1$s?</string>
     <string name="panel_task_title">What does %1$s do in the bunker?</string>
     <string name="panel_diary_title">DIARY</string>
     <string name="dispatch_button">[ DISPATCH ]</string>
     <string name="talk_button">[ TALK ]</string>
+    <string name="talk_button_later">[ TALK at %1$s ]</string>
+    <string name="more_button">[ ⋯ ]</string>
+    <string name="less_button">[ ▴ ]</string>
+    <string name="more_description">More for %1$s: gifts, tasks, gear</string>
     <string name="gift_button">[ GIFT ]</string>
     <string name="task_button">[ TASK ]</string>
 
     <string name="scout_status_away">%1$s: %2$s</string>
     <string name="scout_vitals">Stress %1$d · Trust %2$d · %3$s</string>
-    <string name="scout_bond">Bond %1$s</string>
+    <string name="scout_bond">Bond %1$s · %2$d%% to the next level</string>
+    <string name="scout_bond_max">Bond %1$s · as close as it gets</string>
     <string name="scout_task">Task: %1$s</string>
     <string name="scout_traits">Traits: %1$s</string>
     <string name="scout_gifts">Carrying: %1$s</string>
@@ -35,6 +39,8 @@
     <string name="decision_talk_header">&#xEB79; %1$s wants to talk</string>
     <string name="decision_talk_deadline">Answer by %1$s, or the moment passes.</string>
     <string name="decision_talk_open">No rush. Tap the name for the whole chat.</string>
+    <string name="decision_treat_header">&#xE2E1; %1$s, in the infirmary</string>
+    <string name="decision_treat_open">Treating it now heals it at once, for medicine. Otherwise it heals with time.</string>
     <string name="decision_count">%1$d/%2$d</string>
     <string name="decision_prev">Previous decision</string>
     <string name="decision_next">Next decision</string>
@@ -45,9 +51,25 @@
     <string name="panel_radio_title">RADIO</string>
     <string name="dial_description">Frequency dial</string>
     <string name="tune_button">[ LOCK ON ]</string>
-    <string name="frequency">Frequency %1$d · %2$s</string>
+    <string name="tune_button_cost">[ LOCK ON · &#xE079;%1$d ]</string>
+    <string name="tune_button_free">[ LISTEN · free ]</string>
+    <string name="frequency">%1$s · %2$s</string>
+    <string name="radio_station">◉ %1$s</string>
+    <string name="radio_section_dial">DIAL</string>
+    <string name="radio_reserve">&#xE079; %1$d/%2$d · batteries %3$d</string>
+    <string name="radio_recharge">[ +1 BATTERY: +%1$d ]</string>
+    <string name="radio_section_stations">STATIONS</string>
+    <string name="radio_section_stations_on">STATIONS ◉%1$d</string>
+    <string name="stations_none">No stations yet. Sweep the dial: when you find one, it goes here with its timetable.</string>
+    <string name="station_row_on">◉ ON AIR · %1$s\n    %2$s\n    %3$s</string>
+    <string name="station_row_off">○ %1$s\n    %2$s\n    %3$s</string>
+    <string name="station_bulletin"> · leaves something each time it airs</string>
+    <string name="radio_section_decode">DECODE</string>
+    <string name="radio_section_decode_count">DECODE •%1$d</string>
+    <string name="radio_dial_help">Slide to sweep, ◀ ▶ to fine-tune. Stations (◉) are always on the same frequency and free to listen to. Locking onto a hidden signal costs reserve, unless there\'s nothing in it to keep.</string>
+    <string name="fine_down_description">Tune down one step</string>
+    <string name="fine_up_description">Tune up one step</string>
     <string name="band_locked">%1$s (out of range)</string>
-    <string name="transmissions_title">TRANSMISSIONS TO DECODE</string>
     <string name="no_transmissions">None for now.</string>
     <string name="transmission_row">[ %1$s ] %2$s</string>
     <string name="module_line">%1$s: level %2$d of %3$d</string>
@@ -59,6 +81,7 @@
 
     <string name="decode_caesar_help">Turn the dial until the message makes sense.</string>
     <string name="decode_morse_help">Transcribe letter by letter: build each letter with dots and dashes, then tap LETTER.</string>
+    <string name="decode_morse_keyboard_help">The manual\'s table is your keyboard: find the highlighted group and tap its letter. Spaces go in by themselves.</string>
     <string name="shift_value">Shift: %1$d</string>
     <string name="shift_up" translatable="false">[ ▶ ]</string>
     <string name="shift_down" translatable="false">[ ◀ ]</string>
@@ -71,6 +94,7 @@
     <string name="dash_description">Dash</string>
     <string name="erase_description">Erase</string>
     <string name="morse_letter">[ LETTER ]</string>
+    <string name="morse_key" translatable="false">%1$s %2$s</string>
     <string name="morse_space">[ SPACE ]</string>
     <string name="morse_table">[ TABLE ]</string>
     <string name="send_button">[ SEND ]</string>
@@ -98,7 +122,7 @@
     <string name="panel_recipes_title">What do we make?</string>
     <string name="recipe_meta">%1$s · %2$d min</string>
     <string name="recipe_locked">Needs workshop level %1$d</string>
-    <string name="modules_title">MODULES</string>
+    <string name="upgrades_title">UPGRADES</string>
     <string name="defense_title">DEFENSE</string>
     <string name="defense_line">On guard: %1$s · defense %2$d\nBunks: %3$d / %4$d</string>
     <string name="nobody_on_guard">nobody</string>
@@ -113,7 +137,10 @@
     <string name="gear_empty">No gear yet. It turns up on expeditions or gets built in the workshop.</string>
 
     <string name="goals_title">GOALS</string>
-    <string name="goal_line">%1$s %2$s (%3$d/%4$d)</string>
+    <string name="goal_line">%1$s %2$s (%3$d/%4$d)\n      reward: %5$s</string>
+    <string name="goals_daily">TODAY · reset at midnight</string>
+    <string name="goals_weekly">THIS WEEK · reset on Monday</string>
+    <string name="goals_help">Finish a goal and its reward goes straight into your supplies. They\'re optional: a nudge, not a chore.</string>
 
     <!-- Status bar and expedition strip -->
     <string name="hud_power">&#xE241;%1$d/%2$dW</string>
@@ -135,11 +162,22 @@
     <string name="send_pick_where">%1$s. Now pick where.</string>
     <string name="send_ready">%1$s → %2$s</string>
     <string name="send_go">[ SEND ]</string>
+    <string name="send_go_anyway">[ SEND ANYWAY ]</string>
+    <string name="send_hurt_who">%1$s (%2$s)</string>
+    <string name="send_hurt_warning">&#xE026; Hurt: %1$s. Worse odds out there, and another injury stacks on top. Treat them first, or tap SEND again to go anyway.</string>
     <string name="partner_friends">they get on: works better together</string>
     <string name="partner_rivals">rivals: they\'ll argue the whole way</string>
     <string name="log_system">&#xE18D; SYSTEM</string>
     <string name="log_expeditions">&#xED7F; EXPEDITIONS</string>
     <string name="log_chats">&#xEB79; CHATS</string>
+    <string name="log_diary">&#xE82E; DIARY</string>
+    <string name="crew_filter_button">[ FILTER ▾ ]</string>
+    <string name="crew_filter_button_on">[ %1$s ▴ ]</string>
+    <string name="tile_away">→ %1$s</string>
+    <string name="tile_state">&#xF338;%1$s &#xE2D1;%2$s</string>
+    <string name="tile_hurt">&#xE2E1;</string>
+    <string name="tile_talk">&#xEB79;</string>
+    <string name="tile_description">%1$s: %2$s. %3$s. Tap for details and actions.</string>
     <string name="log_unread">%1$s •%2$d</string>
     <string name="log_all">[ ALL ]</string>
     <string name="crew_filter_all">all</string>
@@ -149,9 +187,9 @@
     <string name="crew_filter_stressed">stressed</string>
     <string name="log_day">──── %1$s ────</string>
     <string name="log_chip_unread">[ %1$s •%2$d ]</string>
-    <string name="log_bunker_chip">Bunker</string>
     <string name="log_chip">[ %1$s ]</string>
     <string name="log_chip_on">[•%1$s ]</string>
+    <string name="log_chip_done">%1$s ✓</string>
     <string name="tab_comms">&#xE28C;\nCOMMS</string>
     <string name="tab_comms_badge">&#xE28C; ●%1$d\nCOMMS</string>
     <string name="tab_crew">&#xE849;\nCREW</string>
@@ -162,7 +200,6 @@
     <string name="tab_radio_badge">&#xE43B; •%1$d\nRADIO</string>
     <string name="tab_bunker">&#xE68A;\nBUNKER</string>
     <string name="tab_bunker_alert">&#xE68A; !\nBUNKER</string>
-    <string name="tab_selected">[%1$s]</string>
     <string name="options_button">&#xE493;</string>
     <string name="options_title">OPTIONS</string>
     <string name="options_name_label">What the crew calls you</string>
@@ -187,7 +224,8 @@
     <string name="map_hint">Tap a ? to send someone to scout it. Places show up as they\'re found.</string>
     <string name="map_scout">[ SEND SOMEONE TO SCOUT ]</string>
     <string name="map_send">[ SEND SOMEONE HERE ]</string>
-    <string name="map_legend">&#xE68A; bunker · ? unexplored · ?! something on the radio · ○ picked over · … someone\'s out there · · out of reach</string>
+    <string name="map_legend_title">MAP SYMBOLS</string>
+    <string name="map_legend">&#xE68A;   the bunker (you)\n?    a sector nobody has scouted\n?!   unscouted, but the radio caught something there\n○    a place that\'s been picked over\n…    someone is out there right now\n·    out of the antenna\'s reach</string>
     <string name="map_place">%1$s · danger %2$d.</string>
     <string name="map_place_far">%1$s · danger %2$d. Out of reach: the antenna can\'t get that far.</string>
     <string name="map_sector_unknown">The %1$s. Nobody\'s been there.</string>
@@ -198,13 +236,15 @@
     <string name="panel_scout_sector_title">Who scouts the %1$s?</string>
     <string name="scout_sector_nobody">Nobody\'s free to go.</string>
     <string name="zones_none">No places known yet. Open the [MAP] and scout around the bunker.</string>
-    <string name="zone_depleted">picked over %1$d%%</string>
-    <string name="zone_depleted_long">Picked over (%1$d%%): less to find until it refills.</string>
+    <string name="zone_depleted">picked over %1$d%% · full in %2$s</string>
+    <string name="zone_depleted_long">Picked over (%1$d%%): less to find. Full again in %2$s.</string>
+    <string name="zone_untouched">Untouched: full loot.</string>
+    <string name="map_refill_rule">Looting a place picks it over; it gets back %1$d%% a day.</string>
     <string name="module_now_next">   now: %1$s\n   next: %2$s</string>
     <string name="module_now_max">   now: %1$s (max level)</string>
     <string name="info_title">INFO</string>
     <string name="info_nothing">Nothing here needs explaining. Long-press names, traits, stats, places or supplies.</string>
-    <string name="inventory_button">&#xE3D7; [ INVENTORY ]</string>
+    <string name="inventory_button">[ &#xE3D7; INVENTORY ]</string>
     <string name="inventory_title">INVENTORY</string>
     <string name="inventory_supplies">&#xE3D7;\nSUPPLIES</string>
     <string name="inventory_gear">&#xF323;\nGEAR</string>

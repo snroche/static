@@ -10,6 +10,137 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.6.12] — Smoother radio, more sounds, more to build — in verification
+
+App 0.6.12 (versionCode 612) · DB 12 (no change) · **Content 20 → 21**
+
+### Added
+- **Seven new radio sounds,** all synthesized: a woman's voice, a child, a preacher in an echoing hall, a choir, a church organ, a music box waltz, and a numbers-station reader with a chime between groups. Stations, rare finds and numbers transmissions use them.
+- **Two new stations:**
+  - The Chapel of San Roque: organ, every morning 08:00–08:45.
+  - A music box that only plays at night, and someone winds it again every time it stops.
+- **Batteries from the radio:** the DIAL section shows the reserve and battery count, with a [ +1 BATTERY ] button.
+- **Three new bunker upgrades:**
+  - **Battery bank:** +8 reserve per level, and each battery charges 1 more per level.
+  - **Pantry:** 6% less food eaten per level. The total saving cap with cooks goes from 40% to 55%.
+  - **Barricades:** +3 defense per level, and they hold off raids even with nobody on guard.
+
+  Old saves start them at level 1.
+
+### Changed
+- **Signals you already locked onto stay on the dial.** They read "Already logged" and can't be locked again, instead of vanishing.
+
+### Fixed
+- **Opening the radio froze the screen for about half a second:** every sound loop was synthesized at that moment. They're now built on a low-priority background thread when the app starts; if the radio opens first, the static starts as soon as they're ready.
+
+## [0.6.11] — A tidier COMMS, clearer screens — in verification
+
+App 0.6.11 (versionCode 611) · DB 12 (no change) · Content 20 (no change)
+
+### Added
+- **Every log line shows its time,** small and dim. Tapping a line adds the date.
+- **Warning before sending someone hurt:** the send screen says who's hurt and how badly. The first tap on SEND turns it into SEND ANYWAY.
+- **Goals explain themselves:** each one shows its reward (paid straight into your supplies when you finish it), and when daily and weekly goals reset.
+
+### Changed
+- **EXPEDITIONS → ALL is an overview:**
+  - It shows departures, returns (with loot and injuries), deaths, recalls and calls for orders.
+  - Each expedition's full radio log is on its own chip. A line separates one expedition from the next.
+  - These summaries no longer go to SYSTEM.
+- **Calls for orders switch off:** once the order is given, or a newer call replaces it, the bright "!" turns into a dim, switched-off one.
+- **Expedition chips stay after the trip:**
+  - Each expedition's chip ("Mara ✓") stays for 4 hours after its result came in.
+  - Results are worked out while the game is open: on screen if you were there, or when you open the game if you weren't.
+- **CHATS → ALL** shows only what happens between the crew (shared moments, reactions). One-on-one chats are on each person's chip, and the "Bunker" chip is gone.
+- **Selected tabs get tall brackets:** one bracket around the whole button, icon and name together, instead of characters beside the text. Same for the COMMS tabs, inventory tabs and the radio and bunker sections.
+- **Radio and bunker section buttons stay on one line:** they shrink to fit and the bracket shows the selected one.
+- **The map legend is titled "MAP SYMBOLS"** and lists one symbol per line, saying what each means.
+
+## [0.6.10] — Fewer repeats, timed choices, a radio with a timetable — in verification
+
+App 0.6.10 (versionCode 610) · DB 12 (no change) · **Content 19 → 20**
+
+### Added
+- **30 common situations** that can come up in any zone of their band: a vending machine, a lone trader, a bridge down, a farmhouse with chickens, a hospital bed in the street… Short, medium and long each get at least 10. New `bands` field on events.
+- **Choices take time, or save it:**
+  - An option can cost or save time on the trip, shown on its button: "Wait for them to leave (+4 min)", "Rob them while they aren't looking (−2 min)".
+  - It's a share of the trip's planned length (`time` on the option), so it scales with the band.
+  - A shortcut only saves time if it works; waiting costs time either way.
+  - 99 existing options are tagged.
+- **Stations keep their own timetable:**
+  - Some are always on (weather, the emergency broadcast).
+  - Old Berto talks every evening 19:00–20:00. The tango plays 21:00–23:00. The Voice comes on for three minutes every hour.
+  - Each station's lines change on their own rhythm, or once per airing.
+- **Bulletins:**
+  - Relief Net drops food three times a day. Dr. Levy leaves medicine at 10:00.
+  - Scav Net warns about dangers at 13:00. The Locksmith gives away stashes at 03:00 and 15:00.
+  - You catch a bulletin if you're listening, or if someone is on the **radio task**: they log it and collect it while you're away. That's what the radio assistant is for now.
+- **STATIONS section on the radio:** every station you've heard, with its frequency, timetable and "ON AIR" now. Tap one to tune straight to it.
+- **Treatment in the infirmary:**
+  - Whoever is on the infirmary task (not the injured one) offers to treat an injured person at home on the spot: "Do it (4 medicine)" or "Not now".
+  - Gentle, Reckless and Hothead healers don't ask; they just do it if there's medicine.
+  - Costs 2 medicine per injury level, and the injury heals at once.
+  - "Not now" keeps them from asking again for 6 hours. Nothing is stored: the offer shows while the conditions hold.
+
+### Changed
+- **Orders arrive at once.** Radio waves don't take minutes. The radio module now cleans up the signal instead of shortening a delay.
+- **Recent situations wait their turn:** anything seen in the last 48 hours only comes up once the fresh ones run out.
+- **Crew screen:**
+  - The living crew is a grid of tiles: name, what they're doing (their task, or "→ place") and stress, bond, hurt and talk marks.
+  - Solid amber frame: in the bunker. Dashed blue frame: out on a mission.
+  - Tap a tile for the full card and every action.
+  - Filters hide behind [ FILTER ▾ ], which shows the active filter.
+- **The Diary moved to COMMS,** as a fourth tab next to SYSTEM · EXPEDITIONS · CHATS. The fallen stay there instead of in the crew grid.
+- **Task texts:** the radio task explains bulletins, and the infirmary task explains treatment.
+
+## [0.6.9] — More to talk about, a deeper radio, and things in the dark — in verification
+
+App 0.6.9 (versionCode 609) · DB 12 (no change) · **Content 18 → 19**
+
+### Added
+- **46 new conversations**, chosen by who the person is and how things stand with you:
+  - **Trust:** someone who doubts you asks why you sent them there, or wants the real odds. Someone who trusts you says they'd go anywhere, and that it scares them.
+  - **Stress:** shaking hands and sleepless nights when it's high; "is it weird that today was good?" when it's low.
+  - **Bond:** strangers ask what to call you. Close friends share food, ask you to teach them the radio, and talk about the day it's over.
+  - **Traits:** each personality starts its own conversations (the Fearful asks you to leave the light on, the Distrustful wants a code word…).
+  - **Everyday pool:** ten new "got a minute?" chats replace the lonely "I'm here" one, plus five more for when you start the talk.
+  - New dialogue conditions: `minTrust`/`maxTrust`, `minStress`/`maxStress`, `maxBondLevel`.
+  - More ways to open a chat in every voice.
+- **Radio stations:** fixed channels that are always on the same frequency, free to listen to, and say something new every few minutes. Each goes in the Diary the first time.
+  - Automated weather, Old Berto talking about his garden, the emergency broadcast, a tango record.
+  - The Litany, which reads the names of the dead, ours included.
+  - Some only come on at night.
+- **Echoes:** some hours after someone falls, their voice can turn up on the short band, saying their last words.
+- **Ten more rare finds**, half of them with supplies.
+- **Night omens:** knocks on the hatch, footsteps above, a photo of everyone asleep. They get worse as the Voice's story advances. Stress only, never harm. Some come as an alert.
+- **Five suspense situations** on expeditions: footsteps that stop when you do, a radio saying your name, mannequins, a child's voice in a basement, shapes in the fog. None is lethal.
+- **Radio sound:**
+  - A continuous static bed instead of a click per dial move.
+  - A squelch sweep when you switch band.
+  - Each signal has its own sound: a man babbling in no language (synthesized), whispers, Morse tones, a teletype warble, a bandoneon, breathing, an open carrier.
+  - Off frequency, the signal plays sped up and thin, like single-sideband, and settles as you tune in.
+- **Map:** tap a place to see when it's full again ("Full again in 1 d 6 h") and how fast places refill. The send screen shows it too.
+
+### Changed
+- **Frequencies in MHz** (short 3.000–3.999, medium 7, long 14, deep 21), plus ◀ ▶ buttons for fine-tuning.
+- **Locking on says what it costs:** "LOCK ON · ◈2", or "LISTEN · free" for stations and finds with nothing to keep, which now cost no reserve.
+- **Rare finds don't repeat** until you've heard them all; after that, the ones with supplies come first.
+- **Morse with the radio manual:** the dot/dash pad becomes a letter keyboard with each letter's code. The group you're on is highlighted in the message, and spaces go in by themselves. Without the manual it's the pad, as before.
+- **Talking:**
+  - The cooldown is 45 minutes (was 4 hours).
+  - Scout-started chats come every 3 hours (was 6).
+  - Every bond change now shows a line ("Mara feels a little closer to you. Bond 2: 40% to the next."), not just level-ups.
+  - The crew card shows the progress too.
+- **No more repeats:** the same repeatable chat never comes twice in a row. A repeatable chat only jumps the queue the first time; after that it joins the everyday pool.
+- **Tidier screens:**
+  - Crew cards show only SEND/RECALL, TALK and [ ⋯ ]. Gift, task and gear are on the open card. TALK stays visible when they're not in the mood, dimmed, with the time they will be.
+  - The radio is split into DIAL · DECODE · RELAYS.
+  - The bunker is split into POWER · WORKSHOP · UPGRADES · GOALS, with INVENTORY in the header. A section that needs you is marked: "!" for a power problem, "↑" for a free bench or an affordable upgrade.
+
+### Fixed
+- **A signal's preview didn't match its contents:** it showed Morse and turned out to be Caesar, or the other way round. The preview and the lock now roll the same seeded dice per signal. Every cipher has its own preview, and so do the rare finds.
+- **Talking didn't seem to raise the bond with more than one person:** only level-ups were announced, so smaller gains went unseen. Every change shows now.
+
 ## [0.6.8] — Static in stretches, colors, tidier screen — in verification
 
 App 0.6.8 (versionCode 608) · DB 12 (no change) · Content 18 (no change)

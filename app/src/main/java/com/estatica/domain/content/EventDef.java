@@ -11,6 +11,12 @@ public final class EventDef {
     private List<Option> options;
     /** The key item this situation exists to give: it stops showing up once you have it. */
     private String grantsKey;
+    /** Bands where it can come up in any zone (common situations), on top of zone lists. */
+    private List<String> bands;
+
+    public List<String> getBands() {
+        return bands != null ? bands : List.of();
+    }
 
     public String getGrantsKey() {
         return grantsKey;
@@ -52,6 +58,16 @@ public final class EventDef {
         private Risk risk = Risk.SAFE;
         private Outcome success;
         private Outcome failure;
+        /**
+         * Time it costs (positive) or saves (negative), as a share of the trip's planned length,
+         * so it scales with the band: 0.15 is a bit longer out there. A saving needs success;
+         * a cost is paid either way.
+         */
+        private double time;
+
+        public double getTime() {
+            return time;
+        }
 
         /** Only for someone with any of these traits (visible ones). */
         private List<String> requiresTrait;

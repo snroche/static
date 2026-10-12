@@ -33,8 +33,54 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
     private long typingSeq = TerminalUiState.NO_TYPING;
     private int typedChars;
     private Highlighter highlighter = Highlighter.NONE;
-    /** Lines the player tapped to see when they happened. */
+    /** Lines the player tapped to see the full date. */
     private final java.util.Set<Long> showingTime = new java.util.HashSet<>();
+    /** Draw a line between lines of different threads (EXPEDITIONS → ALL). */
+    private boolean separateThreads;
+    /** Expeditions still waiting for orders: their latest call stays lit, older ones go dim. */
+    private java.util.Set<String> awaiting = java.util.Set.of();
+    /** Per thread, the newest alert line. */
+    private final java.util.Map<String, Long> latestAlert = new java.util.HashMap<>();
+
+    @SuppressLint("NotifyDataSetChanged")
+    void setSeparateThreads(boolean separate) {
+        if (separate != separateThreads) {
+            separateThreads = separate;
+            notifyDataSetChanged();
+        }
+    }
+
+    /** @param expeditionIds expeditions waiting for orders right now */
+    @SuppressLint("NotifyDataSetChanged")
+    void setAwaiting(java.util.Set<String> expeditionIds) {
+        if (!expeditionIds.equals(awaiting)) {
+            awaiting = java.util.Set.copyOf(expeditionIds);
+            notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onCurrentListChanged(@NonNull List<LogLine> previous, @NonNull List<LogLine> current) {
+        latestAlert.clear();
+        for (LogLine line : current) {
+            if (line.getChannel() == LogChannel.ALERT) {
+                latestAlert.merge(line.getThread(), line.getSeq(), Math::max);
+            }
+        }
+    }
+
+    /** An alert about an expedition that already got its orders: shown switched off. */
+    private boolean answered(LogLine line) {
+        String thread = line.getThread();
+        if (line.getChannel() != LogChannel.ALERT || !thread.startsWith(LogLine.EXPEDITION_PREFIX)) {
+            return false;
+        }
+        String id = thread.substring(LogLine.EXPEDITION_PREFIX.length());
+        if (id.endsWith(LogLine.SUMMARY_SUFFIX)) {
+            id = id.substring(0, id.length() - LogLine.SUMMARY_SUFFIX.length());
+        }
+        return !awaiting.contains(id) || latestAlert.getOrDefault(thread, -1L) != line.getSeq();
+    }
 
     /** Long-press on a line. */
     interface LineListener {
@@ -118,7 +164,9 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
         LogLine line = getItem(position);
         LogLine previous = position > 0 ? getItem(position - 1) : null;
         holder.bind(line, typingSeq, typedChars, highlighter, showingTime.contains(line.getSeq()),
-                previous == null || !sameDay(previous.getTimestampMillis(), line.getTimestampMillis()));
+                previous == null || !sameDay(previous.getTimestampMillis(), line.getTimestampMillis()),
+                separateThreads && previous != null && !previous.getThread().equals(line.getThread()),
+                answered(line));
     }
 
     @Override
@@ -172,6 +220,8 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
         private final int[] voices;
         private final String walkie;
         private final String alertIcon;
+        private final int colorHint;
+        private final int colorDim;
 
         Holder(ItemLogEntryBinding binding) {
             super(binding.getRoot());
@@ -192,11 +242,14 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
             colorBackground = ContextCompat.getColor(c, R.color.terminal_bg);
             walkie = c.getString(R.string.ic_walkie);
             alertIcon = c.getString(R.string.ic_alert);
+            colorHint = ContextCompat.getColor(c, R.color.amber_hint);
+            colorDim = ContextCompat.getColor(c, R.color.amber_dim);
         }
 
-        void bind(LogLine line, long typingSeq, int typedChars, Highlighter highlighter, boolean withTime,
-                  boolean newDay) {
+        void bind(LogLine line, long typingSeq, int typedChars, Highlighter highlighter, boolean withDate,
+                  boolean newDay, boolean newThread, boolean answered) {
             android.content.Context c = binding.getRoot().getContext();
+            binding.threadDivider.setVisibility(newThread && !newDay ? android.view.View.VISIBLE : android.view.View.GONE);
             binding.day.setVisibility(newDay ? android.view.View.VISIBLE : android.view.View.GONE);
             if (newDay) {
                 String day = new java.text.SimpleDateFormat("EEEE d MMMM", java.util.Locale.getDefault())
@@ -208,25 +261,28 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
                     ? text.substring(0, Math.min(typedChars, text.length())) + CURSOR
                     : text;
             SpannableStringBuilder out = new SpannableStringBuilder();
-            prefix(line, out);
+            // A small, dim time on every line: when it happened, at a glance.
+            span(out, android.text.format.DateFormat.getTimeFormat(c).format(new java.util.Date(line.getTimestampMillis())) + " ",
+                    new ForegroundColorSpan(colorHint), new android.text.style.RelativeSizeSpan(0.75f));
+            prefix(line, out, answered);
             int body = out.length();
             out.append(shown);
             highlighter.apply(out, body);
             if (line.getChannel() == LogChannel.RADIO) {
                 dimStatic(out, body);
             }
-            if (withTime) {
+            if (withDate) {
                 int start = out.length();
-                out.append("  ").append(android.text.format.DateFormat.getTimeFormat(c)
+                out.append("  ").append(android.text.format.DateFormat.getMediumDateFormat(c)
                         .format(new java.util.Date(line.getTimestampMillis())));
                 out.setSpan(new ForegroundColorSpan(colorOperator), start, out.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             binding.text.setText(out);
-            binding.text.setTextColor(colorFor(line));
+            binding.text.setTextColor(answered ? colorDim : colorFor(line));
         }
 
         /** Who's talking, with a glyph: › system, walkie + name, inverse ⚠ for alerts, ❯ for you. */
-        private void prefix(LogLine line, SpannableStringBuilder out) {
+        private void prefix(LogLine line, SpannableStringBuilder out, boolean answered) {
             switch (line.getChannel()) {
                 case OPERATOR:
                     span(out, "❯ ", new ForegroundColorSpan(colorOperator));
@@ -240,8 +296,13 @@ final class LogAdapter extends ListAdapter<LogLine, LogAdapter.Holder> {
                     }
                     break;
                 case ALERT:
-                    span(out, " " + alertIcon + " ", new BackgroundColorSpan(colorAlert),
-                            new ForegroundColorSpan(colorBackground), new StyleSpan(Typeface.BOLD));
+                    if (answered) {
+                        // Orders given: the same mark, switched off.
+                        span(out, " " + alertIcon + " ", new ForegroundColorSpan(colorHint));
+                    } else {
+                        span(out, " " + alertIcon + " ", new BackgroundColorSpan(colorAlert),
+                                new ForegroundColorSpan(colorBackground), new StyleSpan(Typeface.BOLD));
+                    }
                     out.append(' ');
                     break;
                 default:

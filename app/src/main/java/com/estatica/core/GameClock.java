@@ -15,6 +15,11 @@ public interface GameClock {
         return Math.floorDiv(millis + offset, 24L * 3_600_000L);
     }
 
+    /** The instant shifted to device local time (for station schedules). */
+    default long localMillis(long millis) {
+        return millis + java.util.TimeZone.getDefault().getOffset(millis);
+    }
+
     /** Hour of day (0–23) on the device for an instant: night raises power use (GDD §6.4). */
     default int localHour(long millis) {
         java.util.Calendar c = java.util.Calendar.getInstance();

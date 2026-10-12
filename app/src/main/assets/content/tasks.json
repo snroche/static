@@ -10,16 +10,17 @@
   {
     "id": "enfermeria",
     "name": "Infirmary",
-    "description": "Tends the wounded: they heal faster and the group calms down.",
+    "description": "Tends the wounded: they heal faster and the group calms down. Can treat someone on the spot, for extra medicine.",
     "stat": "wits",
     "xpPerHour": 0.5,
     "groupHealMultiplier": 1.5,
+    "treats": true,
     "groupStressReliefPerHour": 1
   },
   {
     "id": "cocina",
     "name": "Kitchen",
-    "description": "Stretches the rations (each cook saves a fifth, up to 40%). A hot meal lowers everyone's stress.",
+    "description": "Stretches the rations (each cook saves a fifth; with the pantry, up to 55% in all). A hot meal lowers everyone's stress.",
     "stat": "craft",
     "xpPerHour": 0.5,
     "groupStressReliefPerHour": 1.5,
@@ -49,7 +50,7 @@
   {
     "id": "radio",
     "name": "Radio assistant",
-    "description": "Sweeps the dial while you're away: catches a signal now and then. The company calms everyone.",
+    "description": "Sweeps the dial while you're away, and is there when scheduled bulletins air (food drops, warnings, stashes). The company calms everyone.",
     "stat": "wits",
     "xpPerHour": 0.5,
     "groupStressReliefPerHour": 0.5,

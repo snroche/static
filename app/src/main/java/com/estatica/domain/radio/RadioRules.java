@@ -98,6 +98,15 @@ public final class RadioRules {
      */
     public Outcome resolve(SignalField.Spot spot, Set<String> knownZones, boolean roomForSurvivor,
                            Set<String> usedUnique, GameRandom rng) {
+        return resolve(spot, knownZones, roomForSurvivor, usedUnique, Set.of(), rng);
+    }
+
+    /**
+     * @param heardRares rare finds already heard: unheard ones come first, and once all are
+     *                   heard the ones that leave something behind win over plain flavor
+     */
+    public Outcome resolve(SignalField.Spot spot, Set<String> knownZones, boolean roomForSurvivor,
+                           Set<String> usedUnique, Set<String> heardRares, GameRandom rng) {
         String band = spot.bandId;
         switch (spot.kind) {
             case ZONE: {
@@ -150,12 +159,20 @@ public final class RadioRules {
                 break;
         }
         List<SignalsDef.Rare> rares = new ArrayList<>();
+        List<SignalsDef.Rare> fresh = new ArrayList<>();
+        List<SignalsDef.Rare> useful = new ArrayList<>();
         for (SignalsDef.Rare r : content.getSignals().getRare()) {
             if (r.getBand() == null || band.equals(r.getBand())) {
                 rares.add(r);
+                if (!heardRares.contains(r.getId())) {
+                    fresh.add(r);
+                } else if (!r.getResources().isEmpty()) {
+                    useful.add(r);
+                }
             }
         }
-        return new Outcome(SignalField.Kind.RARE, null, null, rng.pick(rares));
+        List<SignalsDef.Rare> pool = !fresh.isEmpty() ? fresh : !useful.isEmpty() ? useful : rares;
+        return new Outcome(SignalField.Kind.RARE, null, null, rng.pick(pool));
     }
 
     private Outcome transmission(SignalsDef.Transmission t, String band, Set<String> knownZones, GameRandom rng) {
@@ -174,12 +191,25 @@ public final class RadioRules {
         return new Outcome(SignalField.Kind.TRANSMISSION, zone, t, null);
     }
 
+    /**
+     * The scheme a transmission comes in: its own, or Morse or Caesar depending on the band.
+     * Called first by {@link #encrypt} with the same random, so a preview can know it.
+     */
+    public Transmission.Kind scheme(SignalsDef.Transmission def, String bandId, GameRandom rng) {
+        if (def.getKind() != null) {
+            return Transmission.Kind.fromName(def.getKind());
+        }
+        boolean morse = def.getReward() != SignalsDef.Transmission.Reward.MORSE_TABLE
+                && rng.chance(balance.band(bandId).getMorseChance());
+        return morse ? Transmission.Kind.MORSE : Transmission.Kind.CAESAR;
+    }
+
     /** Encrypts a transmission: Morse or Caesar depending on the band, harder farther out. */
     public Transmission encrypt(SignalsDef.Transmission def, String bandId, String zoneId,
                                 String plainText, GameRandom rng, long now) {
-        BandDef band = balance.band(bandId);
+        Transmission.Kind scheme = scheme(def, bandId, rng);
         if (def.getKind() != null) {
-            Transmission.Kind kind = Transmission.Kind.fromName(def.getKind());
+            Transmission.Kind kind = scheme;
             String clean = Cipher.normalize(plainText);
             String key = def.getKey();
             if (kind == Transmission.Kind.NUMBERS) {
@@ -189,8 +219,7 @@ public final class RadioRules {
             }
             return Transmission.create(def.getId(), kind, plainText, 0, bandId, zoneId, now, key);
         }
-        boolean morse = def.getReward() != SignalsDef.Transmission.Reward.MORSE_TABLE
-                && rng.chance(band.getMorseChance());
+        boolean morse = scheme == Transmission.Kind.MORSE;
         int shift = morse ? 0 : 1 + rng.nextInt(25);
         return Transmission.create(def.getId(), morse ? Transmission.Kind.MORSE : Transmission.Kind.CAESAR,
                 plainText, shift, bandId, zoneId, now);

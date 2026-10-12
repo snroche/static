@@ -28,6 +28,9 @@ final class BunkerPanel {
         }
     }
 
+    private enum Section { POWER, WORKSHOP, UPGRADES, GOALS }
+
+    private Section section = Section.POWER;
     private final PanelBunkerBinding b;
     private final TerminalViewModel viewModel;
     private final Host host;
@@ -48,6 +51,28 @@ final class BunkerPanel {
         b.recharge.setOnClickListener(v -> viewModel.recharge());
         b.craft.setOnClickListener(v -> host.pickRecipe());
         b.inventoryButton.setOnClickListener(v -> host.openInventory());
+        b.tabPower.setOnClickListener(v -> showSection(Section.POWER));
+        b.tabWorkshop.setOnClickListener(v -> showSection(Section.WORKSHOP));
+        b.tabUpgrades.setOnClickListener(v -> showSection(Section.UPGRADES));
+        b.tabGoals.setOnClickListener(v -> showSection(Section.GOALS));
+    }
+
+    private void showSection(Section target) {
+        section = target;
+        if (snapshot != null) {
+            render(snapshot);
+        }
+    }
+
+    /** "[•POWER !]": the open section is lit; one that needs you says so, one with news gets "↑". */
+    private void sectionButton(TextView view, Section which, int label, boolean alert, boolean news) {
+        Resources res = view.getResources();
+        String text = res.getString(label) + (alert ? " !" : news ? " ↑" : "");
+        boolean on = section == which;
+        view.setText(text);
+        view.setTextColor(androidx.core.content.ContextCompat.getColor(view.getContext(),
+                alert ? R.color.danger : on ? R.color.amber_bright : R.color.amber_dim));
+        BracketDrawable.mark(view, on);
     }
 
     boolean isShown() {
@@ -74,13 +99,30 @@ final class BunkerPanel {
         LayoutInflater inflater = LayoutInflater.from(b.getRoot().getContext());
         SessionSnapshot.BaseView base = snapshot.base;
 
-        StringBuilder goals = new StringBuilder();
+        boolean powerAlert = base.blackout || base.filtersShort || base.powerCut;
+        boolean anyAffordable = false;
+        for (SessionSnapshot.ModuleView m : base.modules) {
+            anyAffordable |= m.upgradeCost != null && m.affordable;
+        }
+        sectionButton(b.tabPower, Section.POWER, R.string.energy_title, powerAlert, false);
+        sectionButton(b.tabWorkshop, Section.WORKSHOP, R.string.workshop_title, false, base.jobs.size() < base.slots);
+        sectionButton(b.tabUpgrades, Section.UPGRADES, R.string.upgrades_title, false, anyAffordable);
+        sectionButton(b.tabGoals, Section.GOALS, R.string.goals_title, false, false);
+        b.sectionPower.setVisibility(section == Section.POWER ? View.VISIBLE : View.GONE);
+        b.sectionWorkshop.setVisibility(section == Section.WORKSHOP ? View.VISIBLE : View.GONE);
+        b.sectionUpgrades.setVisibility(section == Section.UPGRADES ? View.VISIBLE : View.GONE);
+        b.goals.setVisibility(section == Section.GOALS ? View.VISIBLE : View.GONE);
+
+        StringBuilder goals = new StringBuilder(res.getString(R.string.goals_help));
+        boolean weeklyShown = false;
+        goals.append("\n\n").append(res.getString(R.string.goals_daily));
         for (SessionSnapshot.GoalView g : base.goals) {
-            if (goals.length() > 0) {
-                goals.append('\n');
+            if (g.weekly && !weeklyShown) {
+                weeklyShown = true;
+                goals.append("\n\n").append(res.getString(R.string.goals_weekly));
             }
             String check = g.progress >= g.target ? "[x]" : "[ ]";
-            goals.append(res.getString(R.string.goal_line, check, g.label, g.progress, g.target));
+            goals.append('\n').append(res.getString(R.string.goal_line, check, g.label, g.progress, g.target, g.reward));
         }
         b.goals.setText(goals);
 

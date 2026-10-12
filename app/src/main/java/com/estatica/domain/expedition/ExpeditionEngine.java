@@ -134,9 +134,16 @@ public final class ExpeditionEngine {
         double pace = party.isPair()
                 ? Math.max(rules.durationMultiplier(scout), rules.durationMultiplier(party.partner))
                 : rules.durationMultiplier(scout);
-        List<Segment> segments = TimelineGenerator.generate(zone, pace, rng,
+        List<String> pool = new ArrayList<>(zone.getEvents());
+        for (EventDef e : content.getEvents().values()) {
+            if (e.getBands().contains(zone.getBand()) && !pool.contains(e.getId())) {
+                pool.add(e.getId());
+            }
+        }
+        List<Segment> segments = TimelineGenerator.generate(zone, pace, rng, pool,
                 id -> stillUseful(content.event(id))
-                        && (fits(scout, content.event(id)) || (party.isPair() && fits(party.partner, content.event(id)))));
+                        && (fits(scout, content.event(id)) || (party.isPair() && fits(party.partner, content.event(id)))),
+                recentEvents);
         if (mission.getType() == Mission.Type.PERSONAL) {
             forceEvent(segments, content.getStory().personalMission(mission.getTarget()).getEvent());
         }
@@ -286,7 +293,7 @@ public final class ExpeditionEngine {
         }
         List<String> labels = new ArrayList<>();
         for (EventDef.Option option : event.getOptions()) {
-            labels.add(isAvailable(scout, party, option) ? option.getLabel() : null);
+            labels.add(isAvailable(scout, party, option) ? labelOf(expedition, option) : null);
         }
         if (expedition.isRetreatOffered()) {
             labels.add(content.getTerminal().getBunker().getRetreatLabel());
@@ -509,7 +516,7 @@ public final class ExpeditionEngine {
             OddsHint hint = checks.hint(chanceFor(expedition, scout, party, option, zone, at));
             Map<String, String> optionVars = new HashMap<>(vars);
             optionVars.put("n", String.valueOf(++shown));
-            optionVars.put("label", option.getLabel());
+            optionVars.put("label", labelOf(expedition, option));
             if (noise > 0 && rng.chance(hintLoss)) {
                 // GDD §4.4: less information from far away.
                 expedition.markHintLost(i);
@@ -667,8 +674,51 @@ public final class ExpeditionEngine {
         if (scout.getInjury() == Injury.CRITICAL) {
             expedition.abortToReturn(at);
         } else {
-            expedition.advance(at);
+            long shift = timeShift(expedition, option, success);
+            if (shift != 0) {
+                Map<String, String> timeVars = vars(scout);
+                timeVars.put("time", ElapsedFormatter.format(Math.abs(shift), content.getTerminal().getElapsedUnits()));
+                out.line(system(at, TextTemplate.format(shift > 0 ? text.getTimeLost() : text.getTimeSaved(), timeVars),
+                        scout));
+            }
+            // The next leg starts later (waited it out) or sooner (got through fast).
+            expedition.advance(at + shift);
         }
+    }
+
+    /** What an option does to the trip's length, in millis (0 for nothing, or a failed shortcut). */
+    long timeShift(Expedition expedition, EventDef.Option option, boolean success) {
+        if (option.getTime() == 0 || (option.getTime() < 0 && !success)) {
+            return 0;
+        }
+        long shift = Math.round(TimelineGenerator.plannedDuration(expedition.getSegments()) * option.getTime());
+        if (shift < 0) {
+            // A shortcut can't make the next leg arrive before this one ends.
+            int next = expedition.getIndex() + 1;
+            long room = next < expedition.getSegments().size()
+                    ? expedition.getSegments().get(next).getDurationMillis() * 4 / 5 : 0;
+            shift = Math.max(shift, -room);
+        }
+        return shift;
+    }
+
+    /** "Wait it out (+4 min)": the label with what it does to the trip. */
+    private String labelOf(Expedition expedition, EventDef.Option option) {
+        if (option.getTime() == 0) {
+            return option.getLabel();
+        }
+        long shift = Math.round(TimelineGenerator.plannedDuration(expedition.getSegments()) * Math.abs(option.getTime()));
+        Map<String, String> vars = new HashMap<>();
+        vars.put("label", option.getLabel());
+        vars.put("time", ElapsedFormatter.format(Math.max(60_000L, shift), content.getTerminal().getElapsedUnits()));
+        return TextTemplate.format(option.getTime() > 0 ? text.getOptionTimeMore() : text.getOptionTimeLess(), vars);
+    }
+
+    /** Situations seen recently go to the back of the queue. Set by the session. */
+    private java.util.function.Predicate<String> recentEvents = id -> false;
+
+    public void setRecentEvents(java.util.function.Predicate<String> recent) {
+        this.recentEvents = recent;
     }
 
     private void resolveFind(Expedition expedition, Scout scout, Party party, ZoneDef zone, VoiceDef voice,

@@ -58,6 +58,8 @@ public final class DialogueEngine {
     private final GameContent content;
     private final ScoutRules rules;
     private final Relations relations;
+    /** Last dialogue each scout had, so a repeatable one doesn't come twice in a row. */
+    private final Map<String, String> lastHad = new HashMap<>();
 
     public DialogueEngine(GameContent content, ScoutRules rules) {
         this(content, rules, Relations.NONE);
@@ -87,7 +89,12 @@ public final class DialogueEngine {
         if (!fitsPersonality(s, d)) {
             return false;
         }
-        if (rules.bondLevel(s) < d.getMinBondLevel()) {
+        int bond = rules.bondLevel(s);
+        if (bond < d.getMinBondLevel() || (d.getMaxBondLevel() != null && bond > d.getMaxBondLevel())) {
+            return false;
+        }
+        if (!within(s.getTrust(), d.getMinTrust(), d.getMaxTrust())
+                || !within(s.getStress(), d.getMinStress(), d.getMaxStress())) {
             return false;
         }
         for (String flag : d.getRequiresFlags()) {
@@ -114,6 +121,10 @@ public final class DialogueEngine {
             return false;
         }
         return d.isRepeatable() || !s.getLife().hasFlag(doneFlag(d, other));
+    }
+
+    private static boolean within(int value, Integer min, Integer max) {
+        return (min == null || value >= min) && (max == null || value <= max);
     }
 
     /** Trait and background requirements: who they are, not which template they came from. */
@@ -151,19 +162,36 @@ public final class DialogueEngine {
     public DialogueDef pick(Scout s, boolean initiated, Collection<Scout> everyone, GameRandom rng, long now) {
         List<DialogueDef> best = new ArrayList<>();
         int bestPriority = Integer.MIN_VALUE;
+        String last = lastHad.get(s.getId());
         for (DialogueDef d : content.getDialogues().values()) {
             if (d.isScoutInitiated() != initiated || !isEligible(s, d, everyone, now)) {
                 continue;
             }
-            if (d.getPriority() > bestPriority) {
-                best.clear();
-                bestPriority = d.getPriority();
+            if (d.isRepeatable() && d.getId().equals(last)) {
+                continue;
             }
-            if (d.getPriority() == bestPriority) {
+            // A repeatable talk jumps the queue only the first time; after that it joins the
+            // everyday pool, so no single one can come back again and again.
+            int priority = d.isRepeatable() && s.getLife().hasFlag(doneFlag(d, null)) ? 0 : d.getPriority();
+            if (priority > bestPriority) {
+                best.clear();
+                bestPriority = priority;
+            }
+            if (priority == bestPriority) {
                 best.add(d);
             }
         }
-        return best.isEmpty() ? null : rng.pick(best);
+        if (best.isEmpty()) {
+            return null;
+        }
+        // Among repeatable ones, those never had come first.
+        List<DialogueDef> fresh = new ArrayList<>();
+        for (DialogueDef d : best) {
+            if (!s.getLife().hasFlag(doneFlag(d, null))) {
+                fresh.add(d);
+            }
+        }
+        return rng.pick(fresh.isEmpty() ? best : fresh);
     }
 
     /** The scout's opening lines. Marks the dialogue as had. */
@@ -182,6 +210,7 @@ public final class DialogueEngine {
                               GameRandom rng, long now) {
         Scout dead = subject(s, d, everyone);
         s.getLife().addFlag(doneFlag(d, dead));
+        lastHad.put(s.getId(), d.getId());
         if (initiated) {
             s.getLife().setLastInitiatedAtMillis(now);
         }

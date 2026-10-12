@@ -222,5 +222,189 @@
         "medicine": 2
       }
     }
-  }
+  },
+  "omens": [
+    {
+      "id": "knock_three",
+      "night": true,
+      "minPlot": 0,
+      "weight": 1,
+      "lines": [
+        "Three knocks on the hatch. Slow. Evenly spaced.",
+        "Nobody is out there. Nobody should be."
+      ],
+      "stress": 3,
+      "reaction": [
+        "Tell me you heard that.",
+        "Don't open it. Whatever it says, don't open it."
+      ],
+      "alert": true
+    },
+    {
+      "id": "vent_whisper",
+      "night": true,
+      "minPlot": 0,
+      "weight": 1,
+      "lines": [
+        "The vents carry something that isn't air. A whisper, almost words. It stops when {name} gets up to listen."
+      ],
+      "stress": 2,
+      "reaction": [
+        "It said my name. I swear it said my name."
+      ],
+      "needsCrew": true
+    },
+    {
+      "id": "radio_on",
+      "night": true,
+      "minPlot": 1,
+      "weight": 1,
+      "lines": [
+        "The radio switches itself on at 3:10. Static. Then, very clearly, a door closing. Then static again."
+      ],
+      "stress": 3
+    },
+    {
+      "id": "footsteps_above",
+      "night": true,
+      "minPlot": 0,
+      "weight": 1,
+      "lines": [
+        "Footsteps on the ground above the bunker. They walk to the hatch. They stand there. After a long time, they walk away."
+      ],
+      "stress": 3,
+      "reaction": [
+        "Someone was standing on top of us.",
+        "For an hour. Just standing."
+      ],
+      "alert": true
+    },
+    {
+      "id": "power_flicker",
+      "night": false,
+      "minPlot": 0,
+      "weight": 1,
+      "lines": [
+        "The lights dim to orange for a few seconds. The generator never missed a beat. Something else drew the power."
+      ],
+      "stress": 1
+    },
+    {
+      "id": "scratch_wall",
+      "night": true,
+      "minPlot": 0,
+      "weight": 1,
+      "lines": [
+        "A scratching inside the north wall, where there's only dirt. It moves along the wall, toward the bunks."
+      ],
+      "stress": 2,
+      "reaction": [
+        "I'm sleeping by the radio tonight. Don't argue."
+      ],
+      "needsCrew": true
+    },
+    {
+      "id": "counting",
+      "night": true,
+      "minPlot": 1,
+      "weight": 1,
+      "lines": [
+        "Someone is counting under their breath in the dark. Seven, three, one, nine. When {name} turns on the light, everyone's asleep."
+      ],
+      "stress": 3,
+      "reaction": [
+        "Which one of you was counting?",
+        "...Nobody? Great. Great."
+      ],
+      "needsCrew": true
+    },
+    {
+      "id": "own_voice",
+      "night": true,
+      "minPlot": 2,
+      "weight": 1,
+      "lines": [
+        "The log prints a line you didn't type: OPERATOR: \"stay on the channel\". The timestamp is tomorrow."
+      ],
+      "stress": 2,
+      "alert": true
+    },
+    {
+      "id": "cold_spot",
+      "night": false,
+      "minPlot": 0,
+      "weight": 1,
+      "lines": [
+        "The storage room is cold. Not cool: cold, breath-fog cold, in one corner. The thermometer says 21 degrees."
+      ],
+      "stress": 1,
+      "reaction": [
+        "I'm not going back in there for the beans. Someone else go."
+      ],
+      "needsCrew": true
+    },
+    {
+      "id": "dog_bark",
+      "night": true,
+      "minPlot": 0,
+      "weight": 1,
+      "lines": [
+        "A dog barks outside, far away. Then closer. Then right at the hatch. Then a man's voice says \"good boy\" and it all stops."
+      ],
+      "stress": 2
+    },
+    {
+      "id": "photo",
+      "night": true,
+      "minPlot": 2,
+      "weight": 1,
+      "lines": [
+        "{name} finds a photograph taped inside a locker nobody uses: this bunker, from inside, everyone asleep. The paper is new."
+      ],
+      "stress": 4,
+      "reaction": [
+        "Who took this? WHO TOOK THIS?"
+      ],
+      "needsCrew": true
+    },
+    {
+      "id": "hatch_wheel",
+      "night": true,
+      "minPlot": 1,
+      "weight": 1,
+      "lines": [
+        "The hatch wheel turns a quarter turn on its own. Then back. Like someone testing it from outside."
+      ],
+      "stress": 4,
+      "reaction": [
+        "I'm putting the bar across it. Every night now."
+      ],
+      "alert": true
+    },
+    {
+      "id": "lullaby_pipes",
+      "night": true,
+      "minPlot": 1,
+      "weight": 1,
+      "lines": [
+        "A lullaby hums through the water pipes, the same one from the medium band. It ends mid-note."
+      ],
+      "stress": 2,
+      "reaction": [
+        "That's the song from the radio. How is it in the pipes?"
+      ],
+      "needsCrew": true
+    },
+    {
+      "id": "all_quiet",
+      "night": true,
+      "minPlot": 3,
+      "weight": 1,
+      "lines": [
+        "The static on every band stops at once. Total silence, for nine seconds. Then it comes back, as if nothing happened."
+      ],
+      "stress": 3,
+      "alert": true
+    }
+  ]
 }

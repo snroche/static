@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Bunker: power, reserve, modules, workshop, defense (GDD §6.4, §6.5, §7). -->
+<!-- Bunker, one section at a time: power, workshop, upgrades, goals; and the inventory (GDD §6.4, §6.5, §7). -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,6 +27,13 @@
             tools:targetApi="28" />
 
         <TextView
+            android:id="@+id/inventoryButton"
+            style="@style/TerminalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/inventory_button" />
+
+        <TextView
             android:id="@+id/bunkerClose"
             style="@style/TerminalButton"
             android:layout_width="wrap_content"
@@ -35,14 +42,45 @@
             android:text="@string/panel_close" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/inventoryButton"
-        style="@style/TerminalButton"
+    <!-- Section menu. -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:gravity="center"
-        android:text="@string/inventory_button" />
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <TextView
+            android:id="@+id/tabPower"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tabWorkshop"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tabUpgrades"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tabGoals"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -56,109 +94,110 @@
             android:paddingHorizontal="12dp"
             android:paddingBottom="16dp">
 
-            <TextView
-                style="@style/TerminalText.Bright"
+            <!-- POWER -->
+            <LinearLayout
+                android:id="@+id/sectionPower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/goals_title" />
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/energy"
+                    style="@style/TerminalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:accessibilityLiveRegion="polite" />
+
+                <LinearLayout
+                    android:id="@+id/consumers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/reserve"
+                    style="@style/TerminalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/recharge"
+                    style="@style/TerminalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recharge_button" />
+            </LinearLayout>
+
+            <!-- WORKSHOP: jobs, crafting, gear repairs -->
+            <LinearLayout
+                android:id="@+id/sectionWorkshop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/jobs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/craft"
+                    style="@style/TerminalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/TerminalText.Bright"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/gear_title" />
+
+                <LinearLayout
+                    android:id="@+id/gear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- UPGRADES: modules and defense -->
+            <LinearLayout
+                android:id="@+id/sectionUpgrades"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/modules"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    style="@style/TerminalText.Bright"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/defense_title" />
+
+                <TextView
+                    android:id="@+id/defense"
+                    style="@style/TerminalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- GOALS -->
             <TextView
                 android:id="@+id/goals"
                 style="@style/TerminalText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                style="@style/TerminalText.Bright"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/energy_title" />
-
-            <TextView
-                android:id="@+id/energy"
-                style="@style/TerminalText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="polite" />
-
-            <LinearLayout
-                android:id="@+id/consumers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                android:id="@+id/reserve"
-                style="@style/TerminalText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:id="@+id/recharge"
-                style="@style/TerminalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/recharge_button" />
-
-            <TextView
-                style="@style/TerminalText.Bright"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/workshop_title" />
-
-            <LinearLayout
-                android:id="@+id/jobs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                android:id="@+id/craft"
-                style="@style/TerminalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                style="@style/TerminalText.Bright"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/modules_title" />
-
-            <LinearLayout
-                android:id="@+id/modules"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                style="@style/TerminalText.Bright"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/gear_title" />
-
-            <LinearLayout
-                android:id="@+id/gear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                style="@style/TerminalText.Bright"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/defense_title" />
-
-            <TextView
-                android:id="@+id/defense"
-                style="@style/TerminalText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

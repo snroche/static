@@ -50,7 +50,8 @@ public class FoodRulesTest {
     @Test
     public void cooksStretchTheRationsUpToACap() {
         assertEquals(0.8 * food.perHour(3, 0), food.perHour(3, 0.2), 1e-9);
-        assertEquals(food.perHour(3, 0.4), food.perHour(3, 5.0), 1e-9);
+        double cap = TestContent.get().getBalance().getFood().getKitchenMaxSaving();
+        assertEquals(food.perHour(3, cap), food.perHour(3, 5.0), 1e-9);
     }
 
     @Test

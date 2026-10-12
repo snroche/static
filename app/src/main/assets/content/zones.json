@@ -23,7 +23,9 @@
       "ruido_sotano",
       "inundacion",
       "mapa",
-      "escotilla"
+      "escotilla",
+      "susp_radio_room",
+      "susp_mannequins"
     ],
     "loot": [
       {
@@ -86,7 +88,8 @@
       "radio_encendida",
       "cables",
       "avispas",
-      "semi"
+      "semi",
+      "susp_footsteps"
     ],
     "loot": [
       {
@@ -162,7 +165,8 @@
       "cables",
       "ratas",
       "llanto",
-      "carro_emergencias"
+      "carro_emergencias",
+      "susp_mannequins"
     ],
     "loot": [
       {
@@ -229,7 +233,9 @@
       "radioaficionado",
       "piano",
       "biblioteca",
-      "pupitre"
+      "pupitre",
+      "susp_radio_room",
+      "susp_child_voice"
     ],
     "loot": [
       {
@@ -302,7 +308,8 @@
       "inundacion",
       "cables",
       "escotilla",
-      "generador_viejo"
+      "generador_viejo",
+      "susp_footsteps"
     ],
     "loot": [
       {
@@ -365,7 +372,8 @@
       "francotirador",
       "llanto",
       "carro_emergencias",
-      "despensa_hospital"
+      "despensa_hospital",
+      "susp_child_voice"
     ],
     "loot": [
       {
@@ -436,7 +444,9 @@
       "derrumbe",
       "cambio_vias",
       "escalada",
-      "manual_campo"
+      "manual_campo",
+      "susp_footsteps",
+      "susp_shapes_fog"
     ],
     "loot": [
       {
@@ -504,7 +514,8 @@
       "hueco",
       "pelea_amigos",
       "celda",
-      "armeria"
+      "armeria",
+      "susp_child_voice"
     ],
     "loot": [
       {
@@ -574,7 +585,9 @@
       "helada",
       "piano",
       "pelea_amigos",
-      "estudio"
+      "estudio",
+      "susp_footsteps",
+      "susp_radio_room"
     ],
     "loot": [
       {
@@ -647,7 +660,8 @@
       "semi",
       "hueco",
       "escalada",
-      "oficina_it"
+      "oficina_it",
+      "susp_mannequins"
     ],
     "loot": [
       {
@@ -725,7 +739,9 @@
       "helada",
       "generador_viejo",
       "escalada",
-      "pagina_diecinueve"
+      "pagina_diecinueve",
+      "susp_child_voice",
+      "susp_shapes_fog"
     ],
     "loot": [
       {
@@ -797,7 +813,8 @@
       "puerta_blindada",
       "cables",
       "radioaficionado",
-      "pagina_siete"
+      "pagina_siete",
+      "susp_radio_room"
     ],
     "loot": [
       {
@@ -856,7 +873,8 @@
       "avispas",
       "techo",
       "radio_encendida",
-      "persiana"
+      "persiana",
+      "susp_shapes_fog"
     ],
     "loot": [
       {
@@ -904,7 +922,8 @@
       "trampa",
       "derrumbe",
       "herido",
-      "pelea_amigos"
+      "pelea_amigos",
+      "susp_footsteps"
     ],
     "loot": [
       {
@@ -957,7 +976,8 @@
       "helada",
       "escalada",
       "pista",
-      "semi"
+      "semi",
+      "susp_shapes_fog"
     ],
     "loot": [
       {

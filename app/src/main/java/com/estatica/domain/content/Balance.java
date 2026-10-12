@@ -32,6 +32,59 @@ public final class Balance {
     }
 
     /** Small moments in the bunker. [placeholder] */
+    private Omens omens;
+    private Treatment treatment;
+
+    public Treatment getTreatment() {
+        return treatment != null ? treatment : new Treatment();
+    }
+
+    /** Treating an injury on the spot in the infirmary. [placeholder] */
+    public static final class Treatment {
+        /** Medicine per injury level healed (light 1 level, critical 3). */
+        private int medicinePerLevel = 2;
+        /** After "not now", they don't offer again for this long. */
+        private double declineCooldownHours = 6;
+        /** Healers with any of these traits don't ask: they just do it. */
+        private java.util.List<String> eagerTraits;
+
+        public int getMedicinePerLevel() {
+            return medicinePerLevel;
+        }
+
+        public double getDeclineCooldownHours() {
+            return declineCooldownHours;
+        }
+
+        public java.util.List<String> getEagerTraits() {
+            return eagerTraits != null ? eagerTraits : java.util.List.of();
+        }
+    }
+
+    public Omens getOmens() {
+        return omens != null ? omens : new Omens();
+    }
+
+    /** How often the bunker gets a scare (StoryDef.Omen). [placeholder] */
+    public static final class Omens {
+        private double intervalHours = 5;
+        private double chance = 0.35;
+        /** An omen doesn't repeat for this long. */
+        private double cooldownHours = 72;
+
+        public double getIntervalHours() {
+            return intervalHours;
+        }
+
+        public double getChance() {
+            return chance;
+        }
+
+        public double getCooldownHours() {
+            return cooldownHours;
+        }
+    }
+
     public static final class Vignettes {
         private double intervalHours;
         private double chance;
@@ -508,7 +561,7 @@ public final class Balance {
         /** Points needed for each level; index 0 = level 1. */
         private int[] levelThresholds;
         private int max;
-        private int talkCooldownHours;
+        private int talkCooldownMinutes;
         private int initiatedCooldownHours;
         private int initiatedExpireHours;
         private int neglectGraceHours;
@@ -536,8 +589,8 @@ public final class Balance {
             return max;
         }
 
-        public int getTalkCooldownHours() {
-            return talkCooldownHours;
+        public int getTalkCooldownMinutes() {
+            return talkCooldownMinutes;
         }
 
         public int getInitiatedCooldownHours() {
@@ -674,6 +727,13 @@ public final class Balance {
     }
 
     public static final class Expedition {
+        /** A situation seen this recently only comes up once the fresh ones run out. */
+        private double eventRecentHours = 48;
+
+        public double getEventRecentHours() {
+            return eventRecentHours;
+        }
+
         private int situationTimeoutMinutes;
         /** Chance a scout below their trust threshold ignores an order. */
         private double disobeyChance;

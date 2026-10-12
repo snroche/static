@@ -93,6 +93,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minHeight="44dp" />
+
+        <TextView
+            android:id="@+id/logTabDiary"
+            style="@style/TerminalTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:minHeight="44dp"
+            android:text="@string/log_diary" />
     </LinearLayout>
 
     <!-- Narrow EXPEDITIONS / CHATS to one team or one person. -->
@@ -320,7 +329,7 @@
             style="@style/TerminalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/panel_diary_button"
+            android:text="@string/crew_filter_button"
             app:layout_constraintEnd_toStartOf="@id/panelClose"
             app:layout_constraintTop_toTopOf="parent" />
 

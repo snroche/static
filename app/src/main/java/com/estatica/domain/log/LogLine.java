@@ -26,6 +26,17 @@ public final class LogLine {
     public static final String EXPEDITION_PREFIX = "exp:";
     public static final String CHAT_PREFIX = "chat:";
 
+    /** Departures, returns and calls for orders: what EXPEDITIONS → ALL shows. */
+    public static final String SUMMARY_SUFFIX = "|sum";
+
+    public static String summaryThread(String expeditionId) {
+        return EXPEDITION_PREFIX + expeditionId + SUMMARY_SUFFIX;
+    }
+
+    public static boolean isSummary(String thread) {
+        return thread.startsWith(EXPEDITION_PREFIX) && thread.endsWith(SUMMARY_SUFFIX);
+    }
+
     public static String expeditionThread(String expeditionId) {
         return EXPEDITION_PREFIX + expeditionId;
     }

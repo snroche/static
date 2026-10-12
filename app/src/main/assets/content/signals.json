@@ -11,14 +11,49 @@
       "...if anyone hears this... i'm at..."
     ],
     "TRANSMISSION": [
-      "· — — · · — · · — ·",
-      "QXF HKP... MZRL... VYQ...",
-      "— · — · · — — · ·"
+      "...a pattern... repeating..."
     ],
     "RARE": [
-      "...music... a tango, far away...",
-      "...a voice counting numbers... seven... three...",
-      "...a weather report... sunny..."
+      "...something faint... not quite a voice...",
+      "...a far-off broadcast, fading in and out..."
+    ],
+    "TRANSMISSION:MORSE": [
+      "· — — · · — · · — ·",
+      "— · — · · — — · ·",
+      "··· ——— ··· ... ··· ——— ···"
+    ],
+    "TRANSMISSION:CAESAR": [
+      "QXF HKP... MZRL... VYQ...",
+      "...WKH... ZDWHU... LV...",
+      "...letters, read out flat: K. R. O. Z..."
+    ],
+    "TRANSMISSION:ATBASH": [
+      "...ZOO WLMG... GSV...",
+      "...a list of letters, read backwards..."
+    ],
+    "TRANSMISSION:TAP": [
+      "...knock knock... knock... knock knock knock...",
+      "...tapping on a pipe. Pauses. More tapping..."
+    ],
+    "TRANSMISSION:VIGENERE": [
+      "...XJP RMEU... OAKV... ZLI...",
+      "...letters that change their mind every time..."
+    ],
+    "TRANSMISSION:BASE64": [
+      "...U0lHTkFM... bG9n... ==",
+      "...a modem screech, then text: aGVsbG8..."
+    ],
+    "TRANSMISSION:PLAYFAIR": [
+      "...ALFA TANGO... KILO ROMEO... ECHO...",
+      "...a man spells words in NATO, very calm..."
+    ],
+    "TRANSMISSION:NUMBERS": [
+      "...seven... one one... four... zero...",
+      "...a woman reads numbers. A bell. More numbers..."
+    ],
+    "TRANSMISSION:BOOK": [
+      "...page twelve, line four, word nine...",
+      "...three numbers at a time, like references..."
     ]
   },
   "rare": [
@@ -26,14 +61,18 @@
       "id": "tango",
       "text": [
         "A tango drifts out of the static. Someone has a record player working."
-      ]
+      ],
+      "teaser": "...music... a tango, far away...",
+      "audio": "MUSIC"
     },
     {
       "id": "numeros",
       "text": [
         "A voice counts numbers. Seven, three, one, nine. Then nothing."
       ],
-      "lore": "Someone broadcasts numbers on the short band: 7-3-1-9. Always the same voice."
+      "lore": "Someone broadcasts numbers on the short band: 7-3-1-9. Always the same voice.",
+      "teaser": "...a voice counting numbers... seven... three...",
+      "audio": "NUMBERS"
     },
     {
       "id": "deposito",
@@ -42,7 +81,9 @@
       ],
       "resources": {
         "batteries": 2
-      }
+      },
+      "teaser": "...a beacon... beep... beep... battery...",
+      "audio": "CARRIER"
     },
     {
       "id": "baliza",
@@ -51,13 +92,17 @@
       ],
       "resources": {
         "components": 2
-      }
+      },
+      "teaser": "...an emergency beacon, steady as a heartbeat...",
+      "audio": "CARRIER"
     },
     {
       "id": "pronostico",
       "text": [
         "A recorded weather report from years ago. It promises sun all weekend."
-      ]
+      ],
+      "teaser": "...a weather report... sunny...",
+      "audio": "VOICE"
     },
     {
       "id": "marta",
@@ -65,7 +110,111 @@
       "text": [
         "Someone is calling for a woman named Marta. Calling and calling. Nobody answers."
       ],
-      "lore": "On the medium band, a man calls for Marta every day at the same time."
+      "lore": "On the medium band, a man calls for Marta every day at the same time.",
+      "teaser": "...Marta... Marta, answer...",
+      "audio": "VOICE"
+    },
+    {
+      "id": "trucker_cb",
+      "teaser": "...breaker, breaker... anyone on channel nineteen...",
+      "audio": "VOICE",
+      "text": [
+        "A trucker's CB, left keyed on a dashboard somewhere. Wind, and a radio playing a cumbia under it. You note the landmarks he passes."
+      ],
+      "resources": {
+        "scrap": 2
+      }
+    },
+    {
+      "id": "hospital_loop",
+      "band": "short",
+      "teaser": "...this is the municipal hospital... supplies at...",
+      "audio": "VOICE",
+      "text": [
+        "A hospital's evacuation notice, still looping. It lists a supply drop that nobody ever collected. Your assistant writes it down."
+      ],
+      "resources": {
+        "medicine": 1
+      }
+    },
+    {
+      "id": "kids_walkie",
+      "teaser": "...over! no, you say over... over...",
+      "audio": "CHILD",
+      "text": [
+        "Two kids on walkie-talkies, years ago or right now, you can't tell. One of them laughs. Then the batteries give out."
+      ]
+    },
+    {
+      "id": "church_bells",
+      "teaser": "...bells... a long way off...",
+      "audio": "ORGAN",
+      "text": [
+        "Church bells, recorded, played on a schedule by a timer nobody turned off. Someone, once, wanted the city to know what time it was."
+      ]
+    },
+    {
+      "id": "farm_report",
+      "band": "medium",
+      "teaser": "...soy, wheat, closing prices...",
+      "audio": "VOICE",
+      "text": [
+        "An old grain market report. Prices for things nobody sells anymore. At the end, a farm's address and 'we have seed, come trade'."
+      ],
+      "resources": {
+        "rations": 2
+      }
+    },
+    {
+      "id": "dead_air_generator",
+      "band": "medium",
+      "teaser": "...hum... a generator, close to a mic...",
+      "audio": "CARRIER",
+      "text": [
+        "A microphone left open next to a running generator. By the pitch, your assistant guesses the model, and how to fix yours."
+      ],
+      "resources": {
+        "components": 1
+      }
+    },
+    {
+      "id": "lullaby",
+      "teaser": "...someone humming...",
+      "audio": "WALTZ",
+      "text": [
+        "Someone hums a lullaby into a microphone. It's not for you. It goes on until it stops."
+      ]
+    },
+    {
+      "id": "military_net",
+      "band": "long",
+      "teaser": "...this is checkpoint... authenticate...",
+      "audio": "VOICE",
+      "text": [
+        "A military net, automated, asking for an authentication nobody remembers. It reads out a depot it still thinks is guarded."
+      ],
+      "resources": {
+        "batteries": 2,
+        "components": 1
+      }
+    },
+    {
+      "id": "your_voice",
+      "teaser": "...a voice... it sounds... familiar...",
+      "audio": "WHISPER",
+      "text": [
+        "A voice on the frequency says your words from earlier today, in your voice, a little too slow. Then it says them again, slower."
+      ],
+      "lore": "Something on the dial repeated my own transmissions back to me. Slower each time. I haven't told the others."
+    },
+    {
+      "id": "scratching",
+      "band": "medium",
+      "teaser": "...scratching... like nails on a mic...",
+      "audio": "BREATH",
+      "text": [
+        "Scratching. Something drags itself across a microphone, slowly, for a full minute. Then it taps twice, as if it knows you're there."
+      ]
     }
   ],
   "transmissions": [
@@ -371,5 +520,312 @@
         "rations": 4
       }
     }
-  ]
+  ],
+  "stations": [
+    {
+      "id": "st_weather",
+      "band": "short",
+      "position": 140,
+      "name": "AUTOMATED WEATHER",
+      "audio": "VOICE_F",
+      "minutesPerLine": 15,
+      "lore": "AUTOMATED WEATHER (short band): a robot still reading the forecast for the week the Silence began. Sunny, all of it.",
+      "lines": [
+        "Tuesday: sunny, highs of twenty-four. Light wind from the north.",
+        "Wednesday: sunny. Good day to hang the washing out.",
+        "UV index: high. Remember your hat.",
+        "Thursday: sunny. Friday: sunny. Saturday: sunny.",
+        "This forecast was updated... [the date is a long beep]."
+      ]
+    },
+    {
+      "id": "st_garden",
+      "band": "short",
+      "position": 520,
+      "name": "LU3 · OLD BERTO",
+      "audio": "VOICE",
+      "minutesPerLine": 10,
+      "lore": "LU3 · OLD BERTO (short band, 3.520 MHz): a ham who talks about his garden every evening from 19:00 to 20:00. He never answers back. Maybe he can't hear us.",
+      "lines": [
+        "...the tomatoes came in again. Small, but red. Red is good.",
+        "...if anyone's out there, boil the water. Twice. I learned the hard way.",
+        "...my wife used to say I talk to the radio more than to her. Well. Now it's just the radio.",
+        "...saw a dog today. Thin. I gave it half my bread. Don't tell anyone.",
+        "...the antenna's leaning. I'll fix it tomorrow. I say that every day.",
+        "...this is LU3, still here, still listening. Over."
+      ],
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 19,
+        "minutes": 60
+      }
+    },
+    {
+      "id": "st_ebs",
+      "band": "short",
+      "position": 880,
+      "name": "EMERGENCY BROADCAST",
+      "audio": "CARRIER",
+      "minutesPerLine": 10,
+      "lore": "EMERGENCY BROADCAST (short band): the official instructions, looping since day one. Stay inside. Seal the windows. Do not answer.",
+      "lines": [
+        "THIS IS AN EMERGENCY BROADCAST. STAY INSIDE. SEAL DOORS AND WINDOWS.",
+        "DO NOT RESPOND TO UNIDENTIFIED VOICES. THEY ARE NOT RESCUE.",
+        "RATION WATER. ONE LITER PER PERSON PER DAY.",
+        "AUTHORITIES WILL CONTACT YOU. AUTHORITIES WILL CONTACT YOU. AUTHORITIES WILL"
+      ]
+    },
+    {
+      "id": "st_tango",
+      "band": "medium",
+      "position": 300,
+      "name": "RADIO NOSTALGIA",
+      "audio": "MUSIC",
+      "minutesPerLine": 25,
+      "lore": "RADIO NOSTALGIA (medium band, 7.300 MHz): somebody plays tango records from 21:00 to 23:00. Nobody announces the songs.",
+      "lines": [
+        "...a bandoneon, slow, like breathing...",
+        "...an old tango about a neighborhood that doesn't exist anymore...",
+        "...the record skips. Someone lifts the needle and sets it back down, carefully...",
+        "...a waltz. Somebody, very quietly, is dancing near the microphone..."
+      ],
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 21,
+        "minutes": 120
+      }
+    },
+    {
+      "id": "st_preacher",
+      "band": "medium",
+      "position": 760,
+      "name": "THE LITANY",
+      "audio": "PREACHER",
+      "minutesPerLine": 20,
+      "stress": 2,
+      "lore": "THE LITANY (medium band): a man reads names of the dead, one by one. He has been reading for years. Some of the names are ours.",
+      "lines": [
+        "...and Rosa, who went for water. And Julián, who went after her...",
+        "...we remember them so the silence doesn't...",
+        "...and the family on Calle Ocho, all five, we remember...",
+        "...I will read until there is no one left to read. Then I will read myself..."
+      ],
+      "deadLines": [
+        "...and {dead}. We remember {dead}...",
+        "...{dead}, who answered the radio, we remember..."
+      ]
+    },
+    {
+      "id": "st_breath",
+      "band": "short",
+      "position": 333,
+      "name": "—",
+      "audio": "BREATH",
+      "night": true,
+      "minutesPerLine": 15,
+      "stress": 3,
+      "lore": "Short band, at night only: breathing. Close to the microphone. Whoever it is, they know when we're listening.",
+      "lines": [
+        "...breathing. Slow. Close to the microphone...",
+        "...breathing. It stops when you stop moving the dial...",
+        "...breathing... then a whisper: 'there you are'...",
+        "...breathing... and, far off behind it, your own generator..."
+      ]
+    },
+    {
+      "id": "st_child",
+      "band": "medium",
+      "position": 90,
+      "name": "—",
+      "audio": "CHILD",
+      "night": true,
+      "minutesPerLine": 20,
+      "stress": 3,
+      "lore": "Medium band, at night: a child counting, playing hide and seek. Nobody is looking for them. Or someone is.",
+      "lines": [
+        "...eight... nine... ten... ready or not...",
+        "...mom said don't open the hatch. Mom isn't back yet...",
+        "...I can hear you breathing. You're bad at hiding...",
+        "...found you. Found you. Found you."
+      ]
+    },
+    {
+      "id": "st_voice_hours",
+      "band": "long",
+      "position": 731,
+      "name": "THE VOICE",
+      "audio": "NUMBERS",
+      "minutesPerLine": 60,
+      "stress": 1,
+      "lore": "THE VOICE, long band, 14.731 MHz: seven three one nine, for three minutes on the hour, every hour. It's always been here. We just couldn't reach it.",
+      "lines": [
+        "...seven. three. one. nine...",
+        "...seven. three. one. nine. ... nine. nine...",
+        "...seven. three. one. ... we hear you...",
+        "...seven. three. one. nine. bunker. bunker. bunker..."
+      ],
+      "schedule": {
+        "everyHours": 1,
+        "atHour": 0,
+        "minutes": 3
+      },
+      "perAiring": true
+    },
+    {
+      "id": "st_deep_choir",
+      "band": "deep",
+      "position": 500,
+      "name": "—",
+      "audio": "CHOIR",
+      "minutesPerLine": 45,
+      "stress": 2,
+      "lore": "Deep band: a choir of carriers, all on one frequency, humming the same note. It changes by a hair whenever we transmit.",
+      "lines": [
+        "...a hundred carriers hum one note...",
+        "...the note bends, just a little, when you touch the dial...",
+        "...under the hum, a single word, again and again: 'listening'..."
+      ]
+    },
+    {
+      "id": "st_relief",
+      "band": "short",
+      "position": 660,
+      "name": "RELIEF NET",
+      "audio": "VOICE_F",
+      "schedule": {
+        "everyHours": 8,
+        "atHour": 6,
+        "minutes": 10
+      },
+      "perAiring": true,
+      "resources": {
+        "rations": 2
+      },
+      "lore": "RELIEF NET (short band, 3.660 MHz): a volunteer reads out where they left food. 06:00, 14:00 and 22:00, ten minutes each. Be there, or have someone on the radio.",
+      "lines": [
+        "Relief net, morning drop. Two crates under the overpass, blue tarp. Take what you need, leave the crates.",
+        "Relief net. Bread's gone hard but it's bread. Bus shelter on the avenue, behind the ad.",
+        "Relief net. Canned beans, back of the church. Don't take all of it. Somebody else is hungry too.",
+        "Relief net, short one tonight. Rice in the school gym, under the stage. Stay safe.",
+        "Relief net. We're running low. Leaving what we can. If you have extra, leave some for others."
+      ]
+    },
+    {
+      "id": "st_scav",
+      "band": "medium",
+      "position": 450,
+      "name": "SCAV NET",
+      "audio": "VOICE",
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 13,
+        "minutes": 15
+      },
+      "perAiring": true,
+      "intel": "DANGER",
+      "lore": "SCAV NET (medium band, 7.450 MHz): scavengers swap warnings at 13:00, fifteen minutes. Gruff, fast, useful.",
+      "lines": [
+        "Scav net. Dogs moved north of the tracks. Big pack. Don't be a hero.",
+        "Scav net. Somebody rigged wires in the old offices. Watch your feet.",
+        "Scav net. Raiders camped by the river. Three, maybe four. Armed.",
+        "Scav net. Roof's gone on the hospital's east wing. Don't climb it.",
+        "Scav net. Gas leak somewhere downtown. You'll smell it. Turn back."
+      ]
+    },
+    {
+      "id": "st_cache",
+      "band": "medium",
+      "position": 920,
+      "name": "THE LOCKSMITH",
+      "audio": "DATA",
+      "schedule": {
+        "everyHours": 12,
+        "atHour": 3,
+        "minutes": 5
+      },
+      "perAiring": true,
+      "intel": "CACHE",
+      "lore": "THE LOCKSMITH (medium band, 7.920 MHz): five minutes at 03:00 and 15:00. A dry voice reads where things are hidden, then a modem screech. Nobody knows why he shares.",
+      "lines": [
+        "...under the third floorboard from the window. The key is in the lamp...",
+        "...behind the boiler, a false panel. Push, don't pull...",
+        "...the safe in the back office opens with the year the factory opened...",
+        "...inside the hollow of the fallen tree, wrapped in plastic..."
+      ]
+    },
+    {
+      "id": "st_clinic",
+      "band": "short",
+      "position": 230,
+      "name": "DR. LEVY",
+      "audio": "VOICE_F",
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 10,
+        "minutes": 30
+      },
+      "perAiring": true,
+      "resources": {
+        "medicine": 1
+      },
+      "lore": "DR. LEVY (short band, 3.230 MHz): a doctor gives advice every morning at 10:00 for half an hour, and says where she left supplies.",
+      "lines": [
+        "Boil it, then boil it again. And today's kit is in the pharmacy's back door, the one with the red mark.",
+        "Clean wounds with what you'd drink, not what you'd fear. Bandages left by the clinic gate.",
+        "If it smells sweet, it's infected. Come find me. Or take the antiseptic I left at the bus depot.",
+        "Sleep is medicine too. So is the box under the bench at the square."
+      ]
+    },
+    {
+      "id": "st_chapel",
+      "band": "medium",
+      "position": 610,
+      "name": "CHAPEL OF SAN ROQUE",
+      "audio": "ORGAN",
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 8,
+        "minutes": 45
+      },
+      "minutesPerLine": 15,
+      "lore": "CHAPEL OF SAN ROQUE (medium band, 7.610 MHz): someone plays the organ every morning at 08:00 for three quarters of an hour. Nobody sings. Nobody has to.",
+      "lines": [
+        "...an organ, slow, a hymn half the city used to know...",
+        "...the same hymn again, a little faster, as if the player is in a hurry today...",
+        "...a wrong note. A pause. Then the hymn starts over from the top..."
+      ]
+    },
+    {
+      "id": "st_music_box",
+      "band": "short",
+      "position": 777,
+      "name": "—",
+      "audio": "WALTZ",
+      "night": true,
+      "minutesPerLine": 20,
+      "stress": 2,
+      "lore": "Short band, 3.777 MHz, at night only: a music box playing a waltz. When it winds down, someone winds it again. We never hear them.",
+      "lines": [
+        "...a music box, playing a waltz...",
+        "...the waltz slows... slows... and then the key turns, and it starts again...",
+        "...the music box, and very close to the microphone, someone humming along, off key..."
+      ]
+    }
+  ],
+  "echo": {
+    "afterHours": 6,
+    "everyWindows": 3,
+    "stress": 3,
+    "teasers": [
+      "...a voice... it sounds like {name}...",
+      "...static... and someone says your name the way {name} did...",
+      "...{name}?... no... it can't be..."
+    ],
+    "heard": [
+      "{frequency}. A voice that sounds like {name}: \"{words}\". Then static, and nothing.",
+      "{frequency}. For three seconds it's {name}, clear as if they were in the next room: \"{words}\". Then it's gone.",
+      "{frequency}. {name}'s voice, slowed down, saying \"{words}\" over and over until the signal drowns it."
+    ],
+    "lore": "Heard on the short band, weeks too late: {name}'s voice. \"{words}\""
+  }
 }

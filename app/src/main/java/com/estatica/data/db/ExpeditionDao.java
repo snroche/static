@@ -13,6 +13,9 @@ public interface ExpeditionDao {
     @Query("SELECT * FROM expeditions WHERE status = 'ACTIVE' ORDER BY started_at_millis")
     List<ExpeditionEntity> active();
 
+    @Query("SELECT * FROM expeditions WHERE id IN (:ids)")
+    List<ExpeditionEntity> byIds(List<String> ids);
+
     @Query("SELECT * FROM expedition_segments WHERE expedition_id = :expeditionId ORDER BY idx")
     List<ExpeditionSegmentEntity> segments(String expeditionId);
 

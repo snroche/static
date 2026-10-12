@@ -38,6 +38,7 @@ import com.estatica.domain.content.ResourceDef;
 import com.estatica.domain.content.ScoutTemplate;
 import com.estatica.domain.content.TaskDef;
 import com.estatica.domain.content.TerminalText;
+import com.estatica.domain.content.VoiceDef;
 import com.estatica.domain.content.ZoneDef;
 import com.estatica.domain.dialogue.Conversation;
 import com.estatica.domain.dialogue.DialogueEngine;
@@ -45,6 +46,7 @@ import com.estatica.domain.expedition.Expedition;
 import com.estatica.domain.expedition.ExpeditionEngine;
 import com.estatica.domain.expedition.ExpeditionResult;
 import com.estatica.domain.expedition.Mission;
+import com.estatica.domain.radio.Broadcasts;
 import com.estatica.domain.radio.RadioRules;
 import com.estatica.domain.radio.Relay;
 import com.estatica.domain.radio.SignalDegrader;
@@ -56,6 +58,7 @@ import com.estatica.domain.log.LogLine;
 import com.estatica.domain.scouts.Affinities;
 import com.estatica.domain.scouts.GiftRules;
 import com.estatica.domain.scouts.GriefRules;
+import com.estatica.domain.scouts.Injury;
 import com.estatica.domain.scouts.Memory;
 import com.estatica.domain.scouts.Scout;
 import com.estatica.domain.scouts.ScoutFactory;
@@ -126,6 +129,8 @@ public final class GameSession {
     private final Map<String, com.estatica.domain.bunker.GearPiece> gear = new HashMap<>();
     private com.estatica.domain.state.GameState state;
     private GameRandom random;
+    /** The save's seed, for dice that must roll the same every time (signal previews). */
+    private long rngSeed;
     private long lastSeenAtMillis;
     private boolean newGame;
     private Affinities affinities;
@@ -277,9 +282,12 @@ public final class GameSession {
 
         radio = new RadioRules(content);
         field = new SignalField(content.getBalance(), state.getRngSeed());
+        rngSeed = state.getRngSeed();
         regionMap = new com.estatica.domain.map.RegionMap(content, state.getRngSeed());
         weather = new com.estatica.domain.world.WeatherRules(content.getBalance().getWeather(), state.getRngSeed());
         engine.setKeyOwnership(this::hasKey);
+        engine.setRecentEvents(id -> clock.nowMillis() - value(EVENT_SEEN + id)
+                < content.getBalance().getExpedition().getEventRecentHours() * HOUR);
         engine.setWorld(new com.estatica.domain.world.World() {
             @Override
             public com.estatica.domain.world.WeatherRules.Weather weatherAt(long millis) {
@@ -334,6 +342,13 @@ public final class GameSession {
         power.putAll(baseRepository.power());
         Map<String, Double> values = baseRepository.values();
         baseValues.putAll(values);
+        List<String> recentDone = new ArrayList<>();
+        for (Map.Entry<String, Double> v : baseValues.entrySet()) {
+            if (v.getKey().startsWith(LOG_DONE) && clock.nowMillis() - v.getValue() < LOG_CHIP_MILLIS) {
+                recentDone.add(v.getKey().substring(LOG_DONE.length()));
+            }
+        }
+        doneTeams.putAll(expeditionRepository.teams(recentDone));
         craftJobs.addAll(baseRepository.craftJobs());
         db.runInTransaction(() -> {
             for (EnergyDef.Consumer c : energy.getConsumers()) {
@@ -345,12 +360,12 @@ public final class GameSession {
             if (!values.containsKey(KEY_TICK)) {
                 // New games and saves from before Phase 4: no retroactive raids or blackouts.
                 baseRepository.saveValue(KEY_TICK, now);
-                baseRepository.saveValue(KEY_RESERVE, energy.batteryCapacity(moduleLevel("generator")));
+                baseRepository.saveValue(KEY_RESERVE, reserveCapacity());
             }
         });
         baseTick = values.containsKey(KEY_TICK) ? values.get(KEY_TICK).longValue() : now;
         reserve = values.containsKey(KEY_RESERVE) ? values.get(KEY_RESERVE)
-                : energy.batteryCapacity(moduleLevel("generator"));
+                : reserveCapacity();
         gameStateRepository.saveContentVersion(content.getBalance().getContentVersion());
         started = true;
     }
@@ -600,6 +615,172 @@ public final class GameSession {
         maybeStartConversation(step);
         maybeBark(step);
         maybeVignette(step);
+        maybeOmen(step);
+        catchBroadcasts(step);
+        eagerTreatments(step);
+    }
+
+    /** Someone on the infirmary task offering to treat someone else, right now. */
+    private static final class Treatment {
+        final Scout healer;
+        final Scout patient;
+        final int cost;
+
+        Treatment(Scout healer, Scout patient, int cost) {
+            this.healer = healer;
+            this.patient = patient;
+            this.cost = cost;
+        }
+
+        String id() {
+            return TREAT + healer.getId() + "|" + patient.getId();
+        }
+    }
+
+    private static final String TREAT = "treat:";
+
+    /**
+     * One offer per injured person at home: a healer on the infirmary task (not the injured
+     * one), not turned down lately. Offers exist only while that's true; nothing is stored.
+     */
+    private List<Treatment> treatments(long now) {
+        Balance.Treatment config = content.getBalance().getTreatment();
+        List<Treatment> out = new ArrayList<>();
+        for (Scout patient : scouts.values()) {
+            if (!patient.isAlive() || patient.getStatus() != ScoutStatus.IDLE || patient.getInjury() == Injury.NONE
+                    || now - value(TREAT + "no:" + patient.getId()) < config.getDeclineCooldownHours() * HOUR) {
+                continue;
+            }
+            for (Scout healer : scouts.values()) {
+                String task = healer.getLife().getTaskId();
+                if (healer != patient && healer.isAlive() && healer.getStatus() == ScoutStatus.IDLE
+                        && task != null && content.task(task).isTreats()) {
+                    out.add(new Treatment(healer, patient, patient.getInjury().ordinal() * config.getMedicinePerLevel()));
+                    break;
+                }
+            }
+        }
+        return out;
+    }
+
+    private boolean isEager(Scout healer) {
+        for (ScoutTrait t : healer.getTraits()) {
+            if (t.isVisible() && content.getBalance().getTreatment().getEagerTraits().contains(t.getTraitId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Some healers don't ask (Gentle, Reckless, Hothead): if there's medicine, they just do it. */
+    private void eagerTreatments(Step step) {
+        for (Treatment t : treatments(step.now)) {
+            if (isEager(t.healer) && resources.getOrDefault("medicine", 0)
+                    + step.resourceDelta.getOrDefault("medicine", 0) >= t.cost) {
+                treatNow(t, content.getTerminal().getBunker().getTreatEager(), step);
+            }
+        }
+    }
+
+    private void treatNow(Treatment t, String template, Step step) {
+        Map<String, String> vars = treatVars(t);
+        step.resourceDelta.merge("medicine", -t.cost, Integer::sum);
+        rules.treat(t.patient);
+        step.system(template, vars, t.patient);
+    }
+
+    private Map<String, String> treatVars(Treatment t) {
+        Map<String, String> vars = new HashMap<>();
+        vars.put("healer", t.healer.getName());
+        vars.put("name", t.patient.getName());
+        vars.put("injury", content.getTerminal().getInjuries().get(t.patient.getInjury().name()));
+        vars.put("cost", String.valueOf(t.cost));
+        return vars;
+    }
+
+    /** The operator answers a treatment offer: 0 do it, 1 not now. */
+    @WorkerThread
+    public List<LogLine> treat(String offerId, int choice) {
+        Step step = new Step();
+        advance(step);
+        for (Treatment t : treatments(step.now)) {
+            if (!t.id().equals(offerId)) {
+                continue;
+            }
+            if (choice != 0) {
+                setValue(TREAT + "no:" + t.patient.getId(), step.now, step);
+            } else if (resources.getOrDefault("medicine", 0) + step.resourceDelta.getOrDefault("medicine", 0) < t.cost) {
+                step.system(content.getTerminal().getBunker().getTreatNoMedicine(), treatVars(t), t.patient);
+            } else {
+                treatNow(t, content.getTerminal().getBunker().getTreatDone(), step);
+            }
+        }
+        return step.commit();
+    }
+
+    /**
+     * Every few hours, maybe, something wrong happens in the bunker. Worse ones unlock as the
+     * Voice's story moves forward. Only stress, never harm: it's there to make the dark longer.
+     */
+    private void maybeOmen(Step step) {
+        Balance.Omens config = content.getBalance().getOmens();
+        double last = value("last_omen");
+        if (last <= 0) {
+            setValue("last_omen", step.now, step);
+            return;
+        }
+        if (step.now - last < config.getIntervalHours() * HOUR) {
+            return;
+        }
+        setValue("last_omen", step.now, step);
+        if (!random.chance(config.getChance())) {
+            return;
+        }
+        int plot = 0;
+        for (String flag : gameFlags) {
+            plot += flag.startsWith("plot:") ? 1 : 0;
+        }
+        boolean night = content.getBalance().getEnergy().isNight(clock.localHour(step.now));
+        List<Scout> home = new ArrayList<>();
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE) {
+                home.add(s);
+            }
+        }
+        List<StoryDef.Omen> pool = new ArrayList<>();
+        for (StoryDef.Omen o : content.getStory().getOmens()) {
+            boolean fits = (!o.isNight() || night) && plot >= o.getMinPlot()
+                    && (!o.isNeedsCrew() || !home.isEmpty())
+                    && step.now - value("omen:" + o.getId()) >= config.getCooldownHours() * HOUR;
+            for (int w = 0; fits && w < o.getWeight(); w++) {
+                pool.add(o);
+            }
+        }
+        if (pool.isEmpty()) {
+            return;
+        }
+        StoryDef.Omen omen = random.pick(pool);
+        setValue("omen:" + omen.getId(), step.now, step);
+        Scout witness = home.isEmpty() ? null : random.pick(home);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", witness != null ? witness.getName() : "");
+        for (int i = 0; i < omen.getLines().size(); i++) {
+            LogChannel channel = omen.isAlert() && i == 0 ? LogChannel.ALERT : LogChannel.SYSTEM;
+            step.lines.add(LogLine.draft(step.now, channel, null,
+                    TextTemplate.format(omen.getLines().get(i), vars)));
+        }
+        for (Scout s : home) {
+            rules.addStress(s, omen.getStress());
+        }
+        if (witness != null && !omen.getReaction().isEmpty()) {
+            com.estatica.domain.content.VoiceDef voice = content.voice(witness.getVoiceId());
+            List<LogLine> said = new ArrayList<>();
+            for (String line : omen.getReaction()) {
+                said.add(LogLine.draft(step.now, LogChannel.RADIO, witness.getName(),
+                        com.estatica.domain.scouts.VoiceRenderer.render(voice, line, vars), witness.getId()));
+            }
+            step.into(said, BUNKER_CHAT);
+        }
     }
 
     /** Thread for moments the whole bunker shares. */
@@ -653,7 +834,7 @@ public final class GameSession {
 
     /** What the cooks at home save, before the cap. */
     private double kitchenSaving() {
-        double saving = 0;
+        double saving = moduleBonus("pantry");
         for (Scout s : scouts.values()) {
             String task = s.getLife().getTaskId();
             if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && task != null) {
@@ -730,14 +911,17 @@ public final class GameSession {
         Map<String, String> vars = new HashMap<>();
         vars.put("who", scout.getName() + (party.partner != null ? " + " + party.partner.getName() : ""));
         vars.put("zone", content.zone(expedition.getZoneId()).getName());
+        String thread = LogLine.summaryThread(expedition.getId());
         if (result.isSituationArrived() && expedition.isAwaitingDecision()) {
             step.lines.add(LogLine.draft(step.now, LogChannel.ALERT, null,
-                    TextTemplate.format(text.getSummaryOrders(), vars), scout.getId()));
+                    TextTemplate.format(text.getSummaryOrders(), vars), scout.getId()).withThread(thread));
         }
         if (result.isScoutDied()) {
             Map<String, String> died = new HashMap<>(vars);
             died.put("name", scout.getName());
-            step.system(text.getSummaryDied(), died, scout);
+            step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null,
+                    TextTemplate.format(text.getSummaryDied(), died), scout.getId()).withThread(thread));
+            markLogDone(expedition, step);
         }
         if (result.isReturned()) {
             StringBuilder line = new StringBuilder();
@@ -756,7 +940,9 @@ public final class GameSession {
                     line.append(' ').append(TextTemplate.format(text.getSummaryHurt(), hurt));
                 }
             }
-            step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null, line.toString(), scout.getId()));
+            step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null, line.toString(), scout.getId())
+                    .withThread(thread));
+            markLogDone(expedition, step);
         }
     }
 
@@ -1013,10 +1199,17 @@ public final class GameSession {
         }
         ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, party, step.now);
         step.into(dispatch.lines, LogLine.expeditionThread(dispatch.expedition.getId()));
+        for (com.estatica.domain.expedition.Segment segment : dispatch.expedition.getSegments()) {
+            if (segment.getEventId() != null) {
+                setValue(EVENT_SEEN + segment.getEventId(), step.now, step);
+            }
+        }
         Map<String, String> left = new HashMap<>();
         left.put("who", scout.getName() + (partner != null ? " + " + partner.getName() : ""));
         left.put("zone", zone.getName());
-        step.system(content.getTerminal().getExpedition().getSummaryDeparted(), left, scout);
+        step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null,
+                TextTemplate.format(content.getTerminal().getExpedition().getSummaryDeparted(), left), scout.getId())
+                .withThread(LogLine.summaryThread(dispatch.expedition.getId())));
         step.newExpeditions.add(dispatch.expedition);
         active.put(dispatch.expedition.getId(), dispatch.expedition);
         return step.commit();
@@ -1047,6 +1240,22 @@ public final class GameSession {
         return moduleLevels.getOrDefault(moduleId, 1);
     }
 
+    /** What a module adds over its first level (perLevel × levels above 1). */
+    private double moduleBonus(String moduleId) {
+        ModuleDef m = content.getBalance().module(moduleId);
+        return m == null ? 0 : m.getPerLevel() * (moduleLevel(moduleId) - 1);
+    }
+
+    /** The generator's own storage plus the battery bank. */
+    private double reserveCapacity() {
+        return content.getBalance().getEnergy().batteryCapacity(moduleLevel("generator")) + moduleBonus("battery_bank");
+    }
+
+    /** One battery into the reserve: a bigger bank takes more of each. */
+    private double rechargePerBattery() {
+        return content.getBalance().getEnergy().getRechargePerBattery() + (moduleLevel("battery_bank") - 1);
+    }
+
     private boolean isUnlocked(BandDef band) {
         if (content.getBalance().bandIndex(band.getId()) > 0
                 && !PowerGrid.antennaOn(grid(clock.nowMillis()).units("antenna"))) {
@@ -1067,6 +1276,16 @@ public final class GameSession {
     private static final String DEPLETION_AT = "dept:";
 
     /** How picked-over a place is now (0 untouched, 1 bare), recovering with time. */
+    /** How long until a picked-over place is full again ("2 d 4 h"), or null if it already is. */
+    private String refillIn(String zoneId, long now) {
+        double left = depletion(zoneId, now);
+        double perDay = content.getBalance().getDepletion().getRecoveryPerDay();
+        if (left < 0.01 || perDay <= 0) {
+            return null;
+        }
+        return ElapsedFormatter.format(Math.round(left / perDay * 24 * HOUR), content.getTerminal().getElapsedUnits());
+    }
+
     public double depletion(String zoneId, long now) {
         double stored = value(DEPLETION + zoneId);
         if (stored <= 0) {
@@ -1091,6 +1310,23 @@ public final class GameSession {
 
     private static final String SCOUTED = "scouted:";
     private static final String HEARD = "heard:";
+    /** When an expedition's result first reached the operator (its chip stays 4 h past that). */
+    private static final String LOG_DONE = "logdone:";
+    private static final long LOG_CHIP_MILLIS = 4 * 3_600_000L;
+    /** Finished expeditions still shown as chips: id to {lead, partner}. */
+    private final Map<String, String[]> doneTeams = new LinkedHashMap<>();
+
+    /**
+     * The result is in. Steps only run while the game is open, so this is when the operator
+     * could see it: on screen if they were here, or on opening the game if not.
+     */
+    private void markLogDone(Expedition expedition, Step step) {
+        setValue(LOG_DONE + expedition.getId(), step.now, step);
+        doneTeams.put(expedition.getId(), new String[]{expedition.getScoutId(), expedition.getPartnerId()});
+    }
+
+    /** When a situation last came up: recent ones wait at the back of the queue. */
+    private static final String EVENT_SEEN = "evseen:";
 
     /** Sends a scout to map out a sector. */
     @WorkerThread
@@ -1345,7 +1581,8 @@ public final class GameSession {
             if (place != null) {
                 places.add(new SessionSnapshot.PlaceView(zoneId, z.getName(),
                         content.getBalance().bandIndex(z.getBand()), place.ring, place.turn, z.getDanger(), canReach(z),
-                        (int) Math.round(depletion(zoneId, clock.nowMillis()) * 100), z.getIcon(), z.getShortName()));
+                        (int) Math.round(depletion(zoneId, clock.nowMillis()) * 100), z.getIcon(), z.getShortName(),
+                        refillIn(zoneId, clock.nowMillis())));
             }
         }
         List<String> bands = new ArrayList<>();
@@ -1354,7 +1591,174 @@ public final class GameSession {
                 bands.add(b.getName());
             }
         }
-        return new SessionSnapshot.MapView(sectors, places, bands);
+        return new SessionSnapshot.MapView(sectors, places, bands,
+                (int) Math.round(content.getBalance().getDepletion().getRecoveryPerDay() * 100));
+    }
+
+    /** What the dial hears at a position: the strongest of a hidden signal, a station or an echo. */
+    private static final class Heard {
+        double strength;
+        SignalField.Spot spot;
+        SignalsDef.Station station;
+        Scout echo;
+        /** The spot was already locked onto: still on the air, nothing more to get from it. */
+        boolean caught;
+
+        boolean anything() {
+            return spot != null || station != null || echo != null;
+        }
+    }
+
+    private Heard listen(BandDef band, int position, long now) {
+        Heard heard = new Heard();
+        long window = field.window(now);
+        SignalField.Reading fresh = field.tune(band, position, window, caughtSignals);
+        SignalField.Reading any = field.tune(band, position, window, Set.of());
+        // A signal you already logged stays on the dial, it just can't be locked again.
+        SignalField.Reading reading = any.strength > fresh.strength ? any : fresh;
+        heard.strength = reading.strength;
+        heard.spot = reading.spot;
+        heard.caught = reading.spot != null && caughtSignals.contains(reading.spot.key());
+        boolean night = content.getBalance().getEnergy().isNight(clock.localHour(now));
+        for (SignalsDef.Station station : content.getSignals().getStations()) {
+            if (!band.getId().equals(station.getBand()) || (station.isNight() && !night)
+                    || !Broadcasts.onAir(station, clock.localMillis(now))) {
+                continue;
+            }
+            double strength = closeness(band, position, station.getPosition());
+            if (strength > heard.strength) {
+                heard.strength = strength;
+                heard.station = station;
+                heard.spot = null;
+                heard.caught = false;
+            }
+        }
+        for (Scout dead : echoes(band, now)) {
+            double strength = closeness(band, position, echoPosition(dead, now));
+            if (strength > heard.strength) {
+                heard.strength = strength;
+                heard.echo = dead;
+                heard.station = null;
+                heard.spot = null;
+                heard.caught = false;
+            }
+        }
+        return heard;
+    }
+
+    private static double closeness(BandDef band, int position, int at) {
+        return Math.max(0, 1.0 - Math.abs(position - at) / (double) band.getTuneRadius());
+    }
+
+    /** Echoes already heard this session, by scout and window: each comes once. */
+    private final Set<String> echoesHeard = new java.util.HashSet<>();
+
+    /**
+     * The fallen turn up close to home, on the short band, in one window out of a few, some
+     * hours after they went quiet (GDD §5.5: the channel stays open).
+     */
+    private List<Scout> echoes(BandDef band, long now) {
+        SignalsDef.Echo echo = content.getSignals().getEcho();
+        List<Scout> out = new ArrayList<>();
+        if (echo == null || content.getBalance().bandIndex(band.getId()) != 0) {
+            return out;
+        }
+        long window = field.window(now);
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() || now - s.getLife().getDiedAtMillis() < echo.getAfterHours() * HOUR
+                    || echoesHeard.contains(s.getId() + "@" + window)
+                    || Math.floorMod((s.getId() + "~" + window).hashCode(), echo.getEveryWindows()) != 0) {
+                continue;
+            }
+            out.add(s);
+        }
+        return out;
+    }
+
+    private int echoPosition(Scout s, long now) {
+        return Math.floorMod((s.getId() + "#" + field.window(now)).hashCode(),
+                content.getBalance().getRadio().getDialMax());
+    }
+
+    /**
+     * Seeded per signal, so previewing what a signal is and locking onto it roll the same dice:
+     * a transmission that sounds like Morse is Morse.
+     */
+    private GameRandom spotRandom(SignalField.Spot spot) {
+        return GameRandom.fromSeed(rngSeed ^ (spot.key().hashCode() * 0x9E3779B97F4A7C15L));
+    }
+
+    private static final String RARE_HEARD = "rare:";
+
+    private Set<String> heardRares() {
+        Set<String> out = new java.util.HashSet<>();
+        for (String flag : gameFlags) {
+            if (flag.startsWith(RARE_HEARD)) {
+                out.add(flag.substring(RARE_HEARD.length()));
+            }
+        }
+        return out;
+    }
+
+    private RadioRules.Outcome resolve(SignalField.Spot spot, GameRandom rng) {
+        boolean roomForSurvivor = rescueTargets.size() < content.getBalance().getPeople().getMaxPendingRescues();
+        return radio.resolve(spot, knownZones, roomForSurvivor, receivedTransmissions, heardRares(), rng);
+    }
+
+    /** A rare find that leaves nothing behind (or lore already kept) costs no reserve. */
+    private boolean isFree(RadioRules.Outcome outcome) {
+        return outcome.kind == SignalField.Kind.RARE && (outcome.rare.isFlavor()
+                || (outcome.rare.getResources().isEmpty() && lore.containsKey(outcome.rare.getId())));
+    }
+
+    /** The sound a scheme makes on the air (SoundEngine picks the loop). */
+    private static String audioOf(Transmission.Kind scheme) {
+        switch (scheme) {
+            case MORSE:
+            case TAP:
+                return "MORSE";
+            case NUMBERS:
+                return "NUMBERS";
+            case BOOK:
+            case PLAYFAIR:
+                return "VOICE";
+            default:
+                return "DATA";
+        }
+    }
+
+    /** What a station is saying right now: its lines take turns every few minutes. */
+    private String stationLine(SignalsDef.Station station, long now) {
+        List<String> lines = new ArrayList<>(station.getLines());
+        List<String> fallen = new ArrayList<>();
+        for (Scout s : scouts.values()) {
+            if (!s.isAlive()) {
+                fallen.add(s.getName());
+            }
+        }
+        if (!fallen.isEmpty()) {
+            lines.addAll(station.getDeadLines());
+        }
+        if (lines.isEmpty()) {
+            return content.getTerminal().getRadio().getStaticNoise();
+        }
+        long turn = station.isPerAiring() && station.getSchedule() != null
+                ? Broadcasts.airing(station, clock.localMillis(now))
+                : now / (station.getMinutesPerLine() * 60_000L);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("dead", fallen.isEmpty() ? "" : fallen.get((int) Math.floorMod(turn, (long) fallen.size())));
+        return TextTemplate.format(lines.get((int) Math.floorMod(turn, (long) lines.size())), vars);
+    }
+
+    /** Their last words, or the last thing they kept. */
+    private String echoWords(Scout dead) {
+        String words = null;
+        for (Memory m : memoryRepository.forScout(dead.getId())) {
+            if (m.getType() == Memory.Type.LAST_WORDS || words == null) {
+                words = m.getText();
+            }
+        }
+        return words != null ? words : "...";
     }
 
     /**
@@ -1365,45 +1769,246 @@ public final class GameSession {
     public SessionSnapshot.Tuning tune(String bandId, int position) {
         BandDef band = content.getBalance().band(bandId);
         long now = clock.nowMillis();
+        TerminalText.RadioText text = content.getTerminal().getRadio();
+        String frequency = band.frequency(position);
         if (!isUnlocked(band)) {
-            return new SessionSnapshot.Tuning(0, content.getTerminal().getRadio().getStaticNoise(), false);
+            return SessionSnapshot.Tuning.quiet(text.getStaticNoise(), frequency);
         }
-        SignalField.Reading reading = field.tune(band, position, field.window(now), caughtSignals);
-        if (reading.spot == null || reading.strength < 0.1) {
-            return new SessionSnapshot.Tuning(reading.strength, content.getTerminal().getRadio().getStaticNoise(), false);
+        Heard heard = listen(band, position, now);
+        if (heard.strength < 0.1 || !heard.anything()) {
+            return SessionSnapshot.Tuning.quiet(text.getStaticNoise(), frequency);
         }
-        List<String> teasers = content.getSignals().getTeasers().get(reading.spot.kind.name());
-        GameRandom flavor = GameRandom.fromSeed(reading.spot.key().hashCode() * 31L + position);
-        String teaser = teasers.get(Math.floorMod(reading.spot.key().hashCode(), teasers.size()));
-        String text = SignalDegrader.degrade(teaser, Math.max(0, 1.0 - reading.strength), flavor);
-        boolean lockable = reading.strength >= content.getBalance().getRadio().getLockThreshold();
-        return new SessionSnapshot.Tuning(reading.strength, text, lockable);
+        String key;
+        String teaser;
+        String audio;
+        String label = null;
+        int cost = 0;
+        if (heard.station != null) {
+            key = heard.station.getId();
+            teaser = stationLine(heard.station, now);
+            audio = heard.station.getAudio();
+            label = heard.station.getName();
+        } else if (heard.echo != null) {
+            key = heard.echo.getId();
+            List<String> teasers = content.getSignals().getEcho().getTeasers();
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", heard.echo.getName());
+            teaser = teasers.isEmpty() ? text.getStaticNoise()
+                    : TextTemplate.format(teasers.get(Math.floorMod(key.hashCode(), teasers.size())), vars);
+            audio = "WHISPER";
+        } else if (heard.caught) {
+            key = heard.spot.key();
+            teaser = text.getAlreadyCaught();
+            audio = heard.spot.kind == SignalField.Kind.TRANSMISSION ? "DATA" : "VOICE";
+            GameRandom flavor = GameRandom.fromSeed(key.hashCode() * 31L + position);
+            return new SessionSnapshot.Tuning(heard.strength,
+                    SignalDegrader.degrade(teaser, Math.max(0, 1.0 - heard.strength), flavor), false, frequency,
+                    null, audio, 0);
+        } else {
+            key = heard.spot.key();
+            GameRandom rng = spotRandom(heard.spot);
+            RadioRules.Outcome outcome = resolve(heard.spot, rng);
+            List<String> teasers;
+            switch (outcome.kind) {
+                case TRANSMISSION: {
+                    Transmission.Kind scheme = radio.scheme(outcome.transmission, heard.spot.bandId, rng);
+                    teasers = content.getSignals().teasers("TRANSMISSION", scheme.name());
+                    audio = audioOf(scheme);
+                    break;
+                }
+                case RARE:
+                    teasers = outcome.rare.getTeaser() != null ? List.of(outcome.rare.getTeaser())
+                            : content.getSignals().teasers("RARE", null);
+                    audio = outcome.rare.getAudio();
+                    break;
+                default:
+                    teasers = content.getSignals().teasers(outcome.kind.name(), null);
+                    audio = "VOICE";
+            }
+            teaser = teasers.get(Math.floorMod(key.hashCode(), teasers.size()));
+            cost = isFree(outcome) ? 0 : (int) Math.ceil(content.getBalance().getEnergy().getSweepCost());
+        }
+        GameRandom flavor = GameRandom.fromSeed(key.hashCode() * 31L + position);
+        String shown = SignalDegrader.degrade(teaser, Math.max(0, 1.0 - heard.strength), flavor);
+        boolean lockable = heard.strength >= content.getBalance().getRadio().getLockThreshold();
+        return new SessionSnapshot.Tuning(heard.strength, shown, lockable, frequency, label, audio, cost);
     }
 
-    /** Locks onto the signal at the dial position, if it's clear enough. */
+    /** Locks onto whatever the dial hears, if it's clear enough. */
     @WorkerThread
     public List<LogLine> capture(String bandId, int position) {
         Step step = new Step();
         advance(step);
         BandDef band = content.getBalance().band(bandId);
-        SignalField.Spot spot = isUnlocked(band)
-                ? field.lock(band, position, field.window(step.now), caughtSignals) : null;
+        Heard heard = isUnlocked(band) ? listen(band, position, step.now) : null;
+        if (heard == null || heard.strength < content.getBalance().getRadio().getLockThreshold()
+                || !heard.anything()) {
+            step.system(content.getTerminal().getRadio().getNothingThere(), Map.of(), null);
+            return step.commit();
+        }
+        if (heard.station != null) {
+            listenToStation(heard.station, band.frequency(position), step);
+            return step.commit();
+        }
+        if (heard.echo != null) {
+            listenToEcho(heard.echo, band.frequency(position), step);
+            return step.commit();
+        }
+        if (heard.caught) {
+            step.system(content.getTerminal().getRadio().getAlreadyCaught(), Map.of(), null);
+            return step.commit();
+        }
+        SignalField.Spot spot = heard.spot;
+        boolean free = isFree(resolve(spot, spotRandom(spot)));
         double cost = content.getBalance().getEnergy().getSweepCost();
-        if (spot != null && reserve < cost) {
+        if (!free && reserve < cost) {
             step.system(content.getTerminal().getBase().getReserveLow(), Map.of(), null);
             return step.commit();
         }
-        if (spot != null) {
-            count("sweeps", step);
+        count("sweeps", step);
+        if (!free) {
             reserve -= cost;
             step.radioWrites.add(() -> baseRepository.saveValue(KEY_RESERVE, reserve));
         }
-        if (spot == null) {
-            step.system(content.getTerminal().getRadio().getNothingThere(), Map.of(), null);
-        } else {
-            receive(spot, step);
-        }
+        receive(spot, step);
         return step.commit();
+    }
+
+    /** Stations are free: you only listen. The first time goes in the Diary. */
+    private void listenToStation(SignalsDef.Station station, String frequency, Step step) {
+        Map<String, String> vars = new HashMap<>();
+        vars.put("frequency", frequency);
+        vars.put("station", station.getName());
+        vars.put("line", stationLine(station, step.now));
+        step.system(content.getTerminal().getRadio().getStationHeard(), vars, null);
+        if (station.getLore() != null) {
+            addLore(station.getId(), station.getLore(), step);
+        }
+        unsettle(station.getStress(), step);
+        if (station.hasBulletin()) {
+            takeBulletin(station, Broadcasts.airing(station, clock.localMillis(step.now)), step);
+        }
+    }
+
+    private static final String AIRING_TAKEN = "air:";
+
+    /** Each airing's bulletin is caught once, by you or by whoever is on the radio. */
+    private boolean takeBulletin(SignalsDef.Station station, long airing, Step step) {
+        if (value(AIRING_TAKEN + station.getId()) >= airing + 1) {
+            return false;
+        }
+        setValue(AIRING_TAKEN + station.getId(), airing + 1, step);
+        grant(station.getResources(), step);
+        if (station.getIntel() != null) {
+            List<String> places = new ArrayList<>();
+            for (String id : knownZones) {
+                ZoneDef z = content.getZones().get(id);
+                if (z != null && !z.isWilds() && canReach(z)) {
+                    places.add(id);
+                }
+            }
+            java.util.Collections.sort(places);
+            if (!places.isEmpty()) {
+                addIntel(random.pick(places), station.getIntel(), step);
+            }
+        }
+        return true;
+    }
+
+    /** Intel on a place: the next expedition there uses it. */
+    private void addIntel(String zoneId, String type, Step step) {
+        intel.computeIfAbsent(zoneId, k -> new HashMap<>()).put(type, "pending");
+        step.radioWrites.add(() -> {
+            String id = radioRepository.addIntel(zoneId, type, step.now);
+            intel.get(zoneId).put(type, id);
+        });
+        Map<String, String> vars = new HashMap<>();
+        vars.put("zone", content.zone(zoneId).getName());
+        step.system("CACHE".equals(type) ? content.getTerminal().getRadio().getIntelCache()
+                : content.getTerminal().getRadio().getIntelDanger(), vars, null);
+    }
+
+    /**
+     * Bulletins that aired since the last step, caught by whoever is on the radio task. This
+     * is what the radio assistant is for, besides sweeping: being there at 06:00.
+     */
+    private void catchBroadcasts(Step step) {
+        double last = value("air_check");
+        setValue("air_check", step.now, step);
+        if (last <= 0) {
+            return;
+        }
+        Scout assistant = null;
+        for (Scout s : scouts.values()) {
+            String task = s.getLife().getTaskId();
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && task != null
+                    && content.task(task).isPassiveSweep()) {
+                assistant = s;
+            }
+        }
+        if (assistant == null) {
+            return;
+        }
+        long from = clock.localMillis((long) last);
+        long to = clock.localMillis(step.now);
+        java.text.DateFormat time = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
+        for (SignalsDef.Station station : content.getSignals().getStations()) {
+            if (!station.hasBulletin() || !isUnlocked(content.getBalance().band(station.getBand()))) {
+                continue;
+            }
+            long newest = Broadcasts.airing(station, to);
+            // Only the latest few: a week away doesn't fill the log.
+            for (long n = Math.max(Broadcasts.airing(station, from) + 1, newest - 2); n <= newest; n++) {
+                long startLocal = Broadcasts.startOf(station, n);
+                long startUtc = step.now - (to - startLocal);
+                if (station.isNight() && !content.getBalance().getEnergy().isNight(clock.localHour(startUtc))) {
+                    continue;
+                }
+                Map<String, String> vars = new HashMap<>();
+                vars.put("name", assistant.getName());
+                vars.put("station", station.getName());
+                vars.put("time", time.format(new Date(startUtc)));
+                vars.put("line", stationLine(station, startUtc));
+                if (value(AIRING_TAKEN + station.getId()) < n + 1) {
+                    step.system(content.getTerminal().getRadio().getAssistantBulletin(), vars, assistant);
+                    takeBulletin(station, n, step);
+                }
+            }
+        }
+    }
+
+    private void listenToEcho(Scout dead, String frequency, Step step) {
+        SignalsDef.Echo echo = content.getSignals().getEcho();
+        echoesHeard.add(dead.getId() + "@" + field.window(step.now));
+        Map<String, String> vars = new HashMap<>();
+        vars.put("frequency", frequency);
+        vars.put("name", dead.getName());
+        vars.put("words", echoWords(dead));
+        List<String> heard = echo.getHeard();
+        if (!heard.isEmpty()) {
+            step.system(heard.get(Math.floorMod((dead.getId() + step.now).hashCode(), heard.size())), vars, dead);
+        }
+        if (echo.getLore() != null) {
+            addLore("echo:" + dead.getId(), TextTemplate.format(echo.getLore(), vars), step);
+        }
+        unsettle(echo.getStress(), step);
+    }
+
+    /** Everyone at home heard it too. */
+    private void unsettle(int stress, Step step) {
+        if (stress <= 0) {
+            return;
+        }
+        boolean anyone = false;
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE) {
+                rules.addStress(s, stress);
+                anyone = true;
+            }
+        }
+        if (anyone) {
+            step.system(content.getTerminal().getRadio().getCrewUneasy(), Map.of(), null);
+        }
     }
 
     /** The radio assistant caught a signal on their own while the operator was away. */
@@ -1437,10 +2042,11 @@ public final class GameSession {
     }
 
     private void receive(SignalField.Spot spot, Step step) {
+        // Resolved before it's marked caught, with the same dice the preview rolled.
+        GameRandom rng = spotRandom(spot);
+        RadioRules.Outcome outcome = resolve(spot, rng);
         caughtSignals.add(spot.key());
         step.radioWrites.add(() -> radioRepository.addCaughtSignal(spot.key(), step.now));
-        boolean roomForSurvivor = rescueTargets.size() < content.getBalance().getPeople().getMaxPendingRescues();
-        RadioRules.Outcome outcome = radio.resolve(spot, knownZones, roomForSurvivor, receivedTransmissions, random);
         TerminalText.RadioText text = content.getTerminal().getRadio();
         Map<String, String> vars = new HashMap<>();
         switch (outcome.kind) {
@@ -1481,7 +2087,7 @@ public final class GameSession {
                     plain = plain.replace("{zone}", content.zone(outcome.zoneId).getName());
                 }
                 Transmission t = radio.encrypt(def, spot.bandId, outcome.zoneId, plain.replace("{zone}", ""),
-                        random, step.now);
+                        rng, step.now);
                 transmissions.put(t.getId(), t);
                 receivedTransmissions.add(def.getId());
                 step.radioWrites.add(() -> radioRepository.save(t));
@@ -1489,6 +2095,10 @@ public final class GameSession {
                 break;
             }
             default: {
+                String heardFlag = RARE_HEARD + outcome.rare.getId();
+                if (gameFlags.add(heardFlag)) {
+                    step.radioWrites.add(() -> radioRepository.addFlag(heardFlag, step.now));
+                }
                 for (String line : outcome.rare.getText()) {
                     step.system(line, vars, null);
                 }
@@ -1598,16 +2208,7 @@ public final class GameSession {
             case CACHE:
             case DANGER:
                 if (t.getZoneId() != null) {
-                    String type = def.getReward().name();
-                    String zoneId = t.getZoneId();
-                    intel.computeIfAbsent(zoneId, k -> new HashMap<>()).put(type, "pending");
-                    step.radioWrites.add(() -> {
-                        String id = radioRepository.addIntel(zoneId, type, step.now);
-                        intel.get(zoneId).put(type, id);
-                    });
-                    vars.put("zone", content.zone(zoneId).getName());
-                    step.system(def.getReward() == SignalsDef.Transmission.Reward.CACHE
-                            ? text.getIntelCache() : text.getIntelDanger(), vars, null);
+                    addIntel(t.getZoneId(), def.getReward().name(), step);
                 }
                 break;
             case LORE:
@@ -1823,7 +2424,7 @@ public final class GameSession {
             }
             double hours = (now - baseTick) / (double) HOUR;
             PowerGrid.State g = grid(now);
-            reserve = Math.min(energy.batteryCapacity(moduleLevel("generator")),
+            reserve = Math.min(reserveCapacity(),
                     reserve + g.spare() * energy.getChargePerSpareWattHour() * hours);
             craft(hours, g, step);
             baseTick = now;
@@ -1853,7 +2454,7 @@ public final class GameSession {
         TerminalText.BaseText text = content.getTerminal().getBase();
         Map<String, Integer> stock = new HashMap<>(resources);
         step.resourceDelta.forEach((k, v) -> stock.merge(k, v, Integer::sum));
-        RaidRules.Result result = raids.resolve(scouts.values(), stock, moduleLevel("antenna"), random);
+        RaidRules.Result result = raids.resolve(scouts.values(), stock, moduleLevel("antenna"), (int) moduleBonus("barricades"), random);
         Map<String, String> vars = new HashMap<>();
         if (result.repelled) {
             List<String> names = new ArrayList<>();
@@ -1965,7 +2566,7 @@ public final class GameSession {
         advance(step);
         EnergyDef energy = content.getBalance().getEnergy();
         if (pay(Map.of("batteries", 1), step)) {
-            reserve = Math.min(energy.batteryCapacity(moduleLevel("generator")), reserve + energy.getRechargePerBattery());
+            reserve = Math.min(reserveCapacity(), reserve + rechargePerBattery());
             double saved = reserve;
             step.radioWrites.add(() -> baseRepository.saveValue(KEY_RESERVE, saved));
             step.system(content.getTerminal().getBase().getReserveRecharged(), Map.of(), null);
@@ -2026,7 +2627,9 @@ public final class GameSession {
                     ExpeditionEngine.Party team = party(e);
                     Map<String, String> vars = new HashMap<>();
                     vars.put("who", lead.getName() + (team.partner != null ? " + " + team.partner.getName() : ""));
-                    step.system(content.getTerminal().getExpedition().getSummaryRecalled(), vars, lead);
+                    step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null,
+                            TextTemplate.format(content.getTerminal().getExpedition().getSummaryRecalled(), vars),
+                            lead.getId()).withThread(LogLine.summaryThread(e.getId())));
                 }
                 break;
             }
@@ -2196,11 +2799,14 @@ public final class GameSession {
             gearViews.add(new SessionSnapshot.GearView(piece.getId(), label, holder,
                     damaged && atHome(piece) ? describe(cost) : null, canAfford(cost)));
         }
-        return new SessionSnapshot.BaseView(goalViews(now), !g.cut.isEmpty(), energy.watts(moduleLevel("generator")), g.available, g.used,
+        SessionSnapshot.BaseView baseView = new SessionSnapshot.BaseView(goalViews(now), !g.cut.isEmpty(), energy.watts(moduleLevel("generator")), g.available, g.used,
                 events.blackoutWattsAt(now) > 0, g.night, g.filtersShort, consumers,
-                (int) Math.floor(reserve), (int) energy.batteryCapacity(moduleLevel("generator")),
+                (int) Math.floor(reserve), (int) reserveCapacity(),
                 resources.getOrDefault("batteries", 0) > 0, modules, moduleLevel("workshop"), jobs, recipes,
-                guardNames, raids.defense(guards), gearStock, aliveScouts(), rosterCap(), gearViews);
+                guardNames, raids.defense(guards) + (int) moduleBonus("barricades"), gearStock, aliveScouts(), rosterCap(), gearViews);
+        baseView.rechargePer = (int) Math.round(rechargePerBattery());
+        baseView.batteries = resources.getOrDefault("batteries", 0);
+        return baseView;
     }
 
     // ---- Story: personal missions, La Voz, goals (GDD §5.2, §8, §9) ----
@@ -2314,12 +2920,16 @@ public final class GameSession {
         StoryDef.Objectives objectives = content.getStory().getObjectives();
         List<SessionSnapshot.GoalView> out = new ArrayList<>();
         for (StoryDef.Goal g : objectives.getDaily()) {
-            out.add(new SessionSnapshot.GoalView(g.getLabel(),
-                    (int) Math.min(g.getTarget(), value("obj:d:" + day + ":" + g.getCounter())), g.getTarget(), false));
+            SessionSnapshot.GoalView view = new SessionSnapshot.GoalView(g.getLabel(),
+                    (int) Math.min(g.getTarget(), value("obj:d:" + day + ":" + g.getCounter())), g.getTarget(), false);
+            view.reward = describe(g.getReward());
+            out.add(view);
         }
         StoryDef.Goal w = objectives.getWeekly();
-        out.add(new SessionSnapshot.GoalView(w.getLabel(),
-                (int) Math.min(w.getTarget(), value("obj:w:" + week(day) + ":" + w.getCounter())), w.getTarget(), true));
+        SessionSnapshot.GoalView weekly = new SessionSnapshot.GoalView(w.getLabel(),
+                (int) Math.min(w.getTarget(), value("obj:w:" + week(day) + ":" + w.getCounter())), w.getTarget(), true);
+        weekly.reward = describe(w.getReward());
+        out.add(weekly);
         return out;
     }
 
@@ -2337,7 +2947,7 @@ public final class GameSession {
         if (step.now < readyAt) {
             Map<String, String> vars = new HashMap<>();
             vars.put("name", scout.getName());
-            vars.put("hours", String.valueOf((readyAt - step.now + HOUR - 1) / HOUR));
+            vars.put("time", ElapsedFormatter.format(readyAt - step.now, content.getTerminal().getElapsedUnits()));
             step.system(content.getTerminal().getBunker().getTalkCooldown(), vars, scout);
             return step.commit();
         }
@@ -2418,7 +3028,7 @@ public final class GameSession {
 
     private long talkReadyAt(Scout scout) {
         return scout.getLife().getLastTalkAtMillis()
-                + content.getBalance().getBond().getTalkCooldownHours() * HOUR;
+                + content.getBalance().getBond().getTalkCooldownMinutes() * 60_000L;
     }
 
     // ---- Notifications ----
@@ -2520,6 +3130,8 @@ public final class GameSession {
             boolean home = s.isAlive() && s.getStatus() == ScoutStatus.IDLE;
             b.canDispatch = rules.canDispatch(s);
             b.canTalk = home && !hasPendingConversation(s) && now >= talkReadyAt(s);
+            b.talkReadyAtMillis = home && !hasPendingConversation(s) && now < talkReadyAt(s) ? talkReadyAt(s) : 0;
+            b.bondProgress = s.isAlive() ? rules.bondProgress(s) : 0;
             b.canGift = home && hasInventory;
             b.canAssignTask = s.isAlive();
             b.slots = new ArrayList<>();
@@ -2593,6 +3205,20 @@ public final class GameSession {
         }
         orders.sort(Comparator.comparingLong(p -> p.deadlineMillis));
         List<SessionSnapshot.PendingDecision> pending = new ArrayList<>(orders);
+        TerminalText.BunkerText bunkerText = content.getTerminal().getBunker();
+        for (Treatment t : treatments(now)) {
+            if (isEager(t.healer) || resources.getOrDefault("medicine", 0) < t.cost) {
+                continue; // they'll just do it, or there's nothing to do it with
+            }
+            Map<String, String> vars = treatVars(t);
+            VoiceDef voice = content.voice(t.healer.getVoiceId());
+            pending.add(new SessionSnapshot.PendingDecision(SessionSnapshot.PendingDecision.Kind.TREAT,
+                    t.id(), t.healer.getName(),
+                    List.of(TextTemplate.format(bunkerText.getTreatYes(), vars), bunkerText.getTreatNo()),
+                    -1, null, BUNKER_CHAT,
+                    List.of(com.estatica.domain.scouts.VoiceRenderer.render(voice, bunkerText.getTreatAsk(), vars)),
+                    List.of()));
+        }
         long expireAfter = bond.getInitiatedExpireHours() * HOUR;
         for (Conversation c : conversations.values()) {
             if (!c.isPending()) {
@@ -2625,11 +3251,13 @@ public final class GameSession {
                 continue;
             }
             Relay relay = relays.get(z.getId());
-            zones.add(new SessionSnapshot.ZoneView(z.getId(), z.getName(), z.getDescription(),
+            SessionSnapshot.ZoneView zoneView = new SessionSnapshot.ZoneView(z.getId(), z.getName(), z.getDescription(),
                     z.getDanger(), z.getDurationMinutes()[0], z.getDurationMinutes()[1],
                     content.getBalance().band(z.getBand()).getName(),
                     relay != null ? (int) Math.round(relay.getCondition()) : -1,
-                    intel.containsKey(z.getId()), (int) Math.round(depletion(z.getId(), now) * 100)));
+                    intel.containsKey(z.getId()), (int) Math.round(depletion(z.getId(), now) * 100));
+            zoneView.refillIn = refillIn(z.getId(), now);
+            zones.add(zoneView);
         }
 
         TerminalText.RadioText radioText = content.getTerminal().getRadio();
@@ -2706,7 +3334,21 @@ public final class GameSession {
                     content.zone(e.getZoneId()).getName(), percent, end, e.isAwaitingDecision(),
                     e.getPendingSinceMillis() != Expedition.NONE && !e.isAwaitingDecision()));
         }
-        return new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
+        List<SessionSnapshot.DoneLog> doneLogs = new ArrayList<>();
+        for (Iterator<Map.Entry<String, String[]>> it = doneTeams.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<String, String[]> e = it.next();
+            if (now - value(LOG_DONE + e.getKey()) >= LOG_CHIP_MILLIS || active.containsKey(e.getKey())) {
+                it.remove();
+                continue;
+            }
+            Scout lead = scouts.get(e.getValue()[0]);
+            Scout partner = e.getValue()[1] != null ? scouts.get(e.getValue()[1]) : null;
+            if (lead != null) {
+                doneLogs.add(new SessionSnapshot.DoneLog(LogLine.expeditionThread(e.getKey()),
+                        lead.getName() + (partner != null ? " + " + partner.getName() : "")));
+            }
+        }
+        SessionSnapshot built = new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
                 radioView(), baseView(now), expeditionViews,
                 food.daysLeft(mouths(), kitchenSaving(), resources.getOrDefault("rations", 0), foodCarryNow(now)),
                 value(KEY_HUNGRY) > 0, mapView(), keyItemViews(), glossary(), weather.at(now).name(),
@@ -2714,12 +3356,14 @@ public final class GameSession {
                 placeNames(), resourceNames(),
                 content.getTerminal().getHighlight().getDanger(), content.getTerminal().getHighlight().getGood(),
                 nextWake);
+        built.doneLogs = doneLogs;
+        return built;
     }
 
     private SessionSnapshot.RadioView radioView() {
         List<SessionSnapshot.BandView> bands = new ArrayList<>();
         for (BandDef band : content.getBalance().getBands()) {
-            bands.add(new SessionSnapshot.BandView(band.getId(), band.getName(), isUnlocked(band)));
+            bands.add(new SessionSnapshot.BandView(band.getId(), band.getName(), isUnlocked(band), band::frequency));
         }
         List<SessionSnapshot.TransmissionView> pendingTransmissions = new ArrayList<>();
         for (Transmission t : transmissions.values()) {
@@ -2731,7 +3375,38 @@ public final class GameSession {
         }
         return new SessionSnapshot.RadioView(bands, content.getBalance().getRadio().getDialMax(),
                 pendingTransmissions, gameFlags.contains(FLAG_MORSE_TABLE),
-                resources.getOrDefault("relay_kit", 0), relayLines);
+                resources.getOrDefault("relay_kit", 0), relayLines, stationViews());
+    }
+
+    /** Stations you've heard at least once (they're in the Diary), with their timetable. */
+    private List<SessionSnapshot.StationView> stationViews() {
+        long now = clock.nowMillis();
+        boolean night = content.getBalance().getEnergy().isNight(clock.localHour(now));
+        TerminalText.RadioText text = content.getTerminal().getRadio();
+        List<SessionSnapshot.StationView> out = new ArrayList<>();
+        for (SignalsDef.Station st : content.getSignals().getStations()) {
+            if (!lore.containsKey(st.getId())) {
+                continue;
+            }
+            BandDef band = content.getBalance().band(st.getBand());
+            Map<String, String> vars = new HashMap<>();
+            String schedule;
+            SignalsDef.Schedule s = st.getSchedule();
+            if (s == null) {
+                schedule = st.isNight() ? text.getScheduleNight() : text.getScheduleAlways();
+            } else {
+                long at = Math.round(s.getAtHour() * 60);
+                vars.put("time", String.format(Locale.ROOT, "%02d:%02d", at / 60 % 24, at % 60));
+                vars.put("length", ElapsedFormatter.format(s.getMinutes() * 60_000L, content.getTerminal().getElapsedUnits()));
+                vars.put("hours", s.getEveryHours() == Math.rint(s.getEveryHours())
+                        ? String.valueOf((long) s.getEveryHours()) : String.valueOf(s.getEveryHours()));
+                schedule = TextTemplate.format(s.getEveryHours() >= 24 ? text.getScheduleDaily() : text.getScheduleEvery(), vars);
+            }
+            boolean onAir = isUnlocked(band) && (!st.isNight() || night) && Broadcasts.onAir(st, clock.localMillis(now));
+            out.add(new SessionSnapshot.StationView(st.getId(), st.getName(), st.getBand(), st.getPosition(),
+                    band.frequency(st.getPosition()) + " · " + band.getName(), schedule, onAir, st.hasBulletin()));
+        }
+        return out;
     }
 
     /**

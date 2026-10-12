@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Radio: band selector, dial, readout, antenna, relays, transmissions (GDD §6.1). -->
+<!-- Radio: three sections behind a small menu: the dial, transmissions to decode, relays (GDD §6.1). -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,6 +35,46 @@
             android:text="@string/panel_close" />
     </LinearLayout>
 
+    <!-- Section menu. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <TextView
+            android:id="@+id/sectionDial"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/sectionStations"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/sectionDecode"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/sectionRelays"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -48,82 +88,147 @@
             android:paddingHorizontal="12dp"
             android:paddingBottom="16dp">
 
-            <HorizontalScrollView
+            <LinearLayout
+                android:id="@+id/dialSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none">
+                android:orientation="vertical">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/bands"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/frequency"
+                    style="@style/TerminalHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/station"
+                    style="@style/TerminalText.Dim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/readout"
+                    style="@style/TerminalText.Bright"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:accessibilityLiveRegion="polite"
+                    android:minLines="3" />
+
+                <TextView
+                    android:id="@+id/meter"
+                    style="@style/TerminalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <SeekBar
+                    android:id="@+id/dial"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/dial_description"
+                    android:progressBackgroundTint="@color/amber_hint"
+                    android:progressTint="@color/amber"
+                    android:thumbTint="@color/amber_bright" />
 
                 <LinearLayout
-                    android:id="@+id/bands"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-            </HorizontalScrollView>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/readout"
-                style="@style/TerminalText.Bright"
+                    <TextView
+                        android:id="@+id/fineDown"
+                        style="@style/TerminalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/fine_down_description"
+                        android:text="@string/shift_down" />
+
+                    <TextView
+                        android:id="@+id/tune"
+                        style="@style/TerminalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/tune_button" />
+
+                    <TextView
+                        android:id="@+id/fineUp"
+                        style="@style/TerminalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/fine_up_description"
+                        android:text="@string/shift_up" />
+                </LinearLayout>
+
+                <!-- Reserve, and topping it up without going to the bunker. -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/radioReserve"
+                        style="@style/TerminalText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/radioRecharge"
+                        style="@style/TerminalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/TerminalText.Dim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/radio_dial_help" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/stations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:accessibilityLiveRegion="polite"
-                android:minLines="2" />
-
-            <TextView
-                android:id="@+id/meter"
-                style="@style/TerminalText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <SeekBar
-                android:id="@+id/dial"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/dial_description"
-                android:progressBackgroundTint="@color/amber_hint"
-                android:progressTint="@color/amber"
-                android:thumbTint="@color/amber_bright" />
-
-            <TextView
-                android:id="@+id/frequency"
-                style="@style/TerminalText.Dim"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tune"
-                style="@style/TerminalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tune_button" />
-
-            <TextView
-                style="@style/TerminalText.Bright"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/transmissions_title" />
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/transmissions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                style="@style/TerminalText.Bright"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/relays_title" />
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/relays"
                 style="@style/TerminalText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

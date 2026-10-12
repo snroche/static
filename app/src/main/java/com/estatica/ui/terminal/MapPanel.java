@@ -41,9 +41,11 @@ final class MapPanel {
                 Resources res = b.getRoot().getResources();
                 String info = res.getString(place.reachable ? R.string.map_place : R.string.map_place_far,
                         place.name, place.danger);
-                if (place.depleted >= 15) {
-                    info += " " + res.getString(R.string.zone_depleted_long, place.depleted);
-                }
+                // When the loot is back is the question everyone has.
+                info += "\n" + (place.refillIn != null
+                        ? res.getString(R.string.zone_depleted_long, place.depleted, place.refillIn)
+                        : res.getString(R.string.zone_untouched))
+                        + " " + res.getString(R.string.map_refill_rule, snapshot.map.refillPercentPerDay);
                 b.mapInfo.setText(info);
                 b.mapAction.setText(R.string.map_send);
                 b.mapAction.setVisibility(place.reachable ? View.VISIBLE : View.GONE);

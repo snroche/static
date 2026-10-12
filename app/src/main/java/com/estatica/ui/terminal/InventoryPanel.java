@@ -131,7 +131,8 @@ final class InventoryPanel {
 
     private void tabLabel(TextView view, Tab which, String label) {
         boolean selected = tab == which;
-        view.setText(selected ? view.getResources().getString(R.string.tab_selected, label) : label);
+        view.setText(label);
+        BracketDrawable.mark(view, selected);
         view.setTextColor(ContextCompat.getColor(view.getContext(), selected ? R.color.amber_bright : R.color.amber_dim));
     }
 }

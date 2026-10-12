@@ -16,6 +16,15 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
+    <!-- Between two expeditions in EXPEDITIONS → ALL. -->
+    <View
+        android:id="@+id/threadDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="4dp"
+        android:background="@color/amber_hint"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/text"
         style="@style/TerminalText"
