@@ -306,6 +306,12 @@ public final class SignalsDef {
         private List<String> teasers;
         /** Logged when you lock on: {name}, {words}. */
         private List<String> heard;
+        /** Instead of {@code heard}, for someone who was the operator's partner. */
+        private List<String> heardPartner;
+
+        public List<String> getHeardPartner() {
+            return heardPartner != null ? heardPartner : List.of();
+        }
         /** Diary entry the first time: {name}, {words}. */
         private String lore;
         private int stress;

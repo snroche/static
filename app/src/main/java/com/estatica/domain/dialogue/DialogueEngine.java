@@ -55,9 +55,71 @@ public final class DialogueEngine {
         void adjust(Scout a, Scout b, double delta);
     }
 
+    /** The operator's romances. Provided by the session, which keeps the meters. */
+    public interface Romance {
+        Romance NONE = new Romance() {
+        };
+
+        default boolean adult(Scout s) {
+            return true;
+        }
+
+        default int meter(Scout s) {
+            return 0;
+        }
+
+        default boolean together(Scout s) {
+            return false;
+        }
+
+        default boolean ready(Scout s) {
+            return false;
+        }
+
+        default int jealousy(Scout s) {
+            return 0;
+        }
+
+        default boolean neglected(Scout s) {
+            return false;
+        }
+
+        /** Just broke up: no flirting for a while. */
+        default boolean coolingDown(Scout s) {
+            return false;
+        }
+
+        default boolean wasPartner(Scout dead) {
+            return false;
+        }
+
+        default boolean operatorFemale() {
+            return false;
+        }
+
+        /** Adds to the meter; returns system lines about it (none by default). */
+        default void add(Scout s, int delta, long now, List<LogLine> lines) {
+        }
+
+        default void start(Scout s, long now, List<LogLine> lines) {
+        }
+
+        default void end(Scout s, long now, boolean byOperator, List<LogLine> lines) {
+        }
+
+        /** Ends every romance but this one. */
+        default void exclusive(Scout keep, long now, List<LogLine> lines) {
+        }
+    }
+
     private final GameContent content;
     private final ScoutRules rules;
     private final Relations relations;
+    private Romance romance = Romance.NONE;
+
+    public void setRomance(Romance romance) {
+        this.romance = romance;
+    }
     /** Last dialogue each scout had, so a repeatable one doesn't come twice in a row. */
     private final Map<String, String> lastHad = new HashMap<>();
 
@@ -97,6 +159,9 @@ public final class DialogueEngine {
                 || !within(s.getStress(), d.getMinStress(), d.getMaxStress())) {
             return false;
         }
+        if (!romanceFits(s, d)) {
+            return false;
+        }
         for (String flag : d.getRequiresFlags()) {
             if (!s.getLife().hasFlag(flag)) {
                 return false;
@@ -117,10 +182,40 @@ public final class DialogueEngine {
                 || (now - other.getLife().getDiedAtMillis()) / MILLIS_PER_HOUR < d.getMinHoursSinceDeath())) {
             return false;
         }
+        if (d.isRequiresDeadPartner() && (other == null || !romance.wasPartner(other))) {
+            return false;
+        }
         if (d.getRequiresRelation() != null && other == null) {
             return false;
         }
         return d.isRepeatable() || !s.getLife().hasFlag(doneFlag(d, other));
+    }
+
+    /** Romance gates. Anything romantic is for adults only, always. */
+    private boolean romanceFits(Scout s, DialogueDef d) {
+        if (d.getOperatorFemale() != null && d.getOperatorFemale() != romance.operatorFemale()) {
+            return false;
+        }
+        if (!d.isRomantic()) {
+            return true;
+        }
+        if (!romance.adult(s)) {
+            return false;
+        }
+        boolean together = romance.together(s);
+        if (d.getTogether() != null && d.getTogether() != together) {
+            return false;
+        }
+        if (d.isRomanceReady() && (!romance.ready(s) || romance.coolingDown(s))) {
+            return false;
+        }
+        if (d.getMinJealousy() != null && romance.jealousy(s) < d.getMinJealousy()) {
+            return false;
+        }
+        if (d.isRequiresNeglect() && !romance.neglected(s)) {
+            return false;
+        }
+        return within(romance.meter(s), d.getMinRomance(), d.getMaxRomance());
     }
 
     private static boolean within(int value, Integer min, Integer max) {
@@ -262,6 +357,18 @@ public final class DialogueEngine {
             }
         }
         DialogueOutcomes.applyBond(content, rules, s, choice.getBond(), now, out.lines);
+        if (choice.getRomance() != 0) {
+            romance.add(s, choice.getRomance(), now, out.lines);
+        }
+        if (choice.isStartRomance()) {
+            romance.start(s, now, out.lines);
+        }
+        if (choice.isExclusive()) {
+            romance.exclusive(s, now, out.lines);
+        }
+        if (choice.isEndRomance()) {
+            romance.end(s, now, true, out.lines);
+        }
         if (choice.getMemory() != null) {
             out.memories.add(Memory.create(s.getId(), Memory.Type.TALK,
                     TextTemplate.format(choice.getMemory(), vars), d.getId(), now));
@@ -288,6 +395,9 @@ public final class DialogueEngine {
     private static Map<String, String> vars(Scout s, Scout other) {
         Map<String, String> vars = new HashMap<>();
         vars.put("name", s.getName());
+        if (s.getLife().hasFlag(com.estatica.domain.scouts.RomanceRules.FLAG)) {
+            vars.put(VoiceRenderer.LOVE, "1");
+        }
         if (other != null) {
             vars.put("dead", other.getName());
             vars.put("other", other.getName());

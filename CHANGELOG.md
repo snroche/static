@@ -10,6 +10,72 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.6.14] — Person pages, two-step dispatch, real frequencies — in verification
+
+App 0.6.14 (versionCode 614) · DB 12 (no change) · Content 22 (no change)
+
+### Added
+- **A person's page, in tabs.** On top, always: name with ♂/♀ and the current task (or where they are). The expand arrow is gone. Below, four tabs:
+  - **Stats:** stress, bond and trust as full bars, each with what it means. Bond is notched per level and shows the way to the next one. Then every stat and the traits.
+  - **File:** likes and dislikes, what you've noticed, how they get on with the others, what they carry, and the bio.
+  - **Gear:** one outlined box per slot with its icon; empty slots are dashed. Tap one to change it.
+  - **Orders:** send out, call back, talk, set task, give a gift.
+- **Tasks on the floor plan.** Setting a task shows the bunker: tap a room and pick one of its tasks, or one that can be done anywhere. The current one is marked. Rest and training now happen in the bunks.
+- **Sending out, in two steps.** You can switch between them freely before sending.
+  - **Who goes:** crew tiles. Tap to pick, long-press to make leader (marked with a crown). Each tile shows how the person gets on with the leader, whether they're hurt, and whether they're fast or slow. People who can't go are shown dimmed.
+  - **Where:** one block per place with the **exact trip time** for the team you've picked (events aside), danger, and how picked over it is (%). The band name is gone.
+  - **Sort** by danger (default), by % picked (least first) or by trip time. The choice is remembered.
+  - **Order:** missions come first. Rescues and personal missions are framed in blue and shown even when the antenna can't reach them yet. Then all places, then the ones picked clean (over 95%).
+  - **Personal missions:** tapping one makes its owner the leader.
+- **Tap code:** the current letter is lit and underlined, like in Morse. The space key fills itself in at the end of a word.
+- Twenty-three more icons in the terminal font (tabs, leader, trip time, bunks, training, and vehicles and fuel for the next update). The font grew ~4 KB.
+
+### Changed
+- **Real frequencies on the dial:**
+
+  | Band | Range |
+  |---|---|
+  | Short | FM, 88–108 MHz |
+  | Medium | AM medium wave, 530–1700 kHz |
+  | Long | AM long wave, 150–280 kHz |
+  | Deep | VLF, 3–30 kHz |
+
+  Stations keep their place on the dial, and their descriptions quote the new numbers.
+- **Trip length is fixed:** the middle of each place's range, at the team's pace. Before, it was a random roll inside that range. Situations still add time.
+- **People come to talk much less often.** At most one check an hour, a 15% chance, at least 6 hours between any two, and 12 hours before the same person asks again. Coming back after a while finds one person waiting, not the whole crew. Grief and requests for advice still come when they need to.
+
+### Fixed
+- **Tap code** was missing its erase key: SPACE filled the whole row and pushed ⌫ off the screen.
+
+## [0.6.13] — Rooms, room tasks — in verification
+
+App 0.6.13 (versionCode 613) · DB 12 (no change) · **Content 21 → 22**
+
+### Added
+- **Bunker rooms:**
+  - BUNKER opens on a floor plan (ROOMS section). Open rooms show who's working there. Sealed ones are hatched; tap one to see what's in the way and what it would open.
+  - **Restoring** a room: pay its resources, then people on the new **Restore** task put in the work hours.
+  - Module upgrades now live in their room: the radio and antenna in the radio room, the battery bank in the generator room, barricades at the hatch, and so on.
+  - Sealed rooms: storage (the pantry), lookout, sorting corner, school corner, music room, water recycler, hydroponics bay, archive.
+- **Room tasks:**
+  - **Lookout:** +4 defense against raids, and a line when they're spotted.
+  - **Sorting:** 4 scrap into 1 part every 3 h.
+  - **Teaching:** everyone at home slowly trains their weakest stat.
+  - **Music:** stress relief for the whole bunker.
+  - **Hydroponics** (late game: needs the water recycler and storage):
+    - A little food every hour, never more than a quarter of what the crew eats.
+    - Uses reserve for the lamps, and blight stops it for a day now and then.
+  - Existing tasks need their room open. All of those rooms are open from the start.
+***REMOVED***
+***REMOVED***
+- **Options → [ RESET ALL DATA ]** wipes every save and setting after a confirmation popup; the game closes and starts from zero next time.
+
+### Changed
+- "Teenager on their own" is now "Teenager, alone". Trait, glossary and task texts no longer use "they" for one person.
+
+### Fixed
+- The radio's STATIONS tab (and any tab whose label shrinks to fit) no longer sits lower than the others.
+
 ## [0.6.12] — Smoother radio, more sounds, more to build — in verification
 
 App 0.6.12 (versionCode 612) · DB 12 (no change) · **Content 20 → 21**

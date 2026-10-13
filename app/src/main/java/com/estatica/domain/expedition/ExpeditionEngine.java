@@ -574,7 +574,8 @@ public final class ExpeditionEngine {
         boolean warned = rules.isWarned(scout) || (badOdds && expedition.heardHint(choice));
         if (byOrder && badOdds && option.getRisk() == EventDef.Option.Risk.RISKY) {
             // GDD §5.2: exposing them to unnecessary risk hurts the bond.
-            rules.addBond(scout, -content.getBalance().getBond().getRiskyOrderPenalty());
+            // Sending someone who loves you into that hurts twice.
+            rules.addBond(scout, -content.getBalance().getBond().getRiskyOrderPenalty() * (rules.isLover(scout) ? 2 : 1));
         }
         boolean success = rng.nextDouble() < chance;
         EventDef.Outcome outcome = success ? option.getSuccess() : option.getFailure();
@@ -970,6 +971,9 @@ public final class ExpeditionEngine {
     private static Map<String, String> vars(Scout scout) {
         Map<String, String> vars = new HashMap<>();
         vars.put("name", scout.getName());
+        if (scout.getLife().hasFlag(com.estatica.domain.scouts.RomanceRules.FLAG)) {
+            vars.put(VoiceRenderer.LOVE, "1"); // their "@love" lines
+        }
         return vars;
     }
 

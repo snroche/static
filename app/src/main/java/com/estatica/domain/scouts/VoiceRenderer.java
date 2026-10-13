@@ -18,6 +18,9 @@ public final class VoiceRenderer {
     /** What the crew calls the operator; {@code {operator}} in any line. Set by the session. */
     private static volatile String operatorName = "Operator";
 
+    /** Template variable set to "1" for someone together with the operator: {@code key@love} phrases. */
+    public static final String LOVE = "love";
+
     private VoiceRenderer() {
     }
 
@@ -60,6 +63,9 @@ public final class VoiceRenderer {
      */
     public static String phrase(VoiceDef voice, String key, GameRandom rng, Map<String, String> vars,
                                 boolean close) {
+        if (close && "1".equals(vars.get(LOVE)) && voice.getPhrases().containsKey(key + "@love")) {
+            return phrase(voice, key + "@love", rng, vars);
+        }
         if (close && voice.getPhrases().containsKey(key + "@close")) {
             return phrase(voice, key + "@close", rng, vars);
         }

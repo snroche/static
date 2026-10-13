@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An empty gear slot: a thin dashed outline. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/amber_hint">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/terminal_bg" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/amber_dim"
+                android:dashGap="3dp"
+                android:dashWidth="6dp" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+</ripple>

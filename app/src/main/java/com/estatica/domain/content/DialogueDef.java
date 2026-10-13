@@ -34,6 +34,59 @@ public final class DialogueDef {
     /** Stress range (0–100), each end nullable. */
     private Integer minStress;
     private Integer maxStress;
+    /** Romance meter range (0–100), each end nullable. Any romance condition: adults only. */
+    private Integer minRomance;
+    private Integer maxRomance;
+    /** true: only while together with the operator; false: only while not. Null: either. */
+    private Boolean together;
+    /** Bond high enough for their openness: flirting is on the table. */
+    private boolean romanceReady;
+    /** Jealousy (0–100) at least this. */
+    private Integer minJealousy;
+    /** Together, and the operator hasn't paid them attention in a while. */
+    private boolean requiresNeglect;
+    /** GRIEF about someone who was the operator's partner. */
+    private boolean requiresDeadPartner;
+    /** Only when the operator is a woman (true) or a man (false). Null: either. */
+    private Boolean operatorFemale;
+
+    public Integer getMinRomance() {
+        return minRomance;
+    }
+
+    public Integer getMaxRomance() {
+        return maxRomance;
+    }
+
+    public Boolean getTogether() {
+        return together;
+    }
+
+    public boolean isRomanceReady() {
+        return romanceReady;
+    }
+
+    public Integer getMinJealousy() {
+        return minJealousy;
+    }
+
+    public boolean isRequiresNeglect() {
+        return requiresNeglect;
+    }
+
+    public boolean isRequiresDeadPartner() {
+        return requiresDeadPartner;
+    }
+
+    public Boolean getOperatorFemale() {
+        return operatorFemale;
+    }
+
+    /** Any romance condition at all (these are adults-only). */
+    public boolean isRomantic() {
+        return minRomance != null || maxRomance != null || together != null || romanceReady
+                || minJealousy != null || requiresNeglect;
+    }
     private List<String> requiresFlags;
     private List<String> forbidsFlags;
     /** Stat key to minimum value. */
@@ -160,6 +213,30 @@ public final class DialogueDef {
         /** Nullable: trait gained (specializations). */
         private String addTrait;
         private boolean revealHidden;
+        /** Romance meter change (scaled by their openness when positive). */
+        private int romance;
+        /** Become a couple. */
+        private boolean startRomance;
+        /** End it. */
+        private boolean endRomance;
+        /** "Only you": every other romance ends. */
+        private boolean exclusive;
+
+        public int getRomance() {
+            return romance;
+        }
+
+        public boolean isStartRomance() {
+            return startRomance;
+        }
+
+        public boolean isEndRomance() {
+            return endRomance;
+        }
+
+        public boolean isExclusive() {
+            return exclusive;
+        }
 
         public String getLabel() {
             return label;

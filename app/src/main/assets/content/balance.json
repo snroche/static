@@ -1,5 +1,5 @@
 {
-  "contentVersion": 21,
+  "contentVersion": 22,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -54,8 +54,11 @@
     ],
     "max": 100,
     "talkCooldownMinutes": 45,
-    "initiatedCooldownHours": 3,
+    "initiatedCooldownHours": 12,
     "initiatedExpireHours": 12,
+    "initiatedCheckMinutes": 60,
+    "initiatedGapHours": 6,
+    "initiatedChance": 0.15,
     "neglectGraceHours": 48,
     "neglectPerDay": 3,
     "riskyOrderPenalty": 3,
@@ -89,8 +92,8 @@
   "bands": [
     {
       "id": "short",
-      "baseKHz": 3000,
-      "stepKHz": 1,
+      "baseKHz": 88000,
+      "stepKHz": 20,
       "name": "Short band",
       "minMinutes": 1,
       "maxMinutes": 5,
@@ -110,8 +113,8 @@
     },
     {
       "id": "medium",
-      "baseKHz": 7000,
-      "stepKHz": 1,
+      "baseKHz": 530,
+      "stepKHz": 1.17,
       "name": "Medium band",
       "minMinutes": 15,
       "maxMinutes": 60,
@@ -131,8 +134,8 @@
     },
     {
       "id": "long",
-      "baseKHz": 14000,
-      "stepKHz": 1,
+      "baseKHz": 150,
+      "stepKHz": 0.13,
       "name": "Long band",
       "minMinutes": 120,
       "maxMinutes": 360,
@@ -152,8 +155,8 @@
     },
     {
       "id": "deep",
-      "baseKHz": 21000,
-      "stepKHz": 1,
+      "baseKHz": 3,
+      "stepKHz": 0.027,
       "name": "Deep band",
       "minMinutes": 480,
       "maxMinutes": 720,
@@ -704,5 +707,263 @@
   "barks": {
     "intervalMinutes": 40,
     "chance": 0.6
-  }
+  },
+  "roomTuning": {
+    "_comment": "Room tasks. [placeholder]",
+    "hydroRationsPerHour": 0.06,
+    "hydroMaxShare": 0.25,
+    "hydroReservePerHour": 0.3,
+    "blightChancePerDay": 0.08,
+    "blightHours": 24,
+    "teachXpPerHour": 0.25,
+    "lookoutDefense": 4
+  },
+  "rooms": [
+    {
+      "id": "entrance",
+      "name": "Hatch",
+      "open": true,
+      "x": 0,
+      "y": 0,
+      "w": 3,
+      "h": 2,
+      "modules": [
+        "barricades"
+      ],
+      "description": "The way in and out. Whoever's on guard sits here."
+    },
+    {
+      "id": "radio_room",
+      "name": "Radio room",
+      "open": true,
+      "x": 3,
+      "y": 0,
+      "w": 4,
+      "h": 2,
+      "modules": [
+        "radio",
+        "antenna"
+      ],
+      "description": "Your chair, the dial, the antenna cable going up through the ceiling."
+    },
+    {
+      "id": "lookout",
+      "name": "Lookout",
+      "x": 7,
+      "y": 0,
+      "w": 3,
+      "h": 2,
+      "requires": [
+        "entrance"
+      ],
+      "cost": {
+        "scrap": 10,
+        "components": 3
+      },
+      "hours": 8,
+      "sealed": "A periscope shaft full of dirt and roots.",
+      "description": "An old periscope. Someone up here sees raiders coming."
+    },
+    {
+      "id": "bunks",
+      "name": "Bunks",
+      "open": true,
+      "x": 0,
+      "y": 2,
+      "w": 4,
+      "h": 2,
+      "modules": [
+        "bunks"
+      ],
+      "description": "Where everyone sleeps. Or tries to."
+    },
+    {
+      "id": "kitchen",
+      "name": "Kitchen",
+      "open": true,
+      "x": 4,
+      "y": 2,
+      "w": 3,
+      "h": 2,
+      "description": "A stove, a table, the smell of something almost like soup."
+    },
+    {
+      "id": "storage",
+      "name": "Storage",
+      "x": 7,
+      "y": 2,
+      "w": 3,
+      "h": 2,
+      "requires": [
+        "kitchen"
+      ],
+      "cost": {
+        "scrap": 8,
+        "components": 2
+      },
+      "hours": 6,
+      "modules": [
+        "pantry"
+      ],
+      "sealed": "A door rusted shut. Something sloshes behind it.",
+      "description": "Shelves and a cold corner. Upgraded, it becomes the pantry."
+    },
+    {
+      "id": "infirmary",
+      "name": "Infirmary",
+      "open": true,
+      "x": 0,
+      "y": 4,
+      "w": 3,
+      "h": 2,
+      "modules": [
+        "infirmary"
+      ],
+      "description": "Two cots, a cabinet, a smell of alcohol."
+    },
+    {
+      "id": "workshop",
+      "name": "Workshop",
+      "open": true,
+      "x": 3,
+      "y": 4,
+      "w": 4,
+      "h": 2,
+      "modules": [
+        "workshop"
+      ],
+      "description": "Benches, vises, a box of screws nobody sorted."
+    },
+    {
+      "id": "sorting",
+      "name": "Sorting corner",
+      "x": 7,
+      "y": 4,
+      "w": 3,
+      "h": 2,
+      "requires": [
+        "workshop"
+      ],
+      "cost": {
+        "scrap": 12,
+        "components": 4
+      },
+      "hours": 10,
+      "sealed": "Collapsed shelving and a mountain of junk.",
+      "description": "Where scrap gets taken apart for the parts worth keeping."
+    },
+    {
+      "id": "generator_room",
+      "name": "Generator",
+      "open": true,
+      "x": 0,
+      "y": 6,
+      "w": 3,
+      "h": 2,
+      "modules": [
+        "generator",
+        "battery_bank"
+      ],
+      "description": "The generator and the racks of cells. Loud, warm, the heart of the place."
+    },
+    {
+      "id": "school",
+      "name": "School corner",
+      "x": 3,
+      "y": 6,
+      "w": 2,
+      "h": 2,
+      "requires": [
+        "bunks"
+      ],
+      "cost": {
+        "scrap": 14,
+        "components": 6,
+        "parts": 1
+      },
+      "hours": 16,
+      "sealed": "A flooded alcove. A chalkboard floats in it.",
+      "description": "A chalkboard and some crates. Someone teaches, everyone learns a little."
+    },
+    {
+      "id": "music_room",
+      "name": "Music room",
+      "x": 5,
+      "y": 6,
+      "w": 2,
+      "h": 2,
+      "requires": [
+        "kitchen"
+      ],
+      "cost": {
+        "scrap": 14,
+        "components": 6,
+        "parts": 2
+      },
+      "hours": 16,
+      "sealed": "A bricked-up room. Through a crack: an old piano.",
+      "description": "An old piano, a guitar with four strings, cushions. Evenings are better here."
+    },
+    {
+      "id": "water",
+      "name": "Water recycler",
+      "x": 7,
+      "y": 6,
+      "w": 3,
+      "h": 2,
+      "requires": [
+        "generator_room"
+      ],
+      "cost": {
+        "scrap": 24,
+        "components": 12,
+        "parts": 4,
+        "batteries": 4
+      },
+      "hours": 30,
+      "sealed": "Burst pipes and a dead pump under a foot of sludge.",
+      "description": "Filters, pumps, a tank. Clean water in a closed loop: hydroponics needs it."
+    },
+    {
+      "id": "hydroponics",
+      "name": "Hydroponics bay",
+      "x": 0,
+      "y": 8,
+      "w": 7,
+      "h": 2,
+      "requires": [
+        "water",
+        "storage"
+      ],
+      "cost": {
+        "scrap": 40,
+        "components": 24,
+        "parts": 10,
+        "batteries": 10,
+        "medicine": 4
+      },
+      "hours": 60,
+      "sealed": "A long collapsed tunnel. On the old map it says GREENHOUSE.",
+      "description": "Grow lamps, trays, pumps. Never enough to live on: enough to stretch the rations."
+    },
+    {
+      "id": "archive",
+      "name": "Archive",
+      "x": 7,
+      "y": 8,
+      "w": 3,
+      "h": 2,
+      "requires": [
+        "school"
+      ],
+      "cost": {
+        "scrap": 20,
+        "components": 10,
+        "parts": 6
+      },
+      "hours": 40,
+      "sealed": "A steel door with a combination lock. Someone scratched SECRET on it.",
+      "description": "Filing cabinets from before. Someone kept records of everything."
+    }
+  ]
 }

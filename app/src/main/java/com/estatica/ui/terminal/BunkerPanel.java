@@ -30,7 +30,9 @@ final class BunkerPanel {
 
     private enum Section { POWER, WORKSHOP, UPGRADES, GOALS }
 
-    private Section section = Section.POWER;
+    private Section section = Section.UPGRADES;
+    /** Room picked on the floor plan. */
+    private String room = "radio_room";
     private final PanelBunkerBinding b;
     private final TerminalViewModel viewModel;
     private final Host host;
@@ -55,6 +57,13 @@ final class BunkerPanel {
         b.tabWorkshop.setOnClickListener(v -> showSection(Section.WORKSHOP));
         b.tabUpgrades.setOnClickListener(v -> showSection(Section.UPGRADES));
         b.tabGoals.setOnClickListener(v -> showSection(Section.GOALS));
+        b.bunkerPlan.setListener(r -> {
+            room = r.id;
+            if (snapshot != null) {
+                render(snapshot);
+            }
+        });
+        b.roomRestore.setOnClickListener(v -> viewModel.startRestore(room));
     }
 
     private void showSection(Section target) {
@@ -106,7 +115,7 @@ final class BunkerPanel {
         }
         sectionButton(b.tabPower, Section.POWER, R.string.energy_title, powerAlert, false);
         sectionButton(b.tabWorkshop, Section.WORKSHOP, R.string.workshop_title, false, base.jobs.size() < base.slots);
-        sectionButton(b.tabUpgrades, Section.UPGRADES, R.string.upgrades_title, false, anyAffordable);
+        sectionButton(b.tabUpgrades, Section.UPGRADES, R.string.rooms_title, false, anyAffordable);
         sectionButton(b.tabGoals, Section.GOALS, R.string.goals_title, false, false);
         b.sectionPower.setVisibility(section == Section.POWER ? View.VISIBLE : View.GONE);
         b.sectionWorkshop.setVisibility(section == Section.WORKSHOP ? View.VISIBLE : View.GONE);
@@ -176,8 +185,20 @@ final class BunkerPanel {
         b.craft.setText(res.getString(R.string.craft_slots, base.jobs.size(), base.slots));
         b.craft.setAlpha(base.jobs.size() < base.slots ? 1f : 0.5f);
 
+        SessionSnapshot.RoomView picked = null;
+        for (SessionSnapshot.RoomView r : base.rooms) {
+            if (r.id.equals(room)) {
+                picked = r;
+            }
+        }
+        b.bunkerPlan.setRooms(base.rooms, room);
+        renderRoom(res, picked);
+
         b.modules.removeAllViews();
         for (SessionSnapshot.ModuleView m : base.modules) {
+            if (picked == null || !picked.open || !picked.moduleIds.contains(m.id)) {
+                continue; // upgrades live in their room
+            }
             TextView line = (TextView) inflater.inflate(R.layout.item_log_line, b.modules, false);
             line.setText(res.getString(R.string.module_line, m.name, m.level, m.maxLevel));
             explainable(line);
@@ -220,8 +241,48 @@ final class BunkerPanel {
             b.gear.addView(none);
         }
 
+        boolean entrance = picked != null && "entrance".equals(picked.id);
+        b.defenseTitle.setVisibility(entrance ? View.VISIBLE : View.GONE);
+        b.defense.setVisibility(entrance ? View.VISIBLE : View.GONE);
         String guards = base.guards.isEmpty() ? res.getString(R.string.nobody_on_guard) : String.join(", ", base.guards);
         b.defense.setText(res.getString(R.string.defense_line, guards, base.defense, base.scouts, base.bunks));
+    }
+
+    /** The picked room's sheet: what it is, who's in it, what it unlocks, or how to open it. */
+    private void renderRoom(Resources res, SessionSnapshot.RoomView r) {
+        if (r == null) {
+            b.roomTitle.setText("");
+            b.roomInfo.setText(R.string.rooms_hint);
+            b.roomRestore.setVisibility(View.GONE);
+            return;
+        }
+        b.roomTitle.setText(r.open ? r.name : res.getString(R.string.room_sealed_title, r.name));
+        StringBuilder info = new StringBuilder(r.text != null ? r.text : "");
+        if (r.open) {
+            if (!r.working.isEmpty()) {
+                info.append('\n').append(res.getString(R.string.room_working, String.join(", ", r.working)));
+            }
+            if (!r.tasks.isEmpty()) {
+                info.append('\n').append(res.getString(R.string.room_tasks, String.join(", ", r.tasks)));
+            }
+        } else if (r.restoring) {
+            info.append('\n').append(res.getString(R.string.room_restoring, Math.round(r.progress * 100), r.hours,
+                    r.restorers));
+        } else {
+            if (!r.tasks.isEmpty()) {
+                info.append('\n').append(res.getString(R.string.room_unlocks, String.join(", ", r.tasks)));
+            }
+            if (!r.needs.isEmpty()) {
+                info.append('\n').append(res.getString(R.string.room_needs, String.join(", ", r.needs)));
+            }
+            info.append('\n').append(res.getString(R.string.room_cost, r.cost, r.hours));
+        }
+        b.roomInfo.setText(info);
+        boolean showRestore = !r.open && !r.restoring;
+        b.roomRestore.setVisibility(showRestore ? View.VISIBLE : View.GONE);
+        b.roomRestore.setText(R.string.room_restore);
+        b.roomRestore.setAlpha(r.canRestore ? 1f : 0.4f);
+        b.roomRestore.setEnabled(r.canRestore);
     }
 
     private static TextView stepper(LayoutInflater inflater, ViewGroup parent, String text, boolean enabled,

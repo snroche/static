@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Send out: pick the team (one or two) and where, on one screen. -->
+<!-- Send out, in two steps you can switch between freely: who goes (crew tiles, long-press
+     for the leader) and where (place blocks, sortable). Then send. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,45 +36,85 @@
             android:text="@string/panel_back" />
     </LinearLayout>
 
-    <ScrollView
+    <!-- The two steps. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <TextView
+            android:id="@+id/sendStepWho"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2" />
+
+        <TextView
+            android:id="@+id/sendStepWhere"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2" />
+    </LinearLayout>
+
+    <!-- Sorting the places (WHERE only); remembered. -->
+    <LinearLayout
+        android:id="@+id/sendSortBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <TextView
+            style="@style/TerminalText.Dim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="@string/send_sort"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/sortDanger"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="36dp"
+            android:text="@string/send_sort_danger" />
+
+        <TextView
+            android:id="@+id/sortPicked"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="36dp"
+            android:text="@string/send_sort_picked" />
+
+        <TextView
+            android:id="@+id/sortTime"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="36dp"
+            android:text="@string/send_sort_time" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sendList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="12dp"
-            android:paddingBottom="12dp">
-
-            <TextView
-                style="@style/TerminalText.Dim"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/send_team_title" />
-
-            <LinearLayout
-                android:id="@+id/sendTeam"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <TextView
-                style="@style/TerminalText.Dim"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/send_where_title" />
-
-            <LinearLayout
-                android:id="@+id/sendWhere"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </LinearLayout>
-    </ScrollView>
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="8dp" />
 
     <View
         android:layout_width="match_parent"

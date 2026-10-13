@@ -123,6 +123,11 @@ public final class ScoutLife {
         return flags.add(flag);
     }
 
+    /** @return true if it was there */
+    public boolean removeFlag(String flag) {
+        return flags.remove(flag);
+    }
+
     public long getLastTalkAtMillis() {
         return lastTalkAtMillis;
     }

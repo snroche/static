@@ -1,198 +1,278 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- A crew card: a compact header (tap to expand), details, then the actions. -->
+<!-- One person in full: name and what they're doing on top, then four tabs: stats, file,
+     gear, orders. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingVertical="10dp">
+    android:paddingBottom="12dp">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <TextView
+        android:id="@+id/name"
+        style="@style/TerminalText.Bright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="48dp"
-        android:orientation="vertical"
-        android:paddingVertical="4dp">
+        android:layout_marginTop="4dp"
+        android:accessibilityHeading="true"
+        tools:targetApi="28"
+        android:textSize="19sp" />
+
+    <TextView
+        android:id="@+id/doing"
+        style="@style/TerminalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/summary"
+        style="@style/TerminalText.Dim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Tabs. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/name"
-            style="@style/TerminalText.Bright"
-            android:layout_width="match_parent"
+            android:id="@+id/tabStats"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="17sp" />
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:text="@string/person_tab_stats" />
 
         <TextView
-            android:id="@+id/summary"
-            style="@style/TerminalText.Dim"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:id="@+id/tabFile"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:text="@string/person_tab_file" />
+
+        <TextView
+            android:id="@+id/tabGear"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:text="@string/person_tab_gear" />
+
+        <TextView
+            android:id="@+id/tabOrders"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:text="@string/person_tab_orders" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/amber_hint" />
+
+    <!-- STATS -->
     <LinearLayout
-        android:id="@+id/details"
+        android:id="@+id/pageStats"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/status"
-        style="@style/TerminalText.Dim"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/stressLabel"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/stats"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp" />
+        <com.estatica.ui.scouts.MeterView
+            android:id="@+id/stressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" />
 
-    <TextView
-        android:id="@+id/vitals"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp" />
+        <TextView
+            android:id="@+id/stressNote"
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/bond"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/bondLabel"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
 
-    <TextView
-        android:id="@+id/mood"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <com.estatica.ui.scouts.MeterView
+            android:id="@+id/bondBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" />
 
-    <TextView
-        android:id="@+id/task"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/bondNote"
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/traits"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/trustLabel"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
 
-    <TextView
-        android:id="@+id/likes"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <com.estatica.ui.scouts.MeterView
+            android:id="@+id/trustBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" />
 
-    <TextView
-        android:id="@+id/dislikes"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/injuryLine"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/danger" />
 
-    <TextView
-        android:id="@+id/relations"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/person_stats_title" />
 
-    <TextView
-        android:id="@+id/habits"
-        style="@style/TerminalText.Dim"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/stats"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/gear"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/gifts"
-        style="@style/TerminalText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/bio"
-        style="@style/TerminalText.Dim"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textSize="13sp" />
+        <TextView
+            android:id="@+id/traits"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 
-    <!-- Actions wrap onto a second line on narrow screens. Gift, task and gear only show
-         on an open card, so a closed one has two or three buttons. -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- FILE -->
+    <LinearLayout
+        android:id="@+id/pageFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp">
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/romance"
+            style="@style/TerminalText.Bright"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/likes"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/dislikes"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/habits"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" />
+
+        <TextView
+            android:id="@+id/relations"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" />
+
+        <TextView
+            android:id="@+id/gifts"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" />
+
+        <TextView
+            android:id="@+id/bio"
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+
+    <!-- GEAR: one outlined box per slot, two to a row (filled in code). -->
+    <LinearLayout
+        android:id="@+id/pageGear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <!-- ORDERS -->
+    <LinearLayout
+        android:id="@+id/pageOrders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/dispatch"
             style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dispatch_button" />
-
-        <TextView
-            android:id="@+id/talk"
-            style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/talk_button" />
-
-        <TextView
-            android:id="@+id/gift"
-            style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gift_button" />
-
-        <TextView
-            android:id="@+id/taskButton"
-            style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/task_button" />
-
-        <TextView
-            android:id="@+id/equipButton"
-            style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/equip_button" />
-
-        <TextView
-            android:id="@+id/moreButton"
-            style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/more_button" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/recallButton"
             style="@style/TerminalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/recall_button" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <androidx.constraintlayout.helper.widget.Flow
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/talk"
+            style="@style/TerminalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/taskButton"
+            style="@style/TerminalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/gift"
+            style="@style/TerminalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/ordersNote"
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="dispatch,recallButton,talk,gift,taskButton,equipButton,moreButton"
-            app:flow_horizontalBias="0"
-            app:flow_horizontalGap="4dp"
-            app:flow_horizontalStyle="packed"
-            app:flow_wrapMode="chain"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginTop="6dp" />
+    </LinearLayout>
 </LinearLayout>

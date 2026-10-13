@@ -1,5 +1,7 @@
 package com.estatica.domain.content;
 
+import java.util.List;
+
 /**
  * Tunable numbers from {@code assets/content/balance.json}. Fields are filled by Gson;
  * only the sections used by the code are modeled (unknown sections are ignored).
@@ -33,6 +35,159 @@ public final class Balance {
 
     /** Small moments in the bunker. [placeholder] */
     private Omens omens;
+    private Romance romance;
+
+    public Romance getRomance() {
+        return romance != null ? romance : new Romance();
+    }
+
+    /** Romance with the operator. [placeholder] */
+    public static final class Romance {
+        /** Meter at which "something changed" shows (flirting). */
+        private int sparkAt = 40;
+        /** Hours without attention before a partner feels neglected. */
+        private double neglectHours = 36;
+        private double neglectPerDay = 8;
+        /** A partner ends it below this meter, bond level or trust. */
+        private int endBelow = 25;
+        private int endBelowBondLevel = 3;
+        private int endBelowTrust = 15;
+        private int afterBreakup = 20;
+        private int breakupStress = 14;
+        private int breakupBond = 8;
+        /** No flirting this long after a breakup. */
+        private double cooldownHours = 72;
+        /** Per hour, times jealousy/100, times other partners. */
+        private double jealousyPerHour = 0.02;
+        private int jealousyStress = 4;
+        private int jealousyMeter = 4;
+        private double jealousyAffinity = 3;
+        /** Romance from a gift to someone open to you. */
+        private int gift = 3;
+
+        public int getSparkAt() {
+            return sparkAt;
+        }
+
+        public double getNeglectHours() {
+            return neglectHours;
+        }
+
+        public double getNeglectPerDay() {
+            return neglectPerDay;
+        }
+
+        public int getEndBelow() {
+            return endBelow;
+        }
+
+        public int getEndBelowBondLevel() {
+            return endBelowBondLevel;
+        }
+
+        public int getEndBelowTrust() {
+            return endBelowTrust;
+        }
+
+        public int getAfterBreakup() {
+            return afterBreakup;
+        }
+
+        public int getBreakupStress() {
+            return breakupStress;
+        }
+
+        public int getBreakupBond() {
+            return breakupBond;
+        }
+
+        public double getCooldownHours() {
+            return cooldownHours;
+        }
+
+        public double getJealousyPerHour() {
+            return jealousyPerHour;
+        }
+
+        public int getJealousyStress() {
+            return jealousyStress;
+        }
+
+        public int getJealousyMeter() {
+            return jealousyMeter;
+        }
+
+        public double getJealousyAffinity() {
+            return jealousyAffinity;
+        }
+
+        public int getGift() {
+            return gift;
+        }
+    }
+    private List<RoomDef> rooms;
+    private Rooms roomTuning;
+
+    public List<RoomDef> getRooms() {
+        return rooms != null ? rooms : List.of();
+    }
+
+    public RoomDef room(String id) {
+        for (RoomDef r : getRooms()) {
+            if (r.getId().equals(id)) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    public Rooms getRoomTuning() {
+        return roomTuning != null ? roomTuning : new Rooms();
+    }
+
+    /** What the room tasks do per hour. [placeholder] */
+    public static final class Rooms {
+        /** Rations per hour per person tending the hydroponics bay. */
+        private double hydroRationsPerHour = 0.06;
+        /** Hydroponics never covers more than this share of what the crew eats. */
+        private double hydroMaxShare = 0.25;
+        /** Reserve per hour per person on hydroponics (grow lamps, pumps). */
+        private double hydroReservePerHour = 0.3;
+        private double blightChancePerDay = 0.08;
+        private double blightHours = 24;
+        /** XP per hour for everyone at home, per teacher. */
+        private double teachXpPerHour = 0.25;
+        /** Defense the lookout adds when a raid comes. */
+        private int lookoutDefense = 4;
+
+        public double getHydroRationsPerHour() {
+            return hydroRationsPerHour;
+        }
+
+        public double getHydroMaxShare() {
+            return hydroMaxShare;
+        }
+
+        public double getHydroReservePerHour() {
+            return hydroReservePerHour;
+        }
+
+        public double getBlightChancePerDay() {
+            return blightChancePerDay;
+        }
+
+        public double getBlightHours() {
+            return blightHours;
+        }
+
+        public double getTeachXpPerHour() {
+            return teachXpPerHour;
+        }
+
+        public int getLookoutDefense() {
+            return lookoutDefense;
+        }
+    }
     private Treatment treatment;
 
     public Treatment getTreatment() {
@@ -564,6 +719,10 @@ public final class Balance {
         private int talkCooldownMinutes;
         private int initiatedCooldownHours;
         private int initiatedExpireHours;
+        /** How often anyone may come to talk at all, and the odds when they could. */
+        private int initiatedCheckMinutes = 60;
+        private int initiatedGapHours = 6;
+        private double initiatedChance = 0.15;
         private int neglectGraceHours;
         private int neglectPerDay;
         /** Lost when ordered into a "mala espina" risky option. */
@@ -599,6 +758,18 @@ public final class Balance {
 
         public int getInitiatedExpireHours() {
             return initiatedExpireHours;
+        }
+
+        public int getInitiatedCheckMinutes() {
+            return initiatedCheckMinutes;
+        }
+
+        public int getInitiatedGapHours() {
+            return initiatedGapHours;
+        }
+
+        public double getInitiatedChance() {
+            return initiatedChance;
         }
 
         public int getNeglectGraceHours() {

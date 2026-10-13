@@ -33,7 +33,7 @@
   {
     "id": "desconfianza",
     "name": "Distrustful",
-    "description": "If they don't trust the Operator, they may ignore orders.",
+    "description": "Without trust in the Operator, may ignore orders.",
     "disobeyBelowTrust": 40,
     "clashes": [
       "lealtad"
@@ -63,7 +63,7 @@
   {
     "id": "pies_ligeros",
     "name": "Light feet",
-    "description": "Their expeditions are shorter.",
+    "description": "Shorter expeditions.",
     "durationMultiplier": 0.8,
     "statBonus": {
       "stealth": 1
@@ -175,7 +175,7 @@
   {
     "id": "sangre_fria",
     "name": "Cold-blooded",
-    "description": "Stress barely touches them.",
+    "description": "Stress barely leaves a mark.",
     "stressMultiplier": 0.7,
     "hideable": true,
     "voices": [
@@ -299,7 +299,7 @@
   {
     "id": "sociable",
     "name": "Sociable",
-    "description": "Lifts the mood of whoever works beside them.",
+    "description": "Lifts the mood of whoever works alongside.",
     "stressMultiplier": 0.9,
     "voices": [
       "jerga",

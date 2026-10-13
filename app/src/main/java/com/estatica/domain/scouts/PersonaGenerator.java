@@ -66,9 +66,10 @@ public final class PersonaGenerator {
                 ? List.of() : rng.pick(background.getRescueLines());
         String bio = background.getBios().isEmpty() ? null : rng.pick(background.getBios());
 
+        String gender = content.getPeople().rollGender(name, rng);
         return ScoutTemplate.generated(id, name, voice, bio, background.getId(),
                 stats(background, bandIndex, balance, rng), traits, hidden, likes, dislikes,
-                rescueLines, habits);
+                rescueLines, habits, gender);
     }
 
     private PeopleDef.Background pickBackground(List<ScoutTemplate> around, GameRandom rng) {

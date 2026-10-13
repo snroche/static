@@ -1,10 +1,19 @@
 package com.estatica.ui.terminal;
 
+import android.app.ActivityManager;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 
 import com.estatica.R;
+import com.estatica.databinding.DialogResetBinding;
 import com.estatica.databinding.PanelOptionsBinding;
 
 /** The ⚙ screen: what the crew calls you, sound, haptics, notifications, text speed, CRT. */
@@ -30,7 +39,32 @@ final class OptionsPanel {
         b.optionsNotifications.setOnClickListener(v -> viewModel.toggleNotificationsOption());
         b.optionsTextSpeed.setOnClickListener(v -> viewModel.cycleTextSpeed());
         b.optionsCrt.setOnClickListener(v -> viewModel.toggleCrtOption());
+        b.optionsOperatorGender.setOnClickListener(v -> viewModel.toggleOperatorGender());
+        b.optionsReset.setOnClickListener(v -> confirmReset());
         b.optionsVersion.setText(b.getRoot().getResources().getString(R.string.options_version, version));
+    }
+
+    /** Asks first; on yes, the system wipes saves and settings and closes the app. */
+    private void confirmReset() {
+        Context context = b.getRoot().getContext();
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        DialogResetBinding d = DialogResetBinding.inflate(LayoutInflater.from(context));
+        dialog.setContentView(d.getRoot());
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        d.resetCancel.setOnClickListener(v -> dialog.dismiss());
+        d.resetConfirm.setOnClickListener(v -> {
+            dialog.dismiss();
+            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            if (am != null) {
+                am.clearApplicationUserData();
+            }
+        });
+        dialog.show();
     }
 
     private void saveName() {
@@ -64,6 +98,8 @@ final class OptionsPanel {
         String[] speeds = res.getStringArray(R.array.options_text_speeds);
         b.optionsTextSpeed.setText(res.getString(R.string.options_text_speed, speeds[Math.min(o.textSpeed, speeds.length - 1)]));
         b.optionsCrt.setText(res.getString(R.string.options_toggle, check(o.crt), res.getString(R.string.options_crt)));
+        b.optionsOperatorGender.setText(res.getString(R.string.options_operator_gender,
+                res.getString(o.operatorFemale ? R.string.options_woman : R.string.options_man)));
     }
 
     private static String check(boolean on) {

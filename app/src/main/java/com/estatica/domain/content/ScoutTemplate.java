@@ -32,6 +32,12 @@ public final class ScoutTemplate {
     private List<Habit> habits;
     /** Background id from {@code people.json} (nullable for starters). */
     private String background;
+    /** "F" or "M". Null in saves from before 0.7.0: PeopleDef.genderOf decides from the name. */
+    private String gender;
+
+    public String getGender() {
+        return gender;
+    }
 
     public ScoutTemplate() {
     }
@@ -41,7 +47,16 @@ public final class ScoutTemplate {
                                           Map<String, int[]> stats, List<String> traits, String hiddenTrait,
                                           List<String> likes, List<String> dislikes,
                                           List<String> rescueLines, List<Habit> habits) {
+        return generated(id, name, voice, bio, background, stats, traits, hiddenTrait, likes, dislikes,
+                rescueLines, habits, null);
+    }
+
+    public static ScoutTemplate generated(String id, String name, String voice, String bio, String background,
+                                          Map<String, int[]> stats, List<String> traits, String hiddenTrait,
+                                          List<String> likes, List<String> dislikes,
+                                          List<String> rescueLines, List<Habit> habits, String gender) {
         ScoutTemplate t = new ScoutTemplate();
+        t.gender = gender;
         t.id = id;
         t.name = name;
         t.voice = voice;

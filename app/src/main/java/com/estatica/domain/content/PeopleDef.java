@@ -1,6 +1,7 @@
 package com.estatica.domain.content;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Pools for generated survivors ({@code people.json}): names and backgrounds. Traits add
@@ -9,6 +10,29 @@ import java.util.List;
 public final class PeopleDef {
 
     private List<String> names;
+    /** Name to "F", "M" or "?" (either: rolled per person). */
+    private Map<String, String> genders;
+
+    /**
+     * Whether a person is a woman: their own gender if set, else from the name table,
+     * rolled from the id for names that go either way (stable for that person).
+     */
+    public boolean isFemale(String gender, String name, String id) {
+        String g = gender != null ? gender : genders != null ? genders.getOrDefault(name, "?") : "?";
+        if ("F".equals(g)) {
+            return true;
+        }
+        if ("M".equals(g)) {
+            return false;
+        }
+        return Math.floorMod((id != null ? id : name).hashCode(), 2) == 1;
+    }
+
+    /** "F" or "M" for a new person with this name. */
+    public String rollGender(String name, com.estatica.core.GameRandom rng) {
+        String g = genders != null ? genders.getOrDefault(name, "?") : "?";
+        return "F".equals(g) || "M".equals(g) ? g : rng.chance(0.5) ? "F" : "M";
+    }
     /** Used instead of a name now and then ("Flaco", "Turca"). */
     private List<String> nicknames;
     private List<Background> backgrounds;

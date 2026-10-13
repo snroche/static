@@ -65,7 +65,7 @@
       },
       {
         "id": "calmar",
-        "label": "Let them calm it down",
+        "label": "Calm it down: you know dogs",
         "stat": "nerve",
         "difficulty": 3,
         "requiresTrait": [
@@ -227,7 +227,7 @@
       },
       {
         "id": "curiosear",
-        "label": "Let them find out what it is",
+        "label": "You go find out what it is",
         "stat": "wits",
         "difficulty": 4,
         "requiresTrait": [
@@ -673,25 +673,25 @@
   {
     "id": "otro_superviviente",
     "intro": [
-      "There's someone else here. They saw me.",
-      "They've got a pipe in their hand. Not moving."
+      "There's someone else here. A man. He saw me.",
+      "He's got a pipe in his hand. Not moving."
     ],
     "options": [
       {
         "id": "hablar",
-        "label": "Talk to them",
+        "label": "Talk to him",
         "stat": "nerve",
         "difficulty": 5,
         "time": 0.06,
         "success": {
           "text": [
-            "I talked calmly. They said they were heading south. We left each other alone."
+            "I talked calmly. He said he was heading south. We left each other alone."
           ],
           "memory": "the stranger with the pipe heading south"
         },
         "failure": {
           "text": [
-            "They didn't want to talk. Threw the pipe at me and ran."
+            "He didn't want to talk. Threw the pipe at me and ran."
           ],
           "injury": "light",
           "stress": 15
@@ -705,25 +705,25 @@
         "time": 0.1,
         "success": {
           "text": [
-            "Got behind some furniture until they left."
+            "Got behind some furniture until he left."
           ]
         },
         "failure": {
           "text": [
-            "They found me. We stared at each other a long time. Then they left."
+            "He found me. We stared at each other a long time. Then he left."
           ],
           "stress": 15
         }
       },
       {
         "id": "enfrentar",
-        "label": "Face them",
+        "label": "Face him",
         "stat": "endurance",
         "difficulty": 6,
         "risk": "RISKY",
         "success": {
           "text": [
-            "They ran off and left their bag."
+            "He ran off and left his bag."
           ],
           "loot": [
             {
@@ -757,7 +757,7 @@
         ],
         "success": {
           "text": [
-            "They laughed. First laugh in weeks, they said.",
+            "He laughed. First laugh in weeks, he said.",
             "Gave me some food for the road."
           ],
           "loot": [
@@ -771,21 +771,21 @@
         },
         "failure": {
           "text": [
-            "Tough crowd. They left."
+            "Tough crowd. He left."
           ],
           "stress": 8
         }
       },
       {
         "id": "curar",
-        "label": "Ask if they're hurt",
+        "label": "Ask if he's hurt",
         "stat": "wits",
         "difficulty": 3,
         "time": 0.1,
         "requiresBackground": "nurse",
         "success": {
           "text": [
-            "Infected cut. Cleaned it. They gave me what medicine they had left."
+            "Infected cut. Cleaned it. He gave me what medicine he had left."
           ],
           "loot": [
             {
@@ -797,7 +797,7 @@
         },
         "failure": {
           "text": [
-            "They didn't trust me near them."
+            "He didn't trust me near him."
           ],
           "stress": 8
         }
@@ -2172,7 +2172,7 @@
       },
       {
         "id": "pestillo",
-        "label": "They know how these latch",
+        "label": "You know how these latch",
         "stat": "craft",
         "difficulty": 3,
         "requiresBackground": "cook",
@@ -2319,7 +2319,7 @@
       },
       {
         "id": "de_memoria",
-        "label": "Go by memory: they know this road",
+        "label": "Go by memory: you know this road",
         "stat": "wits",
         "difficulty": 4,
         "time": -0.08,
@@ -4550,8 +4550,8 @@
   {
     "id": "susp_footsteps",
     "intro": [
-      "Someone's walking behind me. When I stop, they stop.",
-      "I can hear them breathing."
+      "Someone's walking behind me. When I stop, it stops.",
+      "I can hear it breathing."
     ],
     "options": [
       {
@@ -4580,12 +4580,12 @@
         "time": 0.12,
         "success": {
           "text": [
-            "They walked past. Bare feet. I didn't look up. I'm not sorry."
+            "It walked past. Bare feet. I didn't look up. I'm not sorry."
           ]
         },
         "failure": {
           "text": [
-            "They stopped right outside the door. For a long time. Then left."
+            "It stopped right outside the door. For a long time. Then left."
           ],
           "stress": 7
         }
@@ -4603,7 +4603,7 @@
         },
         "failure": {
           "text": [
-            "They followed me all the way to the edge. I could feel them looking."
+            "It followed me all the way to the edge. I could feel it looking."
           ],
           "stress": 6
         }
@@ -5513,7 +5513,7 @@
         "time": 0.06,
         "success": {
           "text": [
-            "A fair deal. They even threw in a tip about the road ahead."
+            "A fair deal. She even threw in a tip about the road ahead."
           ],
           "loot": [
             {
@@ -5525,7 +5525,7 @@
         },
         "failure": {
           "text": [
-            "They short-changed me and I noticed too late."
+            "She short-changed me and I noticed too late."
           ],
           "stress": 4
         }
@@ -5538,7 +5538,7 @@
         "time": 0.1,
         "success": {
           "text": [
-            "Got the better end. They laughed about it. I liked them."
+            "Got the better end. She laughed about it. I liked her."
           ],
           "loot": [
             {
@@ -5555,7 +5555,7 @@
         },
         "failure": {
           "text": [
-            "They packed up and left. No deal."
+            "She packed up and left. No deal."
           ],
           "stress": 4
         }
@@ -5573,7 +5573,7 @@
         },
         "failure": {
           "text": [
-            "They followed a while, asking. Annoying."
+            "She followed a while, asking. Annoying."
           ],
           "stress": 2
         }
@@ -5920,7 +5920,7 @@
         "risk": "RISKY",
         "success": {
           "text": [
-            "Their spare fuel cans. I took one. I'm not proud."
+            "Her spare fuel cans. I took one. I'm not proud."
           ],
           "loot": [
             {
@@ -6461,7 +6461,7 @@
         },
         "failure": {
           "text": [
-            "Someone was waiting by the lights. They saw me."
+            "Someone was waiting by the lights. He saw me."
           ],
           "stress": 8
         }

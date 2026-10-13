@@ -40,6 +40,7 @@ import com.estatica.domain.content.TaskDef;
 import com.estatica.domain.content.TerminalText;
 import com.estatica.domain.content.VoiceDef;
 import com.estatica.domain.content.ZoneDef;
+import com.estatica.domain.content.RoomDef;
 import com.estatica.domain.dialogue.Conversation;
 import com.estatica.domain.dialogue.DialogueEngine;
 import com.estatica.domain.expedition.Expedition;
@@ -116,6 +117,7 @@ public final class GameSession {
     private ScoutRules rules;
     private BunkerRules bunker;
     private DialogueEngine dialogues;
+    private com.estatica.domain.scouts.RomanceRules romance;
     private GiftRules gifts;
     private GriefRules grief;
     private com.estatica.domain.scouts.BarkRules barks;
@@ -212,6 +214,14 @@ public final class GameSession {
                     if (other == scout || !other.isAlive()) {
                         continue;
                     }
+                    if ("partner".equals(kind)) {
+                        // Another of the operator's partners (jealousy), or the operator's
+                        // partner as seen by someone else (gossip).
+                        if (romance.isTogether(other)) {
+                            return other;
+                        }
+                        continue;
+                    }
                     String relation = bunker.relationship(affinities, scout, other);
                     boolean match = "friend".equals(kind)
                             ? "friends".equals(relation) || "inseparable".equals(relation)
@@ -229,6 +239,8 @@ public final class GameSession {
                 affinities.add(a.getId(), b.getId(), delta);
             }
         });
+        romance = new com.estatica.domain.scouts.RomanceRules(content, rules);
+        dialogues.setRomance(romanceHooks());
         barks = new com.estatica.domain.scouts.BarkRules(content, rules);
         personas = new com.estatica.domain.scouts.PersonaGenerator(content);
         food = new com.estatica.domain.bunker.FoodRules(content.getBalance().getFood());
@@ -326,6 +338,7 @@ public final class GameSession {
         rescuePersonas.putAll(radioRepository.rescuePersonas());
         lore.putAll(radioRepository.lore());
         moduleLevels.putAll(radioRepository.moduleLevels());
+        registerPronouns();
         long now = clock.nowMillis();
         db.runInTransaction(() -> {
             // New games: module levels. No zone starts known: everything is found by scouting.
@@ -618,6 +631,435 @@ public final class GameSession {
         maybeOmen(step);
         catchBroadcasts(step);
         eagerTreatments(step);
+        roomsTick(step);
+        romanceTick(step);
+    }
+
+    // ---- Romance with the operator ----
+
+    private static final String ROM = "rom:";
+    private static final String ROM_LAST = "romlast:";
+    private static final String ROM_END = "romend:";
+
+    private int romanceMeter(Scout s) {
+        return (int) Math.round(value(ROM + s.getId()));
+    }
+
+    private boolean neglected(Scout s, long now) {
+        double last = value(ROM_LAST + s.getId());
+        return romance.isTogether(s) && last > 0
+                && now - last > content.getBalance().getRomance().getNeglectHours() * HOUR;
+    }
+
+    /** Talking to a partner (any conversation) counts as attention. */
+    private void attention(Scout s, Step step) {
+        if (romance.isTogether(s)) {
+            setValue(ROM_LAST + s.getId(), step.now, step);
+        }
+    }
+
+    private List<Scout> partners() {
+        List<Scout> out = new ArrayList<>();
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() && romance.isTogether(s)) {
+                out.add(s);
+            }
+        }
+        return out;
+    }
+
+    private Map<String, String> romanceVars(Scout s) {
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", s.getName());
+        return vars;
+    }
+
+    /** The dialogue engine's view of romance; steps write through setValue as usual. */
+    private DialogueEngine.Romance romanceHooks() {
+        return new DialogueEngine.Romance() {
+            @Override
+            public boolean adult(Scout s) {
+                return romance.isAdult(s);
+            }
+
+            @Override
+            public int meter(Scout s) {
+                return romanceMeter(s);
+            }
+
+            @Override
+            public boolean together(Scout s) {
+                return romance.isTogether(s);
+            }
+
+            @Override
+            public boolean ready(Scout s) {
+                return romance.isReady(s);
+            }
+
+            @Override
+            public int jealousy(Scout s) {
+                return romance.jealousy(s);
+            }
+
+            @Override
+            public boolean neglected(Scout s) {
+                return GameSession.this.neglected(s, clock.nowMillis());
+            }
+
+            @Override
+            public boolean coolingDown(Scout s) {
+                double ended = value(ROM_END + s.getId());
+                return ended > 0 && clock.nowMillis() - ended
+                        < content.getBalance().getRomance().getCooldownHours() * HOUR;
+            }
+
+            @Override
+            public boolean wasPartner(Scout dead) {
+                return romance.isTogether(dead);
+            }
+
+            @Override
+            public boolean operatorFemale() {
+                return com.estatica.core.Pronouns.isOperatorFemale();
+            }
+
+            @Override
+            public void add(Scout s, int delta, long now, List<LogLine> lines) {
+                double before = value(ROM + s.getId());
+                double change = delta > 0 ? delta * romance.gainMultiplier(s) : delta;
+                double after = Math.max(0, Math.min(100, before + change));
+                pendingValues.put(ROM + s.getId(), after);
+                baseValues.put(ROM + s.getId(), after);
+                if (romance.isTogether(s)) {
+                    pendingValues.put(ROM_LAST + s.getId(), (double) now);
+                    baseValues.put(ROM_LAST + s.getId(), (double) now);
+                }
+                int spark = content.getBalance().getRomance().getSparkAt();
+                if (before < spark && after >= spark && !romance.isTogether(s)) {
+                    lines.add(LogLine.draft(now, LogChannel.SYSTEM, null,
+                            TextTemplate.format(content.getTerminal().getBunker().getRomanceSpark(), romanceVars(s)),
+                            s.getId()));
+                }
+            }
+
+            @Override
+            public void start(Scout s, long now, List<LogLine> lines) {
+                if (romance.isTogether(s)) {
+                    return;
+                }
+                s.getLife().addFlag(com.estatica.domain.scouts.RomanceRules.FLAG);
+                double meter = Math.max(value(ROM + s.getId()), 70);
+                pendingValues.put(ROM + s.getId(), meter);
+                baseValues.put(ROM + s.getId(), meter);
+                pendingValues.put(ROM_LAST + s.getId(), (double) now);
+                baseValues.put(ROM_LAST + s.getId(), (double) now);
+                lines.add(LogLine.draft(now, LogChannel.SYSTEM, null,
+                        TextTemplate.format(content.getTerminal().getBunker().getRomanceStart(), romanceVars(s)),
+                        s.getId()));
+            }
+
+            @Override
+            public void end(Scout s, long now, boolean byOperator, List<LogLine> lines) {
+                endRomance(s, now, byOperator, lines);
+            }
+
+            @Override
+            public void exclusive(Scout keep, long now, List<LogLine> lines) {
+                for (Scout other : partners()) {
+                    if (other != keep) {
+                        endRomance(other, now, true, lines);
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * Values written outside a Step (from inside a dialogue answer); flushed by the next
+     * commit along with everything else.
+     */
+    private final Map<String, Double> pendingValues = new HashMap<>();
+
+    private void endRomance(Scout s, long now, boolean byOperator, List<LogLine> lines) {
+        if (!romance.isTogether(s)) {
+            return;
+        }
+        Balance.Romance config = content.getBalance().getRomance();
+        s.getLife().removeFlag(com.estatica.domain.scouts.RomanceRules.FLAG);
+        s.getLife().addFlag(com.estatica.domain.scouts.RomanceRules.EX_FLAG);
+        double meter = Math.min(value(ROM + s.getId()), config.getAfterBreakup());
+        pendingValues.put(ROM + s.getId(), meter);
+        baseValues.put(ROM + s.getId(), meter);
+        pendingValues.put(ROM_END + s.getId(), (double) now);
+        baseValues.put(ROM_END + s.getId(), (double) now);
+        rules.addStress(s, byOperator ? config.getBreakupStress() : config.getBreakupStress() / 2);
+        rules.addBond(s, -config.getBreakupBond());
+        TerminalText.BunkerText text = content.getTerminal().getBunker();
+        lines.add(LogLine.draft(now, LogChannel.SYSTEM, null, TextTemplate.format(
+                byOperator ? text.getRomanceEndYou() : text.getRomanceEndThem(), romanceVars(s)), s.getId()));
+    }
+
+    /** Neglect wears it down; enough of it (or no trust, or no bond) and they end it. Jealousy flares. */
+    private void romanceTick(Step step) {
+        double last = value("rom_at");
+        setValue("rom_at", step.now, step);
+        if (last <= 0) {
+            return;
+        }
+        double hours = (step.now - last) / (double) HOUR;
+        if (hours <= 0) {
+            return;
+        }
+        Balance.Romance config = content.getBalance().getRomance();
+        List<Scout> partners = partners();
+        for (Scout p : partners) {
+            if (neglected(p, step.now)) {
+                setValue(ROM + p.getId(), Math.max(0, value(ROM + p.getId()) - config.getNeglectPerDay() * hours / 24), step);
+            }
+            boolean gone = value(ROM + p.getId()) < config.getEndBelow()
+                    || rules.bondLevel(p) < config.getEndBelowBondLevel()
+                    || p.getTrust() < config.getEndBelowTrust();
+            if (gone) {
+                endRomance(p, step.now, false, step.lines);
+                continue;
+            }
+            if (partners.size() > 1 && p.getStatus() == ScoutStatus.IDLE) {
+                double chance = romance.jealousy(p) / 100.0 * config.getJealousyPerHour()
+                        * (partners.size() - 1) * hours;
+                if (random.chance(Math.min(0.9, chance))) {
+                    Scout rival = null;
+                    for (Scout other : partners) {
+                        if (other != p) {
+                            rival = other;
+                        }
+                    }
+                    rules.addStress(p, config.getJealousyStress());
+                    setValue(ROM + p.getId(), Math.max(0, value(ROM + p.getId()) - config.getJealousyMeter()), step);
+                    affinities.add(p.getId(), rival.getId(), -config.getJealousyAffinity());
+                    List<String> pool = content.getTerminal().getBunker().getJealousLines();
+                    if (!pool.isEmpty()) {
+                        Map<String, String> vars = romanceVars(p);
+                        vars.put("other", rival.getName());
+                        com.estatica.domain.content.VoiceDef voice = content.voice(p.getVoiceId());
+                        step.into(List.of(LogLine.draft(step.now, LogChannel.RADIO, p.getName(),
+                                com.estatica.domain.scouts.VoiceRenderer.render(voice, random.pick(pool), vars),
+                                p.getId())), BUNKER_CHAT);
+                    }
+                }
+            }
+        }
+        flushRomanceValues(step);
+    }
+
+    /** "♥ together", "flirting", or null when there's nothing to say. */
+    private String romanceLabel(Scout s) {
+        if (!romance.isAdult(s)) {
+            return null;
+        }
+        Map<String, String> stages = content.getTerminal().getBunker().getRomanceStages();
+        int meter = romanceMeter(s);
+        String key = romance.isTogether(s) ? (neglected(s, clock.nowMillis()) ? "neglected" : "together")
+                : meter >= content.getBalance().getRomance().getSparkAt() ? "flirting"
+                : meter >= 15 ? "spark" : null;
+        return key == null ? null : stages.get(key);
+    }
+
+    /** Writes values the dialogue hooks set. */
+    private void flushRomanceValues(Step step) {
+        for (Map.Entry<String, Double> e : pendingValues.entrySet()) {
+            setValue(e.getKey(), e.getValue(), step);
+        }
+        pendingValues.clear();
+    }
+
+    // ---- Rooms (restoration projects and room tasks) ----
+
+    private static final String ROOM_OPEN = "room:";
+    private static final String ROOM_WORK = "roomwork:";
+    private static final String ROOM_PROJECT = "room_project";
+
+    public boolean isRoomOpen(String roomId) {
+        RoomDef room = content.getBalance().room(roomId);
+        return room == null || room.isOpen() || value(ROOM_OPEN + roomId) > 0;
+    }
+
+    /** The room being restored, or null. */
+    private RoomDef project() {
+        int index = (int) value(ROOM_PROJECT) - 1;
+        List<RoomDef> rooms = content.getBalance().getRooms();
+        return index >= 0 && index < rooms.size() ? rooms.get(index) : null;
+    }
+
+    private boolean requirementsMet(RoomDef room) {
+        for (String id : room.getRequires()) {
+            if (!isRoomOpen(id)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<Scout> onRole(String role) {
+        List<Scout> out = new ArrayList<>();
+        for (Scout s : scouts.values()) {
+            String task = s.getLife().getTaskId();
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && task != null
+                    && role.equals(content.task(task).getRole())
+                    && isRoomOpen(content.task(task).getRoom())) {
+                out.add(s);
+            }
+        }
+        return out;
+    }
+
+    /** [RESTORE] on a sealed room: pay up front, then the Restore task does the work. */
+    @WorkerThread
+    public List<LogLine> startRestore(String roomId) {
+        Step step = new Step();
+        advance(step);
+        RoomDef room = content.getBalance().room(roomId);
+        TerminalText.BunkerText text = content.getTerminal().getBunker();
+        Map<String, String> vars = new HashMap<>();
+        if (room != null) {
+            vars.put("room", room.getName());
+        }
+        if (room == null || isRoomOpen(roomId) || project() != null || !requirementsMet(room)) {
+            return step.commit();
+        }
+        if (pay(room.getCost(), step)) {
+            setValue(ROOM_PROJECT, content.getBalance().getRooms().indexOf(room) + 1, step);
+            setValue(ROOM_WORK + roomId, 0, step);
+            step.system(text.getRoomStarted(), vars, null);
+        }
+        return step.commit();
+    }
+
+    /** Restoration, hydroponics and teaching, by the hours since the last step. */
+    private void roomsTick(Step step) {
+        double last = value("rooms_at");
+        setValue("rooms_at", step.now, step);
+        if (last <= 0) {
+            return;
+        }
+        double hours = (step.now - last) / (double) HOUR;
+        if (hours <= 0) {
+            return;
+        }
+        TerminalText.BunkerText text = content.getTerminal().getBunker();
+        Balance.Rooms tuning = content.getBalance().getRoomTuning();
+
+        RoomDef project = project();
+        List<Scout> restorers = onRole("restore");
+        if (project != null && !restorers.isEmpty()) {
+            double work = value(ROOM_WORK + project.getId()) + hours * restorers.size();
+            setValue(ROOM_WORK + project.getId(), work, step);
+            if (work >= project.getHours()) {
+                setValue(ROOM_OPEN + project.getId(), 1, step);
+                setValue(ROOM_PROJECT, 0, step);
+                Map<String, String> vars = new HashMap<>();
+                vars.put("room", project.getName());
+                step.system(text.getRoomDone(), vars, null);
+            }
+        }
+
+        List<Scout> growers = onRole("hydro");
+        if (!growers.isEmpty()) {
+            boolean blighted = step.now < value("blight_until");
+            if (!blighted && random.chance(Math.min(1, tuning.getBlightChancePerDay() * hours / 24))) {
+                setValue("blight_until", step.now + Math.round(tuning.getBlightHours() * HOUR), step);
+                step.system(text.getBlight(), Map.of(), null);
+                blighted = true;
+            }
+            double lamps = tuning.getHydroReservePerHour() * growers.size() * hours;
+            if (!blighted && reserve >= lamps) {
+                reserve -= lamps;
+                step.radioWrites.add(() -> baseRepository.saveValue(KEY_RESERVE, reserve));
+                double eaten = food.perHour(mouths(), 0) * tuning.getHydroMaxShare();
+                double grown = value("hydro_carry")
+                        + Math.min(growers.size() * tuning.getHydroRationsPerHour(), eaten) * hours;
+                int whole = (int) Math.floor(grown);
+                setValue("hydro_carry", grown - whole, step);
+                if (whole > 0) {
+                    step.resourceDelta.merge("rations", whole, Integer::sum);
+                }
+            }
+        }
+
+        List<Scout> teachers = onRole("teach");
+        if (!teachers.isEmpty()) {
+            for (Scout s : scouts.values()) {
+                if (!s.isAlive() || s.getStatus() != ScoutStatus.IDLE || teachers.contains(s)) {
+                    continue;
+                }
+                double xp = value("teachxp:" + s.getId()) + hours * tuning.getTeachXpPerHour() * teachers.size();
+                int whole = (int) Math.floor(xp);
+                setValue("teachxp:" + s.getId(), xp - whole, step);
+                if (whole > 0) {
+                    StatType weakest = null;
+                    for (StatType type : StatType.values()) {
+                        if (weakest == null || s.stat(type).getValue() < s.stat(weakest).getValue()) {
+                            weakest = type;
+                        }
+                    }
+                    if (rules.trainXp(s, weakest, whole)) {
+                        Map<String, String> vars = new HashMap<>();
+                        vars.put("name", s.getName());
+                        vars.put("stat", content.getTerminal().getStatNames().get(weakest.key()));
+                        vars.put("value", String.valueOf(s.stat(weakest).getValue()));
+                        step.system(content.getTerminal().getExpedition().getStatUp(), vars, s);
+                    }
+                }
+            }
+        }
+    }
+
+    /** Someone at the periscope saw them coming: extra defense, and a line saying so. */
+    private int lookoutDefense(Step step) {
+        List<Scout> lookouts = onRole("lookout");
+        if (lookouts.isEmpty()) {
+            return 0;
+        }
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", lookouts.get(0).getName());
+        step.system(content.getTerminal().getBunker().getLookoutSaw(), vars, lookouts.get(0));
+        return content.getBalance().getRoomTuning().getLookoutDefense();
+    }
+
+    private List<SessionSnapshot.RoomView> roomViews() {
+        List<SessionSnapshot.RoomView> out = new ArrayList<>();
+        RoomDef project = project();
+        for (RoomDef r : content.getBalance().getRooms()) {
+            boolean open = isRoomOpen(r.getId());
+            List<String> who = new ArrayList<>();
+            for (Scout s : scouts.values()) {
+                String task = s.getLife().getTaskId();
+                if (open && s.isAlive() && s.getStatus() == ScoutStatus.IDLE && task != null
+                        && r.getId().equals(content.task(task).getRoom())) {
+                    who.add(s.getName());
+                }
+            }
+            List<String> needs = new ArrayList<>();
+            for (String id : r.getRequires()) {
+                if (!isRoomOpen(id)) {
+                    needs.add(content.getBalance().room(id).getName());
+                }
+            }
+            List<String> tasks = new ArrayList<>();
+            for (TaskDef t : content.getTasks().values()) {
+                if (r.getId().equals(t.getRoom())) {
+                    tasks.add(t.getName());
+                }
+            }
+            boolean restoring = project != null && project.getId().equals(r.getId());
+            double progress = restoring ? Math.min(1, value(ROOM_WORK + r.getId()) / Math.max(1, r.getHours())) : 0;
+            out.add(new SessionSnapshot.RoomView(r.getId(), r.getName(), open ? r.getDescription() : r.getSealed(),
+                    r.getX(), r.getY(), r.getW(), r.getH(), open, restoring, progress,
+                    open ? null : describe(r.getCost()), (int) Math.round(r.getHours()),
+                    !open && project == null && needs.isEmpty() && canAfford(r.getCost()), needs, who,
+                    r.getModules(), tasks, onRole("restore").size()));
+        }
+        return out;
     }
 
     /** Someone on the infirmary task offering to treat someone else, right now. */
@@ -780,6 +1222,16 @@ public final class GameSession {
                         com.estatica.domain.scouts.VoiceRenderer.render(voice, line, vars), witness.getId()));
             }
             step.into(said, BUNKER_CHAT);
+        }
+    }
+
+    /** Everyone the crew might mention, so "{he:other}" reads right (core.Pronouns). */
+    private void registerPronouns() {
+        for (Scout s : scouts.values()) {
+            com.estatica.core.Pronouns.register(s.getName(), content.isFemale(s));
+        }
+        for (ScoutTemplate p : rescuePersonas.values()) {
+            com.estatica.core.Pronouns.register(p.getName(), content.isFemale(p));
         }
     }
 
@@ -966,6 +1418,16 @@ public final class GameSession {
 
     /** GDD §5.5 "afterwards": belongings stay in the zone, the others grieve, the task is left. */
     private void afterDeath(Scout dead, String zoneId, Step step) {
+        if (romance.isTogether(dead)) {
+            // The one you loved. It hits the whole bunker, and you hardest.
+            step.lines.add(LogLine.draft(step.now, LogChannel.ALERT, null, TextTemplate.format(
+                    content.getTerminal().getBunker().getRomanceLost(), romanceVars(dead)), dead.getId()));
+            for (Scout s : scouts.values()) {
+                if (s != dead && s.isAlive()) {
+                    rules.addStress(s, content.getBalance().getRomance().getJealousyStress());
+                }
+            }
+        }
         for (com.estatica.domain.bunker.GearPiece worn : dead.getLife().takeAllOff()) {
             worn.moveTo(com.estatica.domain.bunker.GearPiece.lostIn(zoneId));
             worn.setOriginalOwnerId(dead.getId());
@@ -1056,18 +1518,36 @@ public final class GameSession {
         }
     }
 
-    /** At most one scout starts a conversation per step ("got a minute?"). */
+    /**
+     * Now and then someone comes to you ("got a minute?"). Checked once an hour at most, with a
+     * gap between any two, so coming back after a while finds one person waiting, not everyone.
+     * Grief and requests for guidance skip the dice: those don't wait for a good moment.
+     */
     private void maybeStartConversation(Step step) {
-        long cooldown = content.getBalance().getBond().getInitiatedCooldownHours() * HOUR;
-        for (Scout scout : scouts.values()) {
+        Balance.Bond bond = content.getBalance().getBond();
+        if (step.now - value("talk_check") < bond.getInitiatedCheckMinutes() * 60_000L) {
+            return;
+        }
+        setValue("talk_check", step.now, step);
+        if (step.now - value("talk_initiated") < bond.getInitiatedGapHours() * HOUR) {
+            return;
+        }
+        boolean inTheMood = random.chance(bond.getInitiatedChance());
+        long cooldown = bond.getInitiatedCooldownHours() * HOUR;
+        List<Scout> order = new ArrayList<>(scouts.values());
+        for (int i = order.size() - 1; i > 0; i--) {
+            java.util.Collections.swap(order, i, random.nextInt(i + 1));
+        }
+        for (Scout scout : order) {
             if (hasPendingConversation(scout)
                     || step.now - scout.getLife().getLastInitiatedAtMillis() < cooldown) {
                 continue;
             }
             DialogueDef dialogue = dialogues.pick(scout, true, scouts.values(), random, step.now);
-            if (dialogue == null) {
+            if (dialogue == null || (dialogue.getKind() == DialogueDef.Kind.INITIATED && !inTheMood)) {
                 continue;
             }
+            setValue("talk_initiated", step.now, step);
             step.into(dialogues.open(scout, dialogue, true, scouts.values(), random, step.now),
                     LogLine.chatThread(scout.getId()));
             Conversation c = Conversation.start(scout.getId(), dialogue.getId(), step.now, true);
@@ -1984,7 +2464,8 @@ public final class GameSession {
         vars.put("frequency", frequency);
         vars.put("name", dead.getName());
         vars.put("words", echoWords(dead));
-        List<String> heard = echo.getHeard();
+        List<String> heard = romance.isTogether(dead) && !echo.getHeardPartner().isEmpty()
+                ? echo.getHeardPartner() : echo.getHeard();
         if (!heard.isEmpty()) {
             step.system(heard.get(Math.floorMod((dead.getId() + step.now).hashCode(), heard.size())), vars, dead);
         }
@@ -2454,7 +2935,8 @@ public final class GameSession {
         TerminalText.BaseText text = content.getTerminal().getBase();
         Map<String, Integer> stock = new HashMap<>(resources);
         step.resourceDelta.forEach((k, v) -> stock.merge(k, v, Integer::sum));
-        RaidRules.Result result = raids.resolve(scouts.values(), stock, moduleLevel("antenna"), (int) moduleBonus("barricades"), random);
+        RaidRules.Result result = raids.resolve(scouts.values(), stock, moduleLevel("antenna"),
+                (int) moduleBonus("barricades") + lookoutDefense(step), random);
         Map<String, String> vars = new HashMap<>();
         if (result.repelled) {
             List<String> names = new ArrayList<>();
@@ -2805,11 +3287,21 @@ public final class GameSession {
                 resources.getOrDefault("batteries", 0) > 0, modules, moduleLevel("workshop"), jobs, recipes,
                 guardNames, raids.defense(guards) + (int) moduleBonus("barricades"), gearStock, aliveScouts(), rosterCap(), gearViews);
         baseView.rechargePer = (int) Math.round(rechargePerBattery());
+        baseView.rooms = roomViews();
         baseView.batteries = resources.getOrDefault("batteries", 0);
         return baseView;
     }
 
     // ---- Story: personal missions, La Voz, goals (GDD §5.2, §8, §9) ----
+
+    /** Fills in reach, trip range and danger from the zone. */
+    private SessionSnapshot.MissionView missionView(SessionSnapshot.MissionView m, ZoneDef z) {
+        m.reachable = canReach(z);
+        m.minMinutes = z.getDurationMinutes()[0];
+        m.maxMinutes = z.getDurationMinutes()[1];
+        m.danger = z.getDanger();
+        return m;
+    }
 
     private boolean personalAvailable(StoryDef.PersonalMission m, Scout s) {
         return s.isAlive() && m.isFor(s.getTemplateId(), content.persona(s))
@@ -2985,6 +3477,8 @@ public final class GameSession {
             }
             step.memories.addAll(answer.memories);
             scout.getLife().setLastTalkAtMillis(step.now);
+            attention(scout, step);
+            flushRomanceValues(step);
             c.setStatus(Conversation.Status.ANSWERED);
             step.conversationsChanged.add(c);
         }
@@ -3005,6 +3499,12 @@ public final class GameSession {
             step.memories.addAll(result.memories);
             item.moveTo(ItemInstance.carriedBy(scout.getId()));
             scout.getLife().setLastTalkAtMillis(step.now);
+            // A gift to someone who's open to you, or yours, means something more.
+            if (romance.isTogether(scout) || romance.isReady(scout)) {
+                romanceHooks().add(scout, content.getBalance().getRomance().getGift(), step.now, step.lines);
+                attention(scout, step);
+                flushRomanceValues(step);
+            }
         }
         return step.commit();
     }
@@ -3076,6 +3576,7 @@ public final class GameSession {
 
     @WorkerThread
     public SessionSnapshot snapshot() {
+        registerPronouns();
         TerminalText.BunkerText text = content.getTerminal().getBunker();
         Map<String, Expedition> byScout = new HashMap<>();
         for (Expedition e : active.values()) {
@@ -3119,6 +3620,8 @@ public final class GameSession {
             }
             String taskId = s.getLife().getTaskId();
             b.task = taskId != null ? content.task(taskId).getName() : text.getNoTask();
+            b.taskId = taskId;
+            b.pace = s.isAlive() ? rules.durationMultiplier(s) : 1;
             b.likes = tastes(s, GiftRules.LIKES, text.getKnownLikes());
             b.dislikes = tastes(s, GiftRules.DISLIKES, text.getKnownDislikes());
             b.gifts = new ArrayList<>();
@@ -3132,6 +3635,8 @@ public final class GameSession {
             b.canTalk = home && !hasPendingConversation(s) && now >= talkReadyAt(s);
             b.talkReadyAtMillis = home && !hasPendingConversation(s) && now < talkReadyAt(s) ? talkReadyAt(s) : 0;
             b.bondProgress = s.isAlive() ? rules.bondProgress(s) : 0;
+            b.female = content.isFemale(s);
+            b.romance = romanceLabel(s);
             b.canGift = home && hasInventory;
             b.canAssignTask = s.isAlive();
             b.slots = new ArrayList<>();
@@ -3262,25 +3767,26 @@ public final class GameSession {
 
         TerminalText.RadioText radioText = content.getTerminal().getRadio();
         List<SessionSnapshot.MissionView> missions = new ArrayList<>();
+        // Rescues and personal missions show even out of reach, so they're never forgotten.
         for (Map.Entry<String, String> target : rescueTargets.entrySet()) {
             ZoneDef z = content.zone(target.getValue());
-            if (canReach(z)) {
+            if (z != null) {
                 Map<String, String> vars = new HashMap<>();
                 ScoutTemplate waiting = rescuePersona(target.getKey());
                 vars.put("name", waiting != null ? waiting.getName() : "?");
-                missions.add(new SessionSnapshot.MissionView(Mission.Type.RESCUE.name(), z.getId(),
-                        target.getKey(), TextTemplate.format(radioText.getMissionRescue(), vars), z.getName()));
+                missions.add(missionView(new SessionSnapshot.MissionView(Mission.Type.RESCUE.name(), z.getId(),
+                        target.getKey(), TextTemplate.format(radioText.getMissionRescue(), vars), z.getName()), z));
             }
         }
         for (Scout s : scouts.values()) {
             for (StoryDef.PersonalMission m : content.getStory().getPersonalMissions()) {
                 ZoneDef z = content.zone(m.getZone());
-                if (personalAvailable(m, s) && canReach(z)) {
+                if (z != null && personalAvailable(m, s)) {
                     Map<String, String> vars = new HashMap<>();
                     vars.put("title", m.getTitle());
-                    missions.add(new SessionSnapshot.MissionView(Mission.Type.PERSONAL.name(), z.getId(), m.getId(),
-                            TextTemplate.format(content.getTerminal().getStory().getMissionPersonal(), vars),
-                            z.getName(), s.getId()));
+                    missions.add(missionView(new SessionSnapshot.MissionView(Mission.Type.PERSONAL.name(), z.getId(),
+                            m.getId(), TextTemplate.format(content.getTerminal().getStory().getMissionPersonal(), vars),
+                            z.getName(), s.getId()), z));
                 }
             }
         }
@@ -3291,11 +3797,11 @@ public final class GameSession {
             }
             Relay relay = relays.get(z.getId());
             if (relay == null && hasKit) {
-                missions.add(new SessionSnapshot.MissionView(Mission.Type.INSTALL_RELAY.name(), z.getId(),
-                        null, radioText.getMissionInstall(), z.getName()));
+                missions.add(missionView(new SessionSnapshot.MissionView(Mission.Type.INSTALL_RELAY.name(), z.getId(),
+                        null, radioText.getMissionInstall(), z.getName()), z));
             } else if (relay != null && relay.getCondition() < 70) {
-                missions.add(new SessionSnapshot.MissionView(Mission.Type.MAINTAIN_RELAY.name(), z.getId(),
-                        null, radioText.getMissionMaintain(), z.getName()));
+                missions.add(missionView(new SessionSnapshot.MissionView(Mission.Type.MAINTAIN_RELAY.name(), z.getId(),
+                        null, radioText.getMissionMaintain(), z.getName()), z));
             }
         }
 
@@ -3314,9 +3820,11 @@ public final class GameSession {
         }
 
         List<SessionSnapshot.TaskView> tasks = new ArrayList<>();
-        tasks.add(new SessionSnapshot.TaskView(null, text.getNoTask(), ""));
+        tasks.add(new SessionSnapshot.TaskView(null, text.getNoTask(), "", null));
         for (TaskDef t : content.getTasks().values()) {
-            tasks.add(new SessionSnapshot.TaskView(t.getId(), t.getName(), t.getDescription()));
+            if (isRoomOpen(t.getRoom())) {
+                tasks.add(new SessionSnapshot.TaskView(t.getId(), t.getName(), t.getDescription(), t.getRoom()));
+            }
         }
         long baseWake = nextBaseEvent(now);
         if (baseWake >= 0 && (nextWake < 0 || baseWake < nextWake)) {

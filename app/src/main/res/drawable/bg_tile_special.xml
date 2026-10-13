@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A special mission (rescue, personal): framed in the radio's color so it stands out. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/amber_hint">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/terminal_bg" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/signal" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+</ripple>

@@ -105,6 +105,8 @@ public final class ScoutRepository {
                 life.getLastInitiatedAtMillis(), life.getLastDecayAtMillis(), life.getTaskXpCarry(),
                 life.getTaskOutputCarry(), life.getDiedAtMillis(), life.getDiedZoneId(),
                 life.getStressCarry(), life.getGearId());
+        // Rewritten whole, so a flag that was removed (a romance that ended) stays removed.
+        dao.deleteFlags(scout.getId());
         List<ScoutFlagEntity> flags = new ArrayList<>();
         for (String flag : life.getFlags()) {
             ScoutFlagEntity f = new ScoutFlagEntity();

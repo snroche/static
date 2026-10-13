@@ -65,9 +65,19 @@ public class SignalPreviewTest {
 
     @Test
     public void frequenciesReadAsMegahertz() {
-        assertEquals("3.000 MHz", content.getBalance().band("short").frequency(0));
-        assertEquals("7.215 MHz", content.getBalance().band("medium").frequency(215));
-        assertEquals("14.731 MHz", content.getBalance().band("long").frequency(731));
+        assertEquals("88.00 MHz", content.getBalance().band("short").frequency(0));
+        assertEquals("108.00 MHz", content.getBalance().band("short").frequency(1000));
+        assertEquals("782 kHz", content.getBalance().band("medium").frequency(215));
+        assertEquals("1700 kHz", content.getBalance().band("medium").frequency(1000));
+        assertEquals("245.0 kHz", content.getBalance().band("long").frequency(731));
+        assertEquals("3.00 kHz", content.getBalance().band("deep").frequency(0));
+        // Station lore quotes the frequency the dial shows.
+        for (com.estatica.domain.content.SignalsDef.Station st : content.getSignals().getStations()) {
+            if (st.getLore() != null && st.getLore().matches("(?s).*band, [0-9.]+ [kM]Hz.*")) {
+                String f = content.getBalance().band(st.getBand()).frequency(st.getPosition());
+                org.junit.Assert.assertTrue(st.getId() + " lore says " + f, st.getLore().contains(f));
+            }
+        }
     }
 
     @Test

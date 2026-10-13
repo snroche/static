@@ -26,6 +26,18 @@ public final class TaskDef {
     private boolean passiveSweep;
     /** Can treat someone's injury on the spot, for medicine. */
     private boolean treats;
+    /** Room that must be open to take this task (null: always). */
+    private String room;
+    /** What the task does beyond the usual (restore, hydroponics, teach, lookout). */
+    private String role;
+
+    public String getRoom() {
+        return room;
+    }
+
+    public String getRole() {
+        return role;
+    }
 
     public boolean isTreats() {
         return treats;

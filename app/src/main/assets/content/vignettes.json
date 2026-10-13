@@ -34,7 +34,7 @@
     "night": true,
     "lines": [
       {
-        "text": "{a} can't sleep. {b} sits up with them by the radio until the static sounds like rain."
+        "text": "{a} can't sleep. {b} sits up with {him:a} by the radio until the static sounds like rain."
       }
     ],
     "stress": -5,
@@ -130,7 +130,7 @@
     "weight": 2,
     "lines": [
       {
-        "text": "{a} says {b} took more than their share. Voices rise. Someone kicks a crate."
+        "text": "{a} says {b} took more than {his:b} share. Voices rise. Someone kicks a crate."
       },
       {
         "who": "b",

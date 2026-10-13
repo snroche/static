@@ -34,7 +34,7 @@
   {
     "id": "gear_radio",
     "name": "Portable radio",
-    "description": "Their signal comes through cleaner: less noise and fewer lost hints.",
+    "description": "The wearer's signal comes through cleaner: less noise and fewer lost hints.",
     "noiseFactor": 0.6,
     "slot": "NECK"
   },

@@ -13,9 +13,11 @@ final class OptionsState {
     /** Index into {@link #TEXT_SPEEDS}. */
     final int textSpeed;
     final boolean crt;
+    final boolean operatorFemale;
 
     OptionsState(String operatorName, boolean sound, boolean haptics, boolean notifications, int textSpeed,
-                 boolean crt) {
+                 boolean crt, boolean operatorFemale) {
+        this.operatorFemale = operatorFemale;
         this.operatorName = operatorName;
         this.sound = sound;
         this.haptics = haptics;

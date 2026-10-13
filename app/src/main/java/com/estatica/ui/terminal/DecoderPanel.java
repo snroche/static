@@ -182,6 +182,7 @@ final class DecoderPanel {
                 cell.setLayoutParams(lp);
                 cell.setOnClickListener(v -> {
                     typed.append(letter);
+                    autoSpace();
                     showMorseAnswer();
                 });
                 line.addView(cell);
@@ -192,6 +193,9 @@ final class DecoderPanel {
         tools.setOrientation(android.widget.LinearLayout.HORIZONTAL);
         TextView space = (TextView) inflater.inflate(R.layout.item_decision_option, tools, false);
         space.setText(R.string.morse_space);
+        // Side by side, half each: a full-width SPACE pushed erase off the screen.
+        space.setLayoutParams(new android.widget.LinearLayout.LayoutParams(0,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         space.setOnClickListener(v -> {
             if (typed.length() > 0 && typed.charAt(typed.length() - 1) != ' ') {
                 typed.append(' ');
@@ -200,7 +204,14 @@ final class DecoderPanel {
         });
         TextView erase = (TextView) inflater.inflate(R.layout.item_decision_option, tools, false);
         erase.setText(R.string.morse_erase);
+        erase.setContentDescription(b.getRoot().getResources().getString(R.string.erase_description));
+        erase.setLayoutParams(new android.widget.LinearLayout.LayoutParams(0,
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         erase.setOnClickListener(v -> {
+            // An auto-space goes with the letter before it.
+            if (typed.length() > 0 && typed.charAt(typed.length() - 1) == ' ') {
+                typed.setLength(typed.length() - 1);
+            }
             if (typed.length() > 0) {
                 typed.setLength(typed.length() - 1);
             }
@@ -253,9 +264,19 @@ final class DecoderPanel {
         showMorseAnswer();
     }
 
-    /** Morse groups in the cipher, word breaks as "/". */
+    /** One group per letter (Morse code, or a pair of knock runs), word breaks as "/". */
     private String[] groups() {
-        return transmission.cipherText.trim().split("\\s+");
+        String text = transmission.cipherText.trim();
+        if ("TAP".equals(transmission.kind)) {
+            // Letters are three spaces apart; inside one, the two runs are one space apart.
+            return text.replace(" / ", "   /   ").split("\\s{3,}");
+        }
+        return text.split("\\s+");
+    }
+
+    /** Letter-by-letter ciphers that light up the letter being worked on. */
+    private boolean byLetter() {
+        return "MORSE".equals(transmission.kind) || "TAP".equals(transmission.kind);
     }
 
     /** Index of the group the next letter decodes, or -1 past the end. */
@@ -275,7 +296,7 @@ final class DecoderPanel {
 
     /** After the last letter of a word, the space goes in by itself. */
     private void autoSpace() {
-        if (!"MORSE".equals(transmission.kind) || typed.length() == 0 || typed.charAt(typed.length() - 1) == ' ') {
+        if (!byLetter() || typed.length() == 0 || typed.charAt(typed.length() - 1) == ' ') {
             return;
         }
         int next = currentGroup();
@@ -287,9 +308,10 @@ final class DecoderPanel {
 
     /** The cipher with the group being decoded lit up. */
     private void highlightCipher() {
-        if (!"MORSE".equals(transmission.kind)) {
+        if (!byLetter()) {
             return;
         }
+        String gap = "TAP".equals(transmission.kind) ? "   " : " ";
         int current = currentGroup();
         android.text.SpannableStringBuilder out = new android.text.SpannableStringBuilder();
         String[] groups = groups();
@@ -297,7 +319,7 @@ final class DecoderPanel {
         int dim = androidx.core.content.ContextCompat.getColor(b.getRoot().getContext(), R.color.amber_dim);
         for (int i = 0; i < groups.length; i++) {
             if (i > 0) {
-                out.append(' ');
+                out.append(gap);
             }
             int start = out.length();
             out.append(groups[i]);

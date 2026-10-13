@@ -51,4 +51,7 @@ public interface ScoutDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertFlags(List<ScoutFlagEntity> flags);
+
+    @Query("DELETE FROM scout_flags WHERE scout_id = :scoutId")
+    void deleteFlags(String scoutId);
 }

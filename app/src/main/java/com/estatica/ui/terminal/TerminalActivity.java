@@ -60,7 +60,7 @@ public final class TerminalActivity extends ComponentActivity {
 
     private Tab tab = Tab.COMMS;
 
-    private enum Panel { NONE, SCOUTS, SCOUT_DETAIL, GIFTS, TASKS, DIARY, GEAR, RECIPES, SCOUT_SECTOR, GEAR_SLOT }
+    private enum Panel { NONE, SCOUTS, SCOUT_DETAIL, GIFTS, TASKS, DIARY, RECIPES, SCOUT_SECTOR, GEAR_SLOT }
 
     /** Crew grid, and the one person shown in full. */
     private com.estatica.ui.scouts.CrewTileAdapter crewTiles;
@@ -95,6 +95,8 @@ public final class TerminalActivity extends ComponentActivity {
     private SendPanel sendPanel;
     /** Gear slot being changed (GearDef.Slot name). */
     private String pendingSlot;
+    /** Room picked on the task floor plan, or null to start at the person's current one. */
+    private String taskRoom;
     /** Sector the scout picker is for. */
     private SessionSnapshot.SectorView pendingSector;
 
@@ -115,14 +117,13 @@ public final class TerminalActivity extends ComponentActivity {
             } else if (panel == Panel.RECIPES) {
                 showPanel(Panel.NONE);
                 bunkerPanel.show();
-            } else if (panel == Panel.GEAR_SLOT) {
-                showPanel(Panel.GEAR);
+            } else if (panel == Panel.GEAR_SLOT || panel == Panel.TASKS) {
+                showPanel(Panel.SCOUT_DETAIL);
             } else if (sendPanel.isShown()) {
                 sendPanel.hide();
             } else if (panel == Panel.DIARY && tab == Tab.COMMS) {
                 showPanel(Panel.NONE);
-            } else if (panel == Panel.SCOUT_DETAIL || panel == Panel.GIFTS || panel == Panel.TASKS
-                    || panel == Panel.DIARY || panel == Panel.GEAR) {
+            } else if (panel == Panel.SCOUT_DETAIL || panel == Panel.GIFTS || panel == Panel.DIARY) {
                 showPanel(Panel.SCOUTS);
             } else {
                 // A tab's own screen: back goes to COMMS.
@@ -918,13 +919,15 @@ public final class TerminalActivity extends ComponentActivity {
             @Override
             public void onTask(SessionSnapshot.ScoutView scout) {
                 select(scout);
+                taskRoom = null;
                 showPanel(Panel.TASKS);
             }
 
             @Override
-            public void onEquip(SessionSnapshot.ScoutView scout) {
+            public void onSlot(SessionSnapshot.ScoutView scout, String slot) {
                 select(scout);
-                showPanel(Panel.GEAR);
+                pendingSlot = slot;
+                showPanel(Panel.GEAR_SLOT);
             }
 
             @Override
@@ -945,6 +948,10 @@ public final class TerminalActivity extends ComponentActivity {
             showPanel(Panel.SCOUT_DETAIL);
             updateBack();
         });
+        binding.taskPlan.setListener(room -> {
+            taskRoom = room.id;
+            renderPanel();
+        });
         crewGrid = new androidx.recyclerview.widget.GridLayoutManager(this, 2);
         panelLinear = new LinearLayoutManager(this);
         binding.panelList.setLayoutManager(panelLinear);
@@ -955,7 +962,7 @@ public final class TerminalActivity extends ComponentActivity {
         binding.tabRadio.setOnClickListener(v -> selectTab(Tab.RADIO));
         binding.tabBunker.setOnClickListener(v -> selectTab(Tab.BUNKER));
         binding.panelClose.setOnClickListener(v -> closePanelOnBack.handleOnBackPressed());
-        sendPanel = new SendPanel(binding.sendPanel, viewModel, new SendPanel.Host() {
+        sendPanel = new SendPanel(binding.sendPanel, viewModel, settings, new SendPanel.Host() {
             @Override
             public void close() {
                 sendPanel.hide();
@@ -1058,11 +1065,8 @@ public final class TerminalActivity extends ComponentActivity {
                 break;
             case TASKS:
                 viewModel.assignTask(selectedScoutId, row.key);
-                break;
-            case GEAR:
-                // A slot: show what fits in it.
-                pendingSlot = row.key;
-                showPanel(Panel.GEAR_SLOT);
+                showPanel(Panel.SCOUT_DETAIL); // back to their page, task updated
+                updateBack();
                 return;
             case GEAR_SLOT:
                 if (KEY_TAKE_OFF.equals(row.key)) {
@@ -1070,7 +1074,8 @@ public final class TerminalActivity extends ComponentActivity {
                 } else {
                     viewModel.equip(selectedScoutId, row.key);
                 }
-                showPanel(Panel.GEAR); // back to the slots to keep dressing them
+                showPanel(Panel.SCOUT_DETAIL); // back to the slots to keep dressing them
+                updateBack();
                 return;
             case SCOUT_SECTOR:
                 requestNotificationPermission();
@@ -1117,25 +1122,6 @@ public final class TerminalActivity extends ComponentActivity {
         return null;
     }
 
-    private static int slotIcon(String slot) {
-        switch (slot) {
-            case "HEAD":
-                return R.string.ic_head;
-            case "NECK":
-                return R.string.ic_neck;
-            case "HANDS":
-                return R.string.ic_hands;
-            case "BELT":
-                return R.string.ic_gear;
-            case "BACK":
-                return R.string.ic_back;
-            case "FEET":
-                return R.string.ic_feet;
-            default:
-                return R.string.ic_body;
-        }
-    }
-
     private void showPanel(Panel target) {
         panel = target;
         closePanelOnBack.setEnabled(tab != Tab.COMMS || target != Panel.NONE
@@ -1159,6 +1145,7 @@ public final class TerminalActivity extends ComponentActivity {
             return;
         }
         binding.panelList.setLayoutManager(panelLinear);
+        binding.taskPlan.setVisibility(target == Panel.TASKS ? View.VISIBLE : View.GONE);
         if (target == Panel.SCOUT_DETAIL) {
             showScoutDetail();
             return;
@@ -1174,8 +1161,7 @@ public final class TerminalActivity extends ComponentActivity {
             showPanel(Panel.SCOUTS);
             return;
         }
-        binding.panelTitle.setText(who.name);
-        scoutAdapter.setAlwaysOpen(true);
+        binding.panelTitle.setText(R.string.panel_scouts_title);
         if (binding.panelList.getAdapter() != scoutAdapter) {
             binding.panelList.setAdapter(scoutAdapter);
         }
@@ -1227,27 +1213,8 @@ public final class TerminalActivity extends ComponentActivity {
                 break;
             case TASKS:
                 binding.panelTitle.setText(getString(R.string.panel_task_title, selectedScoutName));
-                for (SessionSnapshot.TaskView task : snapshot.tasks) {
-                    rows.add(new PickerAdapter.Row(task.id, task.name, null, task.description, true));
-                }
+                taskRows(rows);
                 break;
-            case GEAR: {
-                binding.panelTitle.setText(getString(R.string.panel_gear_title, selectedScoutName));
-                SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
-                if (who != null) {
-                    for (SessionSnapshot.SlotView slot : who.slots) {
-                        int free = 0;
-                        for (SessionSnapshot.ItemView piece : snapshot.base.gearStock) {
-                            free += slot.slot.equals(piece.slot) ? 1 : 0;
-                        }
-                        String title = getString(R.string.gear_slot_title, getString(slotIcon(slot.slot)), slot.name);
-                        String meta = slot.label != null ? slot.label : getString(R.string.gear_slot_empty);
-                        String extra = free > 0 ? getString(R.string.gear_slot_spare, free) : null;
-                        rows.add(new PickerAdapter.Row(slot.slot, title, meta, extra, true));
-                    }
-                }
-                break;
-            }
             case GEAR_SLOT: {
                 SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
                 SessionSnapshot.SlotView current = null;
@@ -1299,6 +1266,56 @@ public final class TerminalActivity extends ComponentActivity {
                 return;
         }
         pickerAdapter.submitList(rows);
+    }
+
+    /**
+     * Tasks by room: the floor plan above the list picks the room; its tasks come first, then
+     * the ones done anywhere. The current task is marked.
+     */
+    private void taskRows(List<PickerAdapter.Row> rows) {
+        SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
+        String current = who != null ? who.taskId : null;
+        if (taskRoom == null) {
+            taskRoom = "bunks";
+            for (SessionSnapshot.TaskView task : snapshot.tasks) {
+                if (task.id != null && task.id.equals(current) && task.room != null) {
+                    taskRoom = task.room;
+                }
+            }
+        }
+        binding.taskPlan.setRooms(snapshot.base.rooms, taskRoom);
+        SessionSnapshot.RoomView room = null;
+        for (SessionSnapshot.RoomView r : snapshot.base.rooms) {
+            if (r.id.equals(taskRoom)) {
+                room = r;
+            }
+        }
+        if (room != null) {
+            rows.add(new PickerAdapter.Row("room:" + room.id, "── " + room.name + " ──", null,
+                    room.open ? null : getString(R.string.task_room_sealed), false));
+        }
+        boolean any = false;
+        for (SessionSnapshot.TaskView task : snapshot.tasks) {
+            if (task.room != null && task.room.equals(taskRoom)) {
+                rows.add(taskRow(task, current));
+                any = true;
+            }
+        }
+        if (!any && room != null && room.open) {
+            rows.add(new PickerAdapter.Row("none:" + room.id, getString(R.string.task_room_none), null, null, false));
+        }
+        rows.add(new PickerAdapter.Row("anywhere", getString(R.string.task_anywhere), null, null, false));
+        for (SessionSnapshot.TaskView task : snapshot.tasks) {
+            if (task.room == null) {
+                rows.add(taskRow(task, current));
+            }
+        }
+    }
+
+    private PickerAdapter.Row taskRow(SessionSnapshot.TaskView task, String current) {
+        boolean on = java.util.Objects.equals(task.id, current);
+        return new PickerAdapter.Row(task.id, on ? getString(R.string.task_current, task.name) : task.name,
+                null, task.description, true);
     }
 
     private static String diaryText(SessionSnapshot.DiaryEntry e) {

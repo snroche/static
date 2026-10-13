@@ -30,6 +30,21 @@ public class TimelineGeneratorTest {
         }
     }
 
+    /** The send screen shows an exact trip time: whatever the seed, the trip takes exactly that. */
+    @Test
+    public void tripTimeIsKnownBeforeLeaving() {
+        for (ZoneDef zone : TestContent.get().getZones().values()) {
+            int[] range = zone.getDurationMinutes();
+            for (double pace : new double[]{0.8, 1.0, 1.25}) {
+                long shown = TimelineGenerator.tripMillis(range[0], range[1], pace);
+                for (long seed = 0; seed < 20; seed++) {
+                    assertEquals(zone.getId(), shown, TimelineGenerator.plannedDuration(
+                            TimelineGenerator.generate(zone, pace, GameRandom.fromSeed(seed))));
+                }
+            }
+        }
+    }
+
     @Test
     public void shapeAndDurationRespectZoneForManySeeds() {
         for (ZoneDef zone : TestContent.get().getZones().values()) {

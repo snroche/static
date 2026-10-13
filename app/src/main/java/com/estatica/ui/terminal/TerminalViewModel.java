@@ -148,8 +148,10 @@ public final class TerminalViewModel extends ViewModel {
     }
 
     private void publishOptions(String name) {
+        com.estatica.core.Pronouns.setOperatorFemale(settings.isOperatorFemale());
         options.setValue(new OptionsState(name, settings.isSoundOn(), settings.isHapticsOn(),
-                settings.areNotificationsOn(), settings.getTextSpeed(), settings.isCrtOn()));
+                settings.areNotificationsOn(), settings.getTextSpeed(), settings.isCrtOn(),
+                settings.isOperatorFemale()));
     }
 
     private void refreshOptions() {
@@ -186,6 +188,11 @@ public final class TerminalViewModel extends ViewModel {
     void cycleTextSpeed() {
         settings.setTextSpeed((settings.getTextSpeed() + 1) % OptionsState.TEXT_SPEEDS.length);
         charMillis = scaledCharMillis();
+        refreshOptions();
+    }
+
+    void toggleOperatorGender() {
+        com.estatica.core.Pronouns.setOperatorFemale(settings.toggleOperatorFemale());
         refreshOptions();
     }
 
@@ -509,6 +516,12 @@ public final class TerminalViewModel extends ViewModel {
     void talk(String scoutId) {
         if (ready) {
             run(step -> step.animated.addAll(session.talk(scoutId)));
+        }
+    }
+
+    void startRestore(String roomId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.startRestore(roomId)));
         }
     }
 

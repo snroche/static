@@ -55,7 +55,8 @@
         "text": "Saves you the last cracker. Every time.",
         "minBondLevel": 4
       }
-    ]
+    ],
+    "gender": "F"
   },
   {
     "id": "irene",
@@ -113,6 +114,7 @@
         "text": "Leaves you tea on the console without saying anything.",
         "minBondLevel": 4
       }
-    ]
+    ],
+    "gender": "F"
   }
 ]

@@ -172,6 +172,16 @@ public final class GameContent {
     }
 
     /** Who a scout is: their generated persona, else their authored template, else null. */
+    /** He or she: their own gender, or from the name table for older saves. */
+    public boolean isFemale(com.estatica.domain.scouts.Scout scout) {
+        ScoutTemplate persona = persona(scout);
+        return people.isFemale(persona != null ? persona.getGender() : null, scout.getName(), scout.getId());
+    }
+
+    public boolean isFemale(ScoutTemplate persona) {
+        return people.isFemale(persona.getGender(), persona.getName(), persona.getId());
+    }
+
     public ScoutTemplate persona(com.estatica.domain.scouts.Scout scout) {
         return scout.getPersona() != null ? scout.getPersona() : starter(scout.getTemplateId());
     }

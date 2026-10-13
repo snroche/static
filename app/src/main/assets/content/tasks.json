@@ -1,6 +1,7 @@
 [
   {
     "id": "descanso",
+    "room": "bunks",
     "name": "Rest",
     "description": "Sleeps, reads, stares at the ceiling. Recovers from stress much faster.",
     "stat": "nerve",
@@ -15,7 +16,8 @@
     "xpPerHour": 0.5,
     "groupHealMultiplier": 1.5,
     "treats": true,
-    "groupStressReliefPerHour": 1
+    "groupStressReliefPerHour": 1,
+    "room": "infirmary"
   },
   {
     "id": "cocina",
@@ -24,12 +26,13 @@
     "stat": "craft",
     "xpPerHour": 0.5,
     "groupStressReliefPerHour": 1.5,
-    "foodSaving": 0.2
+    "foodSaving": 0.2,
+    "room": "kitchen"
   },
   {
     "id": "taller",
     "name": "Workshop",
-    "description": "Strips scrap (3 scrap → 1 component every 2 h) and speeds up crafting with their Craft.",
+    "description": "Strips scrap (3 scrap → 1 component every 2 h) and speeds up crafting with Craft.",
     "stat": "craft",
     "xpPerHour": 0.6,
     "conversion": {
@@ -37,7 +40,8 @@
       "input": 3,
       "to": "components",
       "hoursPerUnit": 2
-    }
+    },
+    "room": "workshop"
   },
   {
     "id": "guardia",
@@ -45,7 +49,8 @@
     "description": "Watches the entrance. If there's a raid, defends with Endurance and Nerve.",
     "stat": "endurance",
     "xpPerHour": 0.6,
-    "guards": true
+    "guards": true,
+    "room": "entrance"
   },
   {
     "id": "radio",
@@ -54,14 +59,74 @@
     "stat": "wits",
     "xpPerHour": 0.5,
     "groupStressReliefPerHour": 0.5,
-    "passiveSweep": true
+    "passiveSweep": true,
+    "room": "radio_room"
   },
   {
     "id": "entrenamiento",
+    "room": "bunks",
     "name": "Training",
     "description": "Trains with the others. Whoever knows more teaches.",
     "stat": "endurance",
     "xpPerHour": 0.8,
     "mentoring": true
+  },
+  {
+    "id": "restore",
+    "name": "Restore",
+    "stat": "endurance",
+    "xpPerHour": 0.6,
+    "role": "restore",
+    "description": "Digs out and rebuilds the room you picked in BUNKER → ROOMS. More hands, faster."
+  },
+  {
+    "id": "lookout",
+    "name": "Lookout",
+    "stat": "wits",
+    "xpPerHour": 0.4,
+    "role": "lookout",
+    "room": "lookout",
+    "description": "Watches through the periscope: raids are seen coming and met with more defense."
+  },
+  {
+    "id": "sorting",
+    "name": "Sorting",
+    "stat": "craft",
+    "xpPerHour": 0.5,
+    "room": "sorting",
+    "conversion": {
+      "from": "scrap",
+      "input": 4,
+      "to": "parts",
+      "hoursPerUnit": 3
+    },
+    "description": "Takes scrap apart for parts (4 scrap → 1 part every 3 h)."
+  },
+  {
+    "id": "teaching",
+    "name": "Teaching",
+    "stat": "wits",
+    "xpPerHour": 0.5,
+    "role": "teach",
+    "room": "school",
+    "description": "Teaches whoever's home: everyone slowly improves their weakest skill."
+  },
+  {
+    "id": "music",
+    "name": "Music",
+    "stat": "nerve",
+    "xpPerHour": 0.4,
+    "room": "music_room",
+    "groupStressReliefPerHour": 1.5,
+    "description": "Plays in the evenings. Everyone at home unwinds."
+  },
+  {
+    "id": "hydroponics",
+    "name": "Hydroponics",
+    "stat": "craft",
+    "xpPerHour": 0.5,
+    "role": "hydro",
+    "room": "hydroponics",
+    "description": "Tends the grow trays: a little food every hour, never more than a quarter of what the crew eats. Uses reserve for the lamps. Blight happens."
   }
 ]

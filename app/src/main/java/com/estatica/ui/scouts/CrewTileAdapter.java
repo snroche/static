@@ -56,12 +56,15 @@ public final class CrewTileAdapter extends ListAdapter<ScoutView, CrewTileAdapte
             Resources res = b.getRoot().getResources();
             boolean away = s.awayAt != null;
             b.getRoot().setBackgroundResource(away ? R.drawable.bg_tile_away : R.drawable.bg_tile_home);
-            b.tileName.setText(s.name);
+            b.tileName.setText(res.getString(R.string.tile_name, s.name, s.female ? "♀" : "♂"));
             b.tileDoing.setText(away ? res.getString(R.string.tile_away, s.awayAt) : s.task);
             b.tileDoing.setTextColor(ContextCompat.getColor(b.getRoot().getContext(),
                     away ? R.color.signal : R.color.amber));
             StringBuilder state = new StringBuilder(res.getString(R.string.tile_state,
                     bar(Math.round(s.stress / 20f), 5), bar(s.bondLevel, s.bondLevels)));
+            if (s.romance != null && s.romance.startsWith("♥")) {
+                state.append(" ♥");
+            }
             if (s.hurt) {
                 state.append(' ').append(res.getString(R.string.tile_hurt));
             }

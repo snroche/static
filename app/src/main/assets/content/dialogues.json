@@ -1055,7 +1055,7 @@
     "priority": 2,
     "lines": [
       "I can't stand working with {other}.",
-      "Everything I do, they do the opposite. On purpose."
+      "Everything I do, {he:other} does the opposite. On purpose."
     ],
     "choices": [
       {
@@ -1091,7 +1091,7 @@
     "priority": 10,
     "lines": [
       "I've been thinking about {dead}.",
-      "I still expect to hear their voice on the radio."
+      "I still expect to hear {his:dead} voice on the radio."
     ],
     "choices": [
       {
@@ -1802,7 +1802,7 @@
     "priority": 4,
     "lines": [
       "That voice on the radio. The numbers.",
-      "Nobody broadcasts for free. They want something."
+      "Nobody broadcasts for free. Whoever it is wants something."
     ],
     "choices": [
       {
@@ -1813,9 +1813,9 @@
         "bond": 3
       },
       {
-        "label": "Maybe they just want company.",
+        "label": "Maybe it's just someone lonely.",
         "reply": [
-          "Then they can say so."
+          "Then they should say so."
         ],
         "bond": 2
       }
@@ -2039,7 +2039,7 @@
     "minBondLevel": 2,
     "priority": 4,
     "lines": [
-      "When someone's out, I can't sleep until they're back.",
+      "When someone's out, I can't sleep until everyone's back.",
       "Is that strange?"
     ],
     "choices": [
@@ -2489,7 +2489,7 @@
     "minBondLevel": 1,
     "priority": 4,
     "lines": [
-      "Whoever comes back hurt next, send them to me first.",
+      "Whoever comes back hurt next, send straight to me.",
       "I'm not a doctor. But I'm patient."
     ],
     "choices": [
@@ -4046,6 +4046,2984 @@
         "reply": [
           "Later never comes in here."
         ]
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_eyes",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "You're staring. Something on my face?"
+    ],
+    "choices": [
+      {
+        "label": "Just that you look good today.",
+        "reply": [
+          "...Oh. Huh.",
+          "Nobody's said that in a long time."
+        ],
+        "bond": 1,
+        "romance": 8
+      },
+      {
+        "label": "Dirt. Left cheek.",
+        "reply": [
+          "Thanks. Very romantic of you."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "Sorry. Long night.",
+        "reply": [
+          "Get some sleep, then."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_coffee",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "I made the brown water. Want some?"
+    ],
+    "choices": [
+      {
+        "label": "Only if you sit with me while I drink it.",
+        "reply": [
+          "...Yeah. Ok. I can do that.",
+          "Move over."
+        ],
+        "bond": 2,
+        "romance": 7
+      },
+      {
+        "label": "Thanks. You're a lifesaver.",
+        "reply": [
+          "Don't get used to it."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Not now.",
+        "reply": [
+          "More for me."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_voice",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "Out there, when it's bad, I listen for your voice.",
+      "Is that weird?"
+    ],
+    "choices": [
+      {
+        "label": "I listen for yours too. More than I should.",
+        "reply": [
+          "...More than you should?",
+          "I'm going to think about that all night."
+        ],
+        "bond": 2,
+        "romance": 10,
+        "memory": "you said you listen for my voice"
+      },
+      {
+        "label": "Not weird. That's the job.",
+        "reply": [
+          "Right. The job."
+        ],
+        "bond": 1,
+        "trust": 1
+      },
+      {
+        "label": "A little weird.",
+        "reply": [
+          "Forget I said it."
+        ],
+        "bond": -1
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_hands",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "Your hands are freezing. Here.",
+      "({he:name} takes your hands in {his:name} and rubs them warm)"
+    ],
+    "choices": [
+      {
+        "label": "Don't let go yet.",
+        "reply": [
+          "...I wasn't going to."
+        ],
+        "bond": 2,
+        "romance": 10,
+        "memory": "you didn't want me to let go of your hands"
+      },
+      {
+        "label": "Thanks. The radio room's always cold.",
+        "reply": [
+          "I'll find you gloves."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "I'm fine.",
+        "reply": [
+          "Sure you are."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_laugh",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "You laughed at something I said yesterday. Really laughed.",
+      "I've been trying to do it again since."
+    ],
+    "choices": [
+      {
+        "label": "Keep trying. I like it when you try.",
+        "reply": [
+          "Oh, it's on."
+        ],
+        "bond": 2,
+        "romance": 8
+      },
+      {
+        "label": "You're funnier than you think.",
+        "reply": [
+          "Write that down. I want proof."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Must've been tired.",
+        "reply": [
+          "Ouch."
+        ],
+        "bond": -1
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_shirt",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "Is that my shirt you're wearing?"
+    ],
+    "choices": [
+      {
+        "label": "It smells like you. I like it.",
+        "reply": [
+          "...",
+          "Keep it, then."
+        ],
+        "bond": 2,
+        "romance": 12,
+        "memory": "you kept my shirt"
+      },
+      {
+        "label": "It was on the pile. Sorry.",
+        "reply": [
+          "It suits you better anyway."
+        ],
+        "bond": 1,
+        "romance": 3
+      },
+      {
+        "label": "I'll give it back.",
+        "reply": [
+          "No rush."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_night",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "Can't sleep either?"
+    ],
+    "choices": [
+      {
+        "label": "Not when you're out there. Now you're here.",
+        "reply": [
+          "...",
+          "Then neither of us is sleeping. Sit."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "Nope. Want to listen to the radio?",
+        "reply": [
+          "The tango station's on. Shh."
+        ],
+        "bond": 2,
+        "stress": -2
+      },
+      {
+        "label": "Go to bed.",
+        "reply": [
+          "Yes, boss."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_spark_scar",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 45,
+    "lines": [
+      "You keep looking at my scar."
+    ],
+    "choices": [
+      {
+        "label": "I was thinking I'd like to know the story. And you.",
+        "reply": [
+          "...That's a long story. Stay and I'll tell it."
+        ],
+        "bond": 3,
+        "romance": 9
+      },
+      {
+        "label": "It's a good scar.",
+        "reply": [
+          "It's a stupid scar. Thanks, though."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Sorry. Didn't mean to.",
+        "reply": [
+          "It's fine."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_init_brought",
+    "kind": "INITIATED",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 8,
+    "maxRomance": 55,
+    "lines": [
+      "I brought you something. Don't make it weird.",
+      "(a wildflower, pressed flat in a notebook)"
+    ],
+    "choices": [
+      {
+        "label": "It's not weird. It's lovely. Like you.",
+        "reply": [
+          "...You can't say things like that and expect me to stay calm."
+        ],
+        "bond": 3,
+        "romance": 12,
+        "memory": "the flower I pressed for you"
+      },
+      {
+        "label": "Thank you. Really.",
+        "reply": [
+          "It made me think of you. That's all."
+        ],
+        "bond": 3,
+        "romance": 4
+      },
+      {
+        "label": "Where did you even find a flower?",
+        "reply": [
+          "Secret. Like everything good."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "rom_init_sit",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 8,
+    "maxRomance": 55,
+    "lines": [
+      "Mind if I sit here? The bunks are too loud."
+    ],
+    "choices": [
+      {
+        "label": "Closer. You'll freeze over there.",
+        "reply": [
+          "...Like this?",
+          "Ok. This is nice."
+        ],
+        "bond": 2,
+        "romance": 9
+      },
+      {
+        "label": "Sure. Plenty of room.",
+        "reply": [
+          "Thanks."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "I'm working.",
+        "reply": [
+          "Right. Sorry."
+        ],
+        "bond": -1
+      }
+    ]
+  },
+  {
+    "id": "rom_init_dream",
+    "kind": "INITIATED",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 8,
+    "maxRomance": 55,
+    "lines": [
+      "I had a dream about you.",
+      "Don't ask what kind."
+    ],
+    "choices": [
+      {
+        "label": "Now I really have to ask.",
+        "reply": [
+          "({his:name} ears go red)",
+          "...A good kind. Leave it there."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "I won't. But I'm smiling.",
+        "reply": [
+          "Stop smiling."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "Keep your dreams to yourself.",
+        "reply": [
+          "Noted."
+        ],
+        "bond": -2
+      }
+    ]
+  },
+  {
+    "id": "rom_init_haircut",
+    "kind": "INITIATED",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 8,
+    "maxRomance": 55,
+    "lines": [
+      "Cut my hair. With the workshop scissors. Be honest."
+    ],
+    "choices": [
+      {
+        "label": "It's good. You look really good.",
+        "reply": [
+          "Really?",
+          "...Ok. Ok, I believe you."
+        ],
+        "bond": 2,
+        "romance": 8
+      },
+      {
+        "label": "Bold choice.",
+        "reply": [
+          "You hate it."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "You'll grow it back.",
+        "reply": [
+          "Thanks a lot."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_init_return",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 8,
+    "maxRomance": 55,
+    "lines": [
+      "When I got back today, the first thing I looked for was you.",
+      "Just so you know."
+    ],
+    "choices": [
+      {
+        "label": "I was waiting at the hatch. Just so you know.",
+        "reply": [
+          "...",
+          "Good. Keep waiting there."
+        ],
+        "bond": 3,
+        "romance": 12
+      },
+      {
+        "label": "I'm glad you're back.",
+        "reply": [
+          "Yeah. Me too."
+        ],
+        "bond": 3
+      },
+      {
+        "label": "I was on the radio the whole time.",
+        "reply": [
+          "I know. I heard."
+        ],
+        "bond": 2,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_flirt_close",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 40,
+    "maxRomance": 85,
+    "lines": [
+      "We keep ending up like this. Too close for no reason."
+    ],
+    "choices": [
+      {
+        "label": "Maybe there's a reason.",
+        "reply": [
+          "...Say it, then.",
+          "No? Coward. Me too."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "I'll step back.",
+        "reply": [
+          "I didn't say step back."
+        ],
+        "bond": 1,
+        "romance": 3
+      },
+      {
+        "label": "There's no reason.",
+        "reply": [
+          "Right. None."
+        ],
+        "bond": -1,
+        "romance": -5
+      }
+    ]
+  },
+  {
+    "id": "rom_flirt_dance",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 40,
+    "maxRomance": 85,
+    "lines": [
+      "The music room's empty. The radio's playing a tango.",
+      "Do you dance?"
+    ],
+    "choices": [
+      {
+        "label": "Badly. Teach me.",
+        "reply": [
+          "Hand here. The other one here.",
+          "...You're stepping on me. Don't stop."
+        ],
+        "bond": 3,
+        "romance": 12,
+        "memory": "we danced to the tango station"
+      },
+      {
+        "label": "Not anymore.",
+        "reply": [
+          "Shame. You'd be good."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "We have work to do.",
+        "reply": [
+          "Always."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_flirt_jealous_others",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 40,
+    "maxRomance": 85,
+    "lines": [
+      "Everyone's watching us, you know. They've started a betting pool."
+    ],
+    "choices": [
+      {
+        "label": "What are the odds?",
+        "reply": [
+          "Terrible. For them. I've got money on us."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "Let them bet.",
+        "reply": [
+          "Oh, I am."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "There's nothing to bet on.",
+        "reply": [
+          "...Ok. Tell that to the pool."
+        ],
+        "romance": -6
+      }
+    ]
+  },
+  {
+    "id": "rom_flirt_bandage",
+    "kind": "TALK",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 40,
+    "maxRomance": 85,
+    "lines": [
+      "You did this bandage? It's perfect. Your hands are steady.",
+      "Do it again. The other arm. It's fine, I just want you to."
+    ],
+    "choices": [
+      {
+        "label": "Give me the arm.",
+        "reply": [
+          "(you take your time)",
+          "...Done. You can let go now. Or not."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "Go to the infirmary, flirt.",
+        "reply": [
+          "Worth a try."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "Don't waste bandages.",
+        "reply": [
+          "Fine, nurse."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_flirt_kiss_almost",
+    "kind": "INITIATED",
+    "priority": 3,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 40,
+    "maxRomance": 85,
+    "lines": [
+      "Can I tell you something? Come here. Closer.",
+      "({he:name} stops an inch from your face)",
+      "...Never mind. Not yet."
+    ],
+    "choices": [
+      {
+        "label": "Not yet. But soon.",
+        "reply": [
+          "Soon.",
+          "I'm holding you to that."
+        ],
+        "bond": 2,
+        "romance": 12,
+        "memory": "we almost kissed by the radio"
+      },
+      {
+        "label": "You're killing me.",
+        "reply": [
+          "Good."
+        ],
+        "bond": 1,
+        "romance": 8
+      },
+      {
+        "label": "Go to bed.",
+        "reply": [
+          "...Yeah."
+        ],
+        "romance": -4
+      }
+    ]
+  },
+  {
+    "id": "rom_flirt_storage",
+    "kind": "INITIATED",
+    "priority": 2,
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 40,
+    "maxRomance": 85,
+    "lines": [
+      "Help me with something in storage? It's heavy.",
+      "(it isn't heavy)"
+    ],
+    "choices": [
+      {
+        "label": "Lead the way.",
+        "reply": [
+          "(the door closes behind you. {he:name} doesn't turn on the light)",
+          "...Hi.",
+          "(a long while later you both come out with nothing)"
+        ],
+        "bond": 3,
+        "romance": 14,
+        "memory": "the storage room, with the light off"
+      },
+      {
+        "label": "It's not heavy, is it?",
+        "reply": [
+          "Not even a little."
+        ],
+        "bond": 2,
+        "romance": 6
+      },
+      {
+        "label": "Ask someone else.",
+        "reply": [
+          "...Sure."
+        ],
+        "bond": -1,
+        "romance": -6
+      }
+    ]
+  },
+  {
+    "id": "rom_confess_them",
+    "kind": "INITIATED",
+    "priority": 6,
+    "minRomance": 72,
+    "together": false,
+    "romanceReady": true,
+    "lines": [
+      "I can't keep pretending. I'm in love with you.",
+      "You can say no. I just couldn't carry it anymore."
+    ],
+    "choices": [
+      {
+        "label": "I love you too.",
+        "reply": [
+          "...Really?",
+          "({he:name} laughs, and cries a little, and then kisses you)"
+        ],
+        "bond": 6,
+        "romance": 10,
+        "memory": "the night I told you, and you said it back",
+        "startRomance": true
+      },
+      {
+        "label": "Let's not rush. But I feel it too.",
+        "reply": [
+          "Not rushing. Ok. I can wait."
+        ],
+        "bond": 3,
+        "romance": 5
+      },
+      {
+        "label": "I don't feel the same.",
+        "reply": [
+          "...Ok.",
+          "Ok. Thank you for being honest."
+        ],
+        "bond": -3,
+        "stress": 8,
+        "romance": -35
+      }
+    ]
+  },
+  {
+    "id": "rom_confess_shy",
+    "kind": "INITIATED",
+    "priority": 7,
+    "minRomance": 72,
+    "together": false,
+    "romanceReady": true,
+    "requiresTrait": [
+      "solitaria",
+      "miedo",
+      "metodo",
+      "desconfianza"
+    ],
+    "lines": [
+      "I wrote this down so I wouldn't stop halfway.",
+      "({he:name} reads from a crumpled page)",
+      "\"You're the first thing I think about and the last. I want to be yours.\""
+    ],
+    "choices": [
+      {
+        "label": "Take my hand. I'm yours too.",
+        "reply": [
+          "({he:name} folds the paper very small and puts it in your pocket)",
+          "Keep it. Proof."
+        ],
+        "bond": 6,
+        "romance": 10,
+        "memory": "the note I read you",
+        "startRomance": true
+      },
+      {
+        "label": "That's beautiful. Give me time.",
+        "reply": [
+          "Take all of it."
+        ],
+        "bond": 3,
+        "romance": 3
+      },
+      {
+        "label": "I can't.",
+        "reply": [
+          "...I knew. I just had to try."
+        ],
+        "bond": -2,
+        "stress": 8,
+        "romance": -30
+      }
+    ]
+  },
+  {
+    "id": "rom_confess_bold",
+    "kind": "INITIATED",
+    "priority": 7,
+    "minRomance": 72,
+    "together": false,
+    "romanceReady": true,
+    "requiresTrait": [
+      "calentona",
+      "imprudencia",
+      "sociable",
+      "terca"
+    ],
+    "lines": [
+      "I'm done waiting. Kiss me or tell me to stop."
+    ],
+    "choices": [
+      {
+        "label": "(kiss {him:name})",
+        "reply": [
+          "({he:name} grabs your collar and doesn't let go for a long time)",
+          "...About time."
+        ],
+        "bond": 5,
+        "romance": 12,
+        "memory": "the first kiss, by the generator",
+        "startRomance": true
+      },
+      {
+        "label": "Stop. For now.",
+        "reply": [
+          "For now. I'll take it."
+        ],
+        "bond": 1,
+        "romance": -5
+      },
+      {
+        "label": "Stop.",
+        "reply": [
+          "...Right.",
+          "Sorry."
+        ],
+        "bond": -3,
+        "stress": 6,
+        "romance": -30
+      }
+    ]
+  },
+  {
+    "id": "rom_confess_you",
+    "kind": "TALK",
+    "priority": 5,
+    "minRomance": 60,
+    "together": false,
+    "romanceReady": true,
+    "lines": [
+      "You look like you want to say something."
+    ],
+    "choices": [
+      {
+        "label": "I'm in love with you.",
+        "reply": [
+          "...",
+          "Say it again. Slower. I want to remember exactly how it sounded."
+        ],
+        "bond": 6,
+        "romance": 12,
+        "memory": "you said you loved me",
+        "startRomance": true
+      },
+      {
+        "label": "It's nothing.",
+        "reply": [
+          "It's never nothing with you."
+        ],
+        "romance": 2
+      },
+      {
+        "label": "Just tired.",
+        "reply": [
+          "Ok."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_morning",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "together": true,
+    "lines": [
+      "Morning. You stole the blanket again."
+    ],
+    "choices": [
+      {
+        "label": "Come back and steal it back.",
+        "reply": [
+          "({he:name} does)",
+          "...We're going to be late for everything."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "Coffee first.",
+        "reply": [
+          "Coffee and then you."
+        ],
+        "bond": 2,
+        "romance": 3
+      },
+      {
+        "label": "Busy day. Up.",
+        "reply": [
+          "Slave driver."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_plans",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "together": true,
+    "lines": [
+      "When this is over, where do we go? You and me."
+    ],
+    "choices": [
+      {
+        "label": "Somewhere with a sea. And a door that locks.",
+        "reply": [
+          "A sea and a lock. Deal.",
+          "I'm holding you to the lock."
+        ],
+        "bond": 3,
+        "romance": 5,
+        "memory": "the sea and the door that locks"
+      },
+      {
+        "label": "Wherever you are.",
+        "reply": [
+          "That's a terrible plan. I love it."
+        ],
+        "bond": 3,
+        "romance": 4
+      },
+      {
+        "label": "Let's survive first.",
+        "reply": [
+          "Practical. Kiss me anyway."
+        ],
+        "bond": 1,
+        "romance": 2
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_tired",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "together": true,
+    "lines": [
+      "Long trip. Everything hurts."
+    ],
+    "choices": [
+      {
+        "label": "Lie down. I'll take care of it.",
+        "reply": [
+          "(your hands find every knot in {his:name} back)",
+          "...Don't stop. Never stop.",
+          "({he:name}'s asleep before you finish)"
+        ],
+        "bond": 3,
+        "stress": -8,
+        "romance": 6
+      },
+      {
+        "label": "Hot water's on. Go.",
+        "reply": [
+          "Join me."
+        ],
+        "bond": 2,
+        "stress": -4,
+        "romance": 5
+      },
+      {
+        "label": "Rest. You've earned it.",
+        "reply": [
+          "Mm."
+        ],
+        "bond": 1,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_tonight",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "together": true,
+    "lines": [
+      "Everyone's asleep.",
+      "({he:name} says it like a question)"
+    ],
+    "choices": [
+      {
+        "label": "Then let's not waste it.",
+        "reply": [
+          "({he:name} pulls you toward the storage room, laughing under {his:name} breath)",
+          "(the rest of the night isn't anyone's business)"
+        ],
+        "bond": 3,
+        "stress": -8,
+        "romance": 8,
+        "memory": "nights in the storage room"
+      },
+      {
+        "label": "Stay with me by the radio.",
+        "reply": [
+          "({he:name} curls up against you under the blanket. the static sounds like rain)"
+        ],
+        "bond": 3,
+        "stress": -5,
+        "romance": 5
+      },
+      {
+        "label": "I need to sleep.",
+        "reply": [
+          "...Ok. Next time."
+        ],
+        "romance": -2
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_scared",
+    "kind": "TALK",
+    "priority": 2,
+    "together": true,
+    "lines": [
+      "What happens to us if I don't come back one day?"
+    ],
+    "choices": [
+      {
+        "label": "You come back. Every time. That's the deal.",
+        "reply": [
+          "That's a stupid deal.",
+          "...I'll keep it."
+        ],
+        "bond": 3,
+        "trust": 2,
+        "romance": 4
+      },
+      {
+        "label": "Then I'll never stop listening for you.",
+        "reply": [
+          "({he:name} holds you very tightly and doesn't say anything for a long time)"
+        ],
+        "bond": 4,
+        "romance": 6,
+        "memory": "you said you'd never stop listening for me"
+      },
+      {
+        "label": "Don't talk like that.",
+        "reply": [
+          "Somebody has to."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_secret",
+    "kind": "TALK",
+    "priority": 2,
+    "together": true,
+    "lines": [
+      "Tell me something nobody else knows about you."
+    ],
+    "choices": [
+      {
+        "label": "I was scared of the dark until the Silence. Now I'm scared of the quiet.",
+        "reply": [
+          "...Then I'll talk. All night if I have to."
+        ],
+        "bond": 4,
+        "romance": 5
+      },
+      {
+        "label": "I talk to you on the radio even when the channel's closed.",
+        "reply": [
+          "You WHAT?",
+          "...That's the most romantic thing I've ever heard. And creepy."
+        ],
+        "bond": 4,
+        "romance": 6
+      },
+      {
+        "label": "I'll tell you when we're old.",
+        "reply": [
+          "Then we're getting old. Together."
+        ],
+        "bond": 2,
+        "romance": 3
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_bath",
+    "kind": "TALK",
+    "priority": 2,
+    "together": true,
+    "lines": [
+      "I found a tub. A real one. In the back of the generator room. It holds hot water."
+    ],
+    "choices": [
+      {
+        "label": "Room for two?",
+        "reply": [
+          "Barely.",
+          "(it's barely. nobody complains)"
+        ],
+        "bond": 3,
+        "stress": -10,
+        "romance": 8,
+        "memory": "the tub in the generator room"
+      },
+      {
+        "label": "You first. You need it.",
+        "reply": [
+          "You're sweet. Come scrub my back anyway."
+        ],
+        "bond": 3,
+        "stress": -5,
+        "romance": 6
+      },
+      {
+        "label": "Don't waste the hot water.",
+        "reply": [
+          "Too late."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_nickname",
+    "kind": "TALK",
+    "priority": 3,
+    "together": true,
+    "lines": [
+      "Can I call you something? Not \"operator\". Something only I say."
+    ],
+    "choices": [
+      {
+        "label": "Anything you want.",
+        "reply": [
+          "Then you're mine. That's the word. Mine.",
+          "...Is that too much?"
+        ],
+        "bond": 3,
+        "romance": 6,
+        "memory": "the name only I call you"
+      },
+      {
+        "label": "Only in private.",
+        "reply": [
+          "Only in private. Deal."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "Operator's fine.",
+        "reply": [
+          "Boring. Fine."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_hurt_you",
+    "kind": "TALK",
+    "priority": 3,
+    "maxTrust": 55,
+    "together": true,
+    "lines": [
+      "You sent me there knowing what it was. I know why. It still hurt."
+    ],
+    "choices": [
+      {
+        "label": "I'm sorry. I hate doing it to you.",
+        "reply": [
+          "...I know. That's the only reason I'm still in your bed."
+        ],
+        "bond": 3,
+        "trust": 2,
+        "romance": 3
+      },
+      {
+        "label": "I'd send you again if it saves us.",
+        "reply": [
+          "I know. I hate that I love that about you."
+        ],
+        "trust": 3,
+        "romance": -2
+      },
+      {
+        "label": "You agreed to go.",
+        "reply": [
+          "I'd agree to anything you asked. That's the problem."
+        ],
+        "bond": -2,
+        "romance": -6
+      }
+    ]
+  },
+  {
+    "id": "rom_tgi_come",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "together": true,
+    "lines": [
+      "Come here. No, here. Sit.",
+      "({he:name} climbs into your lap like it's the most normal thing in the world)"
+    ],
+    "choices": [
+      {
+        "label": "Comfortable?",
+        "reply": [
+          "Very. Now hush, I'm listening to your heart."
+        ],
+        "bond": 2,
+        "stress": -4,
+        "romance": 5
+      },
+      {
+        "label": "Someone could walk in.",
+        "reply": [
+          "Let them."
+        ],
+        "bond": 1,
+        "romance": 4
+      },
+      {
+        "label": "I'm working.",
+        "reply": [
+          "Work around me."
+        ],
+        "romance": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tgi_missed",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "together": true,
+    "lines": [
+      "I missed you today. Out there, every corner, I thought: you'd like this view."
+    ],
+    "choices": [
+      {
+        "label": "Tell me about every corner.",
+        "reply": [
+          "({he:name} does. you don't remember a word, just the way {he:name} says it)"
+        ],
+        "bond": 3,
+        "romance": 5
+      },
+      {
+        "label": "I missed you too.",
+        "reply": [
+          "Good. Miss me more."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "Focus out there, ok?",
+        "reply": [
+          "I always focus. On you."
+        ],
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tgi_bed",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "together": true,
+    "lines": [
+      "My bunk's cold. Yours is warmer.",
+      "That's the only reason. Obviously."
+    ],
+    "choices": [
+      {
+        "label": "Obviously. Get in.",
+        "reply": [
+          "({he:name} fits against you like {he:name} was made for it)",
+          "(nobody sleeps for a while)"
+        ],
+        "bond": 3,
+        "stress": -8,
+        "romance": 7
+      },
+      {
+        "label": "Just to sleep.",
+        "reply": [
+          "Just to sleep.",
+          "({he:name} falls asleep with {his:name} nose against your neck)"
+        ],
+        "bond": 2,
+        "stress": -5,
+        "romance": 4
+      },
+      {
+        "label": "Not tonight.",
+        "reply": [
+          "...Ok. Tomorrow."
+        ],
+        "romance": -2
+      }
+    ]
+  },
+  {
+    "id": "rom_tgi_jealous_job",
+    "kind": "INITIATED",
+    "priority": 2,
+    "together": true,
+    "lines": [
+      "You talk to everyone on that radio in the same voice you use with me.",
+      "I hate it. A little."
+    ],
+    "choices": [
+      {
+        "label": "Not the same voice. Listen.",
+        "reply": [
+          "(you say {his:name} name, low)",
+          "...Ok. Not the same voice."
+        ],
+        "bond": 2,
+        "romance": 6
+      },
+      {
+        "label": "It's my job.",
+        "reply": [
+          "I know. Doesn't mean I like it."
+        ],
+        "trust": 1
+      },
+      {
+        "label": "You're being silly.",
+        "reply": [
+          "I'm allowed."
+        ],
+        "romance": -2
+      }
+    ]
+  },
+  {
+    "id": "rom_tgi_letter",
+    "kind": "INITIATED",
+    "priority": 3,
+    "together": true,
+    "lines": [
+      "I wrote you a letter. In case. Don't read it unless.",
+      "You know. Unless."
+    ],
+    "choices": [
+      {
+        "label": "I'll keep it closed forever.",
+        "reply": [
+          "Good. That's the plan."
+        ],
+        "bond": 3,
+        "romance": 5,
+        "memory": "the letter I wrote for you, in case"
+      },
+      {
+        "label": "Let me read it now.",
+        "reply": [
+          "No. It's for later. It's very embarrassing.",
+          "...It's mostly about your mouth."
+        ],
+        "bond": 2,
+        "romance": 6
+      },
+      {
+        "label": "Don't write those.",
+        "reply": [
+          "Too late."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_tgi_night_watch",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 1,
+    "together": true,
+    "lines": [
+      "I'll keep you company on night watch.",
+      "I brought the blanket. And not much else on under it."
+    ],
+    "choices": [
+      {
+        "label": "The radio can wait.",
+        "reply": [
+          "(the radio waits. the static plays to an empty chair for a long time)"
+        ],
+        "bond": 3,
+        "stress": -8,
+        "romance": 8,
+        "memory": "the night the radio waited"
+      },
+      {
+        "label": "Behave. Someone's out there tonight.",
+        "reply": [
+          "...Fine. Later.",
+          "({he:name} falls asleep on your shoulder, blanket and all)"
+        ],
+        "bond": 2,
+        "trust": 2,
+        "romance": 3
+      },
+      {
+        "label": "Go to bed, please.",
+        "reply": [
+          "Spoilsport."
+        ],
+        "romance": -2
+      }
+    ]
+  },
+  {
+    "id": "rom_tgi_forever",
+    "kind": "INITIATED",
+    "priority": 3,
+    "minRomance": 80,
+    "together": true,
+    "lines": [
+      "I don't believe in forever anymore. Not since the Silence.",
+      "But with you I want to."
+    ],
+    "choices": [
+      {
+        "label": "Then let's try forever.",
+        "reply": [
+          "({he:name} kisses you like it's a promise)"
+        ],
+        "bond": 4,
+        "romance": 6,
+        "memory": "we decided to try forever"
+      },
+      {
+        "label": "Let's start with tomorrow.",
+        "reply": [
+          "Tomorrow, then. And the day after."
+        ],
+        "bond": 3,
+        "romance": 4
+      },
+      {
+        "label": "Don't put that on me.",
+        "reply": [
+          "...Ok."
+        ],
+        "bond": -2,
+        "romance": -6
+      }
+    ]
+  },
+  {
+    "id": "rom_neglect_distant",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 5,
+    "requiresNeglect": true,
+    "together": true,
+    "lines": [
+      "You've been distant. Days. I don't even know if we're still... us."
+    ],
+    "choices": [
+      {
+        "label": "We're us. I'm sorry. Come here.",
+        "reply": [
+          "...Don't do that again.",
+          "({he:name} lets you hold {him:name}, stiffly at first)"
+        ],
+        "bond": 2,
+        "romance": 12
+      },
+      {
+        "label": "I've been busy keeping everyone alive.",
+        "reply": [
+          "I'm part of everyone. Remember that."
+        ],
+        "trust": 1,
+        "romance": 4
+      },
+      {
+        "label": "Maybe we need space.",
+        "reply": [
+          "...Maybe."
+        ],
+        "stress": 5,
+        "romance": -10
+      }
+    ]
+  },
+  {
+    "id": "rom_neglect_watching",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 5,
+    "requiresNeglect": true,
+    "together": true,
+    "lines": [
+      "I watched you laugh with the others today. You used to laugh like that with me."
+    ],
+    "choices": [
+      {
+        "label": "Then let's laugh. Tell me something stupid.",
+        "reply": [
+          "...You're an idiot.",
+          "({he:name}'s smiling though)"
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "I still do. I've just been tired.",
+        "reply": [
+          "Be tired with me, then."
+        ],
+        "bond": 1,
+        "romance": 6
+      },
+      {
+        "label": "I can laugh with whoever I want.",
+        "reply": [
+          "Sure. You can."
+        ],
+        "bond": -3,
+        "romance": -12
+      }
+    ]
+  },
+  {
+    "id": "rom_jeal_seen",
+    "kind": "INITIATED",
+    "priority": 4,
+    "minJealousy": 45,
+    "together": true,
+    "requiresRelation": "partner",
+    "lines": [
+      "I saw you with {other} last night.",
+      "I'm not stupid. I just thought I was enough."
+    ],
+    "choices": [
+      {
+        "label": "You're not less to me. It's not like that.",
+        "reply": [
+          "Then what IS it like?"
+        ],
+        "stress": 3,
+        "romance": -2
+      },
+      {
+        "label": "It's over with {other}. It's you.",
+        "reply": [
+          "...Promise?"
+        ],
+        "bond": 3,
+        "romance": 8,
+        "exclusive": true
+      },
+      {
+        "label": "You knew what this was.",
+        "reply": [
+          "Did I?"
+        ],
+        "bond": -3,
+        "stress": 6,
+        "romance": -10
+      }
+    ]
+  },
+  {
+    "id": "rom_jeal_quiet",
+    "kind": "INITIATED",
+    "repeatable": true,
+    "priority": 3,
+    "minJealousy": 30,
+    "together": true,
+    "requiresRelation": "partner",
+    "lines": [
+      "Never mind. It's nothing.",
+      "({he:name} looks at {other} across the room, and then away)"
+    ],
+    "choices": [
+      {
+        "label": "It's not nothing. Talk to me.",
+        "reply": [
+          "...I hate sharing you.",
+          "There. Happy?"
+        ],
+        "bond": 2,
+        "stress": -2,
+        "romance": 4
+      },
+      {
+        "label": "Want to go somewhere just us?",
+        "reply": [
+          "Yes. Now. Before I change my mind."
+        ],
+        "bond": 2,
+        "stress": -4,
+        "romance": 7
+      },
+      {
+        "label": "Ok.",
+        "reply": [
+          "Ok."
+        ],
+        "romance": -4
+      }
+    ]
+  },
+  {
+    "id": "rom_jeal_ultimatum",
+    "kind": "INITIATED",
+    "priority": 6,
+    "minJealousy": 65,
+    "together": true,
+    "requiresRelation": "partner",
+    "lines": [
+      "I can't do this. Me or {other}. Choose.",
+      "I mean it. I'm not sharing you anymore."
+    ],
+    "choices": [
+      {
+        "label": "You. Only you.",
+        "reply": [
+          "...Say it again.",
+          "({he:name} doesn't let go of you for the rest of the night)"
+        ],
+        "bond": 5,
+        "romance": 10,
+        "memory": "you chose me",
+        "exclusive": true
+      },
+      {
+        "label": "I won't choose.",
+        "reply": [
+          "Then I will.",
+          "We're done."
+        ],
+        "stress": 10,
+        "endRomance": true
+      },
+      {
+        "label": "You're being unfair.",
+        "reply": [
+          "Maybe. Choose anyway. Tomorrow."
+        ],
+        "stress": 8,
+        "romance": -12
+      }
+    ]
+  },
+  {
+    "id": "rom_jeal_fight",
+    "kind": "INITIATED",
+    "priority": 4,
+    "minJealousy": 55,
+    "together": true,
+    "requiresRelation": "partner",
+    "lines": [
+      "{other} and I had words. Loud ones.",
+      "Don't ask me to apologize."
+    ],
+    "choices": [
+      {
+        "label": "I'm not asking. I'm sorry I put you there.",
+        "reply": [
+          "...Thanks. I'm still angry."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "Both of you need to grow up.",
+        "reply": [
+          "Wow. Ok."
+        ],
+        "bond": -2,
+        "romance": -8
+      },
+      {
+        "label": "I'll talk to {other}.",
+        "reply": [
+          "Do that."
+        ],
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_jeal_fine",
+    "kind": "INITIATED",
+    "priority": 3,
+    "together": true,
+    "requiresRelation": "partner",
+    "lines": [
+      "Me and {other} talked. About you.",
+      "We're fine with it. Weirdly. Don't make us regret it."
+    ],
+    "choices": [
+      {
+        "label": "I won't. Thank you.",
+        "reply": [
+          "Don't thank me. Just don't forget whose night it is."
+        ],
+        "bond": 3,
+        "romance": 6
+      },
+      {
+        "label": "You talked about me?",
+        "reply": [
+          "Constantly. You're our favorite topic."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "Good. Less drama.",
+        "reply": [
+          "Romantic."
+        ],
+        "romance": -3
+      }
+    ]
+  },
+  {
+    "id": "rom_gossip_tease",
+    "kind": "INITIATED",
+    "priority": 2,
+    "lines": [
+      "So. You and {other}, huh?",
+      "Don't look at me like that. The walls are thin."
+    ],
+    "choices": [
+      {
+        "label": "Is it that obvious?",
+        "reply": [
+          "{other} hums now. {He:other} never hummed."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Mind your own business.",
+        "reply": [
+          "Fine. But I'm happy for you. Annoyingly."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "It's nothing.",
+        "reply": [
+          "Sure it is."
+        ]
+      }
+    ],
+    "together": false,
+    "requiresRelation": "partner"
+  },
+  {
+    "id": "rom_gossip_warn",
+    "kind": "INITIATED",
+    "priority": 2,
+    "minBondLevel": 2,
+    "lines": [
+      "Be careful with {other}. Not because of {him:other}. Because of out there.",
+      "If something happens, you'll still have to send the rest of us."
+    ],
+    "choices": [
+      {
+        "label": "I know. I think about it every day.",
+        "reply": [
+          "Good. Someone has to."
+        ],
+        "bond": 1,
+        "trust": 2
+      },
+      {
+        "label": "That's my problem.",
+        "reply": [
+          "It's everyone's problem."
+        ],
+        "bond": -1
+      },
+      {
+        "label": "Thanks for caring.",
+        "reply": [
+          "Always."
+        ],
+        "bond": 2
+      }
+    ],
+    "together": false,
+    "requiresRelation": "partner"
+  },
+  {
+    "id": "rom_gossip_wistful",
+    "kind": "INITIATED",
+    "priority": 3,
+    "romanceReady": true,
+    "minRomance": 20,
+    "maxRomance": 70,
+    "lines": [
+      "You and {other}... it's sweet.",
+      "I sometimes thought... never mind. Forget it."
+    ],
+    "choices": [
+      {
+        "label": "Thought what?",
+        "reply": [
+          "...That it might've been me. Stupid. Forget it."
+        ],
+        "bond": 2,
+        "romance": 8
+      },
+      {
+        "label": "You'll find someone too.",
+        "reply": [
+          "Here? Sure."
+        ],
+        "bond": 1,
+        "romance": -3
+      },
+      {
+        "label": "Ok.",
+        "reply": [
+          "Ok."
+        ]
+      }
+    ],
+    "together": false,
+    "requiresRelation": "partner"
+  },
+  {
+    "id": "rom_end_talk",
+    "kind": "TALK",
+    "repeatable": true,
+    "priority": 0,
+    "minRomance": 0,
+    "together": true,
+    "lines": [
+      "You've got that face. The serious one."
+    ],
+    "choices": [
+      {
+        "label": "I think we should stop. Us. I'm sorry.",
+        "reply": [
+          "...",
+          "I see.",
+          "I'll move my things back to my bunk."
+        ],
+        "bond": -2,
+        "stress": 6,
+        "endRomance": true
+      },
+      {
+        "label": "It's nothing. Come here.",
+        "reply": [
+          "({he:name} comes here)"
+        ],
+        "romance": 3
+      },
+      {
+        "label": "Just tired.",
+        "reply": [
+          "Then rest. I'll be around."
+        ],
+        "romance": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_ex_again",
+    "kind": "INITIATED",
+    "priority": 3,
+    "requiresFlags": [
+      "romance:ex"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "maxRomance": 60,
+    "lines": [
+      "I still keep your note. Is that pathetic?"
+    ],
+    "choices": [
+      {
+        "label": "I still think about us.",
+        "reply": [
+          "...Don't say that unless you mean it.",
+          "Do you mean it?"
+        ],
+        "bond": 2,
+        "romance": 12
+      },
+      {
+        "label": "It's not pathetic. It's kind.",
+        "reply": [
+          "Kind. Right."
+        ],
+        "bond": 1,
+        "romance": 3
+      },
+      {
+        "label": "We ended it for a reason.",
+        "reply": [
+          "I know. I'll throw it out."
+        ],
+        "bond": -1,
+        "romance": -6
+      }
+    ]
+  },
+  {
+    "id": "rom_ex_second",
+    "kind": "TALK",
+    "priority": 5,
+    "requiresFlags": [
+      "romance:ex"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 60,
+    "lines": [
+      "Are we really doing this again? You and me?"
+    ],
+    "choices": [
+      {
+        "label": "If you'll have me.",
+        "reply": [
+          "...Yes. Idiot. Yes.",
+          "Don't make me regret it."
+        ],
+        "bond": 4,
+        "romance": 10,
+        "memory": "the second time we chose each other",
+        "startRomance": true
+      },
+      {
+        "label": "Not yet.",
+        "reply": [
+          "Then stop looking at me like that."
+        ],
+        "romance": 2
+      },
+      {
+        "label": "No. Sorry.",
+        "reply": [
+          "...Right."
+        ],
+        "stress": 5,
+        "romance": -20
+      }
+    ]
+  },
+  {
+    "id": "rom_grief_comfort",
+    "kind": "GRIEF",
+    "priority": 11,
+    "requiresDeadPartner": true,
+    "minHoursSinceDeath": 2,
+    "lines": [
+      "You loved {dead}. Everyone knew.",
+      "You don't have to be the operator for a minute. Just sit."
+    ],
+    "choices": [
+      {
+        "label": "I keep hearing {his:dead} voice on the static.",
+        "reply": [
+          "...So do I.",
+          "({he:name} sits with you until the shift changes)"
+        ],
+        "bond": 4,
+        "stress": -4,
+        "memory": "I sat with you after {dead} died"
+      },
+      {
+        "label": "I'm fine. Go.",
+        "reply": [
+          "You're not. I'll stay anyway."
+        ],
+        "bond": 2
+      },
+      {
+        "label": "Leave me alone.",
+        "reply": [
+          "...Ok. I'll be at the door."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_grief_things",
+    "kind": "GRIEF",
+    "priority": 10,
+    "requiresDeadPartner": true,
+    "minHoursSinceDeath": 12,
+    "lines": [
+      "I folded {dead}'s things. I left {his:dead} shirt on your chair.",
+      "I thought you'd want it."
+    ],
+    "choices": [
+      {
+        "label": "Thank you. I'll keep it.",
+        "reply": [
+          "Keep it close. It still smells like {him:dead}."
+        ],
+        "bond": 4,
+        "memory": "{dead}'s shirt on your chair"
+      },
+      {
+        "label": "I can't look at it.",
+        "reply": [
+          "I'll put it away. It's there when you can."
+        ],
+        "bond": 3
+      },
+      {
+        "label": "Throw it out.",
+        "reply": [
+          "...No. I'll keep it for you. For later."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_sociable",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "sociable"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "Everyone's asking why I keep smiling at the radio.",
+      "I told them it's the static. It's you."
+    ],
+    "choices": [
+      {
+        "label": "Smile at me some more, then.",
+        "reply": [
+          "Careful what you ask for."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "The static's very handsome.",
+        "reply": [
+          "The static IS very handsome."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "Focus on the radio, then.",
+        "reply": [
+          "Boo."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_loner",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "solitaria"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "I don't do this. People. Closeness.",
+      "But I keep coming to the radio room when you're alone."
+    ],
+    "choices": [
+      {
+        "label": "Keep coming. I like the quiet with you.",
+        "reply": [
+          "...Quiet with you. Yeah. That's it exactly."
+        ],
+        "bond": 3,
+        "romance": 12
+      },
+      {
+        "label": "You don't have to explain.",
+        "reply": [
+          "Good. I'm bad at it."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "I'll give you space.",
+        "reply": [
+          "...Right. Space."
+        ],
+        "romance": -4
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_distrust",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "desconfianza"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "Why are you being nice to me? What do you want?"
+    ],
+    "choices": [
+      {
+        "label": "Nothing. I just like you. A lot.",
+        "reply": [
+          "...",
+          "Nobody just likes anybody.",
+          "...Say it again anyway."
+        ],
+        "bond": 2,
+        "trust": 2,
+        "romance": 10
+      },
+      {
+        "label": "Your company.",
+        "reply": [
+          "Strange taste."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "Fine. I'll stop.",
+        "reply": [
+          "I didn't say stop."
+        ],
+        "romance": 2
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_hothead",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "calentona"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "You make me so angry sometimes I want to scream.",
+      "And then you look at me like that and I forget why."
+    ],
+    "choices": [
+      {
+        "label": "Like this?",
+        "reply": [
+          "Exactly like that. Stop it. Don't stop."
+        ],
+        "bond": 2,
+        "romance": 12
+      },
+      {
+        "label": "Breathe. I'm not going anywhere.",
+        "reply": [
+          "...Ok. Ok."
+        ],
+        "bond": 3,
+        "stress": -3,
+        "romance": 6
+      },
+      {
+        "label": "Then don't be angry.",
+        "reply": [
+          "Doesn't work like that!"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_optimist",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "optimista"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "I've decided something. We're going to have a picnic. Up top. On a good day.",
+      "You and me. That's the whole plan."
+    ],
+    "choices": [
+      {
+        "label": "It's a date.",
+        "reply": [
+          "A DATE. You said date. I heard it."
+        ],
+        "bond": 2,
+        "romance": 12,
+        "memory": "our picnic, someday, up top"
+      },
+      {
+        "label": "Up top's dangerous.",
+        "reply": [
+          "So's being down here without picnics."
+        ],
+        "bond": 1,
+        "romance": 4
+      },
+      {
+        "label": "Maybe with everyone.",
+        "reply": [
+          "...Sure. Everyone."
+        ],
+        "romance": -3
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_fearful",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "miedo"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "When you talk me through it out there, I'm not scared.",
+      "It's only your voice. I don't know what that means."
+    ],
+    "choices": [
+      {
+        "label": "It means I'm right here. Always.",
+        "reply": [
+          "...Always. Ok."
+        ],
+        "bond": 3,
+        "stress": -4,
+        "romance": 10
+      },
+      {
+        "label": "It means you're braver than you think.",
+        "reply": [
+          "Only with you on."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "It means you're doing your job.",
+        "reply": [
+          "...Yeah."
+        ],
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_loyal",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "lealtad"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "I'd follow you anywhere. I think you know that.",
+      "I think you know why."
+    ],
+    "choices": [
+      {
+        "label": "I know why. I feel it too.",
+        "reply": [
+          "...Then don't make me wait long."
+        ],
+        "bond": 3,
+        "romance": 12
+      },
+      {
+        "label": "I'd never ask you to go anywhere I wouldn't.",
+        "reply": [
+          "You can't go anywhere. You're down here."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "I know. Thank you.",
+        "reply": [
+          "...Right."
+        ],
+        "trust": 2
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_curious",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "curiosa"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "I've been studying you. Your habits. What makes you laugh.",
+      "For science. Purely."
+    ],
+    "choices": [
+      {
+        "label": "Findings?",
+        "reply": [
+          "Conclusion: I'm in trouble."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "Study me up close, then.",
+        "reply": [
+          "...Up close. For science.",
+          "({he:name} doesn't study anything for a while)"
+        ],
+        "bond": 2,
+        "romance": 12
+      },
+      {
+        "label": "Creepy.",
+        "reply": [
+          "Scientific!"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_gentle",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "gentil"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "You never let anyone take care of you. Let me. Just tonight."
+    ],
+    "choices": [
+      {
+        "label": "Just tonight.",
+        "reply": [
+          "({he:name} washes your hair with warm water from the kettle. you almost fall asleep)"
+        ],
+        "bond": 3,
+        "stress": -6,
+        "romance": 10,
+        "memory": "the night I took care of you"
+      },
+      {
+        "label": "I'm fine. Really.",
+        "reply": [
+          "You're not. Sit."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "Someone else needs it more.",
+        "reply": [
+          "Everyone always does."
+        ],
+        "romance": -2
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_reckless",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "imprudencia"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "Dare: kiss me before the next transmission comes in.",
+      "Thirty seconds. Go."
+    ],
+    "choices": [
+      {
+        "label": "(kiss {him:name})",
+        "reply": [
+          "(the transmission comes in. nobody answers it for a while)"
+        ],
+        "bond": 2,
+        "romance": 14,
+        "memory": "the dare, before the transmission"
+      },
+      {
+        "label": "Make it twenty.",
+        "reply": [
+          "...Oh. Oh, ok."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "Work first.",
+        "reply": [
+          "Coward."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_stubborn",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "terca"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "I'm not going to say it first. So you'll have to."
+    ],
+    "choices": [
+      {
+        "label": "Fine. I like you. A lot.",
+        "reply": [
+          "...Ha. Won.",
+          "...I like you too. Shut up."
+        ],
+        "bond": 3,
+        "romance": 12
+      },
+      {
+        "label": "Then we'll both be stubborn.",
+        "reply": [
+          "Forever. Great."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "Say what?",
+        "reply": [
+          "Never mind!"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_tr_cold",
+    "kind": "INITIATED",
+    "requiresTrait": [
+      "sangre_fria"
+    ],
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 10,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "I don't get flustered. Ever.",
+      "So why can't I look at you right now?"
+    ],
+    "choices": [
+      {
+        "label": "Look at me.",
+        "reply": [
+          "({he:name} does. for a long time)",
+          "...Problem."
+        ],
+        "bond": 2,
+        "romance": 12
+      },
+      {
+        "label": "Maybe you're tired.",
+        "reply": [
+          "I'm never tired either."
+        ],
+        "bond": 1,
+        "romance": 4
+      },
+      {
+        "label": "Don't then.",
+        "reply": [
+          "...Fine."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rom_op_m_shave",
+    "kind": "TALK",
+    "operatorFemale": false,
+    "romanceReady": true,
+    "minRomance": 30,
+    "priority": 2,
+    "lines": [
+      "You need a shave. Come here, I'll do it. Hold still."
+    ],
+    "choices": [
+      {
+        "label": "I trust you with a blade at my throat.",
+        "reply": [
+          "Good. You should.",
+          "(very slowly, very carefully, and then {he:name} kisses your clean jaw)"
+        ],
+        "bond": 3,
+        "trust": 2,
+        "romance": 10
+      },
+      {
+        "label": "I'll do it myself.",
+        "reply": [
+          "Spoilsport."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "Keep the beard. It's warm.",
+        "reply": [
+          "It's scratchy. I'll get used to it."
+        ],
+        "bond": 2,
+        "romance": 3
+      }
+    ]
+  },
+  {
+    "id": "rom_op_f_hair",
+    "kind": "TALK",
+    "operatorFemale": true,
+    "romanceReady": true,
+    "minRomance": 30,
+    "priority": 2,
+    "lines": [
+      "Your hair's a mess. Sit. I'll braid it."
+    ],
+    "choices": [
+      {
+        "label": "Take your time.",
+        "reply": [
+          "({he:name} does. {his:name} fingers linger at the back of your neck)",
+          "...Done. Don't move yet."
+        ],
+        "bond": 3,
+        "romance": 10
+      },
+      {
+        "label": "It's fine messy.",
+        "reply": [
+          "It's lovely messy. Let me anyway."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "I'll do it.",
+        "reply": [
+          "Fine."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_op_look",
+    "kind": "INITIATED",
+    "romanceReady": true,
+    "together": false,
+    "minRomance": 20,
+    "maxRomance": 80,
+    "priority": 2,
+    "lines": [
+      "Has anyone told you you're {handsome:op}? Before, I mean. Before all this."
+    ],
+    "choices": [
+      {
+        "label": "Not like you just did.",
+        "reply": [
+          "...Then they were idiots. All of them."
+        ],
+        "bond": 2,
+        "romance": 10
+      },
+      {
+        "label": "Now you're just flirting.",
+        "reply": [
+          "Is it working?"
+        ],
+        "bond": 2,
+        "romance": 6
+      },
+      {
+        "label": "Don't be silly.",
+        "reply": [
+          "Not silly. True."
+        ],
+        "romance": 2
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_wake",
+    "kind": "INITIATED",
+    "together": true,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "(you wake up with {name} watching you)",
+      "Sorry. You were talking in your sleep. My name, mostly."
+    ],
+    "choices": [
+      {
+        "label": "Only mostly?",
+        "reply": [
+          "Mostly. The rest was about batteries. Romantic."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "Come back to bed.",
+        "reply": [
+          "(the morning shift starts late)"
+        ],
+        "bond": 2,
+        "stress": -5,
+        "romance": 6
+      },
+      {
+        "label": "Embarrassing.",
+        "reply": [
+          "Adorable."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_slow",
+    "kind": "INITIATED",
+    "together": true,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "Kiss me slow. Like we have time.",
+      "Pretend we have time."
+    ],
+    "choices": [
+      {
+        "label": "We have time.",
+        "reply": [
+          "(you take it. all of it)",
+          "...See? Time."
+        ],
+        "bond": 3,
+        "stress": -6,
+        "romance": 6,
+        "memory": "the slow kiss, pretending we had time"
+      },
+      {
+        "label": "We have tonight.",
+        "reply": [
+          "Tonight's enough."
+        ],
+        "bond": 2,
+        "stress": -4,
+        "romance": 5
+      },
+      {
+        "label": "Someone's coming.",
+        "reply": [
+          "Let them see."
+        ],
+        "romance": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_skin",
+    "kind": "INITIATED",
+    "together": true,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "I like your hands. On me. Just your hands.",
+      "(it's not a question)"
+    ],
+    "choices": [
+      {
+        "label": "Lie back.",
+        "reply": [
+          "(you learn {him:name} slowly, by touch, in the dark of the storage room)",
+          "(what happens after is just yours)"
+        ],
+        "bond": 3,
+        "stress": -8,
+        "romance": 7
+      },
+      {
+        "label": "Later. I promise.",
+        "reply": [
+          "I'm holding you to it. Literally."
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "I'm on shift.",
+        "reply": [
+          "Your shift ends at six. I'll be counting."
+        ],
+        "romance": 1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_shower",
+    "kind": "INITIATED",
+    "together": true,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "The shower works for exactly four minutes before it runs cold.",
+      "That's enough for two. If we're quick. Or not quick."
+    ],
+    "choices": [
+      {
+        "label": "Not quick.",
+        "reply": [
+          "(it runs cold. nobody notices for a while)"
+        ],
+        "bond": 3,
+        "stress": -8,
+        "romance": 7,
+        "memory": "the cold shower nobody noticed"
+      },
+      {
+        "label": "Quick. People are waiting.",
+        "reply": [
+          "Boring. Fine. Fast."
+        ],
+        "bond": 2,
+        "stress": -4,
+        "romance": 4
+      },
+      {
+        "label": "You go. I'll wait.",
+        "reply": [
+          "...Ok."
+        ],
+        "romance": -1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_fight",
+    "kind": "INITIATED",
+    "together": true,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "I'm angry with you and I don't even know why. Hold me anyway."
+    ],
+    "choices": [
+      {
+        "label": "(hold {him:name})",
+        "reply": [
+          "...Better.",
+          "Still angry. A little."
+        ],
+        "bond": 3,
+        "stress": -5,
+        "romance": 5
+      },
+      {
+        "label": "Tell me why first.",
+        "reply": [
+          "Because you're out there in my head all day and I can't do anything!"
+        ],
+        "bond": 2,
+        "romance": 4
+      },
+      {
+        "label": "Come back when you know.",
+        "reply": [
+          "...Fine."
+        ],
+        "bond": -2,
+        "romance": -5
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_after",
+    "kind": "INITIATED",
+    "together": true,
+    "repeatable": true,
+    "priority": 1,
+    "lines": [
+      "(later. {name}'s head on your chest, tracing circles on your skin)",
+      "Can I ask you something? Do you ever regret this? Us?"
+    ],
+    "choices": [
+      {
+        "label": "Never.",
+        "reply": [
+          "(the circles stop. {he:name} holds you tighter)"
+        ],
+        "bond": 3,
+        "romance": 6,
+        "memory": "you said never"
+      },
+      {
+        "label": "Only that it took so long.",
+        "reply": [
+          "Smooth. Stupid and smooth."
+        ],
+        "bond": 3,
+        "romance": 5
+      },
+      {
+        "label": "Sometimes it's hard.",
+        "reply": [
+          "...Yeah. It is."
+        ],
+        "romance": -3
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_radio_date",
+    "kind": "TALK",
+    "together": true,
+    "repeatable": true,
+    "priority": 0,
+    "lines": [
+      "The tango station's on. Everyone's asleep. Dance with me?"
+    ],
+    "choices": [
+      {
+        "label": "(take {his:name} hand)",
+        "reply": [
+          "(the radio plays. the dial glows. for one song, there's no Silence at all)"
+        ],
+        "bond": 3,
+        "stress": -6,
+        "romance": 6,
+        "memory": "our dance to the tango station"
+      },
+      {
+        "label": "I'm a terrible dancer.",
+        "reply": [
+          "I know. Dance anyway."
+        ],
+        "bond": 2,
+        "romance": 5
+      },
+      {
+        "label": "Not tonight.",
+        "reply": [
+          "Tomorrow, then."
+        ],
+        "romance": -1
+      }
+    ]
+  },
+  {
+    "id": "rom_tg_gift_back",
+    "kind": "TALK",
+    "together": true,
+    "priority": 3,
+    "minRomance": 75,
+    "lines": [
+      "I made you something. Don't laugh.",
+      "(a ring, bent from a copper wire, a little crooked)"
+    ],
+    "choices": [
+      {
+        "label": "(put it on)",
+        "reply": [
+          "...It fits. It actually fits.",
+          "({he:name} is crying and pretending not to)"
+        ],
+        "bond": 4,
+        "romance": 8,
+        "memory": "the copper ring"
+      },
+      {
+        "label": "It's beautiful.",
+        "reply": [
+          "It's crooked. It's yours."
+        ],
+        "bond": 3,
+        "romance": 6
+      },
+      {
+        "label": "You shouldn't have wasted the copper.",
+        "reply": [
+          "...I'll take it back to the workshop."
+        ],
+        "bond": -2,
+        "romance": -6
       }
     ]
   }

@@ -115,6 +115,10 @@
     "talkCooldown": "{name} doesn't feel like talking right now. Try again in {time}.",
     "conversationExpired": "{name} doesn't want to talk about it anymore.",
     "bondUp": "Your bond with {name} grew stronger.",
+    "roomStarted": "Work starts on the {room}. Put people on the Restore task to get it done.",
+    "roomDone": "The {room} is open. It smells of dust and new beginnings.",
+    "blight": "Blight in the hydroponics bay: the trays went brown overnight. Nothing grows for a day.",
+    "lookoutSaw": "{name} saw them coming through the periscope.",
     "treatAsk": "{name}'s {injury} needs proper work. I can treat it now, but it'll take {cost} medicine.",
     "treatYes": "Do it ({cost} medicine)",
     "treatNo": "Not now",
@@ -140,7 +144,26 @@
     "knownDislikes": "Dislikes: {items}",
     "foodLow": "Rations for about {days} days. Someone should go looking for food.",
     "foodOut": "The rations ran out. Everyone at home is hungry: stress is rising and wounds heal slower.",
-    "foodBack": "There's food again. The bunker breathes easier."
+    "foodBack": "There's food again. The bunker breathes easier.",
+    "romanceSpark": "Something's changed between you and {name}. The way {he:name} looks at you when {he:name} thinks you're busy.",
+    "romanceStart": "♥ You and {name}. It's real now.",
+    "romanceEndYou": "You ended it with {name}. The bunker is very quiet tonight.",
+    "romanceEndThem": "{name} ended it. {He:name} moved {his:name} things back to {his:name} own bunk without a word.",
+    "romanceLost": "{name} is gone. The one you loved. The radio keeps hissing like nothing happened.",
+    "jealousLines": [
+      "I saw how you looked at {other}. Don't.",
+      "Funny. You never have time for me when {other}'s around.",
+      "Tell {other} to find {his:other} own blanket.",
+      "I'm fine. I'm totally fine. Ask {other} how fine I am.",
+      "You smell like {other}. Just saying.",
+      "Whatever. Go. {He:other}'s waiting."
+    ],
+    "romanceStages": {
+      "spark": "Romance: a spark",
+      "flirting": "Romance: flirting",
+      "together": "♥ Together with you",
+      "neglected": "♥ Together, but feeling neglected"
+    }
   },
   "radio": {
     "staticNoise": "kssshhhh...",
@@ -219,7 +242,7 @@
     "gearWorn": "{name}'s {gear} is falling apart ({condition}%). Repair it in the bunker.",
     "gearBroken": "{name}'s {gear} broke. It does nothing until it's repaired.",
     "gearRepaired": "The {gear} is as good as new.",
-    "gearRecovered": "{name} found {dead}'s {gear} where they fell.",
+    "gearRecovered": "{name} found {dead}'s {gear} where {he:dead} fell.",
     "gearLabel": "{gear} · {rarity} · {condition}%",
     "gearLabelBroken": "{gear} · {rarity} · broken",
     "rarities": {
@@ -382,12 +405,12 @@
     "content": "Low stress and a strong bond: steady and happy to help.",
     "steady": "Fine, for now.",
     "tense": "Stressed. Worse odds out there; rest or a good talk helps.",
-    "breaking": "Close to the edge. Bad decisions and risk of disobeying. Keep them home."
+    "breaking": "Close to the edge. Bad decisions and risk of disobeying. Better kept home."
   },
   "glossary": {
-    "Bond": "How close they feel to you (0–100, 5 levels). Grows with talks, gifts and listening. High bond: they open up, ask to come home when in danger.",
-    "Trust": "Whether they follow your orders. Low trust and a stubborn trait: they may do it their way.",
-    "Stress": "Wears them down. High stress lowers their odds and counts as a warning before a deadly situation.",
+    "Bond": "How close a scout feels to you (0–100, 5 levels). Grows with talks, gifts and listening. High bond: a scout opens up, and asks to come home when in danger.",
+    "Trust": "Whether a scout follows your orders. Low trust and a stubborn trait: orders may get done another way.",
+    "Stress": "Wears a scout down. High stress lowers the odds and counts as a warning before a deadly situation.",
     "Reserve": "Stored power, charged by spare watts. Locking a signal on the dial costs reserve.",
     "Power": "Watts from the generator, shared between filters, radio, antenna, workshop and infirmary.",
     "Picked over": "A place looted recently. Less to find until it refills (a quarter of its depletion recovers per day).",
@@ -395,7 +418,7 @@
     "Relay": "Installed in a zone: less static and faster orders there, and more reach.",
     "Intel": "Decoded information about a zone: a stash (more loot) or its dangers (better odds).",
     "Band": "How far the radio reaches. Short, medium, long, deep: farther is slower and more dangerous, and has better finds.",
-    "Personal mission": "Something a scout needs to do for themselves. Asked at bond level 4. Brings peace and a lot of bond."
+    "Personal mission": "Something a scout needs to do, alone. Asked at bond level 4. Brings peace and a lot of bond."
   },
   "console": {
     "usage": "Usage: {usage}",

@@ -105,4 +105,27 @@
     <string name="ic_morse" translatable="false">&#xE1D8;</string>
     <string name="ic_tap" translatable="false">&#xE741;</string>
     <string name="ic_headset" translatable="false">&#xE2CE;</string>
+    <string name="ic_stats" translatable="false">&#xE128;</string>
+    <string name="ic_file" translatable="false">&#xE148;</string>
+    <string name="ic_orders" translatable="false">&#xE0E6;</string>
+    <string name="ic_backspace" translatable="false">&#xEB5C;</string>
+    <string name="ic_bed" translatable="false">&#xE2E3;</string>
+    <string name="ic_dumbbell" translatable="false">&#xE1E6;</string>
+    <string name="ic_timer" translatable="false">&#xE51B;</string>
+    <string name="ic_walk" translatable="false">&#xE583;</string>
+    <string name="ic_marker" translatable="false">&#xE34E;</string>
+    <string name="ic_crown" translatable="false">&#xE1A5;</string>
+    <string name="ic_levelup" translatable="false">&#xEDBC;</string>
+    <string name="ic_brain" translatable="false">&#xE9D1;</string>
+    <string name="ic_pulse" translatable="false">&#xE5F6;</string>
+    <string name="ic_tools" translatable="false">&#xF323;</string>
+    <string name="ic_infinity" translatable="false">&#xE6E4;</string>
+    <string name="ic_swap" translatable="false">&#xE4E1;</string>
+    <string name="ic_percent" translatable="false">&#xE3F0;</string>
+    <string name="ic_bike" translatable="false">&#xE0A3;</string>
+    <string name="ic_motorbike" translatable="false">&#xE37C;</string>
+    <string name="ic_truck" translatable="false">&#xE53D;</string>
+    <string name="ic_fuel" translatable="false">&#xE7CA;</string>
+    <string name="ic_target" translatable="false">&#xE4FE;</string>
+    <string name="ic_wrench" translatable="false">&#xE5B7;</string>
 </resources>

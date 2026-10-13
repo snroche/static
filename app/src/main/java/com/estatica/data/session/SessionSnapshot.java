@@ -91,6 +91,10 @@ public final class SessionSnapshot {
         public final List<String> traits;
         /** Task label (or the "no task" label). */
         public final String task;
+        /** Task id, or null for none. */
+        public final String taskId;
+        /** Trip length multiplier (traits, gear, injuries): 1 is normal, lower is faster. */
+        public final double pace;
         /** Discovered tastes, already worded ("Le gusta: …"), or null. */
         public final String likes;
         public final String dislikes;
@@ -102,6 +106,9 @@ public final class SessionSnapshot {
         public final long talkReadyAtMillis;
         /** How far into the current bond level, 0–100. */
         public final int bondProgress;
+        public final boolean female;
+        /** "♥ together", "flirting"…, or null. */
+        public final String romance;
         public final boolean canGift;
         public final boolean canAssignTask;
         /** Zone name while away, else null. */
@@ -150,6 +157,8 @@ public final class SessionSnapshot {
             this.stats = Collections.unmodifiableList(b.stats);
             this.traits = Collections.unmodifiableList(b.traits);
             this.task = b.task;
+            this.taskId = b.taskId;
+            this.pace = b.pace;
             this.likes = b.likes;
             this.dislikes = b.dislikes;
             this.gifts = Collections.unmodifiableList(b.gifts);
@@ -157,6 +166,8 @@ public final class SessionSnapshot {
             this.canTalk = b.canTalk;
             this.talkReadyAtMillis = b.talkReadyAtMillis;
             this.bondProgress = b.bondProgress;
+            this.female = b.female;
+            this.romance = b.romance;
             this.canGift = b.canGift;
             this.canAssignTask = b.canAssignTask;
             this.awayAt = b.awayAt;
@@ -176,6 +187,8 @@ public final class SessionSnapshot {
             List<StatView> stats;
             List<String> traits;
             String task;
+            String taskId;
+            double pace = 1;
             String likes;
             String dislikes;
             List<String> gifts;
@@ -183,6 +196,8 @@ public final class SessionSnapshot {
             boolean canTalk;
             long talkReadyAtMillis;
             int bondProgress;
+            boolean female;
+            String romance;
             boolean canGift;
             boolean canAssignTask;
             String awayAt;
@@ -287,6 +302,12 @@ public final class SessionSnapshot {
         public final String zoneName;
         /** Only this scout can take it (personal missions), or null for anyone. */
         public final String scoutId;
+        /** Within the antenna's reach: shown either way, sendable only if true. */
+        public boolean reachable = true;
+        /** Trip range in minutes at normal pace. */
+        public int minMinutes;
+        public int maxMinutes;
+        public int danger;
 
         MissionView(String type, String zoneId, String target, String label, String zoneName) {
             this(type, zoneId, target, label, zoneName, null);
@@ -455,6 +476,8 @@ public final class SessionSnapshot {
         public final int reserveCapacity;
         /** Reserve one battery adds (bigger with the battery bank). */
         public int rechargePer;
+        /** The bunker's rooms, open and sealed. */
+        public List<RoomView> rooms = List.of();
         /** Batteries in stock. */
         public int batteries;
         public final boolean canRecharge;
@@ -735,6 +758,60 @@ public final class SessionSnapshot {
     }
 
     /** One expedition in progress. */
+    /** A room of the bunker, for the floor plan and its sheet. */
+    public static final class RoomView {
+        public final String id;
+        public final String name;
+        /** What it is (open), or what's in the way (sealed). */
+        public final String text;
+        public final int x;
+        public final int y;
+        public final int w;
+        public final int h;
+        public final boolean open;
+        /** Being restored right now. */
+        public final boolean restoring;
+        /** 0–1 while restoring. */
+        public final double progress;
+        /** "12 scrap, 4 components" to start restoring (sealed only). */
+        public final String cost;
+        public final int hours;
+        /** It can be started now: requirements met, affordable, no other project. */
+        public final boolean canRestore;
+        /** Rooms that must be open first. */
+        public final List<String> needs;
+        /** Who's working here now. */
+        public final List<String> working;
+        public final List<String> moduleIds;
+        /** Tasks it unlocks. */
+        public final List<String> tasks;
+        /** People on the Restore task. */
+        public final int restorers;
+
+        RoomView(String id, String name, String text, int x, int y, int w, int h, boolean open, boolean restoring,
+                 double progress, String cost, int hours, boolean canRestore, List<String> needs,
+                 List<String> working, List<String> moduleIds, List<String> tasks, int restorers) {
+            this.id = id;
+            this.name = name;
+            this.text = text;
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            this.open = open;
+            this.restoring = restoring;
+            this.progress = progress;
+            this.cost = cost;
+            this.hours = hours;
+            this.canRestore = canRestore;
+            this.needs = needs;
+            this.working = working;
+            this.moduleIds = moduleIds;
+            this.tasks = tasks;
+            this.restorers = restorers;
+        }
+    }
+
     /** A finished expedition whose log chip is still shown: thread and who went. */
     public static final class DoneLog {
         public final String thread;
@@ -798,11 +875,14 @@ public final class SessionSnapshot {
         public final String id;
         public final String name;
         public final String description;
+        /** Room it's done in, or null if anywhere. */
+        public final String room;
 
-        TaskView(String id, String name, String description) {
+        TaskView(String id, String name, String description, String room) {
             this.id = id;
             this.name = name;
             this.description = description;
+            this.room = room;
         }
     }
 

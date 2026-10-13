@@ -362,6 +362,18 @@
                 android:orientation="horizontal" />
         </HorizontalScrollView>
 
+        <!-- Setting a task: tap a room on the floor plan, then one of its tasks. -->
+        <com.estatica.ui.terminal.BunkerView
+            android:id="@+id/taskPlan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/crewFiltersScroll" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/panelList"
             android:layout_width="0dp"
@@ -372,7 +384,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/crewFiltersScroll" />
+            app:layout_constraintTop_toBottomOf="@id/taskPlan" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include

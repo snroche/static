@@ -39,8 +39,7 @@ public final class TimelineGenerator {
                                          List<String> events, java.util.function.Predicate<String> eventFits,
                                          java.util.function.Predicate<String> recent) {
         int[] range = zone.getDurationMinutes();
-        long total = Math.max(MIN_TOTAL_MILLIS, Math.round(
-                rng.nextIntInclusive(range[0], range[1]) * MINUTE * durationMultiplier));
+        long total = tripMillis(range[0], range[1], durationMultiplier);
 
         List<String> eventPool = new ArrayList<>();
         for (String id : events) {
@@ -94,6 +93,14 @@ public final class TimelineGenerator {
             segments.add(new Segment(type, duration, eventId));
         }
         return segments;
+    }
+
+    /**
+     * How long a trip takes, situations aside: the middle of the zone's range at the team's
+     * pace. Fixed (no dice) so the operator knows before sending anyone.
+     */
+    public static long tripMillis(int minMinutes, int maxMinutes, double durationMultiplier) {
+        return Math.max(MIN_TOTAL_MILLIS, Math.round((minMinutes + maxMinutes) / 2.0 * MINUTE * durationMultiplier));
     }
 
     /** Total planned duration, ignoring time spent waiting on decisions. */

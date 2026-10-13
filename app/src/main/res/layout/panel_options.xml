@@ -130,6 +130,23 @@
                 android:gravity="center_vertical|start" />
 
             <TextView
+                android:id="@+id/optionsOperatorGender"
+                style="@style/TerminalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start" />
+
+            <TextView
+                android:id="@+id/optionsReset"
+                style="@style/TerminalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical|start"
+                android:text="@string/options_reset"
+                android:textColor="@color/danger" />
+
+            <TextView
                 android:id="@+id/optionsVersion"
                 style="@style/TerminalText.Dim"
                 android:layout_width="match_parent"

@@ -135,7 +135,7 @@
         "don't talk to me for a bit, ok?"
       ],
       "aboutFriend": [
-        "{other} is all right. don't tell them i said so.",
+        "{other} is all right. don't tell {him:other} i said so.",
         "{other} and i stayed up talking. first time in ages."
       ],
       "aboutRival": [
@@ -158,6 +158,24 @@
       "carryHome": [
         "i've got {other}. holding on. we're coming home.",
         "{other}'s not walking. i'm carrying. don't argue."
+      ],
+      "departure@love": [
+        "heading out. keep the bed warm.",
+        "going. you're the first thing i'll look for when i'm back.",
+        "out the door. miss me, ok?"
+      ],
+      "arrival@love": [
+        "home. come here. now.",
+        "back. i thought about you the whole way.",
+        "i'm in. you look tired. i like it."
+      ],
+      "initiate@love": [
+        "hey you. got a minute? got all night?",
+        "come here. i want you for a bit."
+      ],
+      "lastWords@love": [
+        "it's ok. you were the best part. all of it.",
+        "tell me you love me. one more time. on the channel."
       ]
     }
   },
@@ -263,7 +281,7 @@
         "I've got {gift} in my pocket, boss. Not letting go of it."
       ],
       "lastCompanion": [
-        "Tell {companion} I owe them a game.",
+        "Tell {companion} I owe {him:companion} a game.",
         "Look after {companion} for me, boss."
       ],
       "giftLiked": [
@@ -297,7 +315,7 @@
       ],
       "aboutRival": [
         "One more word from {other} and I swear...",
-        "{other} thinks they know everything. Ha."
+        "{other} thinks {he:other} knows everything. Ha."
       ],
       "task:taller": [
         "Give me a hammer and a reason, boss.",
@@ -319,6 +337,22 @@
       "initiate@close": [
         "Boss, mate, sit down a sec.",
         "Oi, {operator}. You and me. Chat. Now."
+      ],
+      "departure@love": [
+        "Off I go, gorgeous. Don't wait up. Wait up.",
+        "Heading out. Save me a kiss, yeah?"
+      ],
+      "arrival@love": [
+        "Back, and the first thing I want is you.",
+        "Made it home, love. Get over here."
+      ],
+      "initiate@love": [
+        "Oi. You. Me. Now?",
+        "Got a minute, gorgeous?"
+      ],
+      "lastWords@love": [
+        "Don't you cry, love. Best thing I ever had, you were.",
+        "Say it, yeah? Say it one more time."
       ]
     }
   },
@@ -468,8 +502,24 @@
         "Someone has to go out for supplies. Soon."
       ],
       "carryHome": [
-        "Operator, {other} is badly hurt. I am bringing them back. Now.",
+        "Operator, {other} is badly hurt. I am bringing {him:other} back. Now.",
         "I have {other}. We are returning. Please have the infirmary ready."
+      ],
+      "departure@love": [
+        "I'm leaving now. I'll be thinking of you, which is unprofessional.",
+        "Departing. Please be here when I return."
+      ],
+      "arrival@love": [
+        "I'm back. I would very much like to be held.",
+        "Return complete. I missed you. Unprofessionally."
+      ],
+      "initiate@love": [
+        "Do you have a moment? For me, not for work.",
+        "I'd like your company. Only yours."
+      ],
+      "lastWords@love": [
+        "I want you to know you were the best decision I ever made.",
+        "Please stay on the line. I want your voice to be the last thing."
       ]
     }
   },
@@ -597,6 +647,22 @@
       "initiate@close": [
         "{operator}. JUST TALK. NO REPORT. OVER.",
         "OFF THE RECORD. OVER."
+      ],
+      "departure@love": [
+        "DEPARTING. MISS YOU ALREADY. OVER.",
+        "LEAVING. KEEP CHANNEL OPEN. FOR ME. OVER."
+      ],
+      "arrival@love": [
+        "HOME. NEED YOU. OVER.",
+        "BACK. COME HERE. NO REPORT. OVER."
+      ],
+      "initiate@love": [
+        "YOU. ME. NOW. OVER.",
+        "REQUEST. JUST YOU. OVER."
+      ],
+      "lastWords@love": [
+        "LOVED YOU. STOP. ALWAYS. STOP.",
+        "DON'T CLOSE CHANNEL. STAY. OVER."
       ]
     }
   },
@@ -707,7 +773,7 @@
         "Everything's fine. Stop looking at me."
       ],
       "aboutFriend": [
-        "{other} taught me something today. Don't tell them I said it was cool.",
+        "{other} taught me something today. Don't tell {him:other} I said it was cool.",
         "{other}'s ok. Like, really ok."
       ],
       "aboutRival": [
@@ -724,8 +790,8 @@
         "My stomach's eating itself, I swear."
       ],
       "carryHome": [
-        "I've got {other}! I've got them! We're coming back, ok? Ok?",
-        "{other}'s hurt bad, man. I'm carrying them. Don't hang up."
+        "I've got {other}! I've got {him:other}! We're coming back, ok? Ok?",
+        "{other}'s hurt bad, man. I'm carrying {him:other}. Don't hang up."
       ],
       "departure@close": [
         "Going, {operator}! Don't miss me too much."
@@ -733,6 +799,22 @@
       "initiate@close": [
         "You're not busy, right? Good. Sit.",
         "{operator}! C'mere a sec."
+      ],
+      "departure@love": [
+        "Going out. Don't cheat on me with the radio.",
+        "See you later. Kiss for luck? Ok, two."
+      ],
+      "arrival@love": [
+        "Back! Hug. Now. That's an order.",
+        "Home. I missed you so much it's embarrassing."
+      ],
+      "initiate@love": [
+        "Hey. Come here. I need a hug, and other stuff.",
+        "You busy? Be un-busy. For me."
+      ],
+      "lastWords@love": [
+        "Hey. Hey. It's ok. You were the best thing. Don't forget me.",
+        "Talk to me. Please. Keep talking."
       ]
     }
   },
@@ -807,7 +889,7 @@
         "I've got {gift} here, in my apron."
       ],
       "lastCompanion": [
-        "Tell {companion} I love them very much."
+        "Tell {companion} I love {him:companion} very much."
       ],
       "giftLiked": [
         "{item}! Oh, dear, you shouldn't have."
@@ -831,7 +913,7 @@
         "Old bones don't like this cold."
       ],
       "aboutFriend": [
-        "{other} is a good egg. Make sure they eat.",
+        "{other} is a good egg. Make sure {he:other} eats.",
         "{other} brought me tea. Isn't that sweet?"
       ],
       "aboutRival": [
@@ -857,6 +939,22 @@
       "initiate@close": [
         "{operator}, sweetheart, sit. Tell me how you are.",
         "I made tea. Well. Hot water. Sit with me."
+      ],
+      "departure@love": [
+        "I'm off, darling. Keep my side of the bed warm.",
+        "Back soon, my love. Eat something while I'm gone."
+      ],
+      "arrival@love": [
+        "Home, darling. Come here, let me look at you.",
+        "Back. Oh, I missed your face."
+      ],
+      "initiate@love": [
+        "Come sit with me, my love.",
+        "Darling, a little moment? Just us."
+      ],
+      "lastWords@love": [
+        "Don't be sad, my love. We had something good. Better than most.",
+        "Hold the line, darling. I want to hear you breathe."
       ]
     }
   }

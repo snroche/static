@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A picked tile (who goes / where): a thick bright frame. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/amber_hint">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#1AFFB000" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/amber_bright" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+</ripple>

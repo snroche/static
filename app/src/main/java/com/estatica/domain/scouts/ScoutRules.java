@@ -134,7 +134,12 @@ public final class ScoutRules {
         for (TraitDef trait : traitsOf(scout)) {
             threshold = Math.max(threshold, trait.getDisobeyBelowTrust());
         }
-        return threshold;
+        // Together with the operator: they follow you further before doing it their way.
+        return isLover(scout) ? threshold / 2 : threshold;
+    }
+
+    public boolean isLover(Scout scout) {
+        return scout.getLife().hasFlag(RomanceRules.FLAG);
     }
 
     public TraitDef.Bias bias(Scout scout) {
@@ -250,7 +255,7 @@ public final class ScoutRules {
 
     /** Warmer phrases and nicknames once the bond is high enough. */
     public boolean isClose(Scout scout) {
-        return bondLevel(scout) >= content.getBalance().getBond().getCloseVoiceAtLevel();
+        return isLover(scout) || bondLevel(scout) >= content.getBalance().getBond().getCloseVoiceAtLevel();
     }
 
     /** GDD §5.5: with a high bond, a warned scout asks to come home. */

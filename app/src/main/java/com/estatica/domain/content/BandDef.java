@@ -28,7 +28,7 @@ public final class BandDef {
     /** Chance a transmission found here is Morse instead of Caesar. */
     private double morseChance;
     /** Frequency at dial position 0, in kHz. */
-    private int baseKHz;
+    private double baseKHz;
     /** kHz per dial step. */
     private double stepKHz = 1;
 
@@ -64,12 +64,18 @@ public final class BandDef {
         return signalWeights != null ? signalWeights : Map.of();
     }
 
-    /** "7.215 MHz" for a dial position. */
+    /**
+     * The dial position as a real frequency: "98.40 MHz" on FM (short), "881 kHz" on AM
+     * (medium), "245.0 kHz" on long wave, "16.50 kHz" on VLF (deep). As many decimals as one
+     * step of the dial needs.
+     */
     public String frequency(int position) {
         double khz = baseKHz + position * stepKHz;
-        return khz >= 1000
-                ? String.format(java.util.Locale.ROOT, "%.3f MHz", khz / 1000.0)
-                : String.format(java.util.Locale.ROOT, "%.0f kHz", khz);
+        if (stepKHz >= 10) {
+            return String.format(java.util.Locale.ROOT, "%.2f MHz", khz / 1000.0);
+        }
+        String format = stepKHz >= 1 ? "%.0f kHz" : stepKHz >= 0.1 ? "%.1f kHz" : "%.2f kHz";
+        return String.format(java.util.Locale.ROOT, format, khz);
     }
 
     public double getMorseChance() {

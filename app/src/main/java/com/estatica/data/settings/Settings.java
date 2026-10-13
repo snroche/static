@@ -20,12 +20,23 @@ public final class Settings {
     private static final String HAPTICS = "haptics";
     private static final String TEXT_SPEED = "text_speed";
     private static final String CRT = "crt";
+    private static final String OPERATOR_FEMALE = "operator_female";
+    private static final String SEND_SORT = "send_sort";
 
     private final SharedPreferences prefs;
 
     @Inject
     public Settings(@ApplicationContext Context context) {
         this.prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+    }
+
+    /** How the send screen orders places: DANGER (default), PICKED or TIME. */
+    public String getSendSort() {
+        return prefs.getString(SEND_SORT, "DANGER");
+    }
+
+    public void setSendSort(String sort) {
+        prefs.edit().putString(SEND_SORT, sort).apply();
     }
 
     public boolean isSoundOn() {
@@ -56,6 +67,17 @@ public final class Settings {
 
     public void setTextSpeed(int speed) {
         prefs.edit().putInt(TEXT_SPEED, speed).apply();
+    }
+
+    /** The operator is a woman (the crew always say "the operator"; some lines change). */
+    public boolean isOperatorFemale() {
+        return prefs.getBoolean(OPERATOR_FEMALE, false);
+    }
+
+    public boolean toggleOperatorFemale() {
+        boolean value = !isOperatorFemale();
+        prefs.edit().putBoolean(OPERATOR_FEMALE, value).apply();
+        return value;
     }
 
     /** CRT scanlines over the screen. */

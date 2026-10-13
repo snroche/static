@@ -853,6 +853,67 @@ public final class TerminalText {
         private String conversationExpired;
         /** {name}. */
         private String bondUp;
+        /** Romance: {name}. */
+        private String romanceSpark;
+        private String romanceStart;
+        private String romanceEndYou;
+        private String romanceEndThem;
+        private String romanceLost;
+        /** Said in the bunker chat by a jealous partner: {name}, {other}. */
+        private List<String> jealousLines;
+        /** On the crew card: {stage}. */
+        private Map<String, String> romanceStages;
+
+        public String getRomanceSpark() {
+            return romanceSpark;
+        }
+
+        public String getRomanceStart() {
+            return romanceStart;
+        }
+
+        public String getRomanceEndYou() {
+            return romanceEndYou;
+        }
+
+        public String getRomanceEndThem() {
+            return romanceEndThem;
+        }
+
+        public String getRomanceLost() {
+            return romanceLost;
+        }
+
+        public List<String> getJealousLines() {
+            return jealousLines != null ? jealousLines : List.of();
+        }
+
+        public Map<String, String> getRomanceStages() {
+            return romanceStages != null ? romanceStages : Map.of();
+        }
+
+        /** Rooms: {room}; {name} for the lookout. */
+        private String roomStarted;
+        private String roomDone;
+        private String blight;
+        private String lookoutSaw;
+
+        public String getRoomStarted() {
+            return roomStarted;
+        }
+
+        public String getRoomDone() {
+            return roomDone;
+        }
+
+        public String getBlight() {
+            return blight;
+        }
+
+        public String getLookoutSaw() {
+            return lookoutSaw;
+        }
+
         /** Treatment: {healer}, {name}, {injury}, {cost}. */
         private String treatAsk;
         private String treatYes;

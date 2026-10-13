@@ -46,8 +46,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp">
+
+        <TextView
+            android:id="@+id/tabUpgrades"
+            style="@style/TerminalSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/tabPower"
@@ -59,14 +68,6 @@
 
         <TextView
             android:id="@+id/tabWorkshop"
-            style="@style/TerminalSection"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/tabUpgrades"
             style="@style/TerminalSection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -171,6 +172,33 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <!-- ROOMS: the floor plan, then the picked room's sheet. -->
+                <com.estatica.ui.terminal.BunkerView
+                    android:id="@+id/bunkerPlan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/roomTitle"
+                    style="@style/TerminalHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp" />
+
+                <TextView
+                    android:id="@+id/roomInfo"
+                    style="@style/TerminalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/roomRestore"
+                    style="@style/TerminalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:id="@+id/modules"
                     android:layout_width="match_parent"
@@ -178,6 +206,7 @@
                     android:orientation="vertical" />
 
                 <TextView
+                    android:id="@+id/defenseTitle"
                     style="@style/TerminalText.Bright"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

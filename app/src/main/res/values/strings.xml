@@ -10,28 +10,10 @@
     <string name="panel_gift_title">What do you give %1$s?</string>
     <string name="panel_task_title">What does %1$s do in the bunker?</string>
     <string name="panel_diary_title">DIARY</string>
-    <string name="dispatch_button">[ DISPATCH ]</string>
-    <string name="talk_button">[ TALK ]</string>
-    <string name="talk_button_later">[ TALK at %1$s ]</string>
-    <string name="more_button">[ ⋯ ]</string>
-    <string name="less_button">[ ▴ ]</string>
-    <string name="more_description">More for %1$s: gifts, tasks, gear</string>
-    <string name="gift_button">[ GIFT ]</string>
-    <string name="task_button">[ TASK ]</string>
 
-    <string name="scout_status_away">%1$s: %2$s</string>
-    <string name="scout_vitals">Stress %1$d · Trust %2$d · %3$s</string>
-    <string name="scout_bond">Bond %1$s · %2$d%% to the next level</string>
-    <string name="scout_bond_max">Bond %1$s · as close as it gets</string>
-    <string name="scout_task">Task: %1$s</string>
     <string name="scout_traits">Traits: %1$s</string>
     <string name="scout_gifts">Carrying: %1$s</string>
     <string name="scout_mood">Mood: %1$s</string>
-    <string name="scout_habits">Noticed: %1$s</string>
-    <string name="card_name_open">▾ %1$s</string>
-    <string name="card_name_closed">▸ %1$s</string>
-    <string name="scout_summary">%1$s · %2$s · &#xF338;%3$s &#xE2D1;%4$s</string>
-    <string name="card_expand_description">Show details for %1$s</string>
     <string name="inventory_empty">No objects in the bunker.</string>
 
     <string name="decision_header">&#xE026; %1$s · %2$s</string>
@@ -122,16 +104,20 @@
     <string name="panel_recipes_title">What do we make?</string>
     <string name="recipe_meta">%1$s · %2$d min</string>
     <string name="recipe_locked">Needs workshop level %1$d</string>
-    <string name="upgrades_title">UPGRADES</string>
+    <string name="rooms_title">ROOMS</string>
+    <string name="rooms_description">Floor plan of the bunker. Tap a room.</string>
+    <string name="rooms_hint">Tap a room on the plan. Hatched ones are sealed: restore them to open new tasks.</string>
+    <string name="room_sealed_title">%1$s (sealed)</string>
+    <string name="room_working">Here now: %1$s</string>
+    <string name="room_tasks">Tasks: %1$s</string>
+    <string name="room_unlocks">Opens the task: %1$s</string>
+    <string name="room_needs">First open: %1$s</string>
+    <string name="room_cost" tools:ignore="PluralsCandidate">To restore: %1$s, then %2$d work hours on the Restore task.</string>
+    <string name="room_restoring" tools:ignore="PluralsCandidate">Restoring: %1$d%% of %2$d work hours · %3$d on the Restore task</string>
+    <string name="room_restore">[ RESTORE ]</string>
     <string name="defense_title">DEFENSE</string>
     <string name="defense_line">On guard: %1$s · defense %2$d\nBunks: %3$d / %4$d</string>
     <string name="nobody_on_guard">nobody</string>
-    <string name="equip_button">[ GEAR ]</string>
-    <string name="scout_gear">Gear: %1$s</string>
-    <string name="panel_gear_title">%1$s\'s gear</string>
-    <string name="gear_slot_title">%1$s %2$s</string>
-    <string name="gear_slot_empty">— empty —</string>
-    <string name="gear_slot_spare">%1$d in the bunker fit here</string>
     <string name="gear_slot_pick_title">%1$s · %2$s</string>
     <string name="gear_take_off">Take it off</string>
     <string name="gear_empty">No gear yet. It turns up on expeditions or gets built in the workshop.</string>
@@ -150,13 +136,6 @@
     <string name="hud_blackout">&#xE026; blackout</string>
     <string name="hud_resource">%1$s %2$d</string>
     <string name="send_title">SEND OUT</string>
-    <string name="recall_button">[RECALL]</string>
-    <string name="send_team_title">WHO GOES (one or two; the first leads)</string>
-    <string name="send_where_title">WHERE</string>
-    <string name="send_member">[%1$s] %2$s%3$s · %4$s</string>
-    <string name="send_lead">" (lead)"</string>
-    <string name="send_place">(%1$s) %2$s · %3$s</string>
-    <string name="send_zone">(%1$s) %2$s · %3$s · %4$d–%5$d min · danger %6$d</string>
     <string name="send_nobody">Nobody\'s free to go.</string>
     <string name="send_pick_team">Pick who goes.</string>
     <string name="send_pick_where">%1$s. Now pick where.</string>
@@ -164,7 +143,7 @@
     <string name="send_go">[ SEND ]</string>
     <string name="send_go_anyway">[ SEND ANYWAY ]</string>
     <string name="send_hurt_who">%1$s (%2$s)</string>
-    <string name="send_hurt_warning">&#xE026; Hurt: %1$s. Worse odds out there, and another injury stacks on top. Treat them first, or tap SEND again to go anyway.</string>
+    <string name="send_hurt_warning">&#xE026; Hurt: %1$s. Worse odds out there, and another injury stacks on top. Treat the injured first, or tap SEND again to go anyway.</string>
     <string name="partner_friends">they get on: works better together</string>
     <string name="partner_rivals">rivals: they\'ll argue the whole way</string>
     <string name="log_system">&#xE18D; SYSTEM</string>
@@ -173,6 +152,7 @@
     <string name="log_diary">&#xE82E; DIARY</string>
     <string name="crew_filter_button">[ FILTER ▾ ]</string>
     <string name="crew_filter_button_on">[ %1$s ▴ ]</string>
+    <string name="tile_name" translatable="false">%1$s %2$s</string>
     <string name="tile_away">→ %1$s</string>
     <string name="tile_state">&#xF338;%1$s &#xE2D1;%2$s</string>
     <string name="tile_hurt">&#xE2E1;</string>
@@ -210,6 +190,9 @@
     <string name="options_haptics">Vibration</string>
     <string name="options_notifications">Notifications (situations and returns)</string>
     <string name="options_crt">CRT scanlines</string>
+    <string name="options_operator_gender">[ You are: %1$s ]</string>
+    <string name="options_man">a man</string>
+    <string name="options_woman">a woman</string>
     <string name="options_text_speed">Text speed: %1$s</string>
     <string-array name="options_text_speeds">
         <item>slow</item>
@@ -217,6 +200,11 @@
         <item>fast</item>
         <item>instant</item>
     </string-array>
+    <string name="options_reset">[ RESET ALL DATA ]</string>
+    <string name="reset_title">ERASE EVERYTHING?</string>
+    <string name="reset_body">Every save goes: the crew, the dead, the bunker, the log, the radio, and your options. The game closes; open it again to start from zero. This can\'t be undone.</string>
+    <string name="reset_cancel">[ CANCEL ]</string>
+    <string name="reset_confirm">[ ERASE ]</string>
     <string name="options_version">STATIC v%1$s</string>
     <string name="options_description">Options</string>
     <string name="panel_map_title">REGION MAP</string>
@@ -236,7 +224,6 @@
     <string name="panel_scout_sector_title">Who scouts the %1$s?</string>
     <string name="scout_sector_nobody">Nobody\'s free to go.</string>
     <string name="zones_none">No places known yet. Open the [MAP] and scout around the bunker.</string>
-    <string name="zone_depleted">picked over %1$d%% · full in %2$s</string>
     <string name="zone_depleted_long">Picked over (%1$d%%): less to find. Full again in %2$s.</string>
     <string name="zone_untouched">Untouched: full loot.</string>
     <string name="map_refill_rule">Looting a place picks it over; it gets back %1$d%% a day.</string>
@@ -286,4 +273,72 @@
 
     <string name="notification_channel">Transmissions</string>
     <string name="notification_channel_description">Situations that need orders, and scouts coming home.</string>
+    <!-- A person's page. -->
+    <string name="person_tab_stats">&#xE128;\nSTATS</string>
+    <string name="person_tab_file">&#xE148;\nFILE</string>
+    <string name="person_tab_gear">&#xF323;\nGEAR</string>
+    <string name="person_tab_orders">&#xE0E6;\nORDERS</string>
+    <string name="person_task">Task: %1$s</string>
+    <string name="person_away">%1$s → %2$s</string>
+    <string name="person_stress">&#xF338; Stress %1$d/100</string>
+    <string name="person_stress_content">Calm. Works and travels at full strength.</string>
+    <string name="person_stress_steady">Holding up. Rest, music and a good talk keep it there.</string>
+    <string name="person_stress_tense">Tense: worse odds out there, quicker to argue and to refuse a risky order. Rest, music, a talk or a gift bring it down.</string>
+    <string name="person_stress_breaking">Close to breaking. Keep this one home and let the bunker do the rest.</string>
+    <string name="person_bond">&#xE2D1; Bond: level %1$d of %2$d</string>
+    <string name="person_bond_next">%1$d%% of the way to level %2$d. Talks, gifts and safe returns build it.</string>
+    <string name="person_bond_max">As close as it gets.</string>
+    <string name="person_trust">&#xF218; Trust %1$d/100 · how far your orders are followed</string>
+    <string name="person_hurt">&#xEDAF; Hurt: %1$s</string>
+    <string name="person_stats_title">STATS</string>
+    <string name="person_noticed">Noticed:\n%1$s</string>
+    <string name="person_file_empty">Nothing on file yet. Talk, give gifts, and you\'ll learn more.</string>
+    <string name="person_slot_empty">— empty —</string>
+    <string name="person_gear_hint">Tap a slot to put something on or take it off.</string>
+    <string name="person_gear_away">Gear can only be changed in the bunker.</string>
+    <string name="person_dispatch">&#xE48A;  SEND OUT</string>
+    <string name="person_recall">&#xE54D;  CALL BACK</string>
+    <string name="person_talk">&#xEB79;  TALK</string>
+    <string name="person_talk_later">&#xEB79;  TALK · in the mood again at %1$s</string>
+    <string name="person_set_task">&#xE68A;  SET TASK · now: %1$s</string>
+    <string name="person_gift">&#xEE44;  GIVE A GIFT</string>
+    <string name="person_orders_away">Out in the field: orders go over the radio, from COMMS.</string>
+    <string name="person_orders_resting">Not fit to go out right now.</string>
+
+    <!-- Task floor plan. -->
+    <string name="task_room_sealed">Sealed. Restore it from BUNKER → ROOMS to work here.</string>
+    <string name="task_room_none">Nothing to do in here.</string>
+    <string name="task_anywhere">── Anywhere ──</string>
+    <string name="task_current">• %1$s (now)</string>
+
+    <!-- Send out, two steps. -->
+    <string name="send_step_who">&#xE583; WHO GOES\n%1$d of %2$d</string>
+    <string name="send_step_where">&#xE34E; WHERE\nnot picked</string>
+    <string name="send_step_where_picked">&#xE34E; WHERE\n%1$s</string>
+    <string name="send_sort">Sort</string>
+    <string name="send_sort_danger">DANGER</string>
+    <string name="send_sort_picked">PICKED %</string>
+    <string name="send_sort_time">TIME</string>
+    <string name="send_who_help">Tap to pick, long-press to make leader (&#xE1A5;). Up to %1$d.</string>
+    <string name="send_role_leader">Leads the trip</string>
+    <string name="send_role_partner">Goes along</string>
+    <string name="send_tile_hurt">Hurt: %1$s</string>
+    <string name="send_tile_state">&#xF338;%1$s &#xE2D1;%2$s%3$s</string>
+    <string name="send_pace_fast">&#xE70E;fast</string>
+    <string name="send_pace_slow">slow</string>
+    <string name="send_tile_description">%1$s: %2$s. Tap to pick, long-press to make leader.</string>
+    <string name="send_section_missions">── MISSIONS ──</string>
+    <string name="send_section_places">── PLACES ──</string>
+    <string name="send_section_clean">── PICKED CLEAN ──</string>
+    <string name="send_place_stats">Danger %1$s · picked %2$d%%</string>
+    <string name="send_place_refill">full again in %1$s</string>
+    <string name="send_mission_stats">%1$s · danger %2$s</string>
+    <string name="send_out_of_reach">Out of reach: the antenna can\'t get that far yet.</string>
+    <string name="send_only_leads">Only %1$s can lead this. Tap to make %1$s leader.</string>
+    <string name="send_only_leads_away">Only %1$s can lead this, once back and fit.</string>
+    <string name="send_pick_team_for">%1$s. Now pick who goes.</string>
+    <string name="send_time_s">&#xE51B; %1$d s</string>
+    <string name="send_time_m">&#xE51B; %1$d min</string>
+    <string name="send_time_h">&#xE51B; %1$d h</string>
+    <string name="send_time_hm">&#xE51B; %1$d h %2$02d</string>
 </resources>

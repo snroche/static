@@ -77,7 +77,7 @@
     {
       "id": "deposito",
       "text": [
-        "An automatic beacon repeats the location of a battery depot. Your assistant writes down what they can."
+        "An automatic beacon repeats the location of a battery depot. Your assistant writes down what's readable."
       ],
       "resources": {
         "batteries": 2
@@ -545,7 +545,7 @@
       "name": "LU3 · OLD BERTO",
       "audio": "VOICE",
       "minutesPerLine": 10,
-      "lore": "LU3 · OLD BERTO (short band, 3.520 MHz): a ham who talks about his garden every evening from 19:00 to 20:00. He never answers back. Maybe he can't hear us.",
+      "lore": "LU3 · OLD BERTO (short band, 98.40 MHz): a ham who talks about his garden every evening from 19:00 to 20:00. He never answers back. Maybe he can't hear us.",
       "lines": [
         "...the tomatoes came in again. Small, but red. Red is good.",
         "...if anyone's out there, boil the water. Twice. I learned the hard way.",
@@ -582,7 +582,7 @@
       "name": "RADIO NOSTALGIA",
       "audio": "MUSIC",
       "minutesPerLine": 25,
-      "lore": "RADIO NOSTALGIA (medium band, 7.300 MHz): somebody plays tango records from 21:00 to 23:00. Nobody announces the songs.",
+      "lore": "RADIO NOSTALGIA (medium band, 881 kHz): somebody plays tango records from 21:00 to 23:00. Nobody announces the songs.",
       "lines": [
         "...a bandoneon, slow, like breathing...",
         "...an old tango about a neighborhood that doesn't exist anymore...",
@@ -624,7 +624,7 @@
       "night": true,
       "minutesPerLine": 15,
       "stress": 3,
-      "lore": "Short band, at night only: breathing. Close to the microphone. Whoever it is, they know when we're listening.",
+      "lore": "Short band, at night only: breathing. Close to the microphone. Whoever it is knows when we're listening.",
       "lines": [
         "...breathing. Slow. Close to the microphone...",
         "...breathing. It stops when you stop moving the dial...",
@@ -641,7 +641,7 @@
       "night": true,
       "minutesPerLine": 20,
       "stress": 3,
-      "lore": "Medium band, at night: a child counting, playing hide and seek. Nobody is looking for them. Or someone is.",
+      "lore": "Medium band, at night: a child counting, playing hide and seek. Nobody is looking for the child. Or someone is.",
       "lines": [
         "...eight... nine... ten... ready or not...",
         "...mom said don't open the hatch. Mom isn't back yet...",
@@ -657,7 +657,7 @@
       "audio": "NUMBERS",
       "minutesPerLine": 60,
       "stress": 1,
-      "lore": "THE VOICE, long band, 14.731 MHz: seven three one nine, for three minutes on the hour, every hour. It's always been here. We just couldn't reach it.",
+      "lore": "THE VOICE, long band, 245.0 kHz: seven three one nine, for three minutes on the hour, every hour. It's always been here. We just couldn't reach it.",
       "lines": [
         "...seven. three. one. nine...",
         "...seven. three. one. nine. ... nine. nine...",
@@ -701,7 +701,7 @@
       "resources": {
         "rations": 2
       },
-      "lore": "RELIEF NET (short band, 3.660 MHz): a volunteer reads out where they left food. 06:00, 14:00 and 22:00, ten minutes each. Be there, or have someone on the radio.",
+      "lore": "RELIEF NET (short band, 101.20 MHz): a volunteer reads out where the food was left. 06:00, 14:00 and 22:00, ten minutes each. Be there, or have someone on the radio.",
       "lines": [
         "Relief net, morning drop. Two crates under the overpass, blue tarp. Take what you need, leave the crates.",
         "Relief net. Bread's gone hard but it's bread. Bus shelter on the avenue, behind the ad.",
@@ -723,7 +723,7 @@
       },
       "perAiring": true,
       "intel": "DANGER",
-      "lore": "SCAV NET (medium band, 7.450 MHz): scavengers swap warnings at 13:00, fifteen minutes. Gruff, fast, useful.",
+      "lore": "SCAV NET (medium band, 1057 kHz): scavengers swap warnings at 13:00, fifteen minutes. Gruff, fast, useful.",
       "lines": [
         "Scav net. Dogs moved north of the tracks. Big pack. Don't be a hero.",
         "Scav net. Somebody rigged wires in the old offices. Watch your feet.",
@@ -745,7 +745,7 @@
       },
       "perAiring": true,
       "intel": "CACHE",
-      "lore": "THE LOCKSMITH (medium band, 7.920 MHz): five minutes at 03:00 and 15:00. A dry voice reads where things are hidden, then a modem screech. Nobody knows why he shares.",
+      "lore": "THE LOCKSMITH (medium band, 1606 kHz): five minutes at 03:00 and 15:00. A dry voice reads where things are hidden, then a modem screech. Nobody knows why he shares.",
       "lines": [
         "...under the third floorboard from the window. The key is in the lamp...",
         "...behind the boiler, a false panel. Push, don't pull...",
@@ -768,7 +768,7 @@
       "resources": {
         "medicine": 1
       },
-      "lore": "DR. LEVY (short band, 3.230 MHz): a doctor gives advice every morning at 10:00 for half an hour, and says where she left supplies.",
+      "lore": "DR. LEVY (short band, 92.60 MHz): a doctor gives advice every morning at 10:00 for half an hour, and says where she left supplies.",
       "lines": [
         "Boil it, then boil it again. And today's kit is in the pharmacy's back door, the one with the red mark.",
         "Clean wounds with what you'd drink, not what you'd fear. Bandages left by the clinic gate.",
@@ -788,7 +788,7 @@
         "minutes": 45
       },
       "minutesPerLine": 15,
-      "lore": "CHAPEL OF SAN ROQUE (medium band, 7.610 MHz): someone plays the organ every morning at 08:00 for three quarters of an hour. Nobody sings. Nobody has to.",
+      "lore": "CHAPEL OF SAN ROQUE (medium band, 1244 kHz): someone plays the organ every morning at 08:00 for three quarters of an hour. Nobody sings. Nobody has to.",
       "lines": [
         "...an organ, slow, a hymn half the city used to know...",
         "...the same hymn again, a little faster, as if the player is in a hurry today...",
@@ -804,7 +804,7 @@
       "night": true,
       "minutesPerLine": 20,
       "stress": 2,
-      "lore": "Short band, 3.777 MHz, at night only: a music box playing a waltz. When it winds down, someone winds it again. We never hear them.",
+      "lore": "Short band, 103.54 MHz, at night only: a music box playing a waltz. When it winds down, someone winds it again. We never hear who.",
       "lines": [
         "...a music box, playing a waltz...",
         "...the waltz slows... slows... and then the key turns, and it starts again...",
@@ -823,9 +823,13 @@
     ],
     "heard": [
       "{frequency}. A voice that sounds like {name}: \"{words}\". Then static, and nothing.",
-      "{frequency}. For three seconds it's {name}, clear as if they were in the next room: \"{words}\". Then it's gone.",
+      "{frequency}. For three seconds it's {name}, clear as if {he:name} were in the next room: \"{words}\". Then it's gone.",
       "{frequency}. {name}'s voice, slowed down, saying \"{words}\" over and over until the signal drowns it."
     ],
-    "lore": "Heard on the short band, weeks too late: {name}'s voice. \"{words}\""
+    "lore": "Heard on the short band, weeks too late: {name}'s voice. \"{words}\"",
+    "heardPartner": [
+      "{frequency}. {name}'s voice. Not words for anyone else: your name, the way only {he:name} said it. Then: \"{words}\"",
+      "{frequency}. {name}, very close, as if {he:name} were whispering against your neck: \"{words}\". The static takes {him:name} back."
+    ]
   }
 }

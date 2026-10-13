@@ -549,7 +549,7 @@ public final class ContentValidator {
         }
         for (DialogueDef d : content.getDialogues().values()) {
             check(d.getRequiresRelation() == null
-                            || List.of("friend", "inseparable", "rival").contains(d.getRequiresRelation()),
+                            || List.of("friend", "inseparable", "rival", "partner").contains(d.getRequiresRelation()),
                     "dialogue " + d.getId() + ": unknown relation " + d.getRequiresRelation());
         }
         check(content.getBalance().getBarks() != null, "balance: barks");
