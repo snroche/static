@@ -38,6 +38,9 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
         /** A gear slot was tapped: show what fits in it. */
         void onSlot(ScoutView scout, String slot);
 
+        /** Every stat maxed: pick what to focus on and start over higher. */
+        void onRetrain(ScoutView scout);
+
         /** Call them home from the field. */
         default void onRecall(ScoutView scout) {
         }
@@ -147,6 +150,8 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
             switch (page) {
                 case STATS:
                     bindStats(s, res);
+                    b.retrain.setVisibility(s.canRetrain ? View.VISIBLE : View.GONE);
+                    b.retrain.setOnClickListener(s.canRetrain ? v -> listener.onRetrain(s) : null);
                     break;
                 case FILE:
                     bindFile(s, res);
@@ -188,6 +193,7 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
             b.stats.setText(statBlock(s));
             optional(b.traits, s.traits.isEmpty() ? null
                     : res.getString(R.string.scout_traits, String.join(", ", s.traits)));
+            optional(b.veteran, s.veteran > 0 ? res.getString(R.string.person_veteran, s.veteran) : null);
         }
 
         private void bindFile(ScoutView s, Resources res) {
@@ -280,6 +286,8 @@ public final class ScoutAdapter extends ListAdapter<ScoutView, ScoutAdapter.Hold
                     return R.string.ic_back;
                 case "FEET":
                     return R.string.ic_feet;
+                case "RIDE":
+                    return R.string.ic_bike;
                 default:
                     return R.string.ic_body;
             }

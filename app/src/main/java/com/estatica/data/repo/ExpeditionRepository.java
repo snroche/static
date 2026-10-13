@@ -30,13 +30,13 @@ public final class ExpeditionRepository {
         this.dao = dao;
     }
 
-    /** Who went on each of these expeditions: id to {lead, partner (nullable)}. */
+    /** Who went on each of these expeditions: id to {lead, partner, third (both nullable)}. */
     @WorkerThread
     public Map<String, String[]> teams(List<String> ids) {
         Map<String, String[]> out = new LinkedHashMap<>();
         if (!ids.isEmpty()) {
             for (ExpeditionEntity e : dao.byIds(ids)) {
-                out.put(e.id, new String[]{e.scoutId, e.partnerId});
+                out.put(e.id, new String[]{e.scoutId, e.partnerId, e.thirdId});
             }
         }
         return out;
@@ -66,6 +66,7 @@ public final class ExpeditionRepository {
                             e.orderDelayMillis, e.cacheIntel, e.dangerIntel, e.lootFactor),
                     e.aborted, e.lostHints);
             expedition.setPartnerId(e.partnerId);
+            expedition.setThirdId(e.thirdId);
             out.add(expedition);
         }
         return out;
@@ -115,6 +116,7 @@ public final class ExpeditionRepository {
         e.aborted = expedition.isAborted();
         e.lostHints = expedition.getLostHints();
         e.partnerId = expedition.getPartnerId();
+        e.thirdId = expedition.getThirdId();
         dao.upsert(e);
 
         dao.clearItems(expedition.getId());

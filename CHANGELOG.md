@@ -10,6 +10,42 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.6.15] — Teams of three, rides and fuel, retraining, deep runs — in verification
+
+App 0.6.15 (versionCode 615) · **DB 12 → 13** · **Content 22 → 23**
+
+### Added
+- **Teams of three.** Send out picks up to three people, the first one leading.
+  - Situations can be handled by whoever on the team fits.
+  - The best hand on the team helps with each check, and how each one gets on with the lead counts.
+  - Loot ×1.7 for three (×1.4 for two).
+  - The strongest one still standing tries to carry a dying lead home; with two to carry it, the odds are better.
+  - Everyone who comes back together grows closer.
+- **Rides:** a new gear slot.
+  - **Bicycle:** one seat, trips 25% shorter, no fuel.
+  - **Motorbike:** two seats, trips half as long, burns 1 fuel an hour.
+  - **Pickup truck:** three seats, trips 40% shorter, brings 40% more home, burns 2 fuel an hour.
+  - **Seats:** rides only count if they seat the whole team. Otherwise everyone walks at the slowest pace.
+  - **Fuel:** engines need it for the whole trip, paid on leaving. Without enough, they stay parked and the team goes on foot. The send screen shows the fuel each trip needs, and the times account for it.
+  - **Building and repairs:** rides are built in the workshop and never turn up at random. They wear like other gear, but repairs cost more.
+  - **Mara** finds her old delivery bike in storage, once.
+- **Fuel:** a new resource. Found at the gas station, the police station, the gated community, the airport, the dam, and out in the suburbs and the wasteland.
+  - BUNKER → POWER: *Burn fuel in blackouts* lets the generator cover the lost watts, at 1 fuel per blackout hour, until the tank runs dry.
+- **Retraining:** once every stat is at its ceiling, a person can retrain from the Stats tab.
+  - Every stat drops to half, every limit goes up by 1, and the one you focus on by 2. Then they grow again.
+  - Each retraining makes them a veteran one step further. Far-off places (long band and beyond) push veterans harder, so events there stay a challenge.
+- **Deep runs:** past the map's edge, on VLF.
+  - **Antenna:** two new levels, 7 and 8.
+  - **Places:** three, none of them on the map: the drowned city, the salt flats and the mountain observatory. Each has its own situations, plus six shared ones.
+  - **Never run dry:** pick a tier instead.
+  - **Tier I:** opens at antenna 7.
+  - **Tier II:** also at 7. Trips 50% longer, 60% more loot, harder checks.
+  - **Tier III:** needs antenna 8. Twice as long, double the loot, harder still.
+
+### Changed
+- On foot, only boots and traits change someone's pace; rides count per team.
+- The antenna's description lists the new levels.
+
 ## [0.6.14] — Person pages, two-step dispatch, real frequencies — in verification
 
 App 0.6.14 (versionCode 614) · DB 12 (no change) · Content 22 (no change)

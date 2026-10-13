@@ -52,12 +52,15 @@ final class SendPanel {
     static final String SORT_PICKED = "PICKED";
     static final String SORT_TIME = "TIME";
 
-    private static final int MAX_TEAM = 2;
+    private static final int MAX_TEAM = 3;
     /** Above this, a place is picked clean and goes to the bottom. */
     private static final int EXHAUSTED = 95;
     private static final int TILE = 0;
     private static final int PLACE = 1;
     private static final int NOTE = 2;
+    private static final int TIERS = 3;
+    /** Deep-run tier picked (1…), kept while the panel lives. */
+    private int deepTier = 1;
 
     private final com.estatica.databinding.PanelSendBinding b;
     private final TerminalViewModel viewModel;
@@ -251,8 +254,9 @@ final class SendPanel {
         }
         t.tileDoing.setText(doing);
         t.tileDoing.setTextColor(ContextCompat.getColor(t.getRoot().getContext(), color));
+        String ride = s.rideName != null ? " " + res.getString(R.string.send_tile_ride, s.rideSeats) : "";
         t.tileState.setText(res.getString(R.string.send_tile_state, bar(Math.round(s.stress / 20f), 5),
-                bar(s.bondLevel, s.bondLevels), pace(res, s.pace)));
+                bar(s.bondLevel, s.bondLevels), pace(res, s.pace) + ride));
         t.getRoot().setAlpha(s.canDispatch ? 1f : 0.45f);
         t.getRoot().setContentDescription(res.getString(R.string.send_tile_description, s.name, doing));
         if (s.canDispatch) {
@@ -320,16 +324,15 @@ final class SendPanel {
         for (SessionSnapshot.ZoneView z : snapshot.zones) {
             (z.depleted > EXHAUSTED ? clean : places).add(Entry.zone(z));
         }
-        double pace = teamPace();
         Comparator<Entry> order;
         if (SORT_PICKED.equals(sort)) {
             order = Comparator.comparingInt((Entry e) -> e.zone.depleted).thenComparingInt(e -> e.zone.danger);
         } else if (SORT_TIME.equals(sort)) {
-            order = Comparator.comparingLong((Entry e) -> trip(e.zone.minMinutes, e.zone.maxMinutes, pace))
+            order = Comparator.comparingLong((Entry e) -> trip(e.zone.minMinutes, e.zone.maxMinutes, 1).millis)
                     .thenComparingInt(e -> e.zone.danger);
         } else {
             order = Comparator.comparingInt((Entry e) -> e.zone.danger)
-                    .thenComparingLong(e -> trip(e.zone.minMinutes, e.zone.maxMinutes, pace));
+                    .thenComparingLong(e -> trip(e.zone.minMinutes, e.zone.maxMinutes, 1).millis);
         }
         places.sort(order);
         clean.sort(order);
@@ -342,7 +345,65 @@ final class SendPanel {
             out.add(Entry.note("h-clean", res.getString(R.string.send_section_clean)));
             out.addAll(clean);
         }
+        if (!snapshot.deepRuns.isEmpty()) {
+            SessionSnapshot.DeepRunView first = snapshot.deepRuns.get(0);
+            deepTier = Math.max(1, Math.min(deepTier, first.maxTier));
+            out.add(Entry.note("h-deep", res.getString(R.string.send_section_deep)));
+            out.add(Entry.tiers(first));
+            for (SessionSnapshot.DeepRunView d : snapshot.deepRuns) {
+                out.add(Entry.deep(d));
+            }
+        }
         return out;
+    }
+
+    private void bindTiers(android.widget.LinearLayout row, SessionSnapshot.DeepRunView d) {
+        row.removeAllViews();
+        Resources res = row.getResources();
+        LayoutInflater inflater = LayoutInflater.from(row.getContext());
+        for (int t = 1; t <= d.tiers; t++) {
+            TextView tab = (TextView) inflater.inflate(R.layout.item_tier_tab, row, false);
+            boolean open = t <= d.maxTier;
+            tab.setText(open ? res.getString(R.string.send_tier, roman(t))
+                    : res.getString(R.string.send_tier_locked, roman(t), d.tierAntenna[t - 1]));
+            tab(tab, t == deepTier);
+            tab.setAlpha(open ? 1f : 0.45f);
+            int tier = t;
+            tab.setOnClickListener(open ? v -> {
+                deepTier = tier;
+                String key = Mission.Type.DEEP.name() + "|";
+                if (destination != null && destination.startsWith(key)) {
+                    destination = destination.substring(0, destination.lastIndexOf('|') + 1) + tier;
+                }
+                render(snapshot);
+            } : null);
+            row.addView(tab);
+        }
+    }
+
+    private static String roman(int n) {
+        return n == 1 ? "I" : n == 2 ? "II" : n == 3 ? "III" : String.valueOf(n);
+    }
+
+    private void bindDeep(ItemPlaceBinding p, SessionSnapshot.DeepRunView d) {
+        Resources res = p.getRoot().getResources();
+        String key = Mission.Type.DEEP.name() + "|" + d.id + "|" + deepTier;
+        boolean on = key.equals(destination);
+        p.getRoot().setBackgroundResource(on ? R.drawable.bg_tile_picked : R.drawable.bg_tile_special);
+        p.placeName.setText(d.name);
+        p.placeName.setTextColor(ContextCompat.getColor(p.getRoot().getContext(), R.color.amber_bright));
+        double longer = 1 + (deepTier - 1) * d.durationPerTier;
+        Trip trip = trip(d.minMinutes, d.maxMinutes, longer);
+        p.placeTime.setText(time(res, trip.millis));
+        int danger = d.danger + (deepTier - 1) * d.dangerPerTier;
+        int loot = (int) Math.round((deepTier - 1) * d.lootPerTier * 100);
+        p.placeStats.setText(loot > 0 ? res.getString(R.string.send_deep_stats_more, bar(danger, Math.max(5, danger)), loot)
+                : res.getString(R.string.send_deep_stats, bar(danger, Math.max(5, danger))));
+        String fuel = fuelNote(res, trip);
+        optional(p.placeNote, fuel != null ? d.description + "\n" + fuel : d.description);
+        p.placeNote.setTextColor(ContextCompat.getColor(p.getRoot().getContext(), R.color.amber_dim));
+        p.getRoot().setAlpha(1f);
+        p.getRoot().setOnClickListener(v -> choose(key, null));
     }
 
     private static boolean special(SessionSnapshot.MissionView m) {
@@ -355,7 +416,9 @@ final class SendPanel {
         boolean on = key.equals(destination);
         p.getRoot().setBackgroundResource(on ? R.drawable.bg_tile_picked : R.drawable.bg_tile_home);
         p.placeName.setText(z.name);
-        p.placeTime.setText(time(res, trip(z.minMinutes, z.maxMinutes, teamPace())));
+        p.placeName.setTextColor(ContextCompat.getColor(p.getRoot().getContext(), R.color.amber_bright));
+        Trip trip = trip(z.minMinutes, z.maxMinutes, 1);
+        p.placeTime.setText(time(res, trip.millis));
         p.placeStats.setText(res.getString(R.string.send_place_stats, bar(z.danger, Math.max(4, z.danger)),
                 z.depleted));
         List<String> notes = new ArrayList<>();
@@ -367,6 +430,10 @@ final class SendPanel {
         }
         if (z.depleted >= 15 && z.refillIn != null) {
             notes.add(res.getString(R.string.send_place_refill, z.refillIn));
+        }
+        String fuel = fuelNote(res, trip);
+        if (fuel != null) {
+            notes.add(fuel);
         }
         optional(p.placeNote, notes.isEmpty() ? null : String.join(" · ", notes));
         p.getRoot().setAlpha(z.depleted > EXHAUSTED && !on ? 0.6f : 1f);
@@ -382,7 +449,7 @@ final class SendPanel {
         p.placeName.setText(m.label);
         p.placeName.setTextColor(ContextCompat.getColor(p.getRoot().getContext(),
                 special(m) ? R.color.signal : R.color.amber_bright));
-        p.placeTime.setText(m.reachable ? time(res, trip(m.minMinutes, m.maxMinutes, teamPace())) : "");
+        p.placeTime.setText(m.reachable ? time(res, trip(m.minMinutes, m.maxMinutes, 1).millis) : "");
         p.placeStats.setText(res.getString(R.string.send_mission_stats, m.zoneName,
                 bar(m.danger, Math.max(4, m.danger))));
         String blocker = missionBlocker(res, m);
@@ -435,20 +502,83 @@ final class SendPanel {
         render(snapshot);
     }
 
-    /** The team moves at the slowest one's pace; nobody picked yet counts as normal. */
-    private double teamPace() {
-        double pace = 0;
+    /** A trip as the team would make it: how long, and the fuel its engines need (0 on foot). */
+    private static final class Trip {
+        final long millis;
+        final int fuel;
+        /** The engines would go but there isn't enough fuel: walking (or pedalling) instead. */
+        final boolean dry;
+
+        Trip(long millis, int fuel, boolean dry) {
+            this.millis = millis;
+            this.fuel = fuel;
+            this.dry = dry;
+        }
+    }
+
+    /**
+     * Same rules as the game: the team goes at the slowest one's pace on foot, unless the rides
+     * seat everybody; engines need fuel for the whole trip, or they stay parked.
+     *
+     * @param longer deep-run tier factor (1 elsewhere)
+     */
+    private Trip trip(int min, int max, double longer) {
+        List<SessionSnapshot.ScoutView> people = new ArrayList<>();
         for (String id : team) {
             SessionSnapshot.ScoutView s = scout(id);
             if (s != null) {
-                pace = Math.max(pace, s.pace);
+                people.add(s);
             }
         }
-        return pace > 0 ? pace : 1;
+        if (people.isEmpty()) {
+            return new Trip(TimelineGenerator.tripMillis(min, max, longer), 0, false);
+        }
+        double withAll = pace(people, true) * longer;
+        double perHour = 0;
+        int seats = 0;
+        for (SessionSnapshot.ScoutView s : people) {
+            if (s.rideName != null) {
+                seats += s.rideSeats;
+                perHour += s.rideFuel;
+            }
+        }
+        if (perHour <= 0 || seats < people.size()) {
+            return new Trip(TimelineGenerator.tripMillis(min, max, pace(people, perHour <= 0) * longer), 0, false);
+        }
+        long millis = TimelineGenerator.tripMillis(min, max, withAll);
+        int need = Math.max(1, (int) Math.ceil(perHour * millis / 3_600_000.0));
+        if (need > snapshot.base.fuel) {
+            return new Trip(TimelineGenerator.tripMillis(min, max, pace(people, false) * longer), need, true);
+        }
+        return new Trip(millis, need, false);
     }
 
-    private static long trip(int min, int max, double pace) {
-        return TimelineGenerator.tripMillis(min, max, pace);
+    /** @param engines whether rides that burn fuel count */
+    private static double pace(List<SessionSnapshot.ScoutView> people, boolean engines) {
+        double[] walk = new double[people.size()];
+        List<double[]> rides = new ArrayList<>();
+        for (int i = 0; i < people.size(); i++) {
+            SessionSnapshot.ScoutView s = people.get(i);
+            walk[i] = s.pace;
+            if (s.rideName != null && (engines || s.rideFuel <= 0)) {
+                rides.add(new double[]{s.ridePace, s.rideSeats});
+            }
+        }
+        double[] ridePace = new double[rides.size()];
+        int[] seats = new int[rides.size()];
+        for (int i = 0; i < ridePace.length; i++) {
+            ridePace[i] = rides.get(i)[0];
+            seats[i] = (int) rides.get(i)[1];
+        }
+        return com.estatica.domain.scouts.ScoutRules.teamPace(walk, ridePace, seats);
+    }
+
+    /** "⛽ 4 fuel" / "⛽ needs 4 fuel: on foot", or null when no engine goes. */
+    private static String fuelNote(Resources res, Trip trip) {
+        if (trip.fuel <= 0) {
+            return null;
+        }
+        return trip.dry ? res.getString(R.string.send_fuel_dry, trip.fuel) : res.getString(R.string.send_fuel, trip.fuel);
     }
 
     /** "45 s", "12 min", "1 h 05 min", "6 h". */
@@ -511,6 +641,11 @@ final class SendPanel {
                 return z.name;
             }
         }
+        for (SessionSnapshot.DeepRunView d : snapshot.deepRuns) {
+            if (d.id.equals(parts[1])) {
+                return d.name + " " + roman(parts[2].isEmpty() ? 1 : Integer.parseInt(parts[2]));
+            }
+        }
         return parts[1];
     }
 
@@ -522,6 +657,11 @@ final class SendPanel {
         }
         for (SessionSnapshot.ZoneView z : snapshot.zones) {
             if ((Mission.Type.EXPLORE.name() + "|" + z.id + "|").equals(key)) {
+                return true;
+            }
+        }
+        for (SessionSnapshot.DeepRunView d : snapshot.deepRuns) {
+            if (key.startsWith(Mission.Type.DEEP.name() + "|" + d.id + "|")) {
                 return true;
             }
         }
@@ -546,7 +686,7 @@ final class SendPanel {
         }
         String[] parts = destination.split("\\|", -1);
         viewModel.dispatch(team.get(0), parts[1], Mission.Type.valueOf(parts[0]),
-                parts[2].isEmpty() ? null : parts[2], team.size() > 1 ? team.get(1) : null);
+                parts[2].isEmpty() ? null : parts[2], new ArrayList<>(team.subList(1, team.size())));
         host.close();
     }
 
@@ -581,6 +721,7 @@ final class SendPanel {
         SessionSnapshot.ScoutView scout;
         SessionSnapshot.ZoneView zone;
         SessionSnapshot.MissionView mission;
+        SessionSnapshot.DeepRunView deep;
         String text;
 
         private Entry(int type, String key) {
@@ -603,6 +744,18 @@ final class SendPanel {
         static Entry mission(SessionSnapshot.MissionView m) {
             Entry e = new Entry(PLACE, "m:" + m.type + m.zoneId + m.target);
             e.mission = m;
+            return e;
+        }
+
+        static Entry deep(SessionSnapshot.DeepRunView d) {
+            Entry e = new Entry(PLACE, "d:" + d.id);
+            e.deep = d;
+            return e;
+        }
+
+        static Entry tiers(SessionSnapshot.DeepRunView d) {
+            Entry e = new Entry(TIERS, "tiers");
+            e.deep = d;
             return e;
         }
 
@@ -646,6 +799,14 @@ final class SendPanel {
                 ItemPlaceBinding p = ItemPlaceBinding.inflate(inflater, parent, false);
                 return new Holder<>(p.getRoot(), p);
             }
+            if (viewType == TIERS) {
+                android.widget.LinearLayout row = new android.widget.LinearLayout(parent.getContext());
+                row.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+                row.setBaselineAligned(false);
+                row.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT));
+                return new Holder<>(row, row);
+            }
             TextView note = (TextView) inflater.inflate(R.layout.item_log_line, parent, false);
             note.setTextColor(ContextCompat.getColor(parent.getContext(), R.color.amber_dim));
             note.setPadding(note.getPaddingLeft() + 8, 12, note.getPaddingRight(), 4);
@@ -661,9 +822,13 @@ final class SendPanel {
             } else if (e.type == PLACE) {
                 if (e.zone != null) {
                     bindZone((ItemPlaceBinding) binding, e.zone);
+                } else if (e.deep != null) {
+                    bindDeep((ItemPlaceBinding) binding, e.deep);
                 } else {
                     bindMission((ItemPlaceBinding) binding, e.mission);
                 }
+            } else if (e.type == TIERS) {
+                bindTiers((android.widget.LinearLayout) binding, e.deep);
             } else {
                 ((TextView) binding).setText(e.text);
             }

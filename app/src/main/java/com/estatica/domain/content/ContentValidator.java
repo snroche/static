@@ -468,6 +468,7 @@ public final class ContentValidator {
 
         List<ZoneDef> allZones = new ArrayList<>(content.getZones().values());
         allZones.addAll(content.getWilds());
+        allZones.addAll(content.getDeepRuns());
         java.util.Set<String> bandsWithPlaces = new java.util.HashSet<>();
         for (ZoneDef z : content.getZones().values()) {
             bandsWithPlaces.add(z.getBand());

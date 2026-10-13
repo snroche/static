@@ -39,7 +39,9 @@ public class ContentParserTest {
     public void everyEventIsReachableFromSomeZone() {
         GameContent content = TestContent.get();
         for (String eventId : content.getEvents().keySet()) {
-            boolean used = content.getZones().values().stream()
+            java.util.List<com.estatica.domain.content.ZoneDef> places = new java.util.ArrayList<>(content.getZones().values());
+            places.addAll(content.getDeepRuns());
+            boolean used = places.stream()
                     .anyMatch(z -> z.getEvents().contains(eventId)
                             || content.event(eventId).getBands().contains(z.getBand()))
                     || content.getStory().getPersonalMissions().stream()

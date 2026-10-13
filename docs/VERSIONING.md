@@ -66,6 +66,7 @@ Rules:
 | 10 | 0.6.5 | Log threads: `log_lines.thread` (+ index) |
 | 11 | 0.6.6 | Places run dry: `expeditions.loot_factor` |
 | 12 | 0.6.7 | Ciphers: `transmissions.cipher_key` |
+| 13 | 0.6.15 | Teams of three: `expeditions.third_id` |
 
 `MigrationsTest` (JVM) compares each migration's SQL against the exported schemas. When adding a migration, extend that test.
 

@@ -115,5 +115,40 @@
     "output": "gear_cinturon",
     "minutes": 6,
     "minWorkshopLevel": 2
+  },
+  {
+    "id": "bici",
+    "name": "Bicycle",
+    "inputs": {
+      "scrap": 8,
+      "parts": 2
+    },
+    "output": "gear_bici",
+    "minutes": 30
+  },
+  {
+    "id": "moto",
+    "name": "Motorbike",
+    "inputs": {
+      "scrap": 12,
+      "components": 8,
+      "parts": 6
+    },
+    "output": "gear_moto",
+    "minutes": 90,
+    "minWorkshopLevel": 2
+  },
+  {
+    "id": "camioneta",
+    "name": "Pickup truck",
+    "inputs": {
+      "scrap": 24,
+      "components": 14,
+      "parts": 12,
+      "fuel": 4
+    },
+    "output": "gear_camioneta",
+    "minutes": 180,
+    "minWorkshopLevel": 3
   }
 ]

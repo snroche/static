@@ -58,9 +58,75 @@ public final class ScoutRules {
             m *= trait.getLootMultiplier();
         }
         for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
-            m *= com.estatica.domain.bunker.GearRules.lootMultiplier(content.gear(piece.getGearId()), piece);
+            if (!content.gear(piece.getGearId()).isRide()) {
+                m *= com.estatica.domain.bunker.GearRules.lootMultiplier(content.gear(piece.getGearId()), piece);
+            }
         }
         return m;
+    }
+
+    /** The working ride this person has (bike, motorbike, truck), or null. */
+    public com.estatica.domain.bunker.GearPiece ride(Scout scout) {
+        for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
+            if (content.gear(piece.getGearId()).isRide()) {
+                return piece;
+            }
+        }
+        return null;
+    }
+
+    /** How much more their ride brings home (a truck's bed), 1 without. */
+    public double rideLootMultiplier(Scout scout) {
+        com.estatica.domain.bunker.GearPiece piece = ride(scout);
+        return piece == null ? 1.0
+                : com.estatica.domain.bunker.GearRules.lootMultiplier(content.gear(piece.getGearId()), piece);
+    }
+
+    /**
+     * How fast a team goes: everyone walks at the slowest one's pace, unless the team's rides
+     * have a seat for everybody; then they go at the slowest ride's pace.
+     *
+     * @param stalled ride piece ids left parked (no fuel)
+     */
+    public double teamPace(List<Scout> team, java.util.Set<String> stalled) {
+        double[] walk = new double[team.size()];
+        List<Double> rides = new ArrayList<>();
+        List<Integer> seats = new ArrayList<>();
+        for (int i = 0; i < team.size(); i++) {
+            Scout s = team.get(i);
+            walk[i] = durationMultiplier(s);
+            com.estatica.domain.bunker.GearPiece piece = ride(s);
+            if (piece != null && !stalled.contains(piece.getId())) {
+                GearDef def = content.gear(piece.getGearId());
+                rides.add(def.getDurationMultiplier());
+                seats.add(def.getSeats());
+            }
+        }
+        double[] r = new double[rides.size()];
+        int[] st = new int[seats.size()];
+        for (int i = 0; i < r.length; i++) {
+            r[i] = rides.get(i);
+            st[i] = seats.get(i);
+        }
+        return teamPace(walk, r, st);
+    }
+
+    /** Pure version, shared with the send screen. */
+    public static double teamPace(double[] walk, double[] rides, int[] seats) {
+        double slowest = 0;
+        for (double w : walk) {
+            slowest = Math.max(slowest, w);
+        }
+        int totalSeats = 0;
+        double slowestRide = 0;
+        for (int i = 0; i < rides.length; i++) {
+            totalSeats += seats[i];
+            slowestRide = Math.max(slowestRide, rides[i]);
+        }
+        if (rides.length > 0 && totalSeats >= walk.length) {
+            return slowestRide;
+        }
+        return slowest > 0 ? slowest : 1.0;
     }
 
     /** Pieces worn that still work (broken ones do nothing). */
@@ -117,10 +183,14 @@ public final class ScoutRules {
         return factor;
     }
 
+    /** On foot: boots and traits. Rides count per team ({@link #teamPace}). */
     public double durationMultiplier(Scout scout) {
         double m = 1.0;
         for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
-            m *= content.gear(piece.getGearId()).getDurationMultiplier();
+            GearDef def = content.gear(piece.getGearId());
+            if (!def.isRide()) {
+                m *= def.getDurationMultiplier();
+            }
         }
         for (TraitDef trait : traitsOf(scout)) {
             m *= trait.getDurationMultiplier();

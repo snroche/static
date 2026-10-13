@@ -8,8 +8,37 @@ import java.util.Map;
  */
 public final class GearDef {
 
-    /** Where it's worn: one piece per slot. */
-    public enum Slot { HEAD, NECK, BODY, HANDS, BELT, BACK, FEET }
+    /** Where it's worn: one piece per slot. RIDE: a bike or a vehicle, shared with the team. */
+    public enum Slot { HEAD, NECK, BODY, HANDS, BELT, BACK, FEET, RIDE }
+
+    /** RIDE: how many it carries (rider included). */
+    private int seats = 1;
+    /** RIDE: fuel burned per hour on the road (0: pedal power). */
+    private double fuelPerHour;
+    /** Turns up in random finds out there (vehicles don't: they're built). */
+    private boolean findable = true;
+    /** Repairs cost this many times the usual (a truck isn't a flashlight). */
+    private int repairScale = 1;
+
+    public int getRepairScale() {
+        return Math.max(1, repairScale);
+    }
+
+    public int getSeats() {
+        return seats;
+    }
+
+    public double getFuelPerHour() {
+        return fuelPerHour;
+    }
+
+    public boolean isFindable() {
+        return findable && getSlot() != Slot.RIDE;
+    }
+
+    public boolean isRide() {
+        return getSlot() == Slot.RIDE;
+    }
 
     private Slot slot;
     /** Shorter expeditions (boots); 1 = no change. */

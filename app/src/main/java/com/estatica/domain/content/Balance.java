@@ -332,6 +332,92 @@ public final class Balance {
         }
     }
 
+    private Retrain retrain = new Retrain();
+    private Fuel fuel = new Fuel();
+    private DeepRuns deepRuns = new DeepRuns();
+
+    public Retrain getRetrain() {
+        return retrain != null ? retrain : new Retrain();
+    }
+
+    public Fuel getFuel() {
+        return fuel != null ? fuel : new Fuel();
+    }
+
+    public DeepRuns getDeepRuns() {
+        return deepRuns != null ? deepRuns : new DeepRuns();
+    }
+
+    /** Retraining once every stat is maxed. [placeholder] */
+    public static final class Retrain {
+        private int ceilingGain = 1;
+        private int focusGain = 1;
+        /** Share of each stat kept. */
+        private double keep = 0.5;
+        private double farPenaltyPerTier = 0.04;
+
+        public int getCeilingGain() {
+            return ceilingGain;
+        }
+
+        public int getFocusGain() {
+            return focusGain;
+        }
+
+        public double getKeep() {
+            return keep;
+        }
+
+        public double getFarPenaltyPerTier() {
+            return farPenaltyPerTier;
+        }
+    }
+
+    /** Fuel: rides with engines and the generator in a blackout. [placeholder] */
+    public static final class Fuel {
+        /** Burned per blackout hour to cover the missing watts. */
+        private double generatorPerHour = 1.0;
+
+        public double getGeneratorPerHour() {
+            return generatorPerHour;
+        }
+    }
+
+    /** Deep runs past the map's edge (VLF): never picked clean, harder by the tier. [placeholder] */
+    public static final class DeepRuns {
+        /** Antenna level per tier (index 0 = tier 1). */
+        private int[] tierAntenna = {7, 7, 8};
+        private double durationPerTier = 0.5;
+        private double lootPerTier = 0.6;
+        /** Odds lost per tier above the first. */
+        private double oddsPerTier = 0.08;
+        private int dangerPerTier = 1;
+
+        public int[] getTierAntenna() {
+            return tierAntenna;
+        }
+
+        public int tiers() {
+            return tierAntenna.length;
+        }
+
+        public double durationFactor(int tier) {
+            return 1 + Math.max(0, tier - 1) * durationPerTier;
+        }
+
+        public double lootFactor(int tier) {
+            return 1 + Math.max(0, tier - 1) * lootPerTier;
+        }
+
+        public double oddsPenalty(int tier) {
+            return Math.max(0, tier - 1) * oddsPerTier;
+        }
+
+        public int extraDanger(int tier) {
+            return Math.max(0, tier - 1) * dangerPerTier;
+        }
+    }
+
     public Pairs getPairs() {
         return pairs;
     }
@@ -353,6 +439,19 @@ public final class Balance {
         private int rivalArgueStress;
         /** Affinity gained by coming back together. */
         private double affinityPerTrip;
+
+        /** Three on a trip. */
+        private double trioLootMultiplier = 1.7;
+        /** Two companions carrying a dying lead: a better chance. */
+        private double secondCarrierBonus = 0.15;
+
+        public double getTrioLootMultiplier() {
+            return trioLootMultiplier;
+        }
+
+        public double getSecondCarrierBonus() {
+            return secondCarrierBonus;
+        }
 
         public double getLootMultiplier() {
             return lootMultiplier;

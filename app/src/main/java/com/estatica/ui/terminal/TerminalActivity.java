@@ -60,7 +60,7 @@ public final class TerminalActivity extends ComponentActivity {
 
     private Tab tab = Tab.COMMS;
 
-    private enum Panel { NONE, SCOUTS, SCOUT_DETAIL, GIFTS, TASKS, DIARY, RECIPES, SCOUT_SECTOR, GEAR_SLOT }
+    private enum Panel { NONE, SCOUTS, SCOUT_DETAIL, GIFTS, TASKS, DIARY, RECIPES, SCOUT_SECTOR, GEAR_SLOT, RETRAIN }
 
     /** Crew grid, and the one person shown in full. */
     private com.estatica.ui.scouts.CrewTileAdapter crewTiles;
@@ -117,7 +117,7 @@ public final class TerminalActivity extends ComponentActivity {
             } else if (panel == Panel.RECIPES) {
                 showPanel(Panel.NONE);
                 bunkerPanel.show();
-            } else if (panel == Panel.GEAR_SLOT || panel == Panel.TASKS) {
+            } else if (panel == Panel.GEAR_SLOT || panel == Panel.TASKS || panel == Panel.RETRAIN) {
                 showPanel(Panel.SCOUT_DETAIL);
             } else if (sendPanel.isShown()) {
                 sendPanel.hide();
@@ -924,6 +924,12 @@ public final class TerminalActivity extends ComponentActivity {
             }
 
             @Override
+            public void onRetrain(SessionSnapshot.ScoutView scout) {
+                select(scout);
+                showPanel(Panel.RETRAIN);
+            }
+
+            @Override
             public void onSlot(SessionSnapshot.ScoutView scout, String slot) {
                 select(scout);
                 pendingSlot = slot;
@@ -1063,6 +1069,11 @@ public final class TerminalActivity extends ComponentActivity {
             case GIFTS:
                 viewModel.gift(selectedScoutId, row.key);
                 break;
+            case RETRAIN:
+                viewModel.retrain(selectedScoutId, row.key);
+                showPanel(Panel.SCOUT_DETAIL);
+                updateBack();
+                return;
             case TASKS:
                 viewModel.assignTask(selectedScoutId, row.key);
                 showPanel(Panel.SCOUT_DETAIL); // back to their page, task updated
@@ -1215,6 +1226,21 @@ public final class TerminalActivity extends ComponentActivity {
                 binding.panelTitle.setText(getString(R.string.panel_task_title, selectedScoutName));
                 taskRows(rows);
                 break;
+            case RETRAIN: {
+                binding.panelTitle.setText(getString(R.string.retrain_title, selectedScoutName));
+                SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
+                rows.add(new PickerAdapter.Row("-", getString(R.string.retrain_help), null, null, false));
+                String[] keys = {"endurance", "stealth", "wits", "nerve", "craft"};
+                if (who != null) {
+                    for (int i = 0; i < who.stats.size() && i < keys.length; i++) {
+                        SessionSnapshot.StatView stat = who.stats.get(i);
+                        rows.add(new PickerAdapter.Row(keys[i], getString(R.string.retrain_focus, stat.name),
+                                getString(R.string.retrain_meta, stat.value, (stat.value + 1) / 2, stat.ceiling,
+                                        stat.ceiling + 2), null, true));
+                    }
+                }
+                break;
+            }
             case GEAR_SLOT: {
                 SessionSnapshot.ScoutView who = scoutById(selectedScoutId);
                 SessionSnapshot.SlotView current = null;

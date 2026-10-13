@@ -167,6 +167,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/veteran"
+            style="@style/TerminalText.Bright"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/retrain"
+            style="@style/TerminalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/person_retrain" />
     </LinearLayout>
 
     <!-- FILE -->

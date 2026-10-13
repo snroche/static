@@ -51,6 +51,13 @@
     "use": "Rare mechanical parts. High-level upgrades and repairs of rare gear."
   },
   {
+    "id": "fuel",
+    "name": "Fuel",
+    "shortName": "FUL",
+    "icon": "󰟊",
+    "use": "Petrol and diesel. Motorbikes and trucks burn it on the road; the generator can burn it through a blackout."
+  },
+  {
     "id": "gear_linterna",
     "name": "Flashlight",
     "kind": "GEAR"
@@ -98,6 +105,21 @@
   {
     "id": "gear_guantes",
     "name": "Work gloves",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_bici",
+    "name": "Bicycle",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_moto",
+    "name": "Motorbike",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_camioneta",
+    "name": "Pickup truck",
     "kind": "GEAR"
   }
 ]

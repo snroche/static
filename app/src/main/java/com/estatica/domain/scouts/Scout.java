@@ -94,6 +94,11 @@ public final class Scout {
         return stats.get(type);
     }
 
+    /** Retraining: a new value and a higher ceiling. */
+    public void setStat(StatType type, Stat stat) {
+        stats.put(type, stat);
+    }
+
     public Map<StatType, Stat> getStats() {
         return Collections.unmodifiableMap(stats);
     }

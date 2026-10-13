@@ -1,5 +1,5 @@
 {
-  "contentVersion": 22,
+  "contentVersion": 23,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -230,6 +230,20 @@
           "components": 20,
           "batteries": 8,
           "parts": 6
+        },
+        {
+          "scrap": 60,
+          "components": 30,
+          "batteries": 12,
+          "parts": 12,
+          "fuel": 6
+        },
+        {
+          "scrap": 80,
+          "components": 40,
+          "batteries": 16,
+          "parts": 18,
+          "fuel": 10
         }
       ],
       "levels": [
@@ -238,7 +252,9 @@
         "Medium band with a steadier signal.",
         "Opens the long band: the far country.",
         "Long band at full reach.",
-        "Opens the deep band: nothing to scout out there, only voices."
+        "Opens the deep band: nothing to scout out there, only voices.",
+        "VLF: a long wire down the hill. You can talk back that far: deep runs open (tiers I and II).",
+        "VLF at full reach: the hardest deep runs (tier III)."
       ]
     },
     {
@@ -615,7 +631,7 @@
     "maxPenalty": 0.75
   },
   "pairs": {
-    "_comment": "Two-scout expeditions. [placeholder]",
+    "_comment": "Two- and three-scout expeditions. [placeholder]",
     "lootMultiplier": 1.4,
     "supportPerPoint": 0.03,
     "maxSupport": 0.12,
@@ -628,7 +644,9 @@
     "carryPerEndurance": 0.04,
     "chatterChance": 0.4,
     "rivalArgueStress": 4,
-    "affinityPerTrip": 5
+    "affinityPerTrip": 5,
+    "trioLootMultiplier": 1.7,
+    "secondCarrierBonus": 0.15
   },
   "gear": {
     "_comment": "Equipment rarity, wear and repair. [placeholder]",
@@ -965,5 +983,28 @@
       "sealed": "A steel door with a combination lock. Someone scratched SECRET on it.",
       "description": "Filing cabinets from before. Someone kept records of everything."
     }
-  ]
+  ],
+  "retrain": {
+    "_comment": "Retraining once every stat is maxed. [placeholder]",
+    "ceilingGain": 1,
+    "focusGain": 1,
+    "keep": 0.5,
+    "farPenaltyPerTier": 0.04
+  },
+  "fuel": {
+    "_comment": "Fuel for the generator in blackouts. [placeholder]",
+    "generatorPerHour": 1.0
+  },
+  "deepRuns": {
+    "_comment": "Past the map's edge on VLF; tiers need antenna levels. [placeholder]",
+    "tierAntenna": [
+      7,
+      7,
+      8
+    ],
+    "durationPerTier": 0.5,
+    "lootPerTier": 0.6,
+    "oddsPerTier": 0.08,
+    "dangerPerTier": 1
+  }
 }

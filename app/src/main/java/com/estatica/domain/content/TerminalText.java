@@ -525,6 +525,41 @@ public final class TerminalText {
             return gearFound;
         }
 
+        /** {who}, {ride}, {fuel}. */
+        private String fuelUsed;
+        private String noFuel;
+        /** {name}, {stat}, {tier}. */
+        private String retrained;
+        /** {fuel}, {hours}. */
+        private String generatorFuel;
+        private String generatorDry;
+        /** Mara and her old bike. */
+        private String maraBike;
+
+        public String getFuelUsed() {
+            return fuelUsed;
+        }
+
+        public String getNoFuel() {
+            return noFuel;
+        }
+
+        public String getRetrained() {
+            return retrained;
+        }
+
+        public String getGeneratorFuel() {
+            return generatorFuel;
+        }
+
+        public String getGeneratorDry() {
+            return generatorDry;
+        }
+
+        public String getMaraBike() {
+            return maraBike;
+        }
+
         public String getGearWorn() {
             return gearWorn;
         }

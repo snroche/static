@@ -26,6 +26,8 @@ public final class ZoneDef {
     private List<String> transit;
     /** Scouting ground for a band: not a place on the map, never listed as a zone. */
     private boolean wilds;
+    /** A deep run past the map's edge: never discovered, never picked clean. */
+    private boolean endless;
     /** Map glyph (Nerd Font) and a short label for the map. */
     private String icon;
     private String shortName;
@@ -41,6 +43,10 @@ public final class ZoneDef {
 
     public boolean isWilds() {
         return wilds;
+    }
+
+    public boolean isEndless() {
+        return endless;
     }
 
     public String getId() {

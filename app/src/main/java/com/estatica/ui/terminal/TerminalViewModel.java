@@ -320,12 +320,17 @@ public final class TerminalViewModel extends ViewModel {
     }
 
     void dispatch(String scoutId, String zoneId, Mission.Type type, String target) {
-        dispatch(scoutId, zoneId, type, target, null);
+        dispatch(scoutId, zoneId, type, target, List.of());
     }
 
     void dispatch(String scoutId, String zoneId, Mission.Type type, String target, String partnerId) {
+        dispatch(scoutId, zoneId, type, target, partnerId != null ? List.of(partnerId) : List.of());
+    }
+
+    /** A team: the lead and up to two more. */
+    void dispatch(String scoutId, String zoneId, Mission.Type type, String target, List<String> companions) {
         if (ready) {
-            run(step -> step.animated.addAll(session.dispatch(scoutId, zoneId, type, target, partnerId)));
+            run(step -> step.animated.addAll(session.dispatch(scoutId, zoneId, type, target, companions)));
         }
     }
 
@@ -546,6 +551,18 @@ public final class TerminalViewModel extends ViewModel {
     void assignTask(String scoutId, String taskId) {
         if (ready) {
             run(step -> step.animated.addAll(session.assignTask(scoutId, taskId)));
+        }
+    }
+
+    void retrain(String scoutId, String statKey) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.retrain(scoutId, statKey)));
+        }
+    }
+
+    void toggleFuelGenerator() {
+        if (ready) {
+            run(step -> step.animated.addAll(session.toggleFuelGenerator()));
         }
     }
 

@@ -115,6 +115,12 @@
         "min": 1,
         "max": 2,
         "weight": 1
+      },
+      {
+        "resource": "fuel",
+        "min": 1,
+        "max": 3,
+        "weight": 3
       }
     ],
     "transit": [
@@ -535,6 +541,12 @@
         "min": 2,
         "max": 4,
         "weight": 1
+      },
+      {
+        "resource": "fuel",
+        "min": 1,
+        "max": 3,
+        "weight": 1
       }
     ],
     "items": [
@@ -604,6 +616,12 @@
       },
       {
         "resource": "batteries",
+        "min": 1,
+        "max": 3,
+        "weight": 1
+      },
+      {
+        "resource": "fuel",
         "min": 1,
         "max": 3,
         "weight": 1
@@ -687,6 +705,12 @@
         "min": 1,
         "max": 2,
         "weight": 1
+      },
+      {
+        "resource": "fuel",
+        "min": 2,
+        "max": 5,
+        "weight": 1
       }
     ],
     "items": [
@@ -766,6 +790,12 @@
         "resource": "rations",
         "min": 1,
         "max": 2,
+        "weight": 1
+      },
+      {
+        "resource": "fuel",
+        "min": 2,
+        "max": 5,
         "weight": 1
       }
     ],
@@ -943,6 +973,12 @@
         "min": 1,
         "max": 2,
         "weight": 1
+      },
+      {
+        "resource": "fuel",
+        "min": 1,
+        "max": 3,
+        "weight": 1
       }
     ],
     "transit": [
@@ -997,6 +1033,12 @@
         "min": 1,
         "max": 2,
         "weight": 1
+      },
+      {
+        "resource": "fuel",
+        "min": 2,
+        "max": 5,
+        "weight": 1
       }
     ],
     "transit": [
@@ -1004,5 +1046,188 @@
       "Found a road sign still standing. Copied it.",
       "The wind out here never stops. Neither do I."
     ]
+  },
+  {
+    "id": "deep_drowned",
+    "name": "The drowned city",
+    "band": "deep",
+    "endless": true,
+    "description": "A coast city half under the water. Rooftops like islands, and the shops up high still full.",
+    "danger": 4,
+    "durationMinutes": [
+      360,
+      600
+    ],
+    "situations": [
+      3,
+      5
+    ],
+    "finds": [
+      3,
+      4
+    ],
+    "events": [
+      "deep_static_storm",
+      "deep_convoy",
+      "deep_tracks",
+      "deep_other_bunker",
+      "deep_night_lights",
+      "deep_broken_axle",
+      "deep_flooded_mall",
+      "deep_ferry"
+    ],
+    "loot": [
+      {
+        "resource": "components",
+        "min": 3,
+        "max": 7,
+        "weight": 3
+      },
+      {
+        "resource": "medicine",
+        "min": 2,
+        "max": 5,
+        "weight": 2
+      },
+      {
+        "resource": "parts",
+        "min": 2,
+        "max": 4,
+        "weight": 2
+      },
+      {
+        "resource": "fuel",
+        "min": 3,
+        "max": 7,
+        "weight": 2
+      }
+    ],
+    "items": [],
+    "transit": [
+      "Salt on everything. The road just goes into the sea.",
+      "Rooftop to rooftop now. Planks somebody left.",
+      "The water's still. Too still. Something big moved under it."
+    ],
+    "shortName": "Drowned"
+  },
+  {
+    "id": "deep_salt",
+    "name": "The salt flats",
+    "band": "deep",
+    "endless": true,
+    "description": "White to the horizon. Convoys tried to cross it when everything fell; most of them are still there.",
+    "danger": 4,
+    "durationMinutes": [
+      300,
+      540
+    ],
+    "situations": [
+      3,
+      4
+    ],
+    "finds": [
+      3,
+      4
+    ],
+    "events": [
+      "deep_static_storm",
+      "deep_convoy",
+      "deep_tracks",
+      "deep_other_bunker",
+      "deep_night_lights",
+      "deep_broken_axle",
+      "deep_salt_mirage",
+      "deep_salt_wreck"
+    ],
+    "loot": [
+      {
+        "resource": "fuel",
+        "min": 4,
+        "max": 9,
+        "weight": 3
+      },
+      {
+        "resource": "parts",
+        "min": 2,
+        "max": 5,
+        "weight": 3
+      },
+      {
+        "resource": "batteries",
+        "min": 2,
+        "max": 5,
+        "weight": 2
+      },
+      {
+        "resource": "rations",
+        "min": 2,
+        "max": 6,
+        "weight": 1
+      }
+    ],
+    "items": [],
+    "transit": [
+      "Nothing but white. My eyes hurt even through the cloth.",
+      "Tyre tracks, old ones, all going the same way. Away.",
+      "The radio's clearer out here. Nothing to stop it."
+    ],
+    "shortName": "Salt"
+  },
+  {
+    "id": "deep_observatory",
+    "name": "The mountain observatory",
+    "band": "deep",
+    "endless": true,
+    "description": "A dome on a peak, built to listen to the sky. Its dishes still turn. Nobody knows who turns them.",
+    "danger": 5,
+    "durationMinutes": [
+      420,
+      660
+    ],
+    "situations": [
+      3,
+      5
+    ],
+    "finds": [
+      3,
+      4
+    ],
+    "events": [
+      "deep_static_storm",
+      "deep_convoy",
+      "deep_tracks",
+      "deep_other_bunker",
+      "deep_night_lights",
+      "deep_broken_axle",
+      "deep_dome",
+      "deep_dish"
+    ],
+    "loot": [
+      {
+        "resource": "components",
+        "min": 4,
+        "max": 8,
+        "weight": 3
+      },
+      {
+        "resource": "parts",
+        "min": 3,
+        "max": 6,
+        "weight": 3
+      },
+      {
+        "resource": "batteries",
+        "min": 3,
+        "max": 6,
+        "weight": 2
+      }
+    ],
+    "items": [],
+    "transit": [
+      "Switchbacks, one after another. The air's thin.",
+      "Snow up here. Real snow. I'd forgotten.",
+      "The dish turned while I watched. Toward us."
+    ],
+    "shortName": "Dome"
   }
 ]

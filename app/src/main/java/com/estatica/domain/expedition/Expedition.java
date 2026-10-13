@@ -54,9 +54,20 @@ public final class Expedition {
         this.partnerId = partnerId;
     }
 
-    /** True if this scout is the lead or the partner. */
+    /** Third member of a team of three, or null. */
+    private String thirdId;
+
+    public String getThirdId() {
+        return thirdId;
+    }
+
+    public void setThirdId(String thirdId) {
+        this.thirdId = thirdId;
+    }
+
+    /** True if this scout is on the team. */
     public boolean involves(String scoutId) {
-        return getScoutId().equals(scoutId) || scoutId.equals(partnerId);
+        return getScoutId().equals(scoutId) || scoutId.equals(partnerId) || scoutId.equals(thirdId);
     }
 
     public Expedition(String id, String scoutId, String zoneId, long seed, long startedAtMillis,

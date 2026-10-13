@@ -20,7 +20,9 @@ public final class Mission {
         /** A scout's own arc (target: personal mission id). */
         PERSONAL,
         /** Map out a sector of the region (target: sector id); goes through the band's wilds. */
-        SCOUT
+        SCOUT,
+        /** Past the map's edge on VLF (target: tier "1"–"3"). Never picked clean. */
+        DEEP
     }
 
     private final Type type;
@@ -51,6 +53,18 @@ public final class Mission {
         this.orderDelayMillis = orderDelayMillis;
         this.cacheIntel = cacheIntel;
         this.dangerIntel = dangerIntel;
+    }
+
+    /** DEEP: the difficulty tier (1…), else 0. */
+    public int getTier() {
+        if (type != Type.DEEP || target == null) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(target);
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     /** A plain scavenging run with a clean signal. */

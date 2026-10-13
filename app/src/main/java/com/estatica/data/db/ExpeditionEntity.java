@@ -87,4 +87,9 @@ public class ExpeditionEntity {
     @androidx.annotation.Nullable
     @ColumnInfo(name = "partner_id")
     public String partnerId;
+
+    /** DB v13: third scout on a team of three. */
+    @androidx.annotation.Nullable
+    @ColumnInfo(name = "third_id")
+    public String thirdId;
 }

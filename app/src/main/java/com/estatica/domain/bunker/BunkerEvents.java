@@ -65,6 +65,19 @@ public final class BunkerEvents {
         return 0;
     }
 
+    /** Hours of blackout between {@code from} and {@code to}. */
+    public double blackoutHours(long from, long to) {
+        double total = 0;
+        for (long d = Math.floorDiv(from, DAY) - 1; d <= Math.floorDiv(to, DAY); d++) {
+            Blackout b = blackoutOn(d);
+            if (b != null) {
+                long overlap = Math.min(to, b.end) - Math.max(from, b.start);
+                total += Math.max(0, overlap) / (double) HOUR;
+            }
+        }
+        return total;
+    }
+
     /** Blackouts that started in {@code (from, to]}. */
     public List<Blackout> blackoutsStarting(long from, long to) {
         List<Blackout> out = new ArrayList<>();

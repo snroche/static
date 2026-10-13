@@ -115,6 +115,7 @@ public final class GameSession {
     private GameContent content;
     private ExpeditionEngine engine;
     private ScoutRules rules;
+    private com.estatica.domain.scouts.RetrainRules retrainRules;
     private BunkerRules bunker;
     private DialogueEngine dialogues;
     private com.estatica.domain.scouts.RomanceRules romance;
@@ -206,6 +207,7 @@ public final class GameSession {
         content = contentRepository.get();
         engine = new ExpeditionEngine(content);
         rules = engine.rules();
+        retrainRules = new com.estatica.domain.scouts.RetrainRules(content.getBalance().getRetrain());
         bunker = new BunkerRules(content, rules);
         dialogues = new DialogueEngine(content, rules, new DialogueEngine.Relations() {
             @Override
@@ -578,15 +580,21 @@ public final class GameSession {
             }
             if (result.isReturned()) {
                 recoverLostItems(scout, expedition.getZoneId(), step);
-                if (!content.zone(expedition.getZoneId()).isWilds()) {
+                ZoneDef visited = content.zone(expedition.getZoneId());
+                if (!visited.isWilds() && !visited.isEndless()) {
                     pickOver(expedition.getZoneId(), step);
                 }
                 gearAfterTrip(scout, expedition.getZoneId(), step);
-                if (party.partner != null) {
-                    gearAfterTrip(party.partner, expedition.getZoneId(), step);
-                    // Coming back together builds something, even between rivals.
-                    affinities.add(scout.getId(), party.partner.getId(),
-                            content.getBalance().getPairs().getAffinityPerTrip());
+                List<Scout> team = party.everyone(scout);
+                for (int i = 1; i < team.size(); i++) {
+                    gearAfterTrip(team.get(i), expedition.getZoneId(), step);
+                }
+                // Coming back together builds something, even between rivals.
+                for (int i = 0; i < team.size(); i++) {
+                    for (int j = i + 1; j < team.size(); j++) {
+                        affinities.add(team.get(i).getId(), team.get(j).getId(),
+                                content.getBalance().getPairs().getAffinityPerTrip());
+                    }
                 }
                 finishMission(expedition, scout, result.isMissionCompleted(), step);
                 if (result.isMissionCompleted()) {
@@ -625,6 +633,7 @@ public final class GameSession {
         }
 
         expireConversations(step);
+        maraBike(step);
         maybeStartConversation(step);
         maybeBark(step);
         maybeVignette(step);
@@ -1361,7 +1370,7 @@ public final class GameSession {
                            ExpeditionResult result, Step step) {
         TerminalText.ExpeditionText text = content.getTerminal().getExpedition();
         Map<String, String> vars = new HashMap<>();
-        vars.put("who", scout.getName() + (party.partner != null ? " + " + party.partner.getName() : ""));
+        vars.put("who", teamNames(scout, party));
         vars.put("zone", content.zone(expedition.getZoneId()).getName());
         String thread = LogLine.summaryThread(expedition.getId());
         if (result.isSituationArrived() && expedition.isAwaitingDecision()) {
@@ -1384,7 +1393,7 @@ public final class GameSession {
                 vars.put("loot", engine.describeLoot(loot));
                 line.append(TextTemplate.format(text.getSummaryReturned(), vars));
             }
-            for (Scout s : party.partner != null ? List.of(scout, party.partner) : List.of(scout)) {
+            for (Scout s : party.everyone(scout)) {
                 if (s.getInjury() != com.estatica.domain.scouts.Injury.NONE) {
                     Map<String, String> hurt = new HashMap<>();
                     hurt.put("name", s.getName());
@@ -1581,30 +1590,60 @@ public final class GameSession {
      */
     @WorkerThread
     public List<LogLine> dispatch(String scoutId, String zoneId, Mission.Type type, String target) {
-        return dispatch(scoutId, zoneId, type, target, null);
+        return dispatch(scoutId, zoneId, type, target, List.of());
     }
 
     /** Who goes along on an expedition, and how they get on with the lead. */
     private ExpeditionEngine.Party party(Expedition expedition) {
-        Scout partner = expedition.getPartnerId() != null ? scouts.get(expedition.getPartnerId()) : null;
-        if (partner == null || !partner.isAlive()) {
-            return ExpeditionEngine.Party.ALONE;
-        }
         Scout lead = scouts.get(expedition.getScoutId());
-        return new ExpeditionEngine.Party(partner, bunker.relationship(affinities, lead, partner));
+        List<Scout> companions = new ArrayList<>();
+        for (String id : new String[]{expedition.getPartnerId(), expedition.getThirdId()}) {
+            Scout c = id != null ? scouts.get(id) : null;
+            if (c != null && c.isAlive()) {
+                companions.add(c);
+            }
+        }
+        return party(lead, companions, java.util.Set.of());
+    }
+
+    private ExpeditionEngine.Party party(Scout lead, List<Scout> companions, java.util.Set<String> stalled) {
+        Map<String, String> relations = new HashMap<>();
+        for (Scout c : companions) {
+            String relation = bunker.relationship(affinities, lead, c);
+            if (relation != null) {
+                relations.put(c.getId(), relation);
+            }
+        }
+        return new ExpeditionEngine.Party(companions, relations, stalled);
+    }
+
+    /** "Mara + Tano + Irene". */
+    private static String teamNames(Scout lead, ExpeditionEngine.Party party) {
+        StringBuilder out = new StringBuilder(lead.getName());
+        for (Scout c : party.companions) {
+            out.append(" + ").append(c.getName());
+        }
+        return out.toString();
+    }
+
+    /** Sends a scout out, optionally with a partner (GDD §5.3). */
+    @WorkerThread
+    public List<LogLine> dispatch(String scoutId, String zoneId, Mission.Type type, String target, String partnerId) {
+        return dispatch(scoutId, zoneId, type, target, partnerId != null ? List.of(partnerId) : List.of());
     }
 
     /**
-     * Sends a scout out, optionally with a partner (GDD §5.3).
+     * Sends a team out: the lead and up to two more.
      *
-     * @param partnerId second scout, or null to go alone
+     * @param companionIds who goes along, in pick order
      */
     @WorkerThread
-    public List<LogLine> dispatch(String scoutId, String zoneId, Mission.Type type, String target, String partnerId) {
+    public List<LogLine> dispatch(String scoutId, String zoneId, Mission.Type type, String target,
+                                  List<String> companionIds) {
         Step step = new Step();
         advance(step);
         Scout scout = scouts.get(scoutId);
-        ZoneDef zone = content.getZones().get(zoneId);
+        ZoneDef zone = type == Mission.Type.DEEP ? deepRun(zoneId) : content.getZones().get(zoneId);
         if (type == Mission.Type.SCOUT) {
             com.estatica.domain.map.RegionMap.Sector sector = target != null ? regionMap.sector(target) : null;
             zone = sector != null ? content.wilds(sector.bandId) : null;
@@ -1612,8 +1651,18 @@ public final class GameSession {
                 return step.commit();
             }
         }
-        if (scout == null || zone == null || !rules.canDispatch(scout) || !canReach(zone)) {
+        if (scout == null || zone == null || !rules.canDispatch(scout)
+                || (type == Mission.Type.DEEP ? !deepTierOpen(target) : !canReach(zone))) {
             return step.commit();
+        }
+        List<Scout> companions = new ArrayList<>();
+        for (String id : companionIds) {
+            Scout c = id != null ? scouts.get(id) : null;
+            if (c == null || c == scout || companions.contains(c) || !rules.canDispatch(c)
+                    || companions.size() >= MAX_COMPANIONS) {
+                return step.commit();
+            }
+            companions.add(c);
         }
         switch (type) {
             case RESCUE:
@@ -1661,22 +1710,21 @@ public final class GameSession {
         RadioRules.Quality quality = radio.quality(zone, relays, moduleLevel("radio"));
         double noise = quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"));
         noise *= rules.gearNoiseFactor(scout);
-        double lootFactor = zone.isWilds() ? 1.0 : lootFactor(zone.getId(), step.now);
+        double lootFactor = type == Mission.Type.DEEP
+                ? content.getBalance().getDeepRuns().lootFactor(Integer.parseInt(target))
+                : zone.isWilds() ? 1.0 : lootFactor(zone.getId(), step.now);
+        for (Scout c : companions) {
+            // The clearest radio on the team carries the reports.
+            noise = Math.min(noise, quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"))
+                    * rules.gearNoiseFactor(c));
+        }
         Mission mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger,
                 lootFactor);
-        Scout partner = partnerId != null ? scouts.get(partnerId) : null;
-        if (partner != null && (partner == scout || !rules.canDispatch(partner))) {
-            return step.commit();
-        }
-        ExpeditionEngine.Party party = partner == null ? ExpeditionEngine.Party.ALONE
-                : new ExpeditionEngine.Party(partner, bunker.relationship(affinities, scout, partner));
-        if (partner != null) {
-            // The clearer radio of the two carries the reports.
-            noise = Math.min(noise, quality.noise * PowerGrid.radioNoiseFactor(grid(step.now).units("radio"))
-                    * rules.gearNoiseFactor(partner));
-            mission = new Mission(type, target, Math.min(1.0, noise), quality.orderDelayMillis, cache, danger,
-                    lootFactor);
-        }
+        List<Scout> team = new ArrayList<>();
+        team.add(scout);
+        team.addAll(companions);
+        java.util.Set<String> stalled = fuelUp(team, zone, mission, step);
+        ExpeditionEngine.Party party = party(scout, companions, stalled);
         ExpeditionEngine.Dispatch dispatch = engine.dispatch(scout, zone, random.deriveSeed(), mission, party, step.now);
         step.into(dispatch.lines, LogLine.expeditionThread(dispatch.expedition.getId()));
         for (com.estatica.domain.expedition.Segment segment : dispatch.expedition.getSegments()) {
@@ -1685,7 +1733,7 @@ public final class GameSession {
             }
         }
         Map<String, String> left = new HashMap<>();
-        left.put("who", scout.getName() + (partner != null ? " + " + partner.getName() : ""));
+        left.put("who", teamNames(scout, party));
         left.put("zone", zone.getName());
         step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null,
                 TextTemplate.format(content.getTerminal().getExpedition().getSummaryDeparted(), left), scout.getId())
@@ -1693,6 +1741,106 @@ public final class GameSession {
         step.newExpeditions.add(dispatch.expedition);
         active.put(dispatch.expedition.getId(), dispatch.expedition);
         return step.commit();
+    }
+
+    /** Up to two go along with the lead. */
+    private static final int MAX_COMPANIONS = 2;
+
+    /**
+     * Rides with engines need fuel for the whole trip, paid on leaving. If the rides seat the
+     * whole team and there's enough, it's burned; otherwise the engines stay parked (the
+     * team walks, or pedals) and nothing is spent.
+     *
+     * @return ride piece ids left parked
+     */
+    private java.util.Set<String> fuelUp(List<Scout> team, ZoneDef zone, Mission mission, Step step) {
+        java.util.Set<String> engines = new java.util.HashSet<>();
+        int seats = 0;
+        double perHour = 0;
+        List<String> names = new ArrayList<>();
+        for (Scout s : team) {
+            com.estatica.domain.bunker.GearPiece ride = rules.ride(s);
+            if (ride == null) {
+                continue;
+            }
+            GearDef def = content.gear(ride.getGearId());
+            seats += def.getSeats();
+            if (def.getFuelPerHour() > 0) {
+                engines.add(ride.getId());
+                perHour += def.getFuelPerHour();
+                names.add(def.getName().toLowerCase(Locale.ROOT));
+            }
+        }
+        if (engines.isEmpty() || seats < team.size()) {
+            return engines; // nothing burns fuel, or the rides can't take everyone anyway
+        }
+        double pace = rules.teamPace(team, java.util.Set.of())
+                * (mission.getType() == Mission.Type.DEEP
+                ? content.getBalance().getDeepRuns().durationFactor(mission.getTier()) : 1.0);
+        int[] range = zone.getDurationMinutes();
+        double hours = com.estatica.domain.expedition.TimelineGenerator.tripMillis(range[0], range[1], pace)
+                / (double) HOUR;
+        int cost = Math.max(1, (int) Math.ceil(perHour * hours));
+        Map<String, String> vars = new HashMap<>();
+        vars.put("who", team.get(0).getName());
+        vars.put("ride", String.join(", ", names));
+        vars.put("fuel", String.valueOf(cost));
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        if (!canAfford(Map.of("fuel", cost))) {
+            step.system(text.getNoFuel(), vars, team.get(0));
+            return engines;
+        }
+        pay(Map.of("fuel", cost), step);
+        step.system(text.getFuelUsed(), vars, team.get(0));
+        return java.util.Set.of();
+    }
+
+    /** Deep runs, once the antenna reaches the first tier; before that, none. */
+    private List<SessionSnapshot.DeepRunView> deepRunViews() {
+        Balance.DeepRuns tuning = content.getBalance().getDeepRuns();
+        int[] needs = tuning.getTierAntenna();
+        int antenna = moduleLevel("antenna");
+        int maxTier = 0;
+        for (int i = 0; i < needs.length; i++) {
+            if (antenna >= needs[i]) {
+                maxTier = i + 1;
+            }
+        }
+        List<SessionSnapshot.DeepRunView> out = new ArrayList<>();
+        if (maxTier == 0) {
+            return out;
+        }
+        for (ZoneDef z : content.getDeepRuns()) {
+            SessionSnapshot.DeepRunView view = new SessionSnapshot.DeepRunView(z.getId(), z.getName(),
+                    z.getDescription(), z.getDanger(), z.getDurationMinutes()[0], z.getDurationMinutes()[1], maxTier,
+                    tuning.tiers(), needs.clone());
+            view.durationPerTier = tuning.durationFactor(2) - 1;
+            view.lootPerTier = tuning.lootFactor(2) - 1;
+            view.dangerPerTier = tuning.extraDanger(2);
+            out.add(view);
+        }
+        return out;
+    }
+
+    /** A deep run by id, or null. */
+    private ZoneDef deepRun(String zoneId) {
+        for (ZoneDef z : content.getDeepRuns()) {
+            if (z.getId().equals(zoneId)) {
+                return z;
+            }
+        }
+        return null;
+    }
+
+    /** Whether the antenna reaches far enough for this deep-run tier ("1"…). */
+    private boolean deepTierOpen(String tier) {
+        int[] needs = content.getBalance().getDeepRuns().getTierAntenna();
+        try {
+            int t = Integer.parseInt(tier);
+            return t >= 1 && t <= needs.length && moduleLevel("antenna") >= needs[t - 1];
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /** The operator answers a situation. Ignored if it already timed out. */
@@ -1802,7 +1950,8 @@ public final class GameSession {
      */
     private void markLogDone(Expedition expedition, Step step) {
         setValue(LOG_DONE + expedition.getId(), step.now, step);
-        doneTeams.put(expedition.getId(), new String[]{expedition.getScoutId(), expedition.getPartnerId()});
+        doneTeams.put(expedition.getId(),
+                new String[]{expedition.getScoutId(), expedition.getPartnerId(), expedition.getThirdId()});
     }
 
     /** When a situation last came up: recent ones wait at the back of the queue. */
@@ -2884,8 +3033,55 @@ public final class GameSession {
 
     private PowerGrid.State grid(long now) {
         EnergyDef energy = content.getBalance().getEnergy();
-        return PowerGrid.compute(energy, power, moduleLevel("generator"), events.blackoutWattsAt(now),
+        return PowerGrid.compute(energy, power, moduleLevel("generator"), fuelCovers() ? 0 : events.blackoutWattsAt(now),
                 energy.isNight(clock.localHour(now)));
+    }
+
+    /** Value key: the generator burns fuel through blackouts (1) or not. */
+    private static final String KEY_FUEL_GENERATOR = "fuel_generator";
+    /** Fuel burned but not yet taken from stock (fractions of a unit). */
+    private static final String KEY_FUEL_OWED = "fuel_owed";
+
+    /** In a blackout, fuel keeps the lights on: if the operator allows it and there's some left. */
+    private boolean fuelCovers() {
+        return value(KEY_FUEL_GENERATOR) > 0 && resources.getOrDefault("fuel", 0) > 0;
+    }
+
+    /** Burns fuel for the blackout hours just covered; says so when the tank runs dry. */
+    private void burnGeneratorFuel(long from, long to, Step step) {
+        if (value(KEY_FUEL_GENERATOR) <= 0 || resources.getOrDefault("fuel", 0) <= 0) {
+            return;
+        }
+        double hours = events.blackoutHours(from, to);
+        if (hours <= 0) {
+            return;
+        }
+        double owed = value(KEY_FUEL_OWED) + hours * content.getBalance().getFuel().getGeneratorPerHour();
+        int whole = (int) Math.floor(owed);
+        int have = resources.getOrDefault("fuel", 0);
+        int burn = Math.min(whole, have);
+        if (burn > 0) {
+            pay(Map.of("fuel", burn), step);
+        }
+        setValue(KEY_FUEL_OWED, owed - burn, step);
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        if (resources.getOrDefault("fuel", 0) <= 0) {
+            step.system(text.getGeneratorDry(), Map.of(), null);
+        } else if (burn > 0) {
+            Map<String, String> vars = new HashMap<>();
+            vars.put("fuel", String.valueOf(burn));
+            vars.put("hours", String.valueOf(Math.max(1, Math.round(hours))));
+            step.system(text.getGeneratorFuel(), vars, null);
+        }
+    }
+
+    /** The operator lets the generator burn fuel in blackouts, or stops it. */
+    @WorkerThread
+    public List<LogLine> toggleFuelGenerator() {
+        Step step = new Step();
+        advance(step);
+        setValue(KEY_FUEL_GENERATOR, value(KEY_FUEL_GENERATOR) > 0 ? 0 : 1, step);
+        return step.commit();
     }
 
     /** Brings energy, the workshop, blackouts and raids up to date. */
@@ -2904,6 +3100,7 @@ public final class GameSession {
                 raid(at, step);
             }
             double hours = (now - baseTick) / (double) HOUR;
+            burnGeneratorFuel(baseTick, now, step);
             PowerGrid.State g = grid(now);
             reserve = Math.min(reserveCapacity(),
                     reserve + g.spare() * energy.getChargePerSpareWattHour() * hours);
@@ -3108,7 +3305,7 @@ public final class GameSession {
                     step.into(said, LogLine.expeditionThread(e.getId()));
                     ExpeditionEngine.Party team = party(e);
                     Map<String, String> vars = new HashMap<>();
-                    vars.put("who", lead.getName() + (team.partner != null ? " + " + team.partner.getName() : ""));
+                    vars.put("who", teamNames(lead, team));
                     step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null,
                             TextTemplate.format(content.getTerminal().getExpedition().getSummaryRecalled(), vars),
                             lead.getId()).withThread(LogLine.summaryThread(e.getId())));
@@ -3288,6 +3485,8 @@ public final class GameSession {
                 guardNames, raids.defense(guards) + (int) moduleBonus("barricades"), gearStock, aliveScouts(), rosterCap(), gearViews);
         baseView.rechargePer = (int) Math.round(rechargePerBattery());
         baseView.rooms = roomViews();
+        baseView.fuel = resources.getOrDefault("fuel", 0);
+        baseView.fuelGenerator = value(KEY_FUEL_GENERATOR) > 0;
         baseView.batteries = resources.getOrDefault("batteries", 0);
         return baseView;
     }
@@ -3509,6 +3708,42 @@ public final class GameSession {
         return step.commit();
     }
 
+    /** Every stat maxed: start over higher. {@code statKey} gets the extra ceiling point. */
+    @WorkerThread
+    public List<LogLine> retrain(String scoutId, String statKey) {
+        Step step = new Step();
+        advance(step);
+        Scout scout = scouts.get(scoutId);
+        StatType focus = StatType.fromKey(statKey);
+        if (scout != null && retrainRules.retrain(scout, focus)) {
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", scout.getName());
+            vars.put("stat", content.getTerminal().getStatNames().get(focus.key()));
+            vars.put("tier", String.valueOf(com.estatica.domain.scouts.RetrainRules.tier(scout)));
+            step.system(content.getTerminal().getBase().getRetrained(), vars, scout);
+        }
+        return step.commit();
+    }
+
+    /** Mara used to run deliveries on a bike: hers turns up in storage, once. */
+    private void maraBike(Step step) {
+        if (value("mara_bike") > 0 || content.getGear().get("gear_bici") == null) {
+            return;
+        }
+        for (Scout s : scouts.values()) {
+            if ("mara".equals(s.getTemplateId()) && s.isAlive()) {
+                setValue("mara_bike", 1, step);
+                com.estatica.domain.bunker.GearPiece bike = com.estatica.domain.bunker.GearPiece.fresh("gear_bici",
+                        com.estatica.domain.bunker.GearPiece.Rarity.COMMON);
+                gear.put(bike.getId(), bike);
+                Map<String, String> vars = new HashMap<>();
+                vars.put("name", s.getName());
+                step.system(content.getTerminal().getBase().getMaraBike(), vars, s);
+                return;
+            }
+        }
+    }
+
     /** [TAREA]: assigns a bunker task, or none ({@code taskId} null). */
     @WorkerThread
     public List<LogLine> assignTask(String scoutId, String taskId) {
@@ -3584,6 +3819,9 @@ public final class GameSession {
             if (e.getPartnerId() != null) {
                 byScout.put(e.getPartnerId(), e);
             }
+            if (e.getThirdId() != null) {
+                byScout.put(e.getThirdId(), e);
+            }
         }
         boolean hasInventory = false;
         for (ItemInstance item : items.values()) {
@@ -3622,6 +3860,16 @@ public final class GameSession {
             b.task = taskId != null ? content.task(taskId).getName() : text.getNoTask();
             b.taskId = taskId;
             b.pace = s.isAlive() ? rules.durationMultiplier(s) : 1;
+            com.estatica.domain.bunker.GearPiece ride = s.isAlive() ? rules.ride(s) : null;
+            if (ride != null) {
+                GearDef rideDef = content.gear(ride.getGearId());
+                b.rideName = rideDef.getName();
+                b.ridePace = rideDef.getDurationMultiplier();
+                b.rideSeats = rideDef.getSeats();
+                b.rideFuel = rideDef.getFuelPerHour();
+            }
+            b.veteran = com.estatica.domain.scouts.RetrainRules.tier(s);
+            b.canRetrain = retrainRules.canRetrain(s) && s.getStatus() == ScoutStatus.IDLE;
             b.likes = tastes(s, GiftRules.LIKES, text.getKnownLikes());
             b.dislikes = tastes(s, GiftRules.DISLIKES, text.getKnownDislikes());
             b.gifts = new ArrayList<>();
@@ -3702,7 +3950,7 @@ public final class GameSession {
                 for (String key : engine.pendingHints(e, lead, team)) {
                     hints.add(key != null ? hintLabels.get(key) : null);
                 }
-                String who = lead.getName() + (team.partner != null ? " + " + team.partner.getName() : "");
+                String who = teamNames(lead, team);
                 orders.add(new SessionSnapshot.PendingDecision(SessionSnapshot.PendingDecision.Kind.ORDER,
                         e.getId(), who, labels, engine.deadline(e), content.zone(e.getZoneId()).getName(),
                         LogLine.expeditionThread(e.getId()), engine.situationText(e, lead), hints));
@@ -3836,8 +4084,7 @@ public final class GameSession {
             long span = Math.max(1, end - e.getStartedAtMillis());
             int percent = (int) Math.max(0, Math.min(99, 100 * (now - e.getStartedAtMillis()) / span));
             ExpeditionEngine.Party party = party(e);
-            String who = scouts.get(e.getScoutId()).getName()
-                    + (party.partner != null ? " + " + party.partner.getName() : "");
+            String who = teamNames(scouts.get(e.getScoutId()), party);
             expeditionViews.add(new SessionSnapshot.ExpeditionView(LogLine.expeditionThread(e.getId()), who,
                     content.zone(e.getZoneId()).getName(), percent, end, e.isAwaitingDecision(),
                     e.getPendingSinceMillis() != Expedition.NONE && !e.isAwaitingDecision()));
@@ -3850,10 +4097,15 @@ public final class GameSession {
                 continue;
             }
             Scout lead = scouts.get(e.getValue()[0]);
-            Scout partner = e.getValue()[1] != null ? scouts.get(e.getValue()[1]) : null;
             if (lead != null) {
-                doneLogs.add(new SessionSnapshot.DoneLog(LogLine.expeditionThread(e.getKey()),
-                        lead.getName() + (partner != null ? " + " + partner.getName() : "")));
+                StringBuilder who = new StringBuilder(lead.getName());
+                for (int i = 1; i < e.getValue().length; i++) {
+                    Scout other = e.getValue()[i] != null ? scouts.get(e.getValue()[i]) : null;
+                    if (other != null) {
+                        who.append(" + ").append(other.getName());
+                    }
+                }
+                doneLogs.add(new SessionSnapshot.DoneLog(LogLine.expeditionThread(e.getKey()), who.toString()));
             }
         }
         SessionSnapshot built = new SessionSnapshot(scoutViews, pending, zones, resourceViews, inventory, tasks, missions,
@@ -3865,6 +4117,7 @@ public final class GameSession {
                 content.getTerminal().getHighlight().getDanger(), content.getTerminal().getHighlight().getGood(),
                 nextWake);
         built.doneLogs = doneLogs;
+        built.deepRuns = deepRunViews();
         return built;
     }
 

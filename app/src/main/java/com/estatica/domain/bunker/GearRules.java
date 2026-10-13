@@ -61,11 +61,25 @@ public final class GearRules {
 
     /** What fixing it costs: more for better pieces. */
     public Map<String, Integer> repairCost(GearPiece piece) {
-        return balance.getRepairCost().getOrDefault(piece.getRarity().name(), Map.of());
+        Map<String, Integer> base = balance.getRepairCost().getOrDefault(piece.getRarity().name(), Map.of());
+        com.estatica.domain.content.GearDef def = content.gear(piece.getGearId());
+        int scale = def != null ? def.getRepairScale() : 1;
+        if (scale == 1) {
+            return base;
+        }
+        Map<String, Integer> out = new java.util.LinkedHashMap<>();
+        base.forEach((k, v) -> out.put(k, v * scale));
+        return out;
     }
 
+    /** Anything that can turn up out there: not vehicles, those get built. */
     private String pickGear(GameRandom rng) {
-        List<String> ids = new ArrayList<>(content.getGear().keySet());
+        List<String> ids = new ArrayList<>();
+        for (com.estatica.domain.content.GearDef def : content.getGear().values()) {
+            if (def.isFindable()) {
+                ids.add(def.getId());
+            }
+        }
         return rng.pick(ids);
     }
 

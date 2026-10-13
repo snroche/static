@@ -341,4 +341,21 @@
     <string name="send_time_m">&#xE51B; %1$d min</string>
     <string name="send_time_h">&#xE51B; %1$d h</string>
     <string name="send_time_hm">&#xE51B; %1$d h %2$02d</string>
+    <!-- 0.6.15: rides, fuel, retraining, deep runs. -->
+    <string name="fuel_generator">[%1$s] Burn fuel in blackouts (&#xE7CA; %2$d)</string>
+    <string name="person_retrain">&#xEDBC;  RETRAIN · every stat is maxed</string>
+    <string name="person_veteran">&#xE1A5; Veteran %1$d: retrained, out-growing the rest. Far-off places push harder.</string>
+    <string name="retrain_title">Retrain %1$s</string>
+    <string name="retrain_help">Every stat drops to half; every limit goes up by 1, and the one you pick by 2. Then they grow again.</string>
+    <string name="retrain_focus">Focus: %1$s</string>
+    <string name="retrain_meta">%1$d → %2$d, limit %3$d → %4$d</string>
+    <string name="send_tile_ride">&#xE0A3;%1$d</string>
+    <string name="send_section_deep">── DEEP RUNS · VLF ──</string>
+    <string name="send_tier">TIER %1$s</string>
+    <string name="send_tier_locked">TIER %1$s
+antenna %2$d</string>
+    <string name="send_deep_stats">Danger %1$s · never runs dry</string>
+    <string name="send_deep_stats_more">Danger %1$s · +%2$d%% loot · never runs dry</string>
+    <string name="send_fuel" tools:ignore="PluralsCandidate">&#xE7CA; %1$d fuel</string>
+    <string name="send_fuel_dry" tools:ignore="PluralsCandidate">&#xE7CA; needs %1$d fuel: on foot</string>
 </resources>

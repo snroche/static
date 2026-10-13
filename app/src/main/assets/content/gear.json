@@ -83,5 +83,38 @@
     "statBonus": {
       "craft": 1
     }
+  },
+  {
+    "id": "gear_bici",
+    "name": "Bicycle",
+    "slot": "RIDE",
+    "description": "Trips 25% shorter for one. No fuel, just legs. Everyone on the team needs a seat for it to count.",
+    "durationMultiplier": 0.75,
+    "seats": 1,
+    "findable": false,
+    "repairScale": 2
+  },
+  {
+    "id": "gear_moto",
+    "name": "Motorbike",
+    "slot": "RIDE",
+    "description": "Two on it, trips half as long. Burns 1 fuel an hour on the road.",
+    "durationMultiplier": 0.5,
+    "seats": 2,
+    "fuelPerHour": 1.0,
+    "findable": false,
+    "repairScale": 3
+  },
+  {
+    "id": "gear_camioneta",
+    "name": "Pickup truck",
+    "slot": "RIDE",
+    "description": "Three in the cab, trips 40% shorter, and the bed brings home 40% more. Burns 2 fuel an hour.",
+    "durationMultiplier": 0.6,
+    "seats": 3,
+    "fuelPerHour": 2.0,
+    "lootMultiplier": 1.4,
+    "findable": false,
+    "repairScale": 4
   }
 ]

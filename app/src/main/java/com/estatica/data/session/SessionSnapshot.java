@@ -16,6 +16,8 @@ public final class SessionSnapshot {
     public final List<TaskView> tasks;
     /** Rescues and relay jobs available at dispatch, besides plain exploring. */
     public final List<MissionView> missions;
+    /** Deep runs (empty until the antenna reaches past the map). */
+    public List<DeepRunView> deepRuns = List.of();
     public final RadioView radio;
     public final BaseView base;
     /** Scouts out right now, for the expedition strip. */
@@ -93,8 +95,16 @@ public final class SessionSnapshot {
         public final String task;
         /** Task id, or null for none. */
         public final String taskId;
-        /** Trip length multiplier (traits, gear, injuries): 1 is normal, lower is faster. */
+        /** Trip length multiplier on foot (traits, boots): 1 is normal, lower is faster. */
         public final double pace;
+        /** Their ride: name, pace, seats and fuel per hour; null name if none (or broken). */
+        public final String rideName;
+        public final double ridePace;
+        public final int rideSeats;
+        public final double rideFuel;
+        /** Times retrained; and whether they can now (every stat maxed). */
+        public final int veteran;
+        public final boolean canRetrain;
         /** Discovered tastes, already worded ("Le gusta: …"), or null. */
         public final String likes;
         public final String dislikes;
@@ -159,6 +169,12 @@ public final class SessionSnapshot {
             this.task = b.task;
             this.taskId = b.taskId;
             this.pace = b.pace;
+            this.rideName = b.rideName;
+            this.ridePace = b.ridePace;
+            this.rideSeats = b.rideSeats;
+            this.rideFuel = b.rideFuel;
+            this.veteran = b.veteran;
+            this.canRetrain = b.canRetrain;
             this.likes = b.likes;
             this.dislikes = b.dislikes;
             this.gifts = Collections.unmodifiableList(b.gifts);
@@ -189,6 +205,12 @@ public final class SessionSnapshot {
             String task;
             String taskId;
             double pace = 1;
+            String rideName;
+            double ridePace = 1;
+            int rideSeats;
+            double rideFuel;
+            int veteran;
+            boolean canRetrain;
             String likes;
             String dislikes;
             List<String> gifts;
@@ -320,6 +342,38 @@ public final class SessionSnapshot {
             this.label = label;
             this.zoneName = zoneName;
             this.scoutId = scoutId;
+        }
+    }
+
+    /** A deep run past the map's edge: one per place, the tier picked on the send screen. */
+    public static final class DeepRunView {
+        public final String id;
+        public final String name;
+        public final String description;
+        public final int danger;
+        public final int minMinutes;
+        public final int maxMinutes;
+        /** Highest tier the antenna reaches (0: none yet). */
+        public final int maxTier;
+        public final int tiers;
+        /** Antenna level each tier needs. */
+        public final int[] tierAntenna;
+        /** Per tier above the first: longer, richer, more dangerous. */
+        public double durationPerTier;
+        public double lootPerTier;
+        public int dangerPerTier;
+
+        DeepRunView(String id, String name, String description, int danger, int minMinutes, int maxMinutes,
+                    int maxTier, int tiers, int[] tierAntenna) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.danger = danger;
+            this.minMinutes = minMinutes;
+            this.maxMinutes = maxMinutes;
+            this.maxTier = maxTier;
+            this.tiers = tiers;
+            this.tierAntenna = tierAntenna;
         }
     }
 
@@ -478,6 +532,9 @@ public final class SessionSnapshot {
         public int rechargePer;
         /** The bunker's rooms, open and sealed. */
         public List<RoomView> rooms = List.of();
+        /** Fuel in stock, and whether the generator may burn it in blackouts. */
+        public int fuel;
+        public boolean fuelGenerator;
         /** Batteries in stock. */
         public int batteries;
         public final boolean canRecharge;

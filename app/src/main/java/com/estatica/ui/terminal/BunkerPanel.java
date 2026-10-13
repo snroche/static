@@ -51,6 +51,7 @@ final class BunkerPanel {
         this.host = host;
         b.bunkerClose.setOnClickListener(v -> host.closeBunker());
         b.recharge.setOnClickListener(v -> viewModel.recharge());
+        b.fuelGenerator.setOnClickListener(v -> viewModel.toggleFuelGenerator());
         b.craft.setOnClickListener(v -> host.pickRecipe());
         b.inventoryButton.setOnClickListener(v -> host.openInventory());
         b.tabPower.setOnClickListener(v -> showSection(Section.POWER));
@@ -168,6 +169,7 @@ final class BunkerPanel {
 
         b.reserve.setText(res.getString(R.string.reserve_line, base.reserve, base.reserveCapacity));
         b.recharge.setAlpha(base.canRecharge && base.reserve < base.reserveCapacity ? 1f : 0.5f);
+        b.fuelGenerator.setText(res.getString(R.string.fuel_generator, base.fuelGenerator ? "x" : " ", base.fuel));
 
         b.jobs.removeAllViews();
         for (SessionSnapshot.JobView job : base.jobs) {

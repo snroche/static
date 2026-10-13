@@ -16,6 +16,8 @@ public final class GameContent {
     private final Map<String, ZoneDef> zones;
     /** Scouting grounds by band id (zones.json entries with "wilds"). */
     private final Map<String, ZoneDef> wilds = new LinkedHashMap<>();
+    /** Deep runs: kept apart from the map's places. */
+    private final Map<String, ZoneDef> deepRuns = new LinkedHashMap<>();
     private final Map<String, EventDef> events;
     private final Map<String, VoiceDef> voices;
     private final Map<String, ResourceDef> resources;
@@ -48,6 +50,8 @@ public final class GameContent {
                 if (wilds.put(z.getBand(), z) != null) {
                     throw new IllegalStateException("Invalid content: two scouting grounds on band " + z.getBand());
                 }
+            } else if (z.isEndless()) {
+                deepRuns.put(z.getId(), z);
             } else {
                 places.add(z);
             }
@@ -106,12 +110,19 @@ public final class GameContent {
                 return w;
             }
         }
+        if (deepRuns.containsKey(id)) {
+            return deepRuns.get(id);
+        }
         return require(zones, id, "zone");
     }
 
     /** Scouting ground for a band, or null. */
     public ZoneDef wilds(String bandId) {
         return wilds.get(bandId);
+    }
+
+    public java.util.Collection<ZoneDef> getDeepRuns() {
+        return Collections.unmodifiableCollection(deepRuns.values());
     }
 
     public java.util.Collection<ZoneDef> getWilds() {

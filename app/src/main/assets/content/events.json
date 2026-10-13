@@ -6719,5 +6719,764 @@
         }
       }
     ]
+  },
+  {
+    "id": "deep_static_storm",
+    "bands": [
+      "deep"
+    ],
+    "intro": [
+      "A storm on the horizon, but it's not rain. The radio's screaming. Hair standing up on my arms."
+    ],
+    "options": [
+      {
+        "id": "shelter",
+        "label": "Dig in and wait it out",
+        "stat": "endurance",
+        "difficulty": 6,
+        "time": 0.15,
+        "success": {
+          "text": [
+            "Lay flat in a ditch for an hour. Lightning walked right past us."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Waited too long in the open. Something hit near enough to throw me."
+          ],
+          "stress": 6,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "run",
+        "label": "Outrun it to the next ridge",
+        "stat": "endurance",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "time": -0.1,
+        "success": {
+          "text": [
+            "Made the ridge. Looking back, the ground where we were is black glass."
+          ]
+        },
+        "failure": {
+          "text": [
+            "It caught us halfway. I don't remember the next part."
+          ],
+          "stress": 14,
+          "injury": "serious"
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_convoy",
+    "bands": [
+      "deep"
+    ],
+    "intro": [
+      "A convoy, twenty trucks, parked nose to tail. Doors open. Nobody. Engines still have fuel."
+    ],
+    "options": [
+      {
+        "id": "siphon",
+        "label": "Siphon the tanks",
+        "stat": "craft",
+        "difficulty": 6,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "Hose, can, patience. Got a good haul."
+          ],
+          "loot": [
+            {
+              "resource": "fuel",
+              "min": 4,
+              "max": 9
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Fumes. Threw up twice, got nothing."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "cabs",
+        "label": "Search the cabs",
+        "stat": "wits",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Glove boxes. Tools, a first-aid tin, a map with circles on it."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 4
+            },
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Something was living in the last cab. It didn't want me there."
+          ],
+          "stress": 6,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Leave it. It feels like bait",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "We went around. Later we saw the smoke from a fire where the convoy was."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Leaving it bothered me all night."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_tracks",
+    "bands": [
+      "deep"
+    ],
+    "intro": [
+      "Footprints in the dust, fresh. Lots of them, barefoot, going exactly where we're going."
+    ],
+    "options": [
+      {
+        "id": "follow",
+        "label": "Follow them, quietly",
+        "stat": "stealth",
+        "difficulty": 7,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "A camp. Whoever they are, they left a cache under a stone. We took half."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 6
+            },
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "They knew we were following. They waited for us."
+          ],
+          "stress": 12,
+          "injury": "serious"
+        }
+      },
+      {
+        "id": "detour",
+        "label": "Take the long way round",
+        "stat": "endurance",
+        "difficulty": 5,
+        "time": 0.2,
+        "success": {
+          "text": [
+            "Hours lost. Nothing followed us."
+          ]
+        },
+        "failure": {
+          "text": [
+            "The long way had its own problems."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_other_bunker",
+    "bands": [
+      "deep"
+    ],
+    "intro": [
+      "A hatch in the ground, like ours. Somebody's knocking from inside. Three, then two."
+    ],
+    "options": [
+      {
+        "id": "open",
+        "label": "Open it",
+        "stat": "wits",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "An old man and a lot of tins. He gave us some and asked us to tell nobody where he is."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 7
+            },
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "It was a trap, or a madman. Hard to tell which."
+          ],
+          "stress": 10,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "talk",
+        "label": "Talk through the hatch",
+        "stat": "nerve",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "We talked for an hour. He sent up a bag on a rope: batteries, and a list of frequencies."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "He stopped answering. The knocking went on, though."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_night_lights",
+    "bands": [
+      "deep"
+    ],
+    "intro": [
+      "Lights out on the plain at night. Moving. Not cars. They stop when we stop."
+    ],
+    "options": [
+      {
+        "id": "dark",
+        "label": "Kill the lamp and stay still",
+        "stat": "nerve",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "They went past at dawn. I'm not going to describe them."
+          ],
+          "stress": 6
+        },
+        "failure": {
+          "text": [
+            "I couldn't stay still. They noticed."
+          ],
+          "stress": 16,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "signal",
+        "label": "Flash the lamp back",
+        "stat": "wits",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "They flashed back. Morse. Coordinates. A cache, right where they said."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 5
+            },
+            {
+              "resource": "fuel",
+              "min": 2,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "They came closer. Much closer."
+          ],
+          "stress": 14,
+          "injury": "serious"
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_broken_axle",
+    "bands": [
+      "deep"
+    ],
+    "intro": [
+      "An abandoned workshop on the road. A car on the lift, half fixed. The tools are still on the wall."
+    ],
+    "options": [
+      {
+        "id": "strip",
+        "label": "Strip it for parts",
+        "stat": "craft",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Took what fits in a bag. The good stuff."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 3,
+              "max": 6
+            },
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Dropped the engine block on my foot. Mostly my boot."
+          ],
+          "stress": 6,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "rest",
+        "label": "Rest here a while",
+        "stat": "nerve",
+        "difficulty": 4,
+        "time": 0.15,
+        "success": {
+          "text": [
+            "Slept under a roof for the first time in days. Feel human."
+          ],
+          "stress": -10
+        },
+        "failure": {
+          "text": [
+            "Couldn't sleep. Kept hearing the lift creak."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_flooded_mall",
+    "intro": [
+      "A mall, flooded to the second floor. The third floor's dry. The escalator's under water."
+    ],
+    "options": [
+      {
+        "id": "swim",
+        "label": "Swim the escalator up",
+        "stat": "endurance",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Cold. So cold. But the pharmacy up there is untouched."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 3,
+              "max": 7
+            },
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Something brushed my leg down there. I came up too fast and hit my head."
+          ],
+          "stress": 12,
+          "injury": "serious"
+        }
+      },
+      {
+        "id": "climb",
+        "label": "Climb the outside",
+        "stat": "stealth",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Up the drainpipe, in a window. Clothes, tins, batteries."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 5
+            },
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The drainpipe came off the wall."
+          ],
+          "stress": 6,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_ferry",
+    "intro": [
+      "A ferry, run aground, tilted. The fuel tanks are on the low side, half under the water."
+    ],
+    "options": [
+      {
+        "id": "tanks",
+        "label": "Reach the tanks",
+        "stat": "craft",
+        "difficulty": 7,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Rigged a pump out of a bike wheel. Filled every can we had."
+          ],
+          "loot": [
+            {
+              "resource": "fuel",
+              "min": 5,
+              "max": 10
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The hull shifted while I was inside."
+          ],
+          "stress": 12,
+          "injury": "serious"
+        }
+      },
+      {
+        "id": "bridge",
+        "label": "Search the bridge",
+        "stat": "wits",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Charts, a flare gun, the captain's medical kit."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 4
+            },
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Just gulls and the smell."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_salt_mirage",
+    "intro": [
+      "Out on the white, a town. Houses, a church, a water tower. It wasn't there an hour ago."
+    ],
+    "options": [
+      {
+        "id": "ignore",
+        "label": "Keep walking. It's the heat",
+        "stat": "nerve",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "We kept walking. When I looked back it was gone."
+          ],
+          "stress": 4
+        },
+        "failure": {
+          "text": [
+            "I kept looking back. It kept being there."
+          ],
+          "stress": 14
+        }
+      },
+      {
+        "id": "go",
+        "label": "Go and see",
+        "stat": "wits",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "time": 0.25,
+        "success": {
+          "text": [
+            "It's real. A real town, a real well, real people who don't want visitors. They traded."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 6
+            },
+            {
+              "resource": "fuel",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "We walked for hours. It never got closer."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_salt_wreck",
+    "intro": [
+      "A plane, belly down on the salt. Cargo door open. Crates."
+    ],
+    "options": [
+      {
+        "id": "crates",
+        "label": "Open the crates",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Medical supplies. Military. Enough to fill everything we carry."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 3,
+              "max": 6
+            },
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The crates were nailed. One gave way all at once."
+          ],
+          "stress": 6,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "cockpit",
+        "label": "The cockpit first",
+        "stat": "stealth",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "The radio still works. I said our call sign. Somebody, very far away, said it back."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 3,
+              "max": 6
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Somebody was already in the cockpit. Still is."
+          ],
+          "stress": 14
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_dome",
+    "intro": [
+      "The observatory dome. Inside, a desk with a logbook. The last entry is today's date."
+    ],
+    "options": [
+      {
+        "id": "read",
+        "label": "Read the logbook",
+        "stat": "wits",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "Frequencies. Times. A list of names, and ours is on it. Took the book."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 5
+            }
+          ],
+          "stress": 6
+        },
+        "failure": {
+          "text": [
+            "The pages are blank except the last one. It says: LEAVE."
+          ],
+          "stress": 14
+        }
+      },
+      {
+        "id": "generator",
+        "label": "Find their generator",
+        "stat": "craft",
+        "difficulty": 7,
+        "success": {
+          "text": [
+            "A whole room of batteries, still charged. We took what we could carry."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 4,
+              "max": 8
+            },
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Found it. It was running. Something was feeding it."
+          ],
+          "stress": 10,
+          "injury": "light"
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_dish",
+    "intro": [
+      "The big dish is turning. The control room door is open. A chair is still warm."
+    ],
+    "options": [
+      {
+        "id": "controls",
+        "label": "Work the controls",
+        "stat": "wits",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Pointed it at home. For a second I heard the bunker on it, clear as anything."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 3,
+              "max": 6
+            },
+            {
+              "resource": "components",
+              "min": 3,
+              "max": 6
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Sparks. The whole panel went up. We ran."
+          ],
+          "stress": 12,
+          "injury": "serious"
+        }
+      },
+      {
+        "id": "hide",
+        "label": "Hide and see who comes back",
+        "stat": "stealth",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Nobody came back. Nobody at all. We took the spares off the shelf and left."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Somebody came back."
+          ],
+          "stress": 18,
+          "injury": "critical",
+          "lethal": true
+        }
+      }
+    ]
   }
 ]
