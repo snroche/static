@@ -235,10 +235,23 @@ public class BaseSystemsTest {
         rules.equip(s, light);
         int trips = 0;
         while (!light.isBroken()) {
-            gearRules.wear(light, false);
+            gearRules.wearForTrip(light, 4); // a long-band trip
             trips++;
         }
-        assertTrue("lasts a few trips", trips >= 5);
+        assertTrue("lasts a while on long trips", trips >= 10);
+        GearPiece rare = piece("gear_linterna", GearPiece.Rarity.RARE);
+        gearRules.wearForTrip(rare, 4);
+        GearPiece common = piece("gear_linterna", GearPiece.Rarity.COMMON);
+        gearRules.wearForTrip(common, 4);
+        assertTrue("better pieces wear slower", rare.getCondition() > common.getCondition());
+        GearPiece hit = piece("gear_linterna", GearPiece.Rarity.COMMON);
+        gearRules.wearForInjury(hit, "SERIOUS");
+        GearPiece scuffed = piece("gear_linterna", GearPiece.Rarity.COMMON);
+        gearRules.wearForFailure(scuffed);
+        assertTrue("a hit wears more than a scuff", hit.getCondition() < scuffed.getCondition());
+        GearPiece quick = piece("gear_linterna", GearPiece.Rarity.COMMON);
+        gearRules.wearForTrip(quick, 0.05);
+        assertTrue("a three-minute run barely touches it", quick.getCondition() >= 99);
         assertEquals("broken gear does nothing", wits, rules.effectiveStat(s, StatType.WITS));
         assertFalse(gearRules.repairCost(light).isEmpty());
         light.repair();

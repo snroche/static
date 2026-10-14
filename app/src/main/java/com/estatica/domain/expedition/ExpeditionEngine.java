@@ -46,6 +46,7 @@ public final class ExpeditionEngine {
     private final GameContent content;
     private final ScoutRules rules;
     private final com.estatica.domain.scouts.RetrainRules retrain;
+    private final com.estatica.domain.bunker.GearRules gearRules;
     private final CheckCalculator checks;
     private final AutoDecider decider;
     private final Balance.Scouts scoutBalance;
@@ -56,6 +57,7 @@ public final class ExpeditionEngine {
         this.content = content;
         this.rules = new ScoutRules(content);
         this.retrain = new com.estatica.domain.scouts.RetrainRules(content.getBalance().getRetrain());
+        this.gearRules = new com.estatica.domain.bunker.GearRules(content);
         this.checks = new CheckCalculator(content.getBalance().getChecks(), rules);
         this.decider = new AutoDecider(checks);
         this.scoutBalance = content.getBalance().getScouts();
@@ -81,8 +83,25 @@ public final class ExpeditionEngine {
         this.hasKey = hasKey;
     }
 
+    /** Story fragments whose chapter is open (the next chapter waits for the last one). */
+    private java.util.function.Predicate<String> plotOpen = f -> true;
+
+    public void setPlotOpen(java.util.function.Predicate<String> plotOpen) {
+        this.plotOpen = plotOpen;
+    }
+
     private boolean stillUseful(EventDef event) {
-        return event.getGrantsKey() == null || !hasKey.test(event.getGrantsKey());
+        if (event.getGrantsKey() != null && hasKey.test(event.getGrantsKey())) {
+            return false;
+        }
+        for (EventDef.Option o : event.getOptions()) {
+            for (EventDef.Outcome out : new EventDef.Outcome[]{o.getSuccess(), o.getFailure()}) {
+                if (out != null && out.getPlot() != null && !plotOpen.test(out.getPlot())) {
+                    return false; // part of a chapter that hasn't started
+                }
+            }
+        }
+        return true;
     }
 
     // ---- Teams (GDD §5.3) ----
@@ -339,6 +358,31 @@ public final class ExpeditionEngine {
             }
         }
         return false;
+    }
+
+    /** Their gear takes some of the stress out there (canteen, poncho…). */
+    private int softened(Scout scout, int stress) {
+        return stress <= 0 ? stress : (int) Math.round(stress * rules.gearStressFactor(scout));
+    }
+
+    /**
+     * Trouble is hard on gear: a failed check scuffs it, an injury ({@code injury} non-null)
+     * more so. Says so if something gives out right there.
+     */
+    private void scuff(Scout scout, String injury, long at, ExpeditionResult out) {
+        for (com.estatica.domain.bunker.GearPiece piece : rules.working(scout)) {
+            if (injury == null) {
+                gearRules.wearForFailure(piece);
+            } else {
+                gearRules.wearForInjury(piece, injury);
+            }
+            if (piece.isBroken()) {
+                Map<String, String> v = vars(scout);
+                v.put("gear", content.gear(piece.getGearId()).getName().toLowerCase(Locale.ROOT));
+                v.put("condition", "0");
+                out.line(system(at, TextTemplate.format(content.getTerminal().getBase().getGearBroken(), v), scout));
+            }
+        }
     }
 
     /** Deep runs take longer the harder the tier. */
@@ -667,9 +711,12 @@ public final class ExpeditionEngine {
         }
         int stress = outcome.getStress()
                 + (success ? scoutBalance.getStressOnSuccess() : scoutBalance.getStressOnFailure());
-        rules.addStress(scout, stress);
+        rules.addStress(scout, softened(scout, stress));
+        if (!success) {
+            scuff(scout, null, at, out);
+        }
         for (Scout c : party.companions) {
-            rules.addStress(c, stress);
+            rules.addStress(c, softened(c, stress));
             if (rules.train(c, stat, success)) {
                 Map<String, String> statVars = vars(c);
                 statVars.put("stat", content.getTerminal().getStatNames().get(stat.key()));
@@ -734,14 +781,21 @@ public final class ExpeditionEngine {
         }
         com.estatica.domain.bunker.GearPiece kit = rules.injuryAbsorber(scout);
         if (incoming != Injury.NONE && kit != null) {
-            // Used up: one level less of damage.
+            // Takes the edge off: one level (two for a rare kit). Usually used up.
             GearDef gear = content.gear(kit.getGearId());
-            incoming = incoming.better();
-            scout.getLife().wear(gear.getSlot(), null);
-            kit.moveTo(com.estatica.domain.bunker.GearPiece.GONE);
+            for (int i = 0; i < com.estatica.domain.bunker.GearRules.absorbLevels(kit); i++) {
+                incoming = incoming.better();
+            }
+            if (!rng.chance(com.estatica.domain.bunker.GearRules.absorbSurvives(kit))) {
+                scout.getLife().wear(gear.getSlot(), null);
+                kit.moveTo(com.estatica.domain.bunker.GearPiece.GONE);
+            }
             Map<String, String> gearVars = vars(scout);
             gearVars.put("gear", gear.getName().toLowerCase(Locale.ROOT));
             out.line(system(at, TextTemplate.format(content.getTerminal().getBase().getGearSaved(), gearVars), scout));
+        }
+        if (incoming != Injury.NONE) {
+            scuff(scout, incoming.name(), at, out);
         }
         rules.injure(scout, incoming);
         if (incoming != Injury.NONE) {

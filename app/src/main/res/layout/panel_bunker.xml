@@ -146,6 +146,13 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <TextView
+                    android:id="@+id/bench"
+                    style="@style/TerminalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp" />
+
                 <LinearLayout
                     android:id="@+id/jobs"
                     android:layout_width="match_parent"

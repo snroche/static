@@ -495,7 +495,53 @@ public final class SessionSnapshot {
         }
     }
 
+    /** THE FAIR: the trader on the radio. */
+    public static final class MarketView {
+        /** Heard at least once. */
+        public boolean known;
+        /** On the air now: trading possible. */
+        public boolean open;
+        /** "On the air until 12:00" / "Off the air · back at 21:00". */
+        public String status;
+        public int chips;
+        public int reputation;
+        /** Courier fee, percent. */
+        public int courierPercent;
+        public List<TradeRow> buy = List.of();
+        public List<TradeRow> sell = List.of();
+        /** On the way with a courier: "3 rations · 2 h". */
+        public List<String> incoming = List.of();
+        /** Waiting at THE FAIR for someone to fetch. */
+        public List<String> held = List.of();
+    }
+
+    /** One line at the trader. */
+    public static final class TradeRow {
+        /** Buying: "R:good" or an offer key; selling: "R:good" or "P:pieceId". */
+        public final String key;
+        public final String name;
+        /** Chips per unit (buying: before the courier's cut). */
+        public final int price;
+        /** How many you have (selling) or can buy at most with your chips (buying). */
+        public final int count;
+        /** "wanted today", "short today", "blueprint", or null. */
+        public final String note;
+        /** Raw goods take a quantity; offers and gear are one each. */
+        public final boolean bulk;
+
+        TradeRow(String key, String name, int price, int count, String note, boolean bulk) {
+            this.key = key;
+            this.name = name;
+            this.price = price;
+            this.count = count;
+            this.note = note;
+            this.bulk = bulk;
+        }
+    }
+
     public static final class RadioView {
+        /** The trader, or null before 0.7 content. */
+        public MarketView market;
         public final List<StationView> stations;
         public final List<BandView> bands;
         public final int dialMax;
@@ -532,6 +578,14 @@ public final class SessionSnapshot {
         public int rechargePer;
         /** The bunker's rooms, open and sealed. */
         public List<RoomView> rooms = List.of();
+        /** Who's at the bench and their Craft; null if nobody. */
+        public String crafter;
+        public int crafterCraft;
+        /** Blueprints known and in total. */
+        public int blueprintsKnown;
+        public int blueprintsTotal;
+        /** Jobs that fit (benches + line). */
+        public int capacity;
         /** Fuel in stock, and whether the generator may burn it in blackouts. */
         public int fuel;
         public boolean fuelGenerator;
@@ -622,6 +676,10 @@ public final class SessionSnapshot {
         public final boolean affordable;
         /** Workshop level needed, or 0 if available. */
         public final int needsLevel;
+
+        /** Craft needed at the bench, and whether whoever is there has it. */
+        public int minCraft;
+        public boolean crafterOk = true;
 
         RecipeView(String id, String name, String cost, int minutes, boolean affordable, int needsLevel) {
             this.id = id;
@@ -804,6 +862,15 @@ public final class SessionSnapshot {
         /** "2 parts, 1 components", or null at full condition. */
         public final String repairCost;
         public final boolean affordable;
+
+        /** In stock (not worn, not lost): can be salvaged, upgraded or sold. */
+        public boolean inStock;
+        /** "2 scrap, 1 components" back if taken apart. */
+        public String salvage;
+        /** Next rarity's cost and the Craft it needs; null at the top. */
+        public String upgradeCost;
+        public int upgradeCraft;
+        public boolean upgradeOk;
 
         GearView(String id, String label, String holder, String repairCost, boolean affordable) {
             this.id = id;

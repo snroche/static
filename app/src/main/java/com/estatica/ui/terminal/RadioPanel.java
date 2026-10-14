@@ -31,7 +31,7 @@ final class RadioPanel {
         void closeRadio();
     }
 
-    private enum Section { DIAL, STATIONS, DECODE, RELAYS }
+    private enum Section { DIAL, STATIONS, DECODE, RELAYS, TRADE }
 
     /** Strength steps that give a haptic tick while tuning. */
     private static final double[] TICKS = {0.3, 0.6, 0.85};
@@ -46,6 +46,7 @@ final class RadioPanel {
     private String bandId;
     private int lastTick = -1;
     private Section section = Section.DIAL;
+    private final TradePanel trade;
 
     RadioPanel(PanelRadioBinding binding, TerminalViewModel viewModel, Host host, SoundEngine sound) {
         this.sound = sound;
@@ -83,6 +84,8 @@ final class RadioPanel {
         b.sectionDecode.setOnClickListener(v -> showSection(Section.DECODE));
         b.sectionStations.setOnClickListener(v -> showSection(Section.STATIONS));
         b.sectionRelays.setOnClickListener(v -> showSection(Section.RELAYS));
+        b.sectionTrade.setOnClickListener(v -> showSection(Section.TRADE));
+        trade = new TradePanel(b.trade, viewModel);
     }
 
     boolean isShown() {
@@ -140,6 +143,13 @@ final class RadioPanel {
                 ? res.getString(R.string.radio_section_decode)
                 : res.getString(R.string.radio_section_decode_count, radio.transmissions.size()));
         sectionButton(b.sectionRelays, Section.RELAYS, res.getString(R.string.relays_title));
+        boolean open = radio.market != null && radio.market.open;
+        sectionButton(b.sectionTrade, Section.TRADE, res.getString(open ? R.string.radio_section_trade_on
+                : R.string.radio_section_trade));
+        b.trade.setVisibility(section == Section.TRADE ? View.VISIBLE : View.GONE);
+        if (section == Section.TRADE) {
+            trade.render(radio.market);
+        }
         int onAir = 0;
         for (SessionSnapshot.StationView st : radio.stations) {
             onAir += st.onAir ? 1 : 0;

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.estatica.R;
 import com.estatica.data.session.SessionSnapshot;
 import com.estatica.databinding.PanelBunkerBinding;
@@ -29,6 +31,9 @@ final class BunkerPanel {
     }
 
     private enum Section { POWER, WORKSHOP, UPGRADES, GOALS }
+
+    /** Piece whose SALVAGE was tapped once (the second tap does it). */
+    private String salvageArmed;
 
     private Section section = Section.UPGRADES;
     /** Room picked on the floor plan. */
@@ -171,8 +176,20 @@ final class BunkerPanel {
         b.recharge.setAlpha(base.canRecharge && base.reserve < base.reserveCapacity ? 1f : 0.5f);
         b.fuelGenerator.setText(res.getString(R.string.fuel_generator, base.fuelGenerator ? "x" : " ", base.fuel));
 
+        b.bench.setText(base.crafter != null
+                ? res.getString(R.string.bench_line, base.crafter, base.crafterCraft, base.blueprintsKnown, base.blueprintsTotal)
+                : res.getString(R.string.bench_empty, base.blueprintsKnown, base.blueprintsTotal));
+        b.bench.setTextColor(ContextCompat.getColor(b.getRoot().getContext(),
+                base.crafter != null ? R.color.amber : R.color.danger));
         b.jobs.removeAllViews();
+        int at = 0;
         for (SessionSnapshot.JobView job : base.jobs) {
+            if (at++ == base.slots) {
+                TextView queued = (TextView) inflater.inflate(R.layout.item_log_line, b.jobs, false);
+                queued.setText(R.string.job_queue);
+                queued.setAlpha(0.7f);
+                b.jobs.addView(queued);
+            }
             TextView line = (TextView) inflater.inflate(R.layout.item_log_line, b.jobs, false);
             line.setText(job.minutesLeft < 0
                     ? res.getString(R.string.job_paused, job.name, job.percent)
@@ -184,8 +201,8 @@ final class BunkerPanel {
             none.setText(R.string.workshop_idle);
             b.jobs.addView(none);
         }
-        b.craft.setText(res.getString(R.string.craft_slots, base.jobs.size(), base.slots));
-        b.craft.setAlpha(base.jobs.size() < base.slots ? 1f : 0.5f);
+        b.craft.setText(res.getString(R.string.craft_slots, base.jobs.size(), base.capacity));
+        b.craft.setAlpha(base.jobs.size() < base.capacity && base.crafter != null ? 1f : 0.5f);
 
         SessionSnapshot.RoomView picked = null;
         for (SessionSnapshot.RoomView r : base.rooms) {
@@ -235,6 +252,30 @@ final class BunkerPanel {
                 repair.setAlpha(piece.affordable ? 1f : 0.5f);
                 repair.setOnClickListener(v -> viewModel.repairGear(piece.id));
                 b.gear.addView(repair);
+            }
+            if (piece.upgradeCost != null) {
+                TextView upgrade = (TextView) inflater.inflate(R.layout.item_decision_option, b.gear, false);
+                upgrade.setText(res.getString(R.string.gear_upgrade, piece.upgradeCost, piece.upgradeCraft));
+                upgrade.setAlpha(piece.upgradeOk ? 1f : 0.5f);
+                upgrade.setOnClickListener(v -> viewModel.upgradeGear(piece.id));
+                b.gear.addView(upgrade);
+            }
+            if (piece.inStock && piece.salvage != null) {
+                TextView salvage = (TextView) inflater.inflate(R.layout.item_decision_option, b.gear, false);
+                salvage.setText(res.getString(piece.id.equals(salvageArmed) ? R.string.gear_salvage_confirm
+                        : R.string.gear_salvage, piece.salvage));
+                salvage.setOnLongClickListener(null);
+                salvage.setOnClickListener(v -> {
+                    // Two taps: the first only asks.
+                    if (!piece.id.equals(salvageArmed)) {
+                        salvageArmed = piece.id;
+                        salvage.setText(res.getString(R.string.gear_salvage_confirm, piece.salvage));
+                        return;
+                    }
+                    salvageArmed = null;
+                    viewModel.salvage(piece.id);
+                });
+                b.gear.addView(salvage);
             }
         }
         if (base.gear.isEmpty()) {

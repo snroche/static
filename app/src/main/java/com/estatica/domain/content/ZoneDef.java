@@ -28,6 +28,8 @@ public final class ZoneDef {
     private boolean wilds;
     /** A deep run past the map's edge: never discovered, never picked clean. */
     private boolean endless;
+    /** Not found through stray radio signals (THE FAIR: its own station gives it away). */
+    private boolean offAir;
     /** Map glyph (Nerd Font) and a short label for the map. */
     private String icon;
     private String shortName;
@@ -47,6 +49,10 @@ public final class ZoneDef {
 
     public boolean isEndless() {
         return endless;
+    }
+
+    public boolean isOffAir() {
+        return offAir;
     }
 
     public String getId() {

@@ -399,6 +399,12 @@
         "min": 1,
         "max": 2,
         "weight": 1
+      },
+      {
+        "resource": "chips",
+        "min": 2,
+        "max": 6,
+        "weight": 1
       }
     ],
     "items": [
@@ -466,6 +472,12 @@
         "min": 1,
         "max": 3,
         "weight": 2
+      },
+      {
+        "resource": "chips",
+        "min": 2,
+        "max": 6,
+        "weight": 1
       }
     ],
     "items": [
@@ -547,6 +559,12 @@
         "min": 1,
         "max": 3,
         "weight": 1
+      },
+      {
+        "resource": "chips",
+        "min": 2,
+        "max": 6,
+        "weight": 1
       }
     ],
     "items": [
@@ -624,6 +642,12 @@
         "resource": "fuel",
         "min": 1,
         "max": 3,
+        "weight": 1
+      },
+      {
+        "resource": "chips",
+        "min": 2,
+        "max": 6,
         "weight": 1
       }
     ],
@@ -711,6 +735,12 @@
         "min": 2,
         "max": 5,
         "weight": 1
+      },
+      {
+        "resource": "chips",
+        "min": 2,
+        "max": 6,
+        "weight": 1
       }
     ],
     "items": [
@@ -765,7 +795,8 @@
       "escalada",
       "pagina_diecinueve",
       "susp_child_voice",
-      "susp_shapes_fog"
+      "susp_shapes_fog",
+      "dam_echo_cabinet"
     ],
     "loot": [
       {
@@ -1200,7 +1231,8 @@
       "deep_night_lights",
       "deep_broken_axle",
       "deep_dome",
-      "deep_dish"
+      "deep_dish",
+      "deep_console"
     ],
     "loot": [
       {
@@ -1229,5 +1261,53 @@
       "The dish turned while I watched. Toward us."
     ],
     "shortName": "Dome"
+  },
+  {
+    "id": "feria",
+    "name": "The Fair",
+    "band": "short",
+    "description": "The old fairground: stalls under the dead rides, armed and friendly. Anything bought here for pickup waits until someone comes for it.",
+    "danger": 1,
+    "durationMinutes": [
+      3,
+      6
+    ],
+    "situations": [
+      1,
+      2
+    ],
+    "finds": [
+      0,
+      1
+    ],
+    "events": [
+      "feria_haggle",
+      "feria_pickpocket",
+      "feria_tail",
+      "fair_engineer"
+    ],
+    "loot": [
+      {
+        "resource": "chips",
+        "min": 1,
+        "max": 4,
+        "weight": 2
+      },
+      {
+        "resource": "rations",
+        "min": 1,
+        "max": 2,
+        "weight": 1
+      }
+    ],
+    "items": [],
+    "transit": [
+      "Music from the fairground before I even see it. An accordion.",
+      "The Ferris wheel's still standing. People sell from the cars at the bottom.",
+      "Guards at the gate check my hands, not my face."
+    ],
+    "icon": "󰟇",
+    "shortName": "Fair",
+    "offAir": true
   }
 ]

@@ -22,9 +22,11 @@ Format `MAJOR.MINOR.PATCH`, with a single source of truth: `version.properties`.
 | 0.4.x | Phase 3: Active radio and distance |
 | 0.5.x | Phase 4: Bunker |
 | 0.6.x | Phase 5: Content and polish |
+| 0.7.x | Economy: LA FERIA (trader, chips), workshop rework; save export, balance check, first hour |
+| 0.8.x | NPC operators on the dial (trade, lending crew), La Voz chapter 2 |
+| 0.9.x | Asynchronous multiplayer through transmission codes (no server) |
 | **1.0.0** | Phase 6: Play Store launch |
-| 1.x | Post-MVP (Deep Band, grid guidance…) |
-| 2.0.0 | Multiplayer (needs a backend; breaking change) |
+| 1.x | Post-launch content |
 
 - **MINOR** goes up when a phase is closed.
 - **PATCH** goes up with fixes, balance tweaks or new content within a phase.

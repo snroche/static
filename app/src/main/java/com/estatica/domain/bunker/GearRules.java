@@ -46,13 +46,32 @@ public final class GearRules {
         return roll < rare + uncommon ? GearPiece.Rarity.UNCOMMON : GearPiece.Rarity.COMMON;
     }
 
-    /** Wear after an expedition. @return the condition before, to detect crossings */
-    public int wear(GearPiece piece, boolean injured) {
+    /** Wear from time out there. @return the condition before, to detect crossings */
+    public int wearForTrip(GearPiece piece, double hours) {
         int before = piece.getCondition();
-        int amount = balance.getWear().getOrDefault(piece.getRarity().name(), 15)
-                + (injured ? balance.getInjuryWear() : 0);
-        piece.wear(amount);
+        piece.wear(Math.max(1, (int) Math.round(hours * balance.getWearPerHour() * rarityWear(piece))));
         return before;
+    }
+
+    /** Wear from a failed check (scrapes, falls, a bad landing). */
+    public int wearForFailure(GearPiece piece) {
+        int before = piece.getCondition();
+        piece.wear(Math.max(1, (int) Math.round(balance.getWearPerFailure() * rarityWear(piece))));
+        return before;
+    }
+
+    /** Wear from taking a hit, by how bad it was. */
+    public int wearForInjury(GearPiece piece, String injury) {
+        int before = piece.getCondition();
+        int base = balance.wearPerInjury(injury);
+        if (base > 0) {
+            piece.wear(Math.max(1, (int) Math.round(base * rarityWear(piece))));
+        }
+        return before;
+    }
+
+    private double rarityWear(GearPiece piece) {
+        return balance.rarityWear(piece.getRarity().name());
     }
 
     public boolean isWorn(GearPiece piece) {
@@ -101,8 +120,79 @@ public final class GearRules {
 
     // ---- Effects scale with rarity ----
 
+    /** Stat bonus: one more point per rarity step (flashlight +1, +2, +3). */
     public static int statBonus(GearDef def, GearPiece piece, String stat) {
-        return (int) Math.round(def.statBonus(stat) * piece.getRarity().power);
+        int base = def.statBonus(stat);
+        return base == 0 ? 0 : base + piece.getRarity().ordinal();
+    }
+
+    /** Trip length: better pieces shave more off, gently (a rare motorbike isn't a jet). */
+    public static double durationMultiplier(GearDef def, GearPiece piece) {
+        double m = def.getDurationMultiplier();
+        double power = 1 + (piece.getRarity().power - 1) * 0.5;
+        return m >= 1 ? m : Math.max(0.35, 1 - (1 - m) * power);
+    }
+
+    /** Stress taken: better pieces help more. */
+    public static double stressFactor(GearDef def, GearPiece piece) {
+        double f = def.getStressFactor();
+        return f >= 1 ? f : Math.max(0.3, 1 - (1 - f) * piece.getRarity().power);
+    }
+
+    /** First-aid kits: a rare one takes two levels off; uncommon and rare may survive the use. */
+    public static int absorbLevels(GearPiece piece) {
+        return piece.getRarity() == GearPiece.Rarity.RARE ? 2 : 1;
+    }
+
+    public static double absorbSurvives(GearPiece piece) {
+        return piece.getRarity() == GearPiece.Rarity.COMMON ? 0 : 0.5;
+    }
+
+    /**
+     * What this piece actually does, at its rarity: "Wits +2 · +38% loot · trips 13% shorter".
+     *
+     * @param words  terminal texts for each kind of effect
+     * @param stats  stat key to its display name
+     */
+    public static String describe(GearDef def, GearPiece piece, Map<String, String> words, Map<String, String> stats) {
+        List<String> parts = new ArrayList<>();
+        if (def.getStatBonus() != null) {
+            for (String stat : def.getStatBonus().keySet()) {
+                parts.add(fill(words.get("stat"), stats.getOrDefault(stat, stat), statBonus(def, piece, stat)));
+            }
+        }
+        if (def.getLootMultiplier() != 1.0) {
+            parts.add(fill(words.get("loot"), null, (int) Math.round((lootMultiplier(def, piece) - 1) * 100)));
+        }
+        double d = durationMultiplier(def, piece);
+        if (d < 1) {
+            parts.add(fill(words.get("faster"), null, (int) Math.round((1 - d) * 100)));
+        } else if (d > 1) {
+            parts.add(fill(words.get("slower"), null, (int) Math.round((d - 1) * 100)));
+        }
+        if (def.getNoiseFactor() < 1) {
+            parts.add(fill(words.get("noise"), null, (int) Math.round((1 - noiseFactor(def, piece)) * 100)));
+        }
+        if (def.getStressFactor() < 1) {
+            parts.add(fill(words.get("stress"), null, (int) Math.round((1 - stressFactor(def, piece)) * 100)));
+        }
+        if (def.isAbsorbsInjury()) {
+            parts.add(fill(words.get(absorbSurvives(piece) > 0 ? "absorbKeep" : "absorb"), null, absorbLevels(piece)));
+        }
+        if (def.isRide()) {
+            parts.add(fill(words.get("seats"), null, def.getSeats()));
+            if (def.getFuelPerHour() > 0) {
+                parts.add(fill(words.get("fuel"), null, (int) Math.round(def.getFuelPerHour())));
+            }
+        }
+        return String.join(" · ", parts);
+    }
+
+    private static String fill(String template, String stat, int n) {
+        if (template == null) {
+            return String.valueOf(n);
+        }
+        return template.replace("{stat}", stat != null ? stat : "").replace("{n}", String.valueOf(n));
     }
 
     public static double lootMultiplier(GearDef def, GearPiece piece) {

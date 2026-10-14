@@ -1,5 +1,5 @@
 {
-  "contentVersion": 23,
+  "contentVersion": 25,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -191,8 +191,42 @@
     "survivorTrust": 30
   },
   "workshop": {
-    "craftMinMinutes": 1,
-    "craftMaxMinutes": 10
+    "_comment": "The bench: speed = base + perCraft × best Craft there (nobody: nothing). [placeholder]",
+    "speedBase": 0.6,
+    "speedPerCraft": 0.08,
+    "queue": 3,
+    "xpPerHour": 0.8,
+    "workOutChancePerDay": 0.2,
+    "findChance": [
+      0.04,
+      0.08,
+      0.12,
+      0.16
+    ],
+    "upgradeCraft": [
+      5,
+      7
+    ],
+    "upgradeCost": {
+      "parts": 2,
+      "components": 3
+    },
+    "salvage": {
+      "COMMON": {
+        "scrap": 2,
+        "components": 1
+      },
+      "UNCOMMON": {
+        "scrap": 3,
+        "components": 2,
+        "parts": 1
+      },
+      "RARE": {
+        "scrap": 4,
+        "components": 3,
+        "parts": 2
+      }
+    }
   },
   "monetization": {
     "rewardedAdsDailyCap": 3
@@ -649,7 +683,7 @@
     "secondCarrierBonus": 0.15
   },
   "gear": {
-    "_comment": "Equipment rarity, wear and repair. [placeholder]",
+    "_comment": "Equipment rarity, wear and repair. Wear: per hour out, per failed check, per injury (by severity); better pieces wear slower. [placeholder]",
     "findChance": [
       0.06,
       0.1,
@@ -672,12 +706,6 @@
         15
       ]
     ],
-    "wear": {
-      "COMMON": 15,
-      "UNCOMMON": 12,
-      "RARE": 8
-    },
-    "injuryWear": 10,
     "wornAt": 30,
     "repairCost": {
       "COMMON": {
@@ -694,7 +722,19 @@
     },
     "craftUncommonPerPoint": 0.03,
     "craftRareAbove": 6,
-    "craftRarePerPoint": 0.03
+    "craftRarePerPoint": 0.03,
+    "wearPerHour": 1.5,
+    "wearPerFailure": 2,
+    "wearPerInjury": {
+      "LIGHT": 5,
+      "SERIOUS": 10,
+      "CRITICAL": 15
+    },
+    "rarityWear": {
+      "COMMON": 1.0,
+      "UNCOMMON": 0.75,
+      "RARE": 0.5
+    }
   },
   "food": {
     "_comment": "The bunker eats. [placeholder]",
@@ -1006,5 +1046,70 @@
     "lootPerTier": 0.6,
     "oddsPerTier": 0.08,
     "dangerPerTier": 1
+  },
+  "market": {
+    "_comment": "The Fair, the trader on the radio. Prices in chips: goods are [buy, sell]. [placeholder]",
+    "station": "st_feria",
+    "zone": "feria",
+    "courierFee": 0.15,
+    "courierHours": 4,
+    "startReputation": 50,
+    "reputationPerTrade": 1,
+    "reputationSwing": 0.1,
+    "rareStockReputation": 70,
+    "saturationPerUnit": 0.04,
+    "saturationFloor": 0.5,
+    "wantedPerDay": 2,
+    "wantedMultiplier": 1.5,
+    "scarcePerDay": 1,
+    "scarceMultiplier": 1.5,
+    "blueprintsPerDay": 2,
+    "gearPerDay": 2,
+    "blueprintBase": 15,
+    "blueprintPerCraft": 6,
+    "goods": {
+      "rations": [
+        6,
+        3
+      ],
+      "scrap": [
+        3,
+        1
+      ],
+      "components": [
+        8,
+        4
+      ],
+      "batteries": [
+        7,
+        3
+      ],
+      "medicine": [
+        12,
+        6
+      ],
+      "parts": [
+        20,
+        10
+      ],
+      "fuel": [
+        9,
+        4
+      ],
+      "relay_kit": [
+        30,
+        14
+      ]
+    },
+    "gearBuy": {
+      "COMMON": 20,
+      "UNCOMMON": 40,
+      "RARE": 75
+    },
+    "gearSell": {
+      "COMMON": 6,
+      "UNCOMMON": 14,
+      "RARE": 28
+    }
   }
 }

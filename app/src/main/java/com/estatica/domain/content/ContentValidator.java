@@ -19,7 +19,7 @@ public final class ContentValidator {
     /** Sounds the radio can make while tuned (SoundEngine). */
     private static final java.util.Set<String> AUDIO =
             java.util.Set.of("NONE", "VOICE", "WHISPER", "MORSE", "DATA", "MUSIC", "BREATH", "CARRIER",
-                    "VOICE_F", "CHILD", "PREACHER", "CHOIR", "ORGAN", "WALTZ", "NUMBERS");
+                    "VOICE_F", "CHILD", "PREACHER", "CHOIR", "ORGAN", "WALTZ", "NUMBERS", "PIANO", "GUITAR", "ACCORDION");
 
     /** Phrase keys every voice must define (used by the expedition engine). */
     public static final List<String> REQUIRED_PHRASES = List.of(
@@ -249,8 +249,8 @@ public final class ContentValidator {
         Balance.Gear gearBalance = content.getBalance().getGear();
         int bands = content.getBalance().getBands().size();
         check(gearBalance != null && gearBalance.getFindChance() != null && gearBalance.getRarityWeights() != null
-                        && gearBalance.getWear() != null && gearBalance.getRepairCost() != null,
-                "balance.gear: findChance, rarityWeights, wear, repairCost");
+                        && gearBalance.getWearPerHour() > 0 && gearBalance.getRepairCost() != null,
+                "balance.gear: findChance, rarityWeights, wearPerHour, repairCost");
         if (gearBalance != null && gearBalance.getRepairCost() != null) {
             for (Map<String, Integer> cost : gearBalance.getRepairCost().values()) {
                 checkResources(cost, "balance.gear.repairCost");

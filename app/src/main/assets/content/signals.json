@@ -519,6 +519,33 @@
       "resources": {
         "rations": 4
       }
+    },
+    {
+      "id": "echo_dias",
+      "band": "medium",
+      "difficulty": 2,
+      "unique": true,
+      "reward": "PLOT",
+      "plot": "c2_1",
+      "text": "Echo seven day four hundred relay held"
+    },
+    {
+      "id": "voz_eco_cruce",
+      "band": "long",
+      "difficulty": 3,
+      "unique": true,
+      "reward": "PLOT",
+      "plot": "c2_3",
+      "text": "The night before the silence"
+    },
+    {
+      "id": "eco_vlf",
+      "band": "deep",
+      "difficulty": 3,
+      "unique": true,
+      "reward": "PLOT",
+      "plot": "c2_5",
+      "text": "It is not a weapon it is a reply"
     }
   ],
   "stations": [
@@ -535,7 +562,10 @@
         "Wednesday: sunny. Good day to hang the washing out.",
         "UV index: high. Remember your hat.",
         "Thursday: sunny. Friday: sunny. Saturday: sunny.",
-        "This forecast was updated... [the date is a long beep]."
+        "This forecast was updated... [the date is a long beep].",
+        "Monday: sunny. Tuesday: sunny. A perfect week for the beach.",
+        "Pollen count: high. Allergy sufferers, stay indoors. [a long pause] Everyone, stay indoors.",
+        "Sunset at 19:42. Sunrise at... at... [the recording skips] ...sunny."
       ]
     },
     {
@@ -552,7 +582,11 @@
         "...my wife used to say I talk to the radio more than to her. Well. Now it's just the radio.",
         "...saw a dog today. Thin. I gave it half my bread. Don't tell anyone.",
         "...the antenna's leaning. I'll fix it tomorrow. I say that every day.",
-        "...this is LU3, still here, still listening. Over."
+        "...this is LU3, still here, still listening. Over.",
+        "...the snails got the lettuce. I'm not angry. Everyone's got to eat.",
+        "...planted the beans by the moon, like my father. Laugh if you want.",
+        "...rain tonight, I think. My knee says so, and my knee is never wrong.",
+        "...the neighbour's cat comes to sit with me while I weed. No neighbour. Still a cat."
       ],
       "schedule": {
         "everyHours": 24,
@@ -572,7 +606,10 @@
         "THIS IS AN EMERGENCY BROADCAST. STAY INSIDE. SEAL DOORS AND WINDOWS.",
         "DO NOT RESPOND TO UNIDENTIFIED VOICES. THEY ARE NOT RESCUE.",
         "RATION WATER. ONE LITER PER PERSON PER DAY.",
-        "AUTHORITIES WILL CONTACT YOU. AUTHORITIES WILL CONTACT YOU. AUTHORITIES WILL"
+        "AUTHORITIES WILL CONTACT YOU. AUTHORITIES WILL CONTACT YOU. AUTHORITIES WILL",
+        "...THIS IS NOT A TEST. REMAIN WHERE YOU ARE. HELP IS ON THE WAY...",
+        "...the following areas are under curfew until further notice...",
+        "...do not drink tap water. Do not open your door to anyone you do not know..."
       ]
     },
     {
@@ -587,7 +624,10 @@
         "...a bandoneon, slow, like breathing...",
         "...an old tango about a neighborhood that doesn't exist anymore...",
         "...the record skips. Someone lifts the needle and sets it back down, carefully...",
-        "...a waltz. Somebody, very quietly, is dancing near the microphone..."
+        "...a waltz. Somebody, very quietly, is dancing near the microphone...",
+        "...a crackling record, a bandoneón, a voice from another century singing about a street corner...",
+        "...the needle jumps, finds the groove again, and the violin comes back in...",
+        "\"Next one's for whoever's dancing alone in the kitchen. I see you.\""
       ],
       "schedule": {
         "everyHours": 24,
@@ -608,7 +648,10 @@
         "...and Rosa, who went for water. And Julián, who went after her...",
         "...we remember them so the silence doesn't...",
         "...and the family on Calle Ocho, all five, we remember...",
-        "...I will read until there is no one left to read. Then I will read myself..."
+        "...I will read until there is no one left to read. Then I will read myself...",
+        "\"And the silence fell upon the land, and in the silence, a voice.\"",
+        "\"Do not fear the quiet. Fear what speaks in it.\"",
+        "\"Seven times I asked. Seven times I was answered. I will not tell you what it said.\""
       ],
       "deadLines": [
         "...and {dead}. We remember {dead}...",
@@ -629,7 +672,9 @@
         "...breathing. Slow. Close to the microphone...",
         "...breathing. It stops when you stop moving the dial...",
         "...breathing... then a whisper: 'there you are'...",
-        "...breathing... and, far off behind it, your own generator..."
+        "...breathing... and, far off behind it, your own generator...",
+        "...breathing. Slower now. Like someone falling asleep...",
+        "...a whisper, too low to make out, then nothing..."
       ]
     },
     {
@@ -646,7 +691,10 @@
         "...eight... nine... ten... ready or not...",
         "...mom said don't open the hatch. Mom isn't back yet...",
         "...I can hear you breathing. You're bad at hiding...",
-        "...found you. Found you. Found you."
+        "...found you. Found you. Found you.",
+        "\"I counted the stars again. There's one more than yesterday.\"",
+        "\"Mum says not to talk on the radio. Mum's asleep.\"",
+        "\"Are you real? Say something if you're real.\""
       ]
     },
     {
@@ -662,7 +710,9 @@
         "...seven. three. one. nine...",
         "...seven. three. one. nine. ... nine. nine...",
         "...seven. three. one. ... we hear you...",
-        "...seven. three. one. nine. bunker. bunker. bunker..."
+        "...seven. three. one. nine. bunker. bunker. bunker...",
+        "\"...seven, three, one, nine. Seven, three, one, nine. Acknowledge.\"",
+        "\"...seven, three, one, nine. Repeat. Seven...\" and then a breath, a human breath."
       ],
       "schedule": {
         "everyHours": 1,
@@ -683,7 +733,9 @@
       "lines": [
         "...a hundred carriers hum one note...",
         "...the note bends, just a little, when you touch the dial...",
-        "...under the hum, a single word, again and again: 'listening'..."
+        "...under the hum, a single word, again and again: 'listening'...",
+        "...the voices change key together, all at once, as if they'd agreed...",
+        "...under the choir, very faintly, the same seven-three-one-nine..."
       ]
     },
     {
@@ -707,7 +759,10 @@
         "Relief net. Bread's gone hard but it's bread. Bus shelter on the avenue, behind the ad.",
         "Relief net. Canned beans, back of the church. Don't take all of it. Somebody else is hungry too.",
         "Relief net, short one tonight. Rice in the school gym, under the stage. Stay safe.",
-        "Relief net. We're running low. Leaving what we can. If you have extra, leave some for others."
+        "Relief net. We're running low. Leaving what we can. If you have extra, leave some for others.",
+        "Relief net. Water purification tablets left at the old bus shelter on the main road.",
+        "Relief net. The church hall is warm tonight. Bring a blanket if you have one.",
+        "Relief net. We have a doctor until Thursday. After that, we don't know."
       ]
     },
     {
@@ -729,7 +784,10 @@
         "Scav net. Somebody rigged wires in the old offices. Watch your feet.",
         "Scav net. Raiders camped by the river. Three, maybe four. Armed.",
         "Scav net. Roof's gone on the hospital's east wing. Don't climb it.",
-        "Scav net. Gas leak somewhere downtown. You'll smell it. Turn back."
+        "Scav net. Gas leak somewhere downtown. You'll smell it. Turn back.",
+        "Scav net. Supermarket on the ring road is bare, don't bother.",
+        "Scav net. Somebody's trading fuel for medicine at the Fair. Fair rates, for once.",
+        "Scav net. Dogs are back on the east side. More than last week."
       ]
     },
     {
@@ -750,7 +808,9 @@
         "...under the third floorboard from the window. The key is in the lamp...",
         "...behind the boiler, a false panel. Push, don't pull...",
         "...the safe in the back office opens with the year the factory opened...",
-        "...inside the hollow of the fallen tree, wrapped in plastic..."
+        "...inside the hollow of the fallen tree, wrapped in plastic...",
+        "\"Under the third bench from the fountain. Loose stone. You're welcome.\"",
+        "\"Ticket office at the old station. Behind the timetable board. Mind the glass.\""
       ]
     },
     {
@@ -773,7 +833,10 @@
         "Boil it, then boil it again. And today's kit is in the pharmacy's back door, the one with the red mark.",
         "Clean wounds with what you'd drink, not what you'd fear. Bandages left by the clinic gate.",
         "If it smells sweet, it's infected. Come find me. Or take the antiseptic I left at the bus depot.",
-        "Sleep is medicine too. So is the box under the bench at the square."
+        "Sleep is medicine too. So is the box under the bench at the square.",
+        "\"Clean water first, then food, then everything else. In that order.\"",
+        "\"Fever and a rash? Rest, fluids, and keep them away from the others.\"",
+        "\"I left bandages by the library steps. Take what you need, leave what you can.\""
       ]
     },
     {
@@ -792,7 +855,9 @@
       "lines": [
         "...an organ, slow, a hymn half the city used to know...",
         "...the same hymn again, a little faster, as if the player is in a hurry today...",
-        "...a wrong note. A pause. Then the hymn starts over from the top..."
+        "...a wrong note. A pause. Then the hymn starts over from the top...",
+        "...the hymn finishes, and in the silence someone coughs, and starts it again...",
+        "...a different hymn today. Brighter. Someone must have found new sheet music..."
       ]
     },
     {
@@ -808,7 +873,157 @@
       "lines": [
         "...a music box, playing a waltz...",
         "...the waltz slows... slows... and then the key turns, and it starts again...",
-        "...the music box, and very close to the microphone, someone humming along, off key..."
+        "...the music box, and very close to the microphone, someone humming along, off key...",
+        "...the box is wound slower tonight, every note stretched...",
+        "...a second music box joins the first, a little out of step..."
+      ]
+    },
+    {
+      "id": "st_feria",
+      "band": "short",
+      "position": 420,
+      "name": "THE FAIR",
+      "audio": "VOICE",
+      "schedule": {
+        "everyHours": 12,
+        "atHour": 6,
+        "minutes": 360
+      },
+      "lore": "THE FAIR (short band, 96.40 MHz): a market in the old fairground, on the air 06:00 to noon and 18:00 to midnight. They take chips. Trade from RADIO → TRADE while they're on, then fetch it or pay a courier.",
+      "lines": [
+        "The Fair, the Fair! Batteries in, medicine out. Chips only, no IOUs, no tears.",
+        "Fresh in from the coast: tins, rope, a working kettle. Somebody bring me fuel.",
+        "Courier leaves at the top of the hour. Pay the runner, not me.",
+        "Plans, blueprints, drawings, whatever you call them. Know-how's the only thing that doesn't rot.",
+        "We're open, we're armed, we're friendly. In that order.",
+        "Lost and found: one dog, answers to Tango. Bring him back, there's chips in it.",
+        "Morning crowd's in. Somebody brought eggs. Real eggs. Line forms on the left.",
+        "Evening session. Lamps are lit, prices are fair, the guards are awake.",
+        "Lost a boot at the Fair? We found eleven. None of them match.",
+        "Swap table's open: bring a thing, take a thing. Don't be the one who brings a rock again."
+      ]
+    },
+    {
+      "id": "st_piano",
+      "band": "short",
+      "position": 60,
+      "name": "LATE PIANO",
+      "audio": "PIANO",
+      "night": true,
+      "minutesPerLine": 20,
+      "lore": "LATE PIANO (short band, 89.20 MHz), at night only: someone plays an upright piano, badly tuned, the same few pieces. Between them, a cough, a chair, a glass set down.",
+      "lines": [
+        "...the same piece again. Slower this time, as if they're thinking about someone...",
+        "...a wrong note, a laugh, and they start over...",
+        "\"This one's for Marta. She always said I rushed it.\"",
+        "...the piano stops. A long silence. Then the lid closes, gently...",
+        "...somebody hums along, very quietly, from the next room...",
+        "\"Can't sleep either? Good. Then you can listen.\""
+      ]
+    },
+    {
+      "id": "st_porch",
+      "band": "medium",
+      "position": 200,
+      "name": "THE PORCH",
+      "audio": "GUITAR",
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 17,
+        "minutes": 90
+      },
+      "minutesPerLine": 15,
+      "lore": "THE PORCH (medium band, 764 kHz): every evening at 17:00, a man with a guitar on what sounds like a porch. Crickets. He talks between songs to whoever's out there.",
+      "lines": [
+        "\"Evening. Sun's going down orange again. That's the dust, they say. Pretty dust.\"",
+        "...an old folk tune, the guitar a little out of tune, his foot keeping time on wood...",
+        "\"Had a dog come by today. Didn't stay. Nobody stays. That's all right.\"",
+        "\"This one my grandmother sang. I don't know the words past the first verse, so you'll get that one twice.\"",
+        "\"If you're walking tonight, walk with the moon at your back. Old trick.\"",
+        "...a string breaks mid-song. A long sigh. \"Five strings it is, then.\""
+      ]
+    },
+    {
+      "id": "st_club",
+      "band": "medium",
+      "position": 840,
+      "name": "THE SOCIAL CLUB",
+      "audio": "ACCORDION",
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 20,
+        "minutes": 60
+      },
+      "minutesPerLine": 12,
+      "lore": "THE SOCIAL CLUB (medium band, 1513 kHz): at 20:00, an hour of accordion from what sounds like an old neighbourhood club. Glasses, chairs scraping, someone who won't stop requesting the same tango.",
+      "lines": [
+        "...the accordion swells, and somebody at the back shouts for the same tango as last night...",
+        "\"For the couples. All three of them.\" Laughter. Shuffling feet.",
+        "\"The bar's open. The bar's always open. The bar is, technically, a table.\"",
+        "...an old man sings along, half a beat behind, and nobody minds...",
+        "\"Ten minutes. Then the generator needs a rest, and so do my fingers.\"",
+        "\"Same time tomorrow. Bring someone. Bring anyone.\""
+      ]
+    },
+    {
+      "id": "st_story",
+      "band": "short",
+      "position": 950,
+      "name": "BEDTIME STORIES",
+      "audio": "VOICE_F",
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 22,
+        "minutes": 30
+      },
+      "minutesPerLine": 5,
+      "lore": "BEDTIME STORIES (short band, 107.00 MHz): at 22:00, a woman reads a story for half an hour. It's always the same one, about a lighthouse keeper. She never reaches the end.",
+      "lines": [
+        "\"Once there was a lighthouse keeper who kept the light burning long after the ships stopped coming.\"",
+        "\"Every night he climbed the hundred and twelve steps and lit the lamp, in case.\"",
+        "\"In case of what, the gulls asked him. In case, he said. That's all. In case.\"",
+        "\"One night a light answered from far out on the water. Just once. Then nothing.\"",
+        "\"He kept his light burning, and he waited, and he...\" She stops. \"That's enough for tonight.\"",
+        "\"Sleep, all of you. Someone's keeping the light on.\""
+      ]
+    },
+    {
+      "id": "st_match",
+      "band": "medium",
+      "position": 520,
+      "name": "THE MATCH",
+      "audio": "VOICE",
+      "schedule": {
+        "everyHours": 24,
+        "atHour": 16,
+        "minutes": 90
+      },
+      "minutesPerLine": 10,
+      "lore": "THE MATCH (medium band, 1138 kHz): every afternoon at 16:00 a man narrates a football match from memory, the final from years ago, play by play. It never ends the same way.",
+      "lines": [
+        "\"...the ball out to the wing, he's past one, past two, he looks up... and the stadium holds its breath...\"",
+        "\"Minute sixty-seven. Still nil-nil. My heart can't take this. It didn't then either.\"",
+        "\"GOAL! GOOOOAL! ...no. No, wait. Offside. I always forget it was offside.\"",
+        "\"The keeper, a giant, a wall, a cathedral of a man, punches it clear!\"",
+        "\"Injury time. The whole country on its feet. And then... I'll tell you tomorrow.\"",
+        "\"Today they win. Yesterday they lost. It's my match. I'll call it how I like.\""
+      ]
+    },
+    {
+      "id": "st_trucker",
+      "band": "long",
+      "position": 300,
+      "name": "BREAKER NINE",
+      "audio": "VOICE",
+      "minutesPerLine": 30,
+      "lore": "BREAKER NINE (long band, 189.0 kHz): a trucker on the long roads, talking to nobody on an old CB, day and night. Road reports, mostly, and stories.",
+      "lines": [
+        "\"Breaker nine, breaker nine. Bridge on route five is out. Don't trust the detour signs, they lie.\"",
+        "\"Eighty kilometres of nothing. Saw a horse. Just a horse, standing on the road, looking at me.\"",
+        "\"Diesel's down to a quarter. Somebody tell me there's a station still pumping out here.\"",
+        "\"My kid used to ride up front. Called the white lines 'the zipper'. Still do, in my head.\"",
+        "\"Fog on the plateau thick as wool. Going twenty. Going ten. Stopped. Waiting.\"",
+        "\"Breaker nine signing off for the night. Somebody keep the road warm.\""
       ]
     }
   ],

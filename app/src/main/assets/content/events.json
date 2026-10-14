@@ -7478,5 +7478,312 @@
         }
       }
     ]
+  },
+  {
+    "id": "feria_haggle",
+    "intro": [
+      "A woman at a stall waves me over. \"For you, a special price.\" She says that to everyone."
+    ],
+    "options": [
+      {
+        "id": "haggle",
+        "label": "Haggle",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Talked her down to half. She laughed and threw in a tin."
+          ],
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 2,
+              "max": 5
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "She talked me up instead. I don't know how."
+          ],
+          "stress": 5
+        }
+      },
+      {
+        "id": "walk",
+        "label": "Just look around",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Heard where a stall keeps its spare batteries. Good to know."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Too many people. Too loud. I left early."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "feria_pickpocket",
+    "intro": [
+      "A kid bumps into me in the crowd. Says sorry. Too polite."
+    ],
+    "options": [
+      {
+        "id": "catch",
+        "label": "Grab the kid's wrist",
+        "stat": "stealth",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Got my chips back, and the kid's. Gave the kid's back. Mostly."
+          ],
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Slipped right out of my hand. Gone, with my chips."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "let",
+        "label": "Let it go",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Not worth a fight in front of the guards. Felt good, letting it go."
+          ]
+        },
+        "failure": {
+          "text": [
+            "It's eating at me."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "feria_tail",
+    "intro": [
+      "On the way out, two men fall in behind me. They stop when I stop."
+    ],
+    "options": [
+      {
+        "id": "lose",
+        "label": "Lose them in the stalls",
+        "stat": "stealth",
+        "difficulty": 5,
+        "time": 0.1,
+        "success": {
+          "text": [
+            "Through a tent, under a tarp, gone."
+          ]
+        },
+        "failure": {
+          "text": [
+            "They cornered me behind the carousel. Took a cut of what I was carrying."
+          ],
+          "stress": 8,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "face",
+        "label": "Turn and face them",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "They decided I wasn't worth it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "I was right and they were bigger."
+          ],
+          "stress": 10,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "guards",
+        "label": "Walk back to the guards",
+        "stat": "wits",
+        "difficulty": 3,
+        "time": 0.15,
+        "success": {
+          "text": [
+            "The guards walked me to the road. Didn't even ask for chips."
+          ]
+        },
+        "failure": {
+          "text": [
+            "The guards were on a break. Of course."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "fair_engineer",
+    "intro": [
+      "An old man repairs radios at a stall in the back. Soldering iron, magnifying glass, a sign: NO PROMISES."
+    ],
+    "options": [
+      {
+        "id": "ask",
+        "label": "Ask him about Echo-7",
+        "stat": "wits",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "He put the iron down. Talked for an hour. About a network, about a night, about what it heard."
+          ],
+          "plot": "c2_2"
+        },
+        "failure": {
+          "text": [
+            "He pretended not to hear. Come back another day, maybe."
+          ],
+          "stress": 2
+        }
+      },
+      {
+        "id": "drink",
+        "label": "Buy him a drink first",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Two drinks in he was drawing diagrams on a napkin. I kept the napkin."
+          ],
+          "plot": "c2_2"
+        },
+        "failure": {
+          "text": [
+            "He drank it and went back to work. Fair enough."
+          ],
+          "stress": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "dam_echo_cabinet",
+    "intro": [
+      "Down in the dam's control room, behind a door marked AUTHORISED ONLY, something is humming."
+    ],
+    "options": [
+      {
+        "id": "open",
+        "label": "Force the door",
+        "stat": "endurance",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "A steel cabinet with ECHO stencilled on it. Still running. There's a logbook."
+          ],
+          "plot": "c2_4"
+        },
+        "failure": {
+          "text": [
+            "The door won. My shoulder lost."
+          ],
+          "stress": 5,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "pick",
+        "label": "Work the lock",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Click. Inside: a cabinet marked ECHO, humming, and a logbook nobody finished."
+          ],
+          "plot": "c2_4"
+        },
+        "failure": {
+          "text": [
+            "Broke the pick in it. Someone will have to come back."
+          ],
+          "stress": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "deep_console",
+    "intro": [
+      "The observatory's console room. Every screen is dark except one, showing a single point in the sky."
+    ],
+    "options": [
+      {
+        "id": "read",
+        "label": "Read what's taped to the console",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Numbers. The Voice's numbers. Written as coordinates. And a note."
+          ],
+          "plot": "c2_6"
+        },
+        "failure": {
+          "text": [
+            "My hands were shaking too much to read it. We'll come back."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "photo",
+        "label": "Copy everything down and go",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Copied it all, line by line, with the dish turning overhead."
+          ],
+          "plot": "c2_6"
+        },
+        "failure": {
+          "text": [
+            "The dish moved. I ran. I'm not ashamed."
+          ],
+          "stress": 10
+        }
+      }
+    ]
   }
 ]

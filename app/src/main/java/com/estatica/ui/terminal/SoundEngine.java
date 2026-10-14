@@ -38,7 +38,13 @@ final class SoundEngine {
         /** A music box waltz. */
         WALTZ,
         /** A numbers station: a flat voice in groups, and a chime. */
-        NUMBERS
+        NUMBERS,
+        /** An upright piano (Für Elise, slightly out of tune). */
+        PIANO,
+        /** A guitar on a porch (Greensleeves). */
+        GUITAR,
+        /** An accordion and a bass, a slow tango of our own. */
+        ACCORDION
     }
 
     private final AudioTrack click;
@@ -204,6 +210,10 @@ final class SoundEngine {
         built.put(Audio.CHOIR, loopTrack(radio(echo(choir(random, 6.0), 0.31, 0.4), 0.9)));
         built.put(Audio.BREATH, loopTrack(radio(breath(random, 4.2), 1.0)));
         built.put(Audio.CARRIER, loopTrack(radio(carrier(3.0), 0.6)));
+        built.put(Audio.PIANO, loopTrack(radio(score(PIANO_SCORE, 0.17, Instrument.PIANO, random), 0.9)));
+        built.put(Audio.GUITAR, loopTrack(radio(score(GUITAR_SCORE, 0.21, Instrument.GUITAR, random), 0.9)));
+        built.put(Audio.ACCORDION, loopTrack(radio(mix(score(ACCORDION_SCORE, 0.15, Instrument.ACCORDION, random),
+                score(ACCORDION_BASS, 0.15, Instrument.PIANO, random), 0.55), 0.9)));
         main.post(() -> {
             if (released) {
                 staticLoop.release();
@@ -587,6 +597,119 @@ final class SoundEngine {
             }
             // A slow tremulant, like an old church organ.
             out[i] = y * env * (0.85 + 0.15 * Math.sin(2 * Math.PI * 5.5 * t));
+        }
+        return out;
+    }
+
+    // ---- Scored music: public-domain tunes and one of our own ----
+
+    private enum Instrument { PIANO, GUITAR, ACCORDION }
+
+    /** Für Elise (Beethoven, 1810), opening: notes and chords, length in sixteenths. */
+    private static final String PIANO_SCORE = "E5/1 D#5/1 E5/1 D#5/1 E5/1 B4/1 D5/1 C5/1 A4+A2+E3/3 C4/1 E4/1 A4/1 "
+            + "B4+E2+G#3/3 E4/1 G#4/1 B4/1 C5+A2+E3/3 E4/1 E5/1 D#5/1 E5/1 D#5/1 E5/1 B4/1 D5/1 C5/1 "
+            + "A4+A2+E3/3 C4/1 E4/1 A4/1 B4+E2+G#3/3 E4/1 C5/1 B4/1 A4+A2+E3/6";
+    /** Greensleeves (traditional), in eighths. */
+    private static final String GUITAR_SCORE = "A4+A2/2 C5/4 D5+F2/2 E5/3 F5/1 E5/2 D5+G2/4 B4/2 G4/3 A4/1 B4/2 "
+            + "C5+A2/4 A4/2 A4/3 G#4/1 A4/2 B4+E2/4 G#4/2 E4+E2/4 R/2";
+    /** A slow tango in D minor, written for the game. Sixteenths. */
+    private static final String ACCORDION_SCORE = "D5/3 C#5/1 D5/2 F5/2 E5/3 D5/1 C#5/4 A4/3 A#4/1 C#5/2 E5/2 "
+            + "D5/4 R/2 A4/2 F5/3 E5/1 D5/2 C5/2 A#4/3 A4/1 G4/4 A4/3 C#5/1 E5/2 G5/2 F5/6 R/2";
+    /** Its habanera bass: long, short, two even. */
+    private static final String ACCORDION_BASS = "D3/3 D3/1 A2/2 F3/2 D3/3 D3/1 A2/2 E3/2 A2/3 A2/1 E3/2 C#3/2 "
+            + "D3/3 D3/1 A2/2 F3/2 D3/3 D3/1 A2/2 F3/2 G2/3 G2/1 D3/2 A#2/2 A2/3 A2/1 E3/2 C#3/2 D3/3 D3/1 A2/4";
+
+    /** "C#5" → Hz (A4 = 440). */
+    private static double noteHz(String note) {
+        String[] names = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+        String name = note.substring(0, note.length() - 1);
+        int octave = note.charAt(note.length() - 1) - '0';
+        int index = java.util.Arrays.asList(names).indexOf(name);
+        int midi = (octave + 1) * 12 + index;
+        return 440.0 * Math.pow(2, (midi - 69) / 12.0);
+    }
+
+    /**
+     * Plays a score: space-separated notes or chords ("A4+A2+E3") with their length in units
+     * ("/3"), "R" for a rest. Each note rings out in the instrument's own way.
+     */
+    private static double[] score(String score, double unitSeconds, Instrument instrument, Random random) {
+        String[] tokens = score.trim().split("\\s+");
+        int units = 0;
+        for (String t : tokens) {
+            units += Integer.parseInt(t.substring(t.indexOf('/') + 1));
+        }
+        int n = (int) (RATE * unitSeconds * units);
+        double[] out = new double[n];
+        int at = 0;
+        for (String t : tokens) {
+            int length = (int) (RATE * unitSeconds * Integer.parseInt(t.substring(t.indexOf('/') + 1)));
+            String notes = t.substring(0, t.indexOf('/'));
+            if (!"R".equals(notes)) {
+                String[] chord = notes.split("\\+");
+                for (int c = 0; c < chord.length; c++) {
+                    // The melody on top is louder than what's under it.
+                    note(out, at, length, noteHz(chord[c]), c == 0 ? 1.0 : 0.55, instrument, random);
+                }
+            }
+            at += length;
+        }
+        return out;
+    }
+
+    private static void note(double[] out, int at, int length, double hz, double gain, Instrument instrument,
+                             Random random) {
+        switch (instrument) {
+            case GUITAR: {
+                // Karplus-Strong: a burst of noise in a loop that dulls as it rings.
+                int period = Math.max(2, (int) Math.round(RATE / hz));
+                double[] ring = new double[period];
+                for (int i = 0; i < period; i++) {
+                    ring[i] = random.nextDouble() * 2 - 1;
+                }
+                int ringFor = Math.min(out.length - at, length + RATE / 2);
+                for (int i = 0; i < ringFor; i++) {
+                    int k = i % period;
+                    double v = ring[k];
+                    ring[k] = 0.996 * 0.5 * (v + ring[(k + 1) % period]);
+                    out[at + i] += v * gain * 0.8;
+                }
+                break;
+            }
+            case ACCORDION: {
+                // Two reeds a hair apart, odd harmonics, a little bellows swell.
+                for (int i = 0; i < length && at + i < out.length; i++) {
+                    double t = (double) i / RATE;
+                    double env = Math.min(1, t / 0.04) * Math.min(1, (length - i) / (RATE * 0.05));
+                    double vib = 1 + 0.004 * Math.sin(2 * Math.PI * 5 * t);
+                    double y = 0;
+                    for (int h = 1; h <= 7; h += 2) {
+                        y += (Math.sin(2 * Math.PI * hz * h * vib * t) + Math.sin(2 * Math.PI * hz * 1.004 * h * t)) / h;
+                    }
+                    out[at + i] += y * 0.35 * env * gain;
+                }
+                break;
+            }
+            default: {
+                // An upright piano: bright attack, harmonics fading faster than the root, a touch out of tune.
+                int ringFor = Math.min(out.length - at, length + RATE);
+                for (int i = 0; i < ringFor; i++) {
+                    double t = (double) i / RATE;
+                    double y = Math.sin(2 * Math.PI * hz * t) * Math.exp(-t * 2.2)
+                            + 0.5 * Math.sin(2 * Math.PI * hz * 2.003 * t) * Math.exp(-t * 3.5)
+                            + 0.25 * Math.sin(2 * Math.PI * hz * 3.01 * t) * Math.exp(-t * 5);
+                    out[at + i] += y * Math.min(1, t / 0.004) * gain * 0.7;
+                }
+                break;
+            }
+        }
+    }
+
+    /** Two parts together, the second at {@code gain}. */
+    private static double[] mix(double[] a, double[] b, double gain) {
+        double[] out = new double[Math.max(a.length, b.length)];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (i < a.length ? a[i] : 0) + (i < b.length ? b[i] * gain : 0);
         }
         return out;
     }

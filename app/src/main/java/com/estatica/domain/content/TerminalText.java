@@ -535,6 +535,107 @@ public final class TerminalText {
         private String generatorDry;
         /** Mara and her old bike. */
         private String maraBike;
+        /** THE FAIR and the workshop: {what}, {chips}, {how}, {name}, {item}, {gear}, {loot}, {rarity}, {time}. */
+        private String marketSold;
+        private String marketBought;
+        private String marketCourier;
+        private String marketPickup;
+        private String marketDelivered;
+        private String marketPickedUp;
+        private String marketStatusOn;
+        private String marketStatusOff;
+        private String blueprintLearned;
+        private String blueprintFound;
+        private String blueprintWorkedOut;
+        private String salvaged;
+        private String upgraded;
+        private String benchEmpty;
+        private String craftTooHard;
+
+        public String getMarketSold() {
+            return marketSold;
+        }
+
+        public String getMarketBought() {
+            return marketBought;
+        }
+
+        public String getMarketCourier() {
+            return marketCourier;
+        }
+
+        public String getMarketPickup() {
+            return marketPickup;
+        }
+
+        public String getMarketDelivered() {
+            return marketDelivered;
+        }
+
+        public String getMarketPickedUp() {
+            return marketPickedUp;
+        }
+
+        public String getMarketStatusOn() {
+            return marketStatusOn;
+        }
+
+        public String getMarketStatusOff() {
+            return marketStatusOff;
+        }
+
+        public String getBlueprintLearned() {
+            return blueprintLearned;
+        }
+
+        public String getBlueprintFound() {
+            return blueprintFound;
+        }
+
+        public String getBlueprintWorkedOut() {
+            return blueprintWorkedOut;
+        }
+
+        public String getSalvaged() {
+            return salvaged;
+        }
+
+        public String getUpgraded() {
+            return upgraded;
+        }
+
+        public String getBenchEmpty() {
+            return benchEmpty;
+        }
+
+        public String getCraftTooHard() {
+            return craftTooHard;
+        }
+
+        /** "Plans: {item}". */
+        private String blueprintName;
+
+        public String getBlueprintName() {
+            return blueprintName;
+        }
+
+        private String marketWanted;
+        private String marketScarce;
+
+        /** Effect words for gear: stat, loot, faster, slower, noise, stress, absorb, absorbKeep, seats, fuel. */
+        private java.util.Map<String, String> gearEffects;
+
+        public java.util.Map<String, String> getGearEffects() {
+            return gearEffects != null ? gearEffects : java.util.Map.of();
+        }
+
+        public String getMarketWanted() {
+            return marketWanted;
+        }
+
+        public String getMarketScarce() {
+            return marketScarce;
+        }
 
         public String getFuelUsed() {
             return fuelUsed;

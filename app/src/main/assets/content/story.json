@@ -1,5 +1,5 @@
 {
-  "_draft": "DRAFT of the plot (chapter 1 of the Voice) for review and rewriting.",
+  "_draft": "DRAFT of the plot (chapters 1 and 2 of the Voice) for review and rewriting.",
   "chapters": [
     {
       "id": "c1",
@@ -37,6 +37,49 @@
         "When you're ready, find the Echo-7 station. End of transmission."
       ],
       "closing": "Chapter 1 complete. The Voice knows you exist."
+    },
+    {
+      "id": "c2",
+      "title": "Chapter 2: Echo-7",
+      "fragments": [
+        {
+          "id": "c2_1",
+          "source": "Dial (medium band)",
+          "text": "Echo-7 speaks properly at last: a woman, hoarse, counting days since 03:10. \"Day four hundred and something. The relay held. Whoever's out there, the relay held.\""
+        },
+        {
+          "id": "c2_2",
+          "source": "The Fair",
+          "text": "An old engineer at the Fair laughs when you say Echo. \"We built it to hear the missiles coming. Early warning. It heard something, all right. Wasn't missiles.\""
+        },
+        {
+          "id": "c2_3",
+          "source": "Dial (long band)",
+          "text": "On the long band the Voice and Echo-7 talk over each other on one frequency. The Voice reads its numbers; Echo answers with a date: the night before the Silence."
+        },
+        {
+          "id": "c2_4",
+          "source": "The dam",
+          "text": "In the dam's control room, a steel cabinet stencilled ECHO still draws power from the turbines. A logbook on top: \"Receiving. Not ours. Not from any country. Not from any country.\""
+        },
+        {
+          "id": "c2_5",
+          "source": "Dial (deep band)",
+          "text": "On VLF, under everything, a slow pulse, once every seven minutes. Echo-7 says it's what the network was listening to when the Silence began. \"It isn't a weapon. It's a reply.\""
+        },
+        {
+          "id": "c2_6",
+          "source": "The mountain observatory",
+          "text": "The observatory's dish points at one patch of sky. Taped to the console, in someone's careful hand: 7-3-1-9, written out as coordinates. Underneath: \"We asked first.\""
+        }
+      ],
+      "finale": [
+        "Operator. You found Echo. Echo found you.",
+        "Seven, three, one, nine is not a code. It's where we were pointing.",
+        "On the night of the Silence, something answered. Everything that listened went quiet.",
+        "We are going to ask it again. Stay on the line."
+      ],
+      "closing": "Chapter 2 complete. The Silence was an answer."
     }
   ],
   "personalMissions": [

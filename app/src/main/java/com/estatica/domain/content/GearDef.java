@@ -17,6 +17,13 @@ public final class GearDef {
     private double fuelPerHour;
     /** Turns up in random finds out there (vehicles don't: they're built). */
     private boolean findable = true;
+    /** Out there, stress taken is multiplied by this (a canteen, a poncho): 1 = no change. */
+    private double stressFactor = 1.0;
+
+    public double getStressFactor() {
+        return stressFactor;
+    }
+
     /** Repairs cost this many times the usual (a truck isn't a flashlight). */
     private int repairScale = 1;
 

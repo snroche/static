@@ -116,6 +116,8 @@ public final class GameSession {
     private ExpeditionEngine engine;
     private ScoutRules rules;
     private com.estatica.domain.scouts.RetrainRules retrainRules;
+    private com.estatica.domain.bunker.MarketRules marketRules;
+    private com.estatica.domain.bunker.WorkshopRules workshopRules;
     private BunkerRules bunker;
     private DialogueEngine dialogues;
     private com.estatica.domain.scouts.RomanceRules romance;
@@ -208,6 +210,7 @@ public final class GameSession {
         engine = new ExpeditionEngine(content);
         rules = engine.rules();
         retrainRules = new com.estatica.domain.scouts.RetrainRules(content.getBalance().getRetrain());
+        workshopRules = new com.estatica.domain.bunker.WorkshopRules(content);
         bunker = new BunkerRules(content, rules);
         dialogues = new DialogueEngine(content, rules, new DialogueEngine.Relations() {
             @Override
@@ -298,8 +301,10 @@ public final class GameSession {
         field = new SignalField(content.getBalance(), state.getRngSeed());
         rngSeed = state.getRngSeed();
         regionMap = new com.estatica.domain.map.RegionMap(content, state.getRngSeed());
+        marketRules = new com.estatica.domain.bunker.MarketRules(content, state.getRngSeed());
         weather = new com.estatica.domain.world.WeatherRules(content.getBalance().getWeather(), state.getRngSeed());
         engine.setKeyOwnership(this::hasKey);
+        engine.setPlotOpen(this::plotOpen);
         engine.setRecentEvents(id -> clock.nowMillis() - value(EVENT_SEEN + id)
                 < content.getBalance().getExpedition().getEventRecentHours() * HOUR);
         engine.setWorld(new com.estatica.domain.world.World() {
@@ -584,10 +589,15 @@ public final class GameSession {
                 if (!visited.isWilds() && !visited.isEndless()) {
                     pickOver(expedition.getZoneId(), step);
                 }
-                gearAfterTrip(scout, expedition.getZoneId(), step);
+                if (visited.getId().equals(content.getBalance().getMarket().getZone()) && !expedition.isAborted()) {
+                    pickUp(scout, step);
+                }
+                maybeFindBlueprint(scout, visited, step);
+                double tripHours = (step.now - expedition.getStartedAtMillis()) / (double) HOUR;
+                gearAfterTrip(scout, expedition.getZoneId(), tripHours, step);
                 List<Scout> team = party.everyone(scout);
                 for (int i = 1; i < team.size(); i++) {
-                    gearAfterTrip(team.get(i), expedition.getZoneId(), step);
+                    gearAfterTrip(team.get(i), expedition.getZoneId(), tripHours, step);
                 }
                 // Coming back together builds something, even between rivals.
                 for (int i = 0; i < team.size(); i++) {
@@ -633,6 +643,8 @@ public final class GameSession {
         }
 
         expireConversations(step);
+        deliverCouriers(step);
+        maybeWorkOutBlueprint(step);
         maraBike(step);
         maybeStartConversation(step);
         maybeBark(step);
@@ -2331,7 +2343,14 @@ public final class GameSession {
 
     private RadioRules.Outcome resolve(SignalField.Spot spot, GameRandom rng) {
         boolean roomForSurvivor = rescueTargets.size() < content.getBalance().getPeople().getMaxPendingRescues();
-        return radio.resolve(spot, knownZones, roomForSurvivor, receivedTransmissions, heardRares(), rng);
+        // Story transmissions from a chapter that hasn't started yet stay off the air.
+        Set<String> closed = new java.util.HashSet<>(receivedTransmissions);
+        for (SignalsDef.Transmission t : content.getSignals().getTransmissions()) {
+            if (t.getPlot() != null && !plotOpen(t.getPlot())) {
+                closed.add(t.getId());
+            }
+        }
+        return radio.resolve(spot, knownZones, roomForSurvivor, closed, heardRares(), rng);
     }
 
     /** A rare find that leaves nothing behind (or lore already kept) costs no reserve. */
@@ -2512,6 +2531,9 @@ public final class GameSession {
         step.system(content.getTerminal().getRadio().getStationHeard(), vars, null);
         if (station.getLore() != null) {
             addLore(station.getId(), station.getLore(), step);
+        }
+        if (station.getId().equals(content.getBalance().getMarket().getStation())) {
+            discover(content.getBalance().getMarket().getZone(), step);
         }
         unsettle(station.getStress(), step);
         if (station.hasBulletin()) {
@@ -3160,10 +3182,36 @@ public final class GameSession {
     }
 
     /** Workshop speed: power, and the best Oficio among scouts on the workshop task. */
+    /** Power sets how fast the tools run; whoever is at the bench (Craft) sets the rest. Nobody: nothing. */
     private double workshopSpeed(PowerGrid.State g) {
-        double base = PowerGrid.workshopSpeed(g.units("workshop"));
-        return base * (1 + 0.05 * bestWorkshopCraft());
+        return PowerGrid.workshopSpeed(g.units("workshop")) * workshopRules.speed(bestWorkshopCraft());
     }
+
+    /** The jobs being worked on now: one per bench, in order; the rest wait in line. */
+    private List<CraftJob> workingJobs() {
+        int benches = Math.max(1, moduleLevel("workshop"));
+        return new ArrayList<>(craftJobs.subList(0, Math.min(benches, craftJobs.size())));
+    }
+
+    /** Whoever is at the bench gets better at it while there's work. */
+    private void trainCrafters(double hours) {
+        double xp = hours * content.getBalance().getWorkshop().getXpPerHour();
+        if (xp <= 0) {
+            return;
+        }
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && "taller".equals(s.getLife().getTaskId())) {
+                double owed = value(CRAFT_XP + s.getId()) + xp;
+                int whole = (int) Math.floor(owed);
+                if (whole > 0) {
+                    rules.trainXp(s, StatType.CRAFT, whole);
+                }
+                baseValues.put(CRAFT_XP + s.getId(), owed - whole);
+            }
+        }
+    }
+
+    private static final String CRAFT_XP = "craftxp:";
 
     private int bestWorkshopCraft() {
         int bestCraft = 0;
@@ -3179,12 +3227,17 @@ public final class GameSession {
         if (craftJobs.isEmpty()) {
             return;
         }
+        List<CraftJob> working = workingJobs();
         List<Double> minutes = new ArrayList<>();
-        for (CraftJob job : craftJobs) {
+        for (CraftJob job : working) {
             minutes.add(content.recipe(job.getRecipeId()).getMinutes());
         }
-        List<CraftJob> done = CraftJob.work(craftJobs, minutes, hours, workshopSpeed(g));
-        for (CraftJob job : craftJobs) {
+        double speed = workshopSpeed(g);
+        if (speed > 0) {
+            trainCrafters(hours);
+        }
+        List<CraftJob> done = CraftJob.work(working, minutes, hours, speed);
+        for (CraftJob job : working) {
             if (!done.contains(job)) {
                 step.radioWrites.add(() -> baseRepository.save(job));
             }
@@ -3213,7 +3266,7 @@ public final class GameSession {
     private long nextBaseEvent(long now) {
         long best = events.nextEventAfter(now);
         double speed = workshopSpeed(grid(now));
-        for (CraftJob job : craftJobs) {
+        for (CraftJob job : workingJobs()) {
             double left = job.minutesLeft(content.recipe(job.getRecipeId()).getMinutes(), speed);
             if (left >= 0) {
                 long at = now + (long) Math.ceil(left * 60_000);
@@ -3259,8 +3312,18 @@ public final class GameSession {
         Step step = new Step();
         advance(step);
         RecipeDef recipe = content.recipe(recipeId);
-        if (craftJobs.size() >= moduleLevel("workshop")) {
-            step.system(content.getTerminal().getBase().getCraftNoSlot(), Map.of(), null);
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        Map<String, String> need = new HashMap<>();
+        need.put("item", recipe.getName());
+        need.put("craft", String.valueOf(recipe.getMinCraft()));
+        if (!knowsRecipe(recipe)) {
+            return step.commit();
+        } else if (craftJobs.size() >= workshopRules.capacity(moduleLevel("workshop"))) {
+            step.system(text.getCraftNoSlot(), Map.of(), null);
+        } else if (bestWorkshopCraft() <= 0) {
+            step.system(text.getBenchEmpty(), need, null);
+        } else if (!workshopRules.canMake(recipe, bestWorkshopCraft())) {
+            step.system(text.getCraftTooHard(), need, null);
         } else if (moduleLevel("workshop") >= recipe.getMinWorkshopLevel() && pay(recipe.getInputs(), step)) {
             CraftJob job = CraftJob.start(recipeId, step.now);
             craftJobs.add(job);
@@ -3270,6 +3333,363 @@ public final class GameSession {
             step.system(content.getTerminal().getBase().getCraftStarted(), vars, null);
         }
         return step.commit();
+    }
+
+    // ---- Blueprints ----
+
+    private static final String BLUEPRINT = "bp:";
+
+    private boolean knowsRecipe(RecipeDef r) {
+        return r.isKnown() || value(BLUEPRINT + r.getId()) > 0;
+    }
+
+    private void learnBlueprint(RecipeDef r, String template, Scout who, Step step) {
+        if (knowsRecipe(r)) {
+            return;
+        }
+        setValue(BLUEPRINT + r.getId(), 1, step);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("item", r.getName());
+        vars.put("name", who != null ? who.getName() : "");
+        step.system(template, vars, who);
+    }
+
+    /** Plans still out there, nearest band first. */
+    private List<RecipeDef> unknownRecipes(int maxBand) {
+        List<RecipeDef> out = new ArrayList<>();
+        for (RecipeDef r : content.getRecipes().values()) {
+            if (!knowsRecipe(r) && content.getBalance().bandIndex(r.getFindBand()) <= maxBand) {
+                out.add(r);
+            }
+        }
+        out.sort(Comparator.comparing(RecipeDef::getId));
+        return out;
+    }
+
+    /** Coming home, now and then someone brings a blueprint they found. */
+    private void maybeFindBlueprint(Scout scout, ZoneDef zone, Step step) {
+        int band = content.getBalance().bandIndex(zone.getBand());
+        List<RecipeDef> left = unknownRecipes(band);
+        if (left.isEmpty() || !random.chance(content.getBalance().getWorkshop().findChance(band))) {
+            return;
+        }
+        learnBlueprint(random.pick(left), content.getTerminal().getBase().getBlueprintFound(), scout, step);
+    }
+
+    /** Once a day, whoever is at the bench may work out a plan they're good enough for. */
+    private void maybeWorkOutBlueprint(Step step) {
+        long day = localDay(step.now);
+        if (value("bp_day") >= day + 1) {
+            return;
+        }
+        setValue("bp_day", day + 1, step);
+        Scout best = null;
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && "taller".equals(s.getLife().getTaskId())
+                    && (best == null || rules.effectiveStat(s, StatType.CRAFT) > rules.effectiveStat(best, StatType.CRAFT))) {
+                best = s;
+            }
+        }
+        if (best == null || !random.chance(content.getBalance().getWorkshop().getWorkOutChancePerDay())) {
+            return;
+        }
+        int craft = rules.effectiveStat(best, StatType.CRAFT);
+        List<RecipeDef> fits = new ArrayList<>();
+        for (RecipeDef r : unknownRecipes(Integer.MAX_VALUE)) {
+            if (r.getMinCraft() <= craft) {
+                fits.add(r);
+            }
+        }
+        if (!fits.isEmpty()) {
+            learnBlueprint(random.pick(fits), content.getTerminal().getBase().getBlueprintWorkedOut(), best, step);
+        }
+    }
+
+    // ---- Salvage and upgrades ----
+
+    /** Breaks a piece in stock back into materials. */
+    @WorkerThread
+    public List<LogLine> salvage(String pieceId) {
+        Step step = new Step();
+        advance(step);
+        com.estatica.domain.bunker.GearPiece piece = gear.get(pieceId);
+        if (piece != null && piece.isInBunker()) {
+            Map<String, Integer> back = workshopRules.salvage(piece);
+            Map<String, String> vars = new HashMap<>();
+            vars.put("gear", gearName(piece));
+            vars.put("loot", back.isEmpty() ? "-" : describe(back));
+            piece.moveTo(com.estatica.domain.bunker.GearPiece.GONE);
+            back.forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+            step.system(content.getTerminal().getBase().getSalvaged(), vars, null);
+        }
+        return step.commit();
+    }
+
+    /** Raises a piece in stock one rarity: needs the Craft at the bench, and materials. */
+    @WorkerThread
+    public List<LogLine> upgradeGear(String pieceId) {
+        Step step = new Step();
+        advance(step);
+        com.estatica.domain.bunker.GearPiece piece = gear.get(pieceId);
+        if (piece == null || !piece.isInBunker()) {
+            return step.commit();
+        }
+        int needs = workshopRules.upgradeCraft(piece);
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("item", gearName(piece));
+        vars.put("craft", String.valueOf(needs));
+        if (needs < 0) {
+            return step.commit();
+        }
+        if (bestWorkshopCraft() <= 0) {
+            step.system(text.getBenchEmpty(), vars, null);
+        } else if (bestWorkshopCraft() < needs) {
+            step.system(text.getCraftTooHard(), vars, null);
+        } else if (pay(workshopRules.upgradeCost(piece), step)) {
+            com.estatica.domain.bunker.GearPiece.Rarity next =
+                    com.estatica.domain.bunker.GearPiece.Rarity.values()[piece.getRarity().ordinal() + 1];
+            com.estatica.domain.bunker.GearPiece better = new com.estatica.domain.bunker.GearPiece(piece.getId(),
+                    piece.getGearId(), next, piece.getCondition(), piece.getLocation(), piece.getOriginalOwnerId());
+            gear.put(better.getId(), better);
+            vars.put("gear", gearName(better));
+            vars.put("rarity", content.getTerminal().getBase().getRarities()
+                    .getOrDefault(next.name(), next.name().toLowerCase(Locale.ROOT)));
+            step.system(text.getUpgraded(), vars, null);
+        }
+        return step.commit();
+    }
+
+    // ---- THE FAIR: the trader on the radio ----
+
+    private static final String REPUTATION = "feria_rep";
+    private static final String SOLD = "sold:";
+    private static final String BOUGHT = "bought:";
+    private static final String COURIER = "cour:";
+    private static final String HELD = "held:";
+
+    private int reputation() {
+        return baseValues.containsKey(REPUTATION) ? (int) Math.round(value(REPUTATION))
+                : content.getBalance().getMarket().getStartReputation();
+    }
+
+    private SignalsDef.Station marketStation() {
+        String id = content.getBalance().getMarket().getStation();
+        for (SignalsDef.Station st : content.getSignals().getStations()) {
+            if (st.getId().equals(id)) {
+                return st;
+            }
+        }
+        return null;
+    }
+
+    /** Heard at least once: you know where to find them. */
+    private boolean marketKnown() {
+        SignalsDef.Station st = marketStation();
+        return st != null && lore.containsKey(st.getId());
+    }
+
+    private boolean marketOpen(long now) {
+        SignalsDef.Station st = marketStation();
+        return marketKnown() && Broadcasts.onAir(st, clock.localMillis(now));
+    }
+
+    private com.estatica.domain.bunker.MarketRules.Day marketDay(long now) {
+        long day = localDay(now);
+        return marketRules.day(day, r -> !knowsRecipe(r), reputation());
+    }
+
+    private void traded(Step step) {
+        setValue(REPUTATION, marketRules.afterTrade(reputation()), step);
+        count("trades", step);
+    }
+
+    /** Sells {@code qty} of a good in stock. */
+    @WorkerThread
+    public List<LogLine> sell(String good, int qty) {
+        Step step = new Step();
+        advance(step);
+        if (!marketOpen(step.now) || qty <= 0 || resources.getOrDefault(good, 0) < qty
+                || !content.getBalance().getMarket().getGoods().containsKey(good)) {
+            return step.commit();
+        }
+        long day = localDay(step.now);
+        String soldKey = SOLD + day + ":" + good;
+        int chips = marketRules.sellTotal(good, marketDay(step.now), reputation(), (int) value(soldKey), qty);
+        pay(Map.of(good, qty), step);
+        step.resourceDelta.merge("chips", chips, Integer::sum);
+        setValue(soldKey, value(soldKey) + qty, step);
+        traded(step);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("what", describe(Map.of(good, qty)));
+        vars.put("chips", String.valueOf(chips));
+        step.system(content.getTerminal().getBase().getMarketSold(), vars, null);
+        return step.commit();
+    }
+
+    /** Sells a piece of gear from stock. */
+    @WorkerThread
+    public List<LogLine> sellGear(String pieceId) {
+        Step step = new Step();
+        advance(step);
+        com.estatica.domain.bunker.GearPiece piece = gear.get(pieceId);
+        if (!marketOpen(step.now) || piece == null || !piece.isInBunker()) {
+            return step.commit();
+        }
+        int chips = marketRules.gearSellPrice(piece, reputation());
+        Map<String, String> vars = new HashMap<>();
+        vars.put("what", gearName(piece));
+        vars.put("chips", String.valueOf(chips));
+        piece.moveTo(com.estatica.domain.bunker.GearPiece.GONE);
+        step.resourceDelta.merge("chips", chips, Integer::sum);
+        traded(step);
+        step.system(content.getTerminal().getBase().getMarketSold(), vars, null);
+        return step.commit();
+    }
+
+    /**
+     * Buys from THE FAIR. {@code what}: "R:good" (with a quantity), or an offer key
+     * ("BLUEPRINT:id", "GEAR:id:RARITY", one each, once a day).
+     *
+     * @param courier delivered for a fee; otherwise it waits at THE FAIR for someone to fetch it
+     */
+    @WorkerThread
+    public List<LogLine> buy(String what, int qty, boolean courier) {
+        Step step = new Step();
+        advance(step);
+        if (!marketOpen(step.now) || qty <= 0) {
+            return step.commit();
+        }
+        com.estatica.domain.bunker.MarketRules.Day today = marketDay(step.now);
+        long day = localDay(step.now);
+        int price;
+        String name;
+        if (what.startsWith("R:")) {
+            String good = what.substring(2);
+            int each = marketRules.buyPrice(good, today, reputation());
+            if (each < 0) {
+                return step.commit();
+            }
+            price = each * qty;
+            name = describe(Map.of(good, qty));
+        } else {
+            com.estatica.domain.bunker.MarketRules.Offer offer = null;
+            for (com.estatica.domain.bunker.MarketRules.Offer o : today.offers) {
+                if (o.key().equals(what)) {
+                    offer = o;
+                }
+            }
+            if (offer == null || value(BOUGHT + day + ":" + what) > 0) {
+                return step.commit();
+            }
+            qty = 1;
+            price = offer.price;
+            name = offerName(offer);
+            setValue(BOUGHT + day + ":" + what, 1, step);
+        }
+        int total = price + (courier ? marketRules.courierFee(price) : 0);
+        if (!pay(Map.of("chips", total), step)) {
+            return step.commit();
+        }
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("what", name);
+        vars.put("chips", String.valueOf(total));
+        if (courier) {
+            long eta = step.now + Math.round(content.getBalance().getMarket().getCourierHours() * HOUR);
+            setValue(COURIER + com.estatica.core.Ids.newId().substring(0, 8) + ":" + what + ":" + qty, eta, step);
+            Map<String, String> h = new HashMap<>();
+            h.put("hours", String.valueOf(Math.round(content.getBalance().getMarket().getCourierHours())));
+            vars.put("how", TextTemplate.format(text.getMarketCourier(), h));
+        } else {
+            setValue(HELD + what, value(HELD + what) + qty, step);
+            vars.put("how", text.getMarketPickup());
+        }
+        traded(step);
+        step.system(text.getMarketBought(), vars, null);
+        return step.commit();
+    }
+
+    private String offerName(com.estatica.domain.bunker.MarketRules.Offer offer) {
+        if (offer.kind == com.estatica.domain.bunker.MarketRules.Offer.Kind.BLUEPRINT) {
+            Map<String, String> v = new HashMap<>();
+            v.put("item", content.recipe(offer.id).getName());
+            return TextTemplate.format(content.getTerminal().getBase().getBlueprintName(), v);
+        }
+        return content.gear(offer.id).getName() + " · " + content.getTerminal().getBase().getRarities()
+                .getOrDefault(offer.rarity.name(), offer.rarity.name().toLowerCase(Locale.ROOT));
+    }
+
+    /** Hands over what was bought: goods into stock, plans onto the bench, gear on the shelf. */
+    private String deliver(String what, int qty, Step step) {
+        if (what.startsWith("R:")) {
+            String good = what.substring(2);
+            step.resourceDelta.merge(good, qty, Integer::sum);
+            return describe(Map.of(good, qty));
+        }
+        String[] parts = what.split(":");
+        if ("BLUEPRINT".equals(parts[0])) {
+            RecipeDef r = content.getRecipes().get(parts[1]);
+            if (r != null) {
+                learnBlueprint(r, content.getTerminal().getBase().getBlueprintLearned(), null, step);
+                Map<String, String> v = new HashMap<>();
+                v.put("item", r.getName());
+                return TextTemplate.format(content.getTerminal().getBase().getBlueprintName(), v);
+            }
+            return parts[1];
+        }
+        com.estatica.domain.bunker.GearPiece.Rarity rarity = com.estatica.domain.bunker.GearPiece.Rarity.fromKey(parts[2]);
+        String label = parts[1];
+        for (int i = 0; i < qty && content.gear(parts[1]) != null; i++) {
+            com.estatica.domain.bunker.GearPiece piece = com.estatica.domain.bunker.GearPiece.fresh(parts[1], rarity);
+            gear.put(piece.getId(), piece);
+            label = gearName(piece);
+        }
+        return label;
+    }
+
+    /** Couriers that have arrived. */
+    private void deliverCouriers(Step step) {
+        List<String> due = new ArrayList<>();
+        for (Map.Entry<String, Double> e : baseValues.entrySet()) {
+            if (e.getKey().startsWith(COURIER) && e.getValue() > 0 && e.getValue() <= step.now) {
+                due.add(e.getKey());
+            }
+        }
+        java.util.Collections.sort(due);
+        for (String key : due) {
+            String rest = key.substring(COURIER.length());
+            String body = rest.substring(rest.indexOf(':') + 1);
+            int qty = Integer.parseInt(body.substring(body.lastIndexOf(':') + 1));
+            String what = body.substring(0, body.lastIndexOf(':'));
+            setValue(key, 0, step);
+            Map<String, String> vars = new HashMap<>();
+            vars.put("what", deliver(what, qty, step));
+            step.system(content.getTerminal().getBase().getMarketDelivered(), vars, null);
+        }
+    }
+
+    /** Back from THE FAIR: whatever was waiting there comes home with them. */
+    private void pickUp(Scout lead, Step step) {
+        List<String> held = new ArrayList<>();
+        for (Map.Entry<String, Double> e : baseValues.entrySet()) {
+            if (e.getKey().startsWith(HELD) && e.getValue() > 0) {
+                held.add(e.getKey());
+            }
+        }
+        java.util.Collections.sort(held);
+        List<String> names = new ArrayList<>();
+        for (String key : held) {
+            int qty = (int) Math.round(value(key));
+            setValue(key, 0, step);
+            names.add(deliver(key.substring(HELD.length()), qty, step));
+        }
+        if (!names.isEmpty()) {
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", lead.getName());
+            vars.put("what", String.join(", ", names));
+            step.system(content.getTerminal().getBase().getMarketPickedUp(), vars, lead);
+        }
     }
 
     /** Puts a piece from stock on a scout, in its slot. Whatever was there goes back to stock. */
@@ -3374,6 +3794,13 @@ public final class GameSession {
         return content.gear(piece.getGearId()).getName().toLowerCase(Locale.ROOT);
     }
 
+    /** What a piece does at its rarity: "Wits +2 · +38% loot". */
+    private String gearEffects(com.estatica.domain.bunker.GearPiece piece) {
+        GearDef def = content.gear(piece.getGearId());
+        return com.estatica.domain.bunker.GearRules.describe(def, piece, content.getTerminal().getBase().getGearEffects(),
+                content.getTerminal().getStatNames());
+    }
+
     private String gearLabel(com.estatica.domain.bunker.GearPiece piece) {
         TerminalText.BaseText text = content.getTerminal().getBase();
         Map<String, String> vars = new HashMap<>();
@@ -3383,11 +3810,14 @@ public final class GameSession {
         return TextTemplate.format(piece.isBroken() ? text.getGearLabelBroken() : text.getGearLabel(), vars);
     }
 
-    /** Wear on the way back, and sometimes something useful found on the road. */
-    private void gearAfterTrip(Scout scout, String zoneId, Step step) {
+    /**
+     * Time on the road wears gear down (trouble on the way already did its part), and
+     * sometimes something useful turns up on the way back.
+     */
+    private void gearAfterTrip(Scout scout, String zoneId, double hours, Step step) {
         TerminalText.BaseText text = content.getTerminal().getBase();
         for (com.estatica.domain.bunker.GearPiece piece : rules.working(scout)) {
-            int before = gearRules.wear(piece, scout.getInjury() != com.estatica.domain.scouts.Injury.NONE);
+            int before = gearRules.wearForTrip(piece, hours);
             Map<String, String> vars = new HashMap<>();
             vars.put("name", scout.getName());
             vars.put("gear", gearName(piece));
@@ -3447,10 +3877,17 @@ public final class GameSession {
                     left < 0 ? -1 : (int) Math.ceil(left)));
         }
         List<SessionSnapshot.RecipeView> recipes = new ArrayList<>();
+        int bench = bestWorkshopCraft();
         for (RecipeDef r : content.getRecipes().values()) {
+            if (!knowsRecipe(r)) {
+                continue; // a blueprint still out there
+            }
             int needs = moduleLevel("workshop") >= r.getMinWorkshopLevel() ? 0 : r.getMinWorkshopLevel();
-            recipes.add(new SessionSnapshot.RecipeView(r.getId(), r.getName(), describe(r.getInputs()),
-                    (int) Math.ceil(r.getMinutes()), canAfford(r.getInputs()), needs));
+            SessionSnapshot.RecipeView view = new SessionSnapshot.RecipeView(r.getId(), r.getName(),
+                    describe(r.getInputs()), (int) Math.ceil(r.getMinutes()), canAfford(r.getInputs()), needs);
+            view.minCraft = r.getMinCraft();
+            view.crafterOk = workshopRules.canMake(r, bench);
+            recipes.add(view);
         }
         List<Scout> guards = raids.guards(scouts.values());
         List<String> guardNames = new ArrayList<>();
@@ -3468,15 +3905,29 @@ public final class GameSession {
             String label = gearLabel(piece);
             if (piece.isInBunker()) {
                 GearDef def = content.gear(piece.getGearId());
-                gearStock.add(new SessionSnapshot.ItemView(piece.getId(), label, def.getDescription(),
+                gearStock.add(new SessionSnapshot.ItemView(piece.getId(), label, gearEffects(piece),
                         def.getSlot().name()));
             }
             Scout wearer = wearerOf(piece);
             String holder = wearer != null ? wearer.getName() : null;
             boolean damaged = piece.getCondition() < com.estatica.domain.bunker.GearPiece.MAX_CONDITION;
             Map<String, Integer> cost = gearRules.repairCost(piece);
-            gearViews.add(new SessionSnapshot.GearView(piece.getId(), label, holder,
-                    damaged && atHome(piece) ? describe(cost) : null, canAfford(cost)));
+            SessionSnapshot.GearView view = new SessionSnapshot.GearView(piece.getId(),
+                    label + "\n" + gearEffects(piece), holder,
+                    damaged && atHome(piece) ? describe(cost) : null, canAfford(cost));
+            view.inStock = piece.isInBunker();
+            if (view.inStock) {
+                Map<String, Integer> back = workshopRules.salvage(piece);
+                view.salvage = back.isEmpty() ? null : describe(back);
+                int needsCraft = workshopRules.upgradeCraft(piece);
+                if (needsCraft >= 0) {
+                    Map<String, Integer> up = workshopRules.upgradeCost(piece);
+                    view.upgradeCost = describe(up);
+                    view.upgradeCraft = needsCraft;
+                    view.upgradeOk = bench >= needsCraft && canAfford(up);
+                }
+            }
+            gearViews.add(view);
         }
         SessionSnapshot.BaseView baseView = new SessionSnapshot.BaseView(goalViews(now), !g.cut.isEmpty(), energy.watts(moduleLevel("generator")), g.available, g.used,
                 events.blackoutWattsAt(now) > 0, g.night, g.filtersShort, consumers,
@@ -3485,6 +3936,20 @@ public final class GameSession {
                 guardNames, raids.defense(guards) + (int) moduleBonus("barricades"), gearStock, aliveScouts(), rosterCap(), gearViews);
         baseView.rechargePer = (int) Math.round(rechargePerBattery());
         baseView.rooms = roomViews();
+        Scout atBench = null;
+        for (Scout s : scouts.values()) {
+            if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && "taller".equals(s.getLife().getTaskId())
+                    && (atBench == null || rules.effectiveStat(s, StatType.CRAFT) > rules.effectiveStat(atBench, StatType.CRAFT))) {
+                atBench = s;
+            }
+        }
+        baseView.crafter = atBench != null ? atBench.getName() : null;
+        baseView.crafterCraft = atBench != null ? rules.effectiveStat(atBench, StatType.CRAFT) : 0;
+        baseView.capacity = workshopRules.capacity(moduleLevel("workshop"));
+        baseView.blueprintsTotal = content.getRecipes().size();
+        for (RecipeDef r : content.getRecipes().values()) {
+            baseView.blueprintsKnown += knowsRecipe(r) ? 1 : 0;
+        }
         baseView.fuel = resources.getOrDefault("fuel", 0);
         baseView.fuelGenerator = value(KEY_FUEL_GENERATOR) > 0;
         baseView.batteries = resources.getOrDefault("batteries", 0);
@@ -3532,6 +3997,14 @@ public final class GameSession {
     }
 
     /** A La Voz fragment was found. When a chapter is complete, La Voz speaks (GDD §8). */
+    /** A fragment can turn up once its chapter is open: the first always, the rest after the one before. */
+    private boolean plotOpen(String fragmentId) {
+        List<StoryDef.Chapter> chapters = content.getStory().getChapters();
+        StoryDef.Chapter chapter = content.getStory().chapterOf(fragmentId);
+        int i = chapters.indexOf(chapter);
+        return i <= 0 || gameFlags.contains("chapter:" + chapters.get(i - 1).getId());
+    }
+
     private void foundPlot(String fragmentId, Step step) {
         StoryDef.Chapter chapter = content.getStory().chapterOf(fragmentId);
         if (chapter == null || !gameFlags.add("plot:" + fragmentId)) {
@@ -3864,7 +4337,7 @@ public final class GameSession {
             if (ride != null) {
                 GearDef rideDef = content.gear(ride.getGearId());
                 b.rideName = rideDef.getName();
-                b.ridePace = rideDef.getDurationMultiplier();
+                b.ridePace = com.estatica.domain.bunker.GearRules.durationMultiplier(rideDef, ride);
                 b.rideSeats = rideDef.getSeats();
                 b.rideFuel = rideDef.getFuelPerHour();
             }
@@ -3892,7 +4365,8 @@ public final class GameSession {
                 com.estatica.domain.bunker.GearPiece worn = s.getLife().getGear(slot);
                 b.slots.add(new SessionSnapshot.SlotView(slot.name(),
                         content.getTerminal().getBase().getSlotNames().getOrDefault(slot.name(), slot.name()),
-                        worn != null ? worn.getId() : null, worn != null ? gearLabel(worn) : null));
+                        worn != null ? worn.getId() : null,
+                        worn != null ? gearLabel(worn) + "\n" + gearEffects(worn) : null));
             }
             List<String> worn = new ArrayList<>();
             for (com.estatica.domain.bunker.GearPiece piece : s.getLife().getEquipped()) {
@@ -4134,9 +4608,98 @@ public final class GameSession {
         for (Relay relay : relays.values()) {
             relayLines.add(content.zone(relay.getZoneId()).getName() + " " + Math.round(relay.getCondition()) + "%");
         }
-        return new SessionSnapshot.RadioView(bands, content.getBalance().getRadio().getDialMax(),
+        SessionSnapshot.RadioView view = new SessionSnapshot.RadioView(bands, content.getBalance().getRadio().getDialMax(),
                 pendingTransmissions, gameFlags.contains(FLAG_MORSE_TABLE),
                 resources.getOrDefault("relay_kit", 0), relayLines, stationViews());
+        view.market = marketView(clock.nowMillis());
+        return view;
+    }
+
+    private SessionSnapshot.MarketView marketView(long now) {
+        SessionSnapshot.MarketView m = new SessionSnapshot.MarketView();
+        SignalsDef.Station station = marketStation();
+        m.known = marketKnown();
+        if (station == null || !m.known) {
+            return m;
+        }
+        TerminalText.BaseText text = content.getTerminal().getBase();
+        m.open = marketOpen(now);
+        m.chips = resources.getOrDefault("chips", 0);
+        m.reputation = reputation();
+        m.courierPercent = (int) Math.round(content.getBalance().getMarket().getCourierFee() * 100);
+        long local = clock.localMillis(now);
+        long at = m.open ? Broadcasts.startOf(station, Broadcasts.airing(station, local))
+                + station.getSchedule().getMinutes() * 60_000L : Broadcasts.nextStart(station, local);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("time", String.format(Locale.ROOT, "%02d:%02d", Math.floorMod(at / HOUR, 24), at / 60_000 % 60));
+        m.status = TextTemplate.format(m.open ? text.getMarketStatusOn() : text.getMarketStatusOff(), vars);
+        com.estatica.domain.bunker.MarketRules.Day today = marketDay(now);
+        long day = localDay(now);
+        int rep = reputation();
+        List<SessionSnapshot.TradeRow> buy = new ArrayList<>();
+        for (com.estatica.domain.bunker.MarketRules.Offer offer : today.offers) {
+            if (value(BOUGHT + day + ":" + offer.key()) > 0) {
+                continue;
+            }
+            buy.add(new SessionSnapshot.TradeRow(offer.key(), offerName(offer), offer.price,
+                    m.chips >= offer.price ? 1 : 0, offer.kind.name().toLowerCase(Locale.ROOT), false));
+        }
+        List<SessionSnapshot.TradeRow> sell = new ArrayList<>();
+        for (String good : content.getBalance().getMarket().getGoods().keySet()) {
+            String name = content.resource(good).getName();
+            String note = today.wanted.contains(good) ? text.getMarketWanted()
+                    : today.scarce.contains(good) ? text.getMarketScarce() : null;
+            int price = marketRules.buyPrice(good, today, rep);
+            buy.add(new SessionSnapshot.TradeRow("R:" + good, name, price, price > 0 ? m.chips / price : 0,
+                    today.scarce.contains(good) ? note : null, true));
+            int have = resources.getOrDefault(good, 0);
+            if (have > 0) {
+                sell.add(new SessionSnapshot.TradeRow("R:" + good, name,
+                        marketRules.sellPrice(good, today, rep, (int) value(SOLD + day + ":" + good)), have,
+                        today.wanted.contains(good) ? note : null, true));
+            }
+        }
+        for (com.estatica.domain.bunker.GearPiece piece : gear.values()) {
+            if (piece.isInBunker()) {
+                sell.add(new SessionSnapshot.TradeRow("P:" + piece.getId(), gearLabel(piece),
+                        marketRules.gearSellPrice(piece, rep), 1, null, false));
+            }
+        }
+        m.buy = buy;
+        m.sell = sell;
+        List<String> incoming = new ArrayList<>();
+        List<String> held = new ArrayList<>();
+        for (Map.Entry<String, Double> e : new java.util.TreeMap<>(baseValues).entrySet()) {
+            if (e.getKey().startsWith(COURIER) && e.getValue() > now) {
+                String body = e.getKey().substring(COURIER.length());
+                body = body.substring(body.indexOf(':') + 1);
+                int qty = Integer.parseInt(body.substring(body.lastIndexOf(':') + 1));
+                incoming.add(goodsName(body.substring(0, body.lastIndexOf(':')), qty) + " · "
+                        + ElapsedFormatter.format((long) (e.getValue() - now), content.getTerminal().getElapsedUnits()));
+            } else if (e.getKey().startsWith(HELD) && e.getValue() > 0) {
+                held.add(goodsName(e.getKey().substring(HELD.length()), (int) Math.round(e.getValue())));
+            }
+        }
+        m.incoming = incoming;
+        m.held = held;
+        return m;
+    }
+
+    /** "3 rations", "Plans: Motorbike", "Helmet · rare". */
+    private String goodsName(String what, int qty) {
+        if (what.startsWith("R:")) {
+            return describe(Map.of(what.substring(2), qty));
+        }
+        String[] parts = what.split(":");
+        if ("BLUEPRINT".equals(parts[0])) {
+            Map<String, String> v = new HashMap<>();
+            RecipeDef r = content.getRecipes().get(parts[1]);
+            v.put("item", r != null ? r.getName() : parts[1]);
+            return TextTemplate.format(content.getTerminal().getBase().getBlueprintName(), v);
+        }
+        GearDef def = content.gear(parts[1]);
+        return (def != null ? def.getName() : parts[1]) + " · " + content.getTerminal().getBase().getRarities()
+                .getOrDefault(parts[2], parts[2].toLowerCase(Locale.ROOT));
     }
 
     /** Stations you've heard at least once (they're in the Diary), with their timetable. */

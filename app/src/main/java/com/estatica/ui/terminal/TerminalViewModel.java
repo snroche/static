@@ -560,6 +560,36 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
+    void sell(String good, int qty) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.sell(good, qty)));
+        }
+    }
+
+    void sellGear(String pieceId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.sellGear(pieceId)));
+        }
+    }
+
+    void buy(String what, int qty, boolean courier) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.buy(what, qty, courier)));
+        }
+    }
+
+    void salvage(String pieceId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.salvage(pieceId)));
+        }
+    }
+
+    void upgradeGear(String pieceId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.upgradeGear(pieceId)));
+        }
+    }
+
     void toggleFuelGenerator() {
         if (ready) {
             run(step -> step.animated.addAll(session.toggleFuelGenerator()));

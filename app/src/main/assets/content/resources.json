@@ -38,9 +38,7 @@
     "id": "relay_kit",
     "name": "Relay kits",
     "kind": "KIT",
-    "shortName": "KIT",
-    "icon": "󰀃",
-    "use": "Install in a zone to extend the radio's reach there."
+    "use": "Carried on a mission and installed in a place: a relay there cleans up the signal and cuts the order delay. Kept in RADIO → RELAYS."
   },
   {
     "id": "parts",
@@ -56,6 +54,13 @@
     "shortName": "FUL",
     "icon": "󰟊",
     "use": "Petrol and diesel. Motorbikes and trucks burn it on the road; the generator can burn it through a blackout."
+  },
+  {
+    "id": "chips",
+    "name": "Chips",
+    "shortName": "CHP",
+    "icon": "󰠰",
+    "use": "Old casino and bus tokens. Nobody remembers who decided, but the Fair takes them, and pays in them."
   },
   {
     "id": "gear_linterna",
@@ -120,6 +125,71 @@
   {
     "id": "gear_camioneta",
     "name": "Pickup truck",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_frontal",
+    "name": "Headlamp",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_mascara",
+    "name": "Gas mask",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_binoculares",
+    "name": "Binoculars",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_brujula",
+    "name": "Compass",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_campera",
+    "name": "Leather jacket",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_poncho",
+    "name": "Rain poncho",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_zapatillas",
+    "name": "Running shoes",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_borcegos",
+    "name": "Steel-toe boots",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_bolso",
+    "name": "Messenger bag",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_mochila_grande",
+    "name": "Hiking pack",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_navaja",
+    "name": "Multitool",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_cantimplora",
+    "name": "Canteen",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_palanca",
+    "name": "Crowbar",
     "kind": "GEAR"
   }
 ]

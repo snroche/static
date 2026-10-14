@@ -65,6 +65,15 @@ public final class ScoutRules {
         return m;
     }
 
+    /** How much of the stress out there gets through their gear (1 = all of it). */
+    public double gearStressFactor(Scout scout) {
+        double f = 1.0;
+        for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
+            f *= com.estatica.domain.bunker.GearRules.stressFactor(content.gear(piece.getGearId()), piece);
+        }
+        return f;
+    }
+
     /** The working ride this person has (bike, motorbike, truck), or null. */
     public com.estatica.domain.bunker.GearPiece ride(Scout scout) {
         for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
@@ -98,7 +107,7 @@ public final class ScoutRules {
             com.estatica.domain.bunker.GearPiece piece = ride(s);
             if (piece != null && !stalled.contains(piece.getId())) {
                 GearDef def = content.gear(piece.getGearId());
-                rides.add(def.getDurationMultiplier());
+                rides.add(com.estatica.domain.bunker.GearRules.durationMultiplier(def, piece));
                 seats.add(def.getSeats());
             }
         }
@@ -189,7 +198,7 @@ public final class ScoutRules {
         for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
             GearDef def = content.gear(piece.getGearId());
             if (!def.isRide()) {
-                m *= def.getDurationMultiplier();
+                m *= com.estatica.domain.bunker.GearRules.durationMultiplier(def, piece);
             }
         }
         for (TraitDef trait : traitsOf(scout)) {

@@ -85,6 +85,119 @@
     }
   },
   {
+    "id": "gear_frontal",
+    "name": "Headlamp",
+    "slot": "HEAD",
+    "description": "Hands free, eyes open.",
+    "statBonus": {
+      "wits": 1
+    }
+  },
+  {
+    "id": "gear_mascara",
+    "name": "Gas mask",
+    "slot": "HEAD",
+    "description": "Smoke, spores, the smell of the dead.",
+    "statBonus": {
+      "endurance": 1
+    },
+    "stressFactor": 0.85
+  },
+  {
+    "id": "gear_binoculares",
+    "name": "Binoculars",
+    "slot": "NECK",
+    "description": "See it before it sees you.",
+    "statBonus": {
+      "stealth": 1,
+      "wits": 1
+    }
+  },
+  {
+    "id": "gear_brujula",
+    "name": "Compass",
+    "slot": "NECK",
+    "description": "North is still north. Less wandering.",
+    "durationMultiplier": 0.9
+  },
+  {
+    "id": "gear_campera",
+    "name": "Leather jacket",
+    "slot": "BODY",
+    "description": "Old, heavy, honest.",
+    "statBonus": {
+      "endurance": 1,
+      "nerve": 1
+    }
+  },
+  {
+    "id": "gear_poncho",
+    "name": "Rain poncho",
+    "slot": "BODY",
+    "description": "Dry is half of sane.",
+    "stressFactor": 0.8
+  },
+  {
+    "id": "gear_zapatillas",
+    "name": "Running shoes",
+    "slot": "FEET",
+    "description": "Light and fast, until they aren't.",
+    "durationMultiplier": 0.85
+  },
+  {
+    "id": "gear_borcegos",
+    "name": "Steel-toe boots",
+    "slot": "FEET",
+    "description": "Heavy. Nothing gets through.",
+    "statBonus": {
+      "endurance": 2
+    },
+    "durationMultiplier": 1.05
+  },
+  {
+    "id": "gear_bolso",
+    "name": "Messenger bag",
+    "slot": "BACK",
+    "description": "Quick in, quick out.",
+    "lootMultiplier": 1.15,
+    "durationMultiplier": 0.95
+  },
+  {
+    "id": "gear_mochila_grande",
+    "name": "Hiking pack",
+    "slot": "BACK",
+    "description": "Room for everything. Feels like it, too.",
+    "lootMultiplier": 1.4,
+    "durationMultiplier": 1.1
+  },
+  {
+    "id": "gear_navaja",
+    "name": "Multitool",
+    "slot": "BELT",
+    "description": "Pliers, blade, screwdriver, a bottle opener for morale.",
+    "statBonus": {
+      "craft": 1,
+      "wits": 1
+    }
+  },
+  {
+    "id": "gear_cantimplora",
+    "name": "Canteen",
+    "slot": "BELT",
+    "description": "Water, and the habit of stopping to drink it.",
+    "stressFactor": 0.85
+  },
+  {
+    "id": "gear_palanca",
+    "name": "Crowbar",
+    "slot": "HANDS",
+    "description": "Doors are suggestions.",
+    "statBonus": {
+      "endurance": 1
+    },
+    "lootMultiplier": 1.1
+  },
+  {
     "id": "gear_bici",
     "name": "Bicycle",
     "slot": "RIDE",

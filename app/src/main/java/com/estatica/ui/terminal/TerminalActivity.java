@@ -600,6 +600,14 @@ public final class TerminalActivity extends ComponentActivity {
                 reserveShare < 20 ? R.color.danger : reserveShare < 50 ? R.color.amber : R.color.good);
         hud.append("  ").append(getString(base.night ? R.string.hud_night : R.string.hud_day)).append(' ');
         colored(hud, getString(weatherIcon(snapshot.weather)) + ' ' + snapshot.weatherName, weatherColor(snapshot.weather));
+        // How long the food lasts, next to the weather: the two things to check first.
+        hud.append("  ");
+        if (snapshot.hungry) {
+            colored(hud, getString(R.string.hud_hungry), R.color.danger);
+        } else if (!Double.isInfinite(snapshot.foodDaysLeft)) {
+            colored(hud, getString(R.string.hud_food, String.format(java.util.Locale.ENGLISH, "%.1f", snapshot.foodDaysLeft)),
+                    snapshot.foodDaysLeft < 1 ? R.color.danger : snapshot.foodDaysLeft < 3 ? R.color.amber_bright : R.color.good);
+        }
         boolean first = true;
         for (SessionSnapshot.ResourceView r : snapshot.resources) {
             if (r.shortName == null) {
@@ -616,13 +624,6 @@ public final class TerminalActivity extends ComponentActivity {
             } else {
                 hud.append(getString(R.string.hud_resource, r.shortName, r.amount));
             }
-        }
-        hud.append(first ? "\n" : "  ");
-        if (snapshot.hungry) {
-            colored(hud, getString(R.string.hud_hungry), R.color.danger);
-        } else if (!Double.isInfinite(snapshot.foodDaysLeft)) {
-            colored(hud, getString(R.string.hud_food, String.format(java.util.Locale.ENGLISH, "%.1f", snapshot.foodDaysLeft)),
-                    snapshot.foodDaysLeft < 1 ? R.color.danger : snapshot.foodDaysLeft < 3 ? R.color.amber_bright : R.color.good);
         }
         binding.hud.setText(hud);
         binding.hud.setContentDescription(getString(R.string.hud_description, hud));
@@ -646,6 +647,9 @@ public final class TerminalActivity extends ComponentActivity {
         text.append(getString(R.string.ic_rations)).append(' ').append(getString(R.string.hud_info_food)).append("\n\n");
         text.append(getString(weatherIcon(snapshot.weather))).append(' ').append(getString(R.string.hud_info_weather));
         for (SessionSnapshot.ResourceView r : snapshot.resources) {
+            if (r.shortName == null) {
+                continue; // only what's on the bar
+            }
             text.append("\n\n").append(getString(R.string.hud_info_resource, r.icon != null ? r.icon : "·",
                     r.name.toUpperCase(java.util.Locale.ROOT), r.amount));
             String use = snapshot.glossary.get(r.name);
@@ -1270,11 +1274,17 @@ public final class TerminalActivity extends ComponentActivity {
             case RECIPES:
                 binding.panelTitle.setText(R.string.panel_recipes_title);
                 for (SessionSnapshot.RecipeView r : snapshot.base.recipes) {
-                    boolean available = r.needsLevel == 0;
-                    rows.add(new PickerAdapter.Row(r.id, r.name,
-                            getString(R.string.recipe_meta, r.cost, r.minutes),
-                            available ? null : getString(R.string.recipe_locked, r.needsLevel),
-                            available && r.affordable));
+                    boolean available = r.needsLevel == 0 && r.crafterOk;
+                    String blocked = r.needsLevel != 0 ? getString(R.string.recipe_locked, r.needsLevel)
+                            : !r.crafterOk ? getString(R.string.recipe_needs_craft, r.minCraft) : null;
+                    String meta = getString(R.string.recipe_meta, r.cost, r.minutes)
+                            + (r.minCraft > 0 ? getString(R.string.recipe_craft, r.minCraft) : "");
+                    rows.add(new PickerAdapter.Row(r.id, r.name, meta, blocked, available && r.affordable));
+                }
+                int missing = snapshot.base.blueprintsTotal - snapshot.base.blueprintsKnown;
+                if (missing > 0) {
+                    rows.add(new PickerAdapter.Row("-", getString(R.string.recipe_missing, missing), null,
+                            getString(R.string.recipe_missing_how), false));
                 }
                 break;
             case DIARY:

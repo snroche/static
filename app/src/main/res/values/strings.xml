@@ -100,7 +100,7 @@
     <string name="workshop_idle">Nothing in progress.</string>
     <string name="job_line">%1$s: %2$d%% · %3$d min left</string>
     <string name="job_paused">%1$s: %2$d%% · paused (no power)</string>
-    <string name="craft_slots">[ CRAFT ] benches %1$d/%2$d</string>
+    <string name="craft_slots">[ CRAFT ] jobs %1$d/%2$d</string>
     <string name="panel_recipes_title">What do we make?</string>
     <string name="recipe_meta">%1$s · %2$d min</string>
     <string name="recipe_locked">Needs workshop level %1$d</string>
@@ -358,4 +358,35 @@ antenna %2$d</string>
     <string name="send_deep_stats_more">Danger %1$s · +%2$d%% loot · never runs dry</string>
     <string name="send_fuel" tools:ignore="PluralsCandidate">&#xE7CA; %1$d fuel</string>
     <string name="send_fuel_dry" tools:ignore="PluralsCandidate">&#xE7CA; needs %1$d fuel: on foot</string>
+    <!-- 0.7: THE FAIR and the workshop. -->
+    <string name="radio_section_trade">TRADE</string>
+    <string name="radio_section_trade_on">TRADE ◉</string>
+    <string name="trade_unknown">Nobody to trade with yet. Sweep the short band: somebody out there sells things.</string>
+    <string name="trade_status">THE FAIR · %1$s</string>
+    <string name="trade_wallet" tools:ignore="PluralsCandidate">&#xE830; %1$d chips · standing %2$d/100</string>
+    <string name="trade_buy">BUY</string>
+    <string name="trade_sell">SELL</string>
+    <string name="trade_courier">&#xE53E; COURIER +%1$d%%</string>
+    <string name="trade_pickup">&#xE3D6; PICKUP · free</string>
+    <string name="trade_buy_line">%1$s · %2$d &#xE830;</string>
+    <string name="trade_buy_n">×%1$d · %2$d</string>
+    <string name="trade_buy_one">BUY · %1$d &#xE830;</string>
+    <string name="trade_sell_line">%1$s · %2$d &#xE830; each · have %3$d</string>
+    <string name="trade_sell_gear">%1$s · %2$d &#xE830;</string>
+    <string name="trade_sell_n">×%1$d</string>
+    <string name="trade_sell_all">ALL %1$d</string>
+    <string name="trade_sell_one">SELL</string>
+    <string name="trade_nothing_to_sell">Nothing they want in the bunker right now.</string>
+    <string name="trade_incoming">&#xE53E; On the way:\n%1$s</string>
+    <string name="trade_held">&#xE3D6; Waiting at the Fair (send someone there to fetch it):\n%1$s</string>
+    <string name="bench_line">At the bench: %1$s, Craft %2$d · plans %3$d of %4$d</string>
+    <string name="bench_empty">Nobody at the bench: nothing gets made. Put someone on the Workshop task. · plans %1$d of %2$d</string>
+    <string name="job_queue">── waiting in line ──</string>
+    <string name="gear_upgrade">[ &#xE738; UPGRADE: %1$s · Craft %2$d ]</string>
+    <string name="gear_salvage">[ &#xE44C; SALVAGE → %1$s ]</string>
+    <string name="gear_salvage_confirm">[ &#xE44C; TAP AGAIN to take it apart → %1$s ]</string>
+    <string name="recipe_craft">" · Craft %1$d"</string>
+    <string name="recipe_needs_craft">Needs Craft %1$d at the bench.</string>
+    <string name="recipe_missing" tools:ignore="PluralsCandidate">%1$d plans still out there</string>
+    <string name="recipe_missing_how">Found on expeditions, bought at the Fair, or worked out at the bench.</string>
 </resources>

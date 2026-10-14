@@ -32,7 +32,7 @@
   {
     "id": "taller",
     "name": "Workshop",
-    "description": "Strips scrap (3 scrap → 1 component every 2 h) and speeds up crafting with Craft.",
+    "description": "Works the bench: nothing gets made without someone here, and the better their Craft, the faster and better it comes out. Also strips scrap (3 scrap → 1 component every 2 h) and, now and then, works out a blueprint.",
     "stat": "craft",
     "xpPerHour": 0.6,
     "conversion": {

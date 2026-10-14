@@ -14,6 +14,12 @@ public final class RecipeDef {
     /** Minutes at normal speed. */
     private double minutes;
     private int minWorkshopLevel = 1;
+    /** Known from the start; the rest are blueprints to find, buy or work out. */
+    private boolean known;
+    /** Craft someone at the bench needs to make it (and to work out its plan). */
+    private int minCraft;
+    /** Nearest band where its blueprint can turn up on an expedition. */
+    private String findBand = "short";
 
     public String getId() {
         return id;
@@ -41,5 +47,17 @@ public final class RecipeDef {
 
     public int getMinWorkshopLevel() {
         return minWorkshopLevel;
+    }
+
+    public boolean isKnown() {
+        return known;
+    }
+
+    public int getMinCraft() {
+        return minCraft;
+    }
+
+    public String getFindBand() {
+        return findBand != null ? findBand : "short";
     }
 }

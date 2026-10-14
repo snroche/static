@@ -128,4 +128,11 @@
     <string name="ic_fuel" translatable="false">&#xE7CA;</string>
     <string name="ic_target" translatable="false">&#xE4FE;</string>
     <string name="ic_wrench" translatable="false">&#xE5B7;</string>
+    <string name="ic_chips" translatable="false">&#xE830;</string>
+    <string name="ic_handshake" translatable="false">&#xF218;</string>
+    <string name="ic_blueprint" translatable="false">&#xE821;</string>
+    <string name="ic_recycle" translatable="false">&#xE44C;</string>
+    <string name="ic_upgrade" translatable="false">&#xE738;</string>
+    <string name="ic_courier" translatable="false">&#xE53E;</string>
+    <string name="ic_package" translatable="false">&#xE3D6;</string>
 </resources>

@@ -10,6 +10,82 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.7.1] — Gear that lasts, the Fair, more radio, chapter 2 — in verification
+
+App 0.7.1 (versionCode 701) · DB 13 (no change) · **Content 24 → 25**
+
+### Added
+- **The Voice, chapter 2: "Echo-7".**
+  - It opens once chapter 1 is complete. Its fragments never turn up before that.
+  - Six fragments: three on the dial (medium, long and deep band), one from an old engineer at the Fair, one in the dam's control room, one in the mountain observatory.
+  - Every fragment can be found by any crew; a new test checks this for all chapters.
+- **Twelve more pieces of gear:**
+  - Headlamp, gas mask, binoculars, compass, leather jacket, rain poncho, running shoes, steel-toe boots, messenger bag, hiking pack, multitool, canteen and crowbar.
+  - The gas mask, rain poncho and canteen also take some of the stress out there.
+  - Eight new blueprints build some of them.
+- **Gear shows what it actually does at its rarity**, for example "Wits +2 · +38% loot · trips 13% shorter", in the gear picker, on the person's Gear tab and in the workshop.
+- **Six new stations, three with new synthesized music:**
+  - LATE PIANO: an upright piano at night playing Für Elise.
+  - THE PORCH: guitar and Greensleeves at 17:00.
+  - THE SOCIAL CLUB: a slow tango of our own on accordion at 20:00.
+  - BEDTIME STORIES: a lighthouse story at 22:00 that never reaches its end.
+  - THE MATCH: an old football final narrated from memory at 16:00.
+  - BREAKER NINE: a trucker on the long band.
+- **More to hear on the old stations:** two to four new lines on every one.
+
+### Changed
+- **Gear wears by what happens to it**, instead of a flat 15 per trip:
+  - Time out there wears it: 1.5 an hour, so a three-minute run barely touches it and a long trip costs about 6.
+  - A failed check scuffs it (2).
+  - An injury hits it harder: 5, 10 or 15 by severity.
+  - Uncommon pieces wear 25% slower, rare ones 50% slower.
+- **Rarity matters for every piece:**
+  - Stat bonuses go up a point per rarity (+1, +2, +3).
+  - Speed, loot, signal and stress bonuses grow with rarity.
+  - A rare first-aid kit takes two levels off an injury, and uncommon or rare kits may survive the use.
+- **La Feria is now the Fair.** Spanish and Argentine touches stay as small nods (mate, a truck called La Tortuga) instead of being everywhere.
+- **The Fair's hours:** on the air 06:00–noon and 18:00–midnight, half the day, with more chatter.
+- **Top bar:**
+  - The days of rations left now sit on the first line, next to the weather.
+  - The info sheet only explains what's on the bar.
+  - Relay kits left the bar; their count lives in RADIO → RELAYS.
+
+## [0.7.0] — THE FAIR and the workshop — in verification
+
+App 0.7.0 (versionCode 700) · DB 13 (no change) · **Content 23 → 24**
+
+Phase 5 (content and polish) is closed; 0.7 is the economy. The version table in docs/VERSIONING.md now plans 0.7 to 0.9 before the 1.0 launch.
+
+### Added
+- **THE FAIR:** a market in the old fairground, with its own station on the short band (96.40 MHz).
+  - **Hours:** on the air 09:00–12:00 and 21:00–midnight. Hearing it once puts it on the map, and opens **RADIO → TRADE**.
+  - **Chips:** the currency. You get them by selling, and now and then on expeditions (the gated community, the police station, the hospital, the train station, the airport).
+  - **Buying:** goods, plus each day's offers: two blueprints you don't have, and two pieces of gear. Rare gear only shows up once you have a standing of 70.
+    - *Courier:* +15%, arrives in about 4 hours.
+    - *Pickup:* free; it waits at the Fair until someone goes there and comes back with it.
+  - **Selling:** goods and spare gear. Worn gear fetches less.
+  - **Prices move:**
+    - Each day the trader pays 1.5× for two goods and charges 1.5× for one it's short of.
+    - Selling a lot of one thing in a day drives its price down.
+    - Standing (0–100, up a point per trade) moves every price by up to 10%.
+  - **The place itself:** three situations of its own (haggling, a pickpocket, being followed on the way out). Stray radio signals never reveal it; only its station does.
+- **Workshop rework:**
+  - **Someone has to be at the bench.** Nothing gets made without a person on the Workshop task. The best Craft there sets the speed (×0.6 plus 0.08 per point), the quality, and what can be made at all. They train Craft while working.
+  - **Craft requirements:** every recipe needs a minimum. Bicycle 3, padded vest and helmet 4, motorbike and portable radio 6, pickup truck 8.
+  - **Blueprints:** only relay kits and parts are known from the start. The rest turn up three ways:
+    - in a drawer on an expedition (more often farther out);
+    - bought at THE FAIR;
+    - worked out at the bench by whoever is there and good enough (about one in five days).
+  - **A queue:** three jobs can wait in line beyond the benches, so a long absence still gets work done.
+  - **Salvage:** break unwanted gear into scrap, components and parts. Better and bigger pieces give more back; it takes two taps.
+  - **Upgrade:** raise a piece one rarity with parts and components. Common to uncommon needs Craft 5 at the bench, uncommon to rare needs Craft 7.
+  - The workshop shows who's at the bench, their Craft and how many plans you have. The craft list shows what each recipe needs and how many plans are still out there.
+- Seven more icons (chips, trading, plans, salvage, upgrade, courier, package).
+
+### Changed
+- **Recipes from older saves:** they're hidden again until found, since the workshop had barely been used.
+- **The Workshop task** now says it's the bench and what Craft does there.
+
 ## [0.6.15] — Teams of three, rides and fuel, retraining, deep runs — in verification
 
 App 0.6.15 (versionCode 615) · **DB 12 → 13** · **Content 22 → 23**

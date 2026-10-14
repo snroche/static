@@ -332,6 +332,187 @@ public final class Balance {
         }
     }
 
+    private Market market = new Market();
+    private Workshop workshop = new Workshop();
+
+    public Market getMarket() {
+        return market != null ? market : new Market();
+    }
+
+    public Workshop getWorkshop() {
+        return workshop != null ? workshop : new Workshop();
+    }
+
+    /** THE FAIR: the trader on the radio. Prices in chips. [placeholder] */
+    public static final class Market {
+        private String station = "st_feria";
+        /** The place on the map where goods can be picked up (no fee). */
+        private String zone = "feria";
+        /** Courier's cut on top of the price, and how long it takes. */
+        private double courierFee = 0.15;
+        private double courierHours = 4;
+        private int startReputation = 50;
+        private int reputationPerTrade = 1;
+        /** ±share on prices at reputation 0 / 100. */
+        private double reputationSwing = 0.1;
+        private int rareStockReputation = 70;
+        private double saturationPerUnit = 0.04;
+        private double saturationFloor = 0.5;
+        private int wantedPerDay = 2;
+        private double wantedMultiplier = 1.5;
+        private int scarcePerDay = 1;
+        private double scarceMultiplier = 1.5;
+        private int blueprintsPerDay = 2;
+        private int gearPerDay = 2;
+        private int blueprintBase = 15;
+        private int blueprintPerCraft = 6;
+        /** Good id to {buy, sell}. */
+        private java.util.Map<String, int[]> goods = new java.util.LinkedHashMap<>();
+        private java.util.Map<String, Integer> gearBuy = new java.util.HashMap<>();
+        private java.util.Map<String, Integer> gearSell = new java.util.HashMap<>();
+
+        public String getStation() {
+            return station;
+        }
+
+        public String getZone() {
+            return zone;
+        }
+
+        public double getCourierFee() {
+            return courierFee;
+        }
+
+        public double getCourierHours() {
+            return courierHours;
+        }
+
+        public int getStartReputation() {
+            return startReputation;
+        }
+
+        public int getReputationPerTrade() {
+            return reputationPerTrade;
+        }
+
+        public double getReputationSwing() {
+            return reputationSwing;
+        }
+
+        public int getRareStockReputation() {
+            return rareStockReputation;
+        }
+
+        public double getSaturationPerUnit() {
+            return saturationPerUnit;
+        }
+
+        public double getSaturationFloor() {
+            return saturationFloor;
+        }
+
+        public int getWantedPerDay() {
+            return wantedPerDay;
+        }
+
+        public double getWantedMultiplier() {
+            return wantedMultiplier;
+        }
+
+        public int getScarcePerDay() {
+            return scarcePerDay;
+        }
+
+        public double getScarceMultiplier() {
+            return scarceMultiplier;
+        }
+
+        public int getBlueprintsPerDay() {
+            return blueprintsPerDay;
+        }
+
+        public int getGearPerDay() {
+            return gearPerDay;
+        }
+
+        public int getBlueprintBase() {
+            return blueprintBase;
+        }
+
+        public int getBlueprintPerCraft() {
+            return blueprintPerCraft;
+        }
+
+        public java.util.Map<String, int[]> getGoods() {
+            return goods != null ? goods : java.util.Map.of();
+        }
+
+        public java.util.Map<String, Integer> getGearBuy() {
+            return gearBuy != null ? gearBuy : java.util.Map.of();
+        }
+
+        public java.util.Map<String, Integer> getGearSell() {
+            return gearSell != null ? gearSell : java.util.Map.of();
+        }
+    }
+
+    /** The bench: who works it and how well. [placeholder] */
+    public static final class Workshop {
+        /** Speed at the bench: base + perCraft × the best Craft there. */
+        private double speedBase = 0.6;
+        private double speedPerCraft = 0.08;
+        /** Jobs that can wait in line beyond the benches. */
+        private int queue = 3;
+        /** Craft XP per hour of work, for whoever is at the bench. */
+        private double xpPerHour = 0.8;
+        /** Chance per day that someone at the bench works out a plan they're good enough for. */
+        private double workOutChancePerDay = 0.2;
+        /** Chance per expedition home of finding a blueprint, by band (index). */
+        private double[] findChance = {0.04, 0.08, 0.12, 0.16};
+        /** Upgrading a piece to the next rarity: Craft needed, and parts/components per step. */
+        private int[] upgradeCraft = {5, 7};
+        private java.util.Map<String, Integer> upgradeCost = new java.util.HashMap<>();
+        /** What a piece gives back when salvaged, by rarity. */
+        private java.util.Map<String, java.util.Map<String, Integer>> salvage = new java.util.HashMap<>();
+
+        public double getSpeedBase() {
+            return speedBase;
+        }
+
+        public double getSpeedPerCraft() {
+            return speedPerCraft;
+        }
+
+        public int getQueue() {
+            return queue;
+        }
+
+        public double getXpPerHour() {
+            return xpPerHour;
+        }
+
+        public double getWorkOutChancePerDay() {
+            return workOutChancePerDay;
+        }
+
+        public double findChance(int bandIndex) {
+            return findChance.length == 0 ? 0 : findChance[Math.min(bandIndex, findChance.length - 1)];
+        }
+
+        /** Craft needed to raise a piece from {@code rarity} to the next one, or -1 at the top. */
+        public int upgradeCraft(int fromRarityOrdinal) {
+            return fromRarityOrdinal < upgradeCraft.length ? upgradeCraft[fromRarityOrdinal] : -1;
+        }
+
+        public java.util.Map<String, Integer> getUpgradeCost() {
+            return upgradeCost != null ? upgradeCost : java.util.Map.of();
+        }
+
+        public java.util.Map<String, Integer> salvage(String rarity) {
+            return salvage != null ? salvage.getOrDefault(rarity, java.util.Map.of()) : java.util.Map.of();
+        }
+    }
+
     private Retrain retrain = new Retrain();
     private Fuel fuel = new Fuel();
     private DeepRuns deepRuns = new DeepRuns();
@@ -500,9 +681,12 @@ public final class Balance {
         private double[] findChance;
         /** {common, uncommon, rare} weights per band index. */
         private java.util.List<int[]> rarityWeights;
-        /** Condition lost per expedition, by rarity. */
-        private java.util.Map<String, Integer> wear;
-        private int injuryWear;
+        /** Condition lost per hour out, per failed check, and per injury (by severity). */
+        private double wearPerHour = 1.5;
+        private double wearPerFailure = 2;
+        private java.util.Map<String, Integer> wearPerInjury = new java.util.HashMap<>();
+        /** Better pieces wear slower: multiplier by rarity. */
+        private java.util.Map<String, Double> rarityWear = new java.util.HashMap<>();
         private int wornAt;
         /** By rarity. */
         private java.util.Map<String, java.util.Map<String, Integer>> repairCost;
@@ -518,12 +702,20 @@ public final class Balance {
             return rarityWeights;
         }
 
-        public java.util.Map<String, Integer> getWear() {
-            return wear;
+        public double getWearPerHour() {
+            return wearPerHour;
         }
 
-        public int getInjuryWear() {
-            return injuryWear;
+        public double getWearPerFailure() {
+            return wearPerFailure;
+        }
+
+        public int wearPerInjury(String injury) {
+            return wearPerInjury != null ? wearPerInjury.getOrDefault(injury, 0) : 0;
+        }
+
+        public double rarityWear(String rarity) {
+            return rarityWear != null ? rarityWear.getOrDefault(rarity, 1.0) : 1.0;
         }
 
         public int getWornAt() {

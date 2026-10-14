@@ -112,7 +112,7 @@ public final class RadioRules {
             case ZONE: {
                 List<String> unknown = new ArrayList<>();
                 for (ZoneDef z : content.getZones().values()) {
-                    if (band.equals(z.getBand()) && !knownZones.contains(z.getId())) {
+                    if (band.equals(z.getBand()) && !knownZones.contains(z.getId()) && !z.isOffAir()) {
                         unknown.add(z.getId());
                     }
                 }
