@@ -79,10 +79,24 @@ public class BunkerRulesTest {
         Scout worker = TestScouts.custom("lucho", 5, 0, 0, T0);
         worker.getLife().setTaskId("taller");
         Map<String, Integer> resources = new HashMap<>();
-        resources.put("scrap", 7);
-        BunkerRules.Result result = advance(List.of(worker), resources, T0 + 4 * HOUR);
+        resources.put("scrap", 27);
+        BunkerRules.Result result = advance(List.of(worker), resources, T0 + 8 * HOUR);
         assertEquals(Integer.valueOf(-6), result.resourceDelta.get("scrap"));
         assertEquals(Integer.valueOf(2), result.resourceDelta.get("components"));
+    }
+
+    @Test
+    public void workshopLeavesAScrapReserveAndStopsWhenThereArePlenty() {
+        Scout worker = TestScouts.custom("lucho", 5, 0, 0, T0);
+        worker.getLife().setTaskId("taller");
+        Map<String, Integer> low = new HashMap<>();
+        low.put("scrap", 20);
+        assertEquals("the reserve stays", null, advance(List.of(worker), low, T0 + 12 * HOUR).resourceDelta.get("components"));
+        Map<String, Integer> full = new HashMap<>();
+        full.put("scrap", 60);
+        full.put("components", 40);
+        assertEquals("enough components already", null,
+                advance(List.of(worker), full, T0 + 12 * HOUR).resourceDelta.get("components"));
     }
 
     @Test

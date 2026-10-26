@@ -3,57 +3,99 @@
     "ZONE": [
       "...coordinates... forty-two... south...",
       "...a place with a roof... repeat... a roof...",
-      "...the warehouse on... ksshh..."
+      "...the warehouse on... ksshh...",
+      "...north of the... the old road...",
+      "...a building, big, doors open...",
+      "...we found... shelter... near the...",
+      "...landmark... the water tower... left of...",
+      "...three blocks... past the bridge...",
+      "...don't know the name... there's a sign..."
     ],
     "SURVIVOR": [
       "...is anyone there? ...please...",
       "...i'm alone... answer...",
-      "...if anyone hears this... i'm at..."
+      "...if anyone hears this... i'm at...",
+      "...my leg... can't walk far...",
+      "...two of us... the kid's sick...",
+      "...we have water, no food...",
+      "...hello? hello? is this thing on...",
+      "...i can hear you sometimes... can you hear me...",
+      "...been here eleven days... counting..."
     ],
     "TRANSMISSION": [
-      "...a pattern... repeating..."
+      "...a pattern... repeating...",
+      "...the same message, over and over...",
+      "...somebody spelling something out...",
+      "...a code, patient, deliberate...",
+      "...a message meant for someone in particular...",
+      "...letters, then a pause, then letters..."
     ],
     "RARE": [
       "...something faint... not quite a voice...",
-      "...a far-off broadcast, fading in and out..."
+      "...a far-off broadcast, fading in and out...",
+      "...something you've never heard before...",
+      "...music? a voice? both...",
+      "...a sound that doesn't belong...",
+      "...it stops when you get close... then starts again...",
+      "...warm, somehow. Like a room with people in it..."
     ],
     "TRANSMISSION:MORSE": [
       "· — — · · — · · — ·",
       "— · — · · — — · ·",
-      "··· ——— ··· ... ··· ——— ···"
+      "··· ——— ··· ... ··· ——— ···",
+      "· · · — — — · · ·",
+      "— — · · — · — —",
+      "...dits and dahs, steady as a heartbeat..."
     ],
     "TRANSMISSION:CAESAR": [
       "QXF HKP... MZRL... VYQ...",
       "...WKH... ZDWHU... LV...",
-      "...letters, read out flat: K. R. O. Z..."
+      "...letters, read out flat: K. R. O. Z...",
+      "...ORRN... DW... WKH...",
+      "...letters that are almost words...",
+      "PHHW... PH... DW..."
     ],
     "TRANSMISSION:ATBASH": [
       "...ZOO WLMG... GSV...",
-      "...a list of letters, read backwards..."
+      "...a list of letters, read backwards...",
+      "...WIRMP... MLG...",
+      "...the alphabet, mirrored..."
     ],
     "TRANSMISSION:TAP": [
       "...knock knock... knock... knock knock knock...",
-      "...tapping on a pipe. Pauses. More tapping..."
+      "...tapping on a pipe. Pauses. More tapping...",
+      "...tapping, rows and columns...",
+      "...metal on metal, counted out..."
     ],
     "TRANSMISSION:VIGENERE": [
       "...XJP RMEU... OAKV... ZLI...",
-      "...letters that change their mind every time..."
+      "...letters that change their mind every time...",
+      "...a word keeps changing the letters...",
+      "...LXFM... QYRB... it has a key..."
     ],
     "TRANSMISSION:BASE64": [
       "...U0lHTkFM... bG9n... ==",
-      "...a modem screech, then text: aGVsbG8..."
+      "...a modem screech, then text: aGVsbG8...",
+      "...a screech, then: dGhl... d2F0...",
+      "...machine text, padded with equals signs..."
     ],
     "TRANSMISSION:PLAYFAIR": [
       "...ALFA TANGO... KILO ROMEO... ECHO...",
-      "...a man spells words in NATO, very calm..."
+      "...a man spells words in NATO, very calm...",
+      "...pairs of letters, always pairs...",
+      "...BRAVO OSCAR... pairs again..."
     ],
     "TRANSMISSION:NUMBERS": [
       "...seven... one one... four... zero...",
-      "...a woman reads numbers. A bell. More numbers..."
+      "...a woman reads numbers. A bell. More numbers...",
+      "...four... four... nine... a chime...",
+      "...a child reads numbers, carefully..."
     ],
     "TRANSMISSION:BOOK": [
       "...page twelve, line four, word nine...",
-      "...three numbers at a time, like references..."
+      "...three numbers at a time, like references...",
+      "...chapter, line, word... chapter, line, word...",
+      "...he says 'the handbook', then numbers..."
     ]
   },
   "rare": [
@@ -215,6 +257,106 @@
       "text": [
         "Scratching. Something drags itself across a microphone, slowly, for a full minute. Then it taps twice, as if it knows you're there."
       ]
+    },
+    {
+      "id": "wedding",
+      "band": "medium",
+      "audio": "MUSIC",
+      "teaser": "...a crowd... clapping...",
+      "text": [
+        "Someone's getting married on the air. Vows, a cheer, a scratchy record for the first dance."
+      ],
+      "lore": "On the medium band, once: a wedding, broadcast so everyone could come."
+    },
+    {
+      "id": "astronomer",
+      "band": "long",
+      "audio": "VOICE_F",
+      "teaser": "...the stars tonight...",
+      "text": [
+        "A woman reads out what's in the night sky, planet by planet. 'Saturn's up. Still there. Good.'"
+      ]
+    },
+    {
+      "id": "birthday",
+      "band": "short",
+      "audio": "CHILD",
+      "teaser": "...happy birth...",
+      "text": [
+        "Kids singing happy birthday, off-key, to somebody called Nico. Someone blows out candles."
+      ],
+      "resources": {
+        "rations": 1
+      }
+    },
+    {
+      "id": "lost_dog",
+      "band": "short",
+      "audio": "VOICE",
+      "teaser": "...if you see him...",
+      "text": [
+        "A man describes a lost dog: brown, one white ear, answers to Tango. 'He'll come if you whistle.'"
+      ]
+    },
+    {
+      "id": "confession",
+      "band": "medium",
+      "audio": "WHISPER",
+      "teaser": "...i have to tell someone...",
+      "text": [
+        "Somebody confesses to the radio, quietly, something they did on the first night. Then: 'Thank you for listening.'"
+      ]
+    },
+    {
+      "id": "radio_play",
+      "band": "medium",
+      "audio": "VOICE",
+      "teaser": "...a door creaks... footsteps...",
+      "text": [
+        "An old radio play: a detective, a storm, a body in the library. Someone does all the voices."
+      ]
+    },
+    {
+      "id": "weather_balloon",
+      "band": "long",
+      "audio": "DATA",
+      "teaser": "...telemetry...",
+      "text": [
+        "A weather balloon still sending readings. Altitude, pressure, temperature. It's very high up and very alone."
+      ],
+      "resources": {
+        "components": 1
+      }
+    },
+    {
+      "id": "choir_practice",
+      "band": "short",
+      "audio": "CHOIR",
+      "teaser": "...voices... warming up...",
+      "text": [
+        "A choir practising scales. Someone keeps getting it wrong. They start again, laughing."
+      ]
+    },
+    {
+      "id": "deep_whale",
+      "band": "deep",
+      "audio": "BREATH",
+      "teaser": "...long, low... alive...",
+      "text": [
+        "Something long and low on VLF, rising and falling. Whale song, maybe. Or something pretending."
+      ]
+    },
+    {
+      "id": "auction",
+      "band": "short",
+      "audio": "VOICE",
+      "teaser": "...going once...",
+      "text": [
+        "An auction somewhere: a bicycle, a box of candles, a working watch. Bids in chips. Somebody wins the watch."
+      ],
+      "resources": {
+        "scrap": 2
+      }
     }
   ],
   "transmissions": [
@@ -229,13 +371,23 @@
       "id": "provisiones",
       "band": "short",
       "reward": "CACHE",
-      "text": "We left supplies at {zone}"
+      "text": "We left supplies at {zone}",
+      "variants": [
+        "Supplies left for whoever needs them at {zone}",
+        "We could not carry it all it is at {zone}",
+        "Food and water stashed at {zone} take it"
+      ]
     },
     {
       "id": "perros_aviso",
       "band": "short",
       "reward": "DANGER",
-      "text": "Careful at {zone} there are dogs"
+      "text": "Careful at {zone} there are dogs",
+      "variants": [
+        "Dogs nesting at {zone} big pack",
+        "Do not go to {zone} the dogs have it",
+        "Heard barking all night near {zone}"
+      ]
     },
     {
       "id": "baterias_tanque",
@@ -244,21 +396,36 @@
       "resources": {
         "batteries": 2
       },
-      "text": "Batteries buried next to the tank"
+      "text": "Batteries buried next to the tank",
+      "variants": [
+        "Car batteries in the garage by the water tower",
+        "Batteries under the bus stop bench",
+        "Spare batteries in the mailbox on the corner"
+      ]
     },
     {
       "id": "alijo",
       "band": "medium",
       "difficulty": 2,
       "reward": "CACHE",
-      "text": "There is a stash under the floor at {zone}"
+      "text": "There is a stash under the floor at {zone}",
+      "variants": [
+        "Loose floorboards at {zone} look under them",
+        "A locker at {zone} the code is the year",
+        "Somebody hid a crate at {zone} behind the wall"
+      ]
     },
     {
       "id": "frente",
       "band": "medium",
       "difficulty": 2,
       "reward": "DANGER",
-      "text": "Do not go in through the front of {zone}"
+      "text": "Do not go in through the front of {zone}",
+      "variants": [
+        "The front of {zone} is trapped use the side",
+        "Wires across the doors at {zone}",
+        "{zone} has a lookout on the roof"
+      ]
     },
     {
       "id": "ambulancia",
@@ -267,7 +434,12 @@
       "resources": {
         "medicine": 2
       },
-      "text": "Medicine in the overturned ambulance"
+      "text": "Medicine in the overturned ambulance",
+      "variants": [
+        "Medicine in the pharmacy van on the bridge",
+        "First aid boxes in the school gym",
+        "The vet clinic still has bandages"
+      ]
     },
     {
       "id": "tres_y_diez",
@@ -297,14 +469,24 @@
       "band": "long",
       "difficulty": 3,
       "reward": "CACHE",
-      "text": "Fuel and parts at {zone}"
+      "text": "Fuel and parts at {zone}",
+      "variants": [
+        "Diesel drums at {zone} still sealed",
+        "Jerry cans and tools at {zone}",
+        "A fuel truck abandoned at {zone}"
+      ]
     },
     {
       "id": "no_seguro",
       "band": "long",
       "difficulty": 3,
       "reward": "DANGER",
-      "text": "{zone} is not safe"
+      "text": "{zone} is not safe",
+      "variants": [
+        "Raiders camp at {zone} now",
+        "{zone} burned last night stay away",
+        "Something took the people at {zone}"
+      ]
     },
     {
       "id": "voz_horario",
@@ -349,7 +531,11 @@
       "kind": "ATBASH",
       "text": "Spare parts hidden at {zone}",
       "reward": "CACHE",
-      "unique": false
+      "unique": false,
+      "variants": [
+        "Machine parts in a toolbox at {zone}",
+        "A workshop at {zone} nobody emptied"
+      ]
     },
     {
       "id": "tap_celdas",
@@ -367,7 +553,11 @@
       "text": "Stay away from {zone} at night",
       "reward": "DANGER",
       "unique": false,
-      "minPosition": 600
+      "minPosition": 600,
+      "variants": [
+        "After dark {zone} belongs to someone else",
+        "Lights at {zone} at night do not go"
+      ]
     },
     {
       "id": "vig_solos",
@@ -388,7 +578,11 @@
       "reward": "CACHE",
       "unique": false,
       "key": "BUNKER",
-      "keyHint": "Key: where you are (one word)"
+      "keyHint": "Key: where you are (one word)",
+      "variants": [
+        "Antibiotics hidden at {zone}",
+        "A doctor's bag left at {zone}"
+      ]
     },
     {
       "id": "b64_registro",
@@ -429,7 +623,11 @@
       "reward": "CACHE",
       "unique": false,
       "key": "FALCONRY",
-      "keyHint": "Net OSPREY"
+      "keyHint": "Net OSPREY",
+      "variants": [
+        "Crates at {zone} marked relief",
+        "Military rations at {zone}"
+      ]
     },
     {
       "id": "pf_eco",
@@ -546,6 +744,146 @@
       "reward": "PLOT",
       "plot": "c2_5",
       "text": "It is not a weapon it is a reply"
+    },
+    {
+      "id": "r_rooftop",
+      "band": "short",
+      "reward": "CACHE",
+      "text": "Rooftop garden at {zone} still growing",
+      "variants": [
+        "Tins on the roof of {zone} climb the fire escape",
+        "Water tank on {zone} is clean"
+      ]
+    },
+    {
+      "id": "r_sniper",
+      "band": "short",
+      "reward": "DANGER",
+      "text": "Shots from the tower near {zone}",
+      "variants": [
+        "Someone with a rifle watches {zone}",
+        "Do not cross the square at {zone}"
+      ]
+    },
+    {
+      "id": "r_scrapyard",
+      "band": "short",
+      "reward": "RESOURCES",
+      "resources": {
+        "scrap": 4
+      },
+      "text": "Scrap pile behind the tyre shop",
+      "variants": [
+        "Bent sheet metal by the old bus depot",
+        "A car stripped to the frame by the river"
+      ]
+    },
+    {
+      "id": "r_swap",
+      "band": "short",
+      "reward": "RESOURCES",
+      "resources": {
+        "rations": 2
+      },
+      "text": "Left a box of tins at the church door",
+      "variants": [
+        "Bread at the bakery back door this morning",
+        "Apples on the wall by the school"
+      ]
+    },
+    {
+      "id": "r_flood",
+      "band": "medium",
+      "reward": "DANGER",
+      "text": "{zone} is flooding do not go below ground",
+      "variants": [
+        "The basement at {zone} is full of water",
+        "Bridge to {zone} is underwater"
+      ]
+    },
+    {
+      "id": "r_lockers",
+      "band": "medium",
+      "reward": "CACHE",
+      "text": "Staff lockers at {zone} untouched",
+      "variants": [
+        "Office safe at {zone} is open",
+        "Under the stage at {zone}"
+      ]
+    },
+    {
+      "id": "r_wires",
+      "band": "medium",
+      "reward": "RESOURCES",
+      "resources": {
+        "scrap": 3,
+        "components": 1
+      },
+      "text": "Copper in the substation fence",
+      "variants": [
+        "Cable spools at the phone exchange",
+        "Radios in the taxi office"
+      ]
+    },
+    {
+      "id": "r_fuel_med",
+      "band": "medium",
+      "reward": "RESOURCES",
+      "resources": {
+        "fuel": 2
+      },
+      "text": "Gas in the tractor by the farm road",
+      "variants": [
+        "Petrol in the lawn mower shed",
+        "A full jerry can under the bridge"
+      ]
+    },
+    {
+      "id": "r_collapse",
+      "band": "long",
+      "reward": "DANGER",
+      "text": "The roof at {zone} is coming down",
+      "variants": [
+        "{zone} shook all night",
+        "Gas leak at {zone} no fire no light"
+      ]
+    },
+    {
+      "id": "r_depot",
+      "band": "long",
+      "reward": "CACHE",
+      "text": "Supply depot at {zone} unlocked",
+      "variants": [
+        "A container at {zone} full of tools",
+        "Medical kits at {zone} under the stairs"
+      ]
+    },
+    {
+      "id": "r_parts_long",
+      "band": "long",
+      "reward": "RESOURCES",
+      "resources": {
+        "parts": 2
+      },
+      "text": "Engine parts in the broken bus on route nine",
+      "variants": [
+        "Gearboxes at the farm co-op",
+        "Pumps at the irrigation station"
+      ]
+    },
+    {
+      "id": "r_deep_ping",
+      "band": "deep",
+      "reward": "RESOURCES",
+      "resources": {
+        "batteries": 2,
+        "parts": 1
+      },
+      "text": "Weather buoy washed ashore full of cells",
+      "variants": [
+        "A satellite dish fell on the hill",
+        "Research hut with its generator"
+      ]
     }
   ],
   "stations": [

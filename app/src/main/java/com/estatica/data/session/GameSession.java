@@ -996,13 +996,30 @@ public final class GameSession {
             if (!blighted && reserve >= lamps) {
                 reserve -= lamps;
                 step.radioWrites.add(() -> baseRepository.saveValue(KEY_RESERVE, reserve));
-                double eaten = food.perHour(mouths(), 0) * tuning.getHydroMaxShare();
+                // Grow lights: more per grower, and a slightly bigger share of what the bunker eats.
+                double lights = moduleBonus("grow_lights");
+                double eaten = food.perHour(mouths(), 0) * (tuning.getHydroMaxShare() + lights * 0.25);
                 double grown = value("hydro_carry")
-                        + Math.min(growers.size() * tuning.getHydroRationsPerHour(), eaten) * hours;
+                        + Math.min(growers.size() * tuning.getHydroRationsPerHour() * (1 + lights), eaten) * hours;
                 int whole = (int) Math.floor(grown);
                 setValue("hydro_carry", grown - whole, step);
                 if (whole > 0) {
                     step.resourceDelta.merge("rations", whole, Integer::sum);
+                }
+            }
+        }
+
+        // A record player in the music room: everyone at home unwinds a little, all day.
+        double calm = moduleBonus("record_player") * hours;
+        if (calm > 0 && isRoomOpen("music_room")) {
+            double owed = value("calm_carry") + calm;
+            int whole = (int) Math.floor(owed);
+            setValue("calm_carry", owed - whole, step);
+            if (whole > 0) {
+                for (Scout s : scouts.values()) {
+                    if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE) {
+                        rules.addStress(s, -whole);
+                    }
                 }
             }
         }
@@ -1013,7 +1030,8 @@ public final class GameSession {
                 if (!s.isAlive() || s.getStatus() != ScoutStatus.IDLE || teachers.contains(s)) {
                     continue;
                 }
-                double xp = value("teachxp:" + s.getId()) + hours * tuning.getTeachXpPerHour() * teachers.size();
+                double xp = value("teachxp:" + s.getId())
+                        + hours * tuning.getTeachXpPerHour() * teachers.size() * (1 + moduleBonus("library"));
                 int whole = (int) Math.floor(xp);
                 setValue("teachxp:" + s.getId(), xp - whole, step);
                 if (whole > 0) {
@@ -1044,7 +1062,7 @@ public final class GameSession {
         Map<String, String> vars = new HashMap<>();
         vars.put("name", lookouts.get(0).getName());
         step.system(content.getTerminal().getBunker().getLookoutSaw(), vars, lookouts.get(0));
-        return content.getBalance().getRoomTuning().getLookoutDefense();
+        return content.getBalance().getRoomTuning().getLookoutDefense() + (int) Math.round(moduleBonus("watchtower"));
     }
 
     private List<SessionSnapshot.RoomView> roomViews() {
@@ -1307,7 +1325,7 @@ public final class GameSession {
 
     /** What the cooks at home save, before the cap. */
     private double kitchenSaving() {
-        double saving = moduleBonus("pantry");
+        double saving = moduleBonus("pantry") + moduleBonus("stove") + moduleBonus("purifier");
         for (Scout s : scouts.values()) {
             String task = s.getLife().getTaskId();
             if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE && task != null) {
@@ -2734,7 +2752,9 @@ public final class GameSession {
             }
             case TRANSMISSION: {
                 SignalsDef.Transmission def = outcome.transmission;
-                String plain = def.getText();
+                // Same message, other words: picked off the clock, so the dial's preview (which
+                // replays the random rolls) still matches.
+                String plain = def.text(step.now / 60_000L + def.getId().hashCode());
                 if (outcome.zoneId != null) {
                     plain = plain.replace("{zone}", content.zone(outcome.zoneId).getName());
                 }
@@ -3390,7 +3410,9 @@ public final class GameSession {
                 best = s;
             }
         }
-        if (best == null || !random.chance(content.getBalance().getWorkshop().getWorkOutChancePerDay())) {
+        // The archive's card index: old plans to compare against.
+        double chance = content.getBalance().getWorkshop().getWorkOutChancePerDay() + moduleBonus("card_index");
+        if (best == null || !random.chance(chance)) {
             return;
         }
         int craft = rules.effectiveStat(best, StatType.CRAFT);

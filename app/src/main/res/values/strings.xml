@@ -213,7 +213,7 @@
     <string name="map_scout">[ SEND SOMEONE TO SCOUT ]</string>
     <string name="map_send">[ SEND SOMEONE HERE ]</string>
     <string name="map_legend_title">MAP SYMBOLS</string>
-    <string name="map_legend">&#xE68A;   the bunker (you)\n?    a sector nobody has scouted\n?!   unscouted, but the radio caught something there\n○    a place that\'s been picked over\n…    someone is out there right now\n·    out of the antenna\'s reach</string>
+    <string name="map_legend">●    the bunker (you)\n?    a sector nobody has scouted\n?!   unscouted, but the radio caught something there\n○    a place that\'s been picked over\n…    someone is out there right now\n·    out of the antenna\'s reach</string>
     <string name="map_place">%1$s · danger %2$d.</string>
     <string name="map_place_far">%1$s · danger %2$d. Out of reach: the antenna can\'t get that far.</string>
     <string name="map_sector_unknown">The %1$s. Nobody\'s been there.</string>

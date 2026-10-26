@@ -1,5 +1,5 @@
 {
-  "contentVersion": 25,
+  "contentVersion": 26,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -521,6 +521,191 @@
         "A second door: +6 defense.",
         "A killing corridor: +9 defense."
       ]
+    },
+    {
+      "id": "stove",
+      "name": "Stove",
+      "description": "A real stove instead of a camping burner: food stretches further.",
+      "startLevel": 1,
+      "perLevel": 0.04,
+      "upgradeCosts": [
+        {
+          "scrap": 10,
+          "components": 2
+        },
+        {
+          "scrap": 16,
+          "components": 4,
+          "parts": 1
+        }
+      ],
+      "levels": [
+        "A camping burner.",
+        "A wood stove: 4% less food eaten.",
+        "Two burners and an oven: 8% less."
+      ]
+    },
+    {
+      "id": "watchtower",
+      "name": "Watchtower",
+      "description": "A higher platform and a mirror on a pole: raiders are seen sooner.",
+      "startLevel": 1,
+      "perLevel": 2,
+      "upgradeCosts": [
+        {
+          "scrap": 10,
+          "components": 2
+        },
+        {
+          "scrap": 16,
+          "components": 4,
+          "parts": 1
+        },
+        {
+          "scrap": 24,
+          "components": 6,
+          "parts": 2
+        }
+      ],
+      "levels": [
+        "A slit in the wall.",
+        "A raised platform: +2 defense with someone on lookout.",
+        "Mirrors and a bell: +4.",
+        "A proper tower: +6."
+      ]
+    },
+    {
+      "id": "library",
+      "name": "Library",
+      "description": "Books, chalk, a map on the wall: lessons stick better.",
+      "startLevel": 1,
+      "perLevel": 0.25,
+      "upgradeCosts": [
+        {
+          "scrap": 8,
+          "components": 3
+        },
+        {
+          "scrap": 14,
+          "components": 6,
+          "parts": 1
+        }
+      ],
+      "levels": [
+        "A blackboard.",
+        "Shelves of books: teaching 25% faster.",
+        "A real library: 50% faster."
+      ]
+    },
+    {
+      "id": "purifier",
+      "name": "Purifier",
+      "description": "Clean water wastes less food: nothing spoils, nobody gets sick from it.",
+      "startLevel": 1,
+      "perLevel": 0.04,
+      "upgradeCosts": [
+        {
+          "scrap": 12,
+          "components": 6,
+          "batteries": 2
+        },
+        {
+          "scrap": 18,
+          "components": 8,
+          "parts": 2,
+          "batteries": 4
+        }
+      ],
+      "levels": [
+        "Filters and a pump.",
+        "A second filter: 4% less food eaten.",
+        "UV lamps: 8% less."
+      ]
+    },
+    {
+      "id": "grow_lights",
+      "name": "Grow lights",
+      "description": "Brighter lamps over the trays: more grows, on more of the food.",
+      "startLevel": 1,
+      "perLevel": 0.2,
+      "upgradeCosts": [
+        {
+          "scrap": 16,
+          "components": 8,
+          "batteries": 4
+        },
+        {
+          "scrap": 24,
+          "components": 12,
+          "parts": 3,
+          "batteries": 6
+        },
+        {
+          "scrap": 32,
+          "components": 16,
+          "parts": 5,
+          "batteries": 8
+        }
+      ],
+      "levels": [
+        "Salvaged bulbs.",
+        "Proper grow lights: 20% more food.",
+        "Full spectrum: 40% more.",
+        "Mirrors on every wall: 60% more."
+      ]
+    },
+    {
+      "id": "record_player",
+      "name": "Record player",
+      "description": "Somebody fixed a record player. The whole bunker unwinds a little, all day.",
+      "startLevel": 1,
+      "perLevel": 0.3,
+      "upgradeCosts": [
+        {
+          "scrap": 8,
+          "components": 4,
+          "batteries": 1
+        },
+        {
+          "scrap": 12,
+          "components": 6,
+          "parts": 1
+        },
+        {
+          "scrap": 16,
+          "components": 8,
+          "parts": 2
+        }
+      ],
+      "levels": [
+        "Just the piano.",
+        "A record player: everyone at home sheds stress slowly.",
+        "Speakers in the corridors: faster.",
+        "A record for every mood: faster still."
+      ]
+    },
+    {
+      "id": "card_index",
+      "name": "Card index",
+      "description": "Every plan sorted and cross-referenced: the bench works out blueprints more often.",
+      "startLevel": 1,
+      "perLevel": 0.1,
+      "upgradeCosts": [
+        {
+          "scrap": 6,
+          "components": 4
+        },
+        {
+          "scrap": 10,
+          "components": 6,
+          "parts": 1
+        }
+      ],
+      "levels": [
+        "Boxes of paper.",
+        "A card index: +10% a day to work out a plan.",
+        "Sorted by trade: +20%."
+      ]
     }
   ],
   "energy": {
@@ -820,7 +1005,10 @@
       },
       "hours": 8,
       "sealed": "A periscope shaft full of dirt and roots.",
-      "description": "An old periscope. Someone up here sees raiders coming."
+      "description": "An old periscope. Someone up here sees raiders coming.",
+      "modules": [
+        "watchtower"
+      ]
     },
     {
       "id": "bunks",
@@ -843,7 +1031,10 @@
       "y": 2,
       "w": 3,
       "h": 2,
-      "description": "A stove, a table, the smell of something almost like soup."
+      "description": "A stove, a table, the smell of something almost like soup.",
+      "modules": [
+        "stove"
+      ]
     },
     {
       "id": "storage",
@@ -941,7 +1132,10 @@
       },
       "hours": 16,
       "sealed": "A flooded alcove. A chalkboard floats in it.",
-      "description": "A chalkboard and some crates. Someone teaches, everyone learns a little."
+      "description": "A chalkboard and some crates. Someone teaches, everyone learns a little.",
+      "modules": [
+        "library"
+      ]
     },
     {
       "id": "music_room",
@@ -960,7 +1154,10 @@
       },
       "hours": 16,
       "sealed": "A bricked-up room. Through a crack: an old piano.",
-      "description": "An old piano, a guitar with four strings, cushions. Evenings are better here."
+      "description": "An old piano, a guitar with four strings, cushions. Evenings are better here.",
+      "modules": [
+        "record_player"
+      ]
     },
     {
       "id": "water",
@@ -980,7 +1177,10 @@
       },
       "hours": 30,
       "sealed": "Burst pipes and a dead pump under a foot of sludge.",
-      "description": "Filters, pumps, a tank. Clean water in a closed loop: hydroponics needs it."
+      "description": "Filters, pumps, a tank. Clean water in a closed loop: hydroponics needs it.",
+      "modules": [
+        "purifier"
+      ]
     },
     {
       "id": "hydroponics",
@@ -1002,7 +1202,10 @@
       },
       "hours": 60,
       "sealed": "A long collapsed tunnel. On the old map it says GREENHOUSE.",
-      "description": "Grow lamps, trays, pumps. Never enough to live on: enough to stretch the rations."
+      "description": "Grow lamps, trays, pumps. Never enough to live on: enough to stretch the rations.",
+      "modules": [
+        "grow_lights"
+      ]
     },
     {
       "id": "archive",
@@ -1021,7 +1224,10 @@
       },
       "hours": 40,
       "sealed": "A steel door with a combination lock. Someone scratched SECRET on it.",
-      "description": "Filing cabinets from before. Someone kept records of everything."
+      "description": "Filing cabinets from before. Someone kept records of everything.",
+      "modules": [
+        "card_index"
+      ]
     }
   ],
   "retrain": {

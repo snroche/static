@@ -166,8 +166,8 @@
           "loot": [
             {
               "resource": "components",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ],
           "memory": "the dark basement where nobody was waiting after all"
@@ -193,9 +193,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 1
+              "resource": "scrap",
+              "min": 2,
+              "max": 2
             }
           ]
         },
@@ -241,7 +241,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -301,7 +301,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 3
+              "max": 2
             }
           ]
         },
@@ -327,7 +327,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -357,8 +357,8 @@
             },
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 2
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -421,8 +421,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 2,
-              "max": 4
+              "min": 3,
+              "max": 6
             }
           ]
         },
@@ -465,7 +465,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -525,7 +525,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             },
             {
               "resource": "components",
@@ -630,7 +630,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -733,8 +733,8 @@
             },
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 2
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -791,7 +791,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -824,8 +824,8 @@
           "loot": [
             {
               "resource": "components",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             }
           ],
           "memory": "the loose roof of the school"
@@ -851,9 +851,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 1
+              "resource": "scrap",
+              "min": 2,
+              "max": 2
             }
           ]
         },
@@ -999,8 +999,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 2,
-              "max": 4
+              "min": 3,
+              "max": 6
             }
           ]
         },
@@ -1026,13 +1026,13 @@
           "loot": [
             {
               "resource": "batteries",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             },
             {
               "resource": "medicine",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -1083,8 +1083,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 3
+              "min": 2,
+              "max": 5
             }
           ]
         },
@@ -1118,9 +1118,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 2,
-              "max": 4
+              "resource": "scrap",
+              "min": 4,
+              "max": 8
             }
           ]
         },
@@ -1147,7 +1147,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -1233,14 +1233,14 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 2,
-              "max": 4
+              "resource": "scrap",
+              "min": 4,
+              "max": 8
             },
             {
               "resource": "scrap",
-              "min": 2,
-              "max": 3
+              "min": 3,
+              "max": 5
             }
           ]
         },
@@ -1271,7 +1271,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -1314,8 +1314,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 2,
-              "max": 3
+              "min": 3,
+              "max": 5
             },
             {
               "resource": "components",
@@ -1372,8 +1372,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 2
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -1453,8 +1453,8 @@
           "loot": [
             {
               "resource": "medicine",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             }
           ],
           "stress": 10
@@ -1502,7 +1502,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 2
+              "max": 1
             },
             {
               "resource": "rations",
@@ -1564,7 +1564,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 3
+              "max": 2
             }
           ]
         },
@@ -1588,9 +1588,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -1622,8 +1622,8 @@
           "loot": [
             {
               "resource": "components",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             }
           ]
         },
@@ -1666,8 +1666,8 @@
           "loot": [
             {
               "resource": "batteries",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ]
         },
@@ -1693,7 +1693,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -1773,13 +1773,13 @@
           "loot": [
             {
               "resource": "batteries",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             },
             {
               "resource": "components",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             }
           ],
           "memory": "the door that opened with the Voice's numbers"
@@ -1803,8 +1803,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 3,
-              "max": 6
+              "min": 4,
+              "max": 8
             },
             {
               "resource": "parts",
@@ -1836,9 +1836,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             },
             {
               "resource": "parts",
@@ -1896,8 +1896,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 1
+              "min": 2,
+              "max": 3
             }
           ]
         },
@@ -2036,8 +2036,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 2,
-              "max": 4
+              "min": 3,
+              "max": 6
             }
           ]
         },
@@ -2408,8 +2408,8 @@
             },
             {
               "resource": "components",
-              "min": 3,
-              "max": 5
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -2435,8 +2435,8 @@
           "loot": [
             {
               "resource": "batteries",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ]
         },
@@ -2465,9 +2465,9 @@
               "max": 2
             },
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -2499,8 +2499,8 @@
           "loot": [
             {
               "resource": "components",
-              "min": 3,
-              "max": 5
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -2558,8 +2558,8 @@
             },
             {
               "resource": "scrap",
-              "min": 3,
-              "max": 5
+              "min": 4,
+              "max": 7
             }
           ]
         },
@@ -2589,8 +2589,8 @@
             },
             {
               "resource": "components",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ]
         },
@@ -2621,9 +2621,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 2,
-              "max": 4
+              "resource": "scrap",
+              "min": 4,
+              "max": 8
             }
           ],
           "memory": "the forty-meter tower"
@@ -2747,13 +2747,13 @@
           "loot": [
             {
               "resource": "batteries",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             },
             {
               "resource": "medicine",
-              "min": 2,
-              "max": 3
+              "min": 1,
+              "max": 2
             }
           ]
         },
@@ -2958,8 +2958,8 @@
           "loot": [
             {
               "resource": "medicine",
-              "min": 3,
-              "max": 5
+              "min": 2,
+              "max": 4
             }
           ],
           "memory": "the samples I saved from the lab"
@@ -3207,8 +3207,8 @@
           "loot": [
             {
               "resource": "medicine",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ]
         },
@@ -3509,12 +3509,12 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             },
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -3616,8 +3616,8 @@
           "loot": [
             {
               "resource": "medicine",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ]
         },
@@ -3642,12 +3642,12 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 2
+              "max": 1
             },
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 2
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -3745,7 +3745,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -3768,8 +3768,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 2,
-              "max": 3
+              "min": 3,
+              "max": 5
             }
           ]
         },
@@ -3822,8 +3822,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 2
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -3856,8 +3856,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 2
+              "min": 2,
+              "max": 4
             },
             {
               "resource": "rations",
@@ -3917,9 +3917,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             },
             {
               "resource": "parts",
@@ -4087,9 +4087,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             },
             {
               "resource": "rations",
@@ -4649,7 +4649,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -4700,8 +4700,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 3
+              "min": 2,
+              "max": 5
             },
             {
               "resource": "rations",
@@ -4760,7 +4760,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ],
           "memory": "the voice in the basement"
@@ -4933,8 +4933,8 @@
             },
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 1
+              "min": 2,
+              "max": 3
             }
           ]
         },
@@ -5077,7 +5077,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -5220,9 +5220,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -5402,7 +5402,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -5455,8 +5455,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 2
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -5479,9 +5479,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 1
+              "resource": "scrap",
+              "min": 2,
+              "max": 2
             }
           ]
         },
@@ -5792,8 +5792,8 @@
             },
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 1
+              "min": 2,
+              "max": 3
             }
           ],
           "memory": "the note that said 'tell Ana I tried'"
@@ -5926,7 +5926,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -5981,7 +5981,7 @@
             {
               "resource": "components",
               "min": 1,
-              "max": 2
+              "max": 1
             },
             {
               "resource": "batteries",
@@ -6112,9 +6112,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 1,
-              "max": 2
+              "resource": "scrap",
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -6151,7 +6151,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -6332,9 +6332,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 2,
-              "max": 3
+              "resource": "scrap",
+              "min": 4,
+              "max": 6
             }
           ]
         },
@@ -6359,7 +6359,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -6584,8 +6584,8 @@
           "loot": [
             {
               "resource": "scrap",
-              "min": 1,
-              "max": 1
+              "min": 2,
+              "max": 3
             },
             {
               "resource": "rations",
@@ -6628,7 +6628,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },
@@ -6822,7 +6822,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 3
+              "max": 2
             }
           ]
         },
@@ -6880,8 +6880,8 @@
             },
             {
               "resource": "components",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ]
         },
@@ -6940,7 +6940,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 3
+              "max": 2
             }
           ]
         },
@@ -6964,8 +6964,8 @@
           "loot": [
             {
               "resource": "batteries",
-              "min": 2,
-              "max": 5
+              "min": 1,
+              "max": 4
             }
           ]
         },
@@ -7064,9 +7064,9 @@
               "max": 6
             },
             {
-              "resource": "components",
-              "min": 2,
-              "max": 4
+              "resource": "scrap",
+              "min": 4,
+              "max": 8
             }
           ]
         },
@@ -7118,13 +7118,13 @@
           "loot": [
             {
               "resource": "medicine",
-              "min": 3,
-              "max": 7
+              "min": 2,
+              "max": 5
             },
             {
-              "resource": "components",
-              "min": 2,
-              "max": 4
+              "resource": "scrap",
+              "min": 4,
+              "max": 8
             }
           ]
         },
@@ -7153,8 +7153,8 @@
             },
             {
               "resource": "batteries",
-              "min": 2,
-              "max": 4
+              "min": 1,
+              "max": 3
             }
           ]
         },
@@ -7213,7 +7213,7 @@
             {
               "resource": "medicine",
               "min": 1,
-              "max": 4
+              "max": 3
             },
             {
               "resource": "parts",
@@ -7306,8 +7306,8 @@
           "loot": [
             {
               "resource": "medicine",
-              "min": 3,
-              "max": 6
+              "min": 2,
+              "max": 4
             },
             {
               "resource": "parts",
@@ -7335,9 +7335,9 @@
           ],
           "loot": [
             {
-              "resource": "components",
-              "min": 3,
-              "max": 6
+              "resource": "scrap",
+              "min": 6,
+              "max": 12
             }
           ]
         },
@@ -7368,8 +7368,8 @@
           "loot": [
             {
               "resource": "components",
-              "min": 2,
-              "max": 5
+              "min": 1,
+              "max": 4
             }
           ],
           "stress": 6
@@ -7393,8 +7393,8 @@
           "loot": [
             {
               "resource": "batteries",
-              "min": 4,
-              "max": 8
+              "min": 3,
+              "max": 6
             },
             {
               "resource": "parts",
@@ -7437,8 +7437,8 @@
             },
             {
               "resource": "components",
-              "min": 3,
-              "max": 6
+              "min": 2,
+              "max": 4
             }
           ]
         },
@@ -7527,7 +7527,7 @@
             {
               "resource": "batteries",
               "min": 1,
-              "max": 2
+              "max": 1
             }
           ]
         },

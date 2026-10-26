@@ -37,7 +37,7 @@
       {
         "resource": "scrap",
         "min": 1,
-        "max": 2,
+        "max": 4,
         "weight": 2
       }
     ],
@@ -101,7 +101,7 @@
       {
         "resource": "scrap",
         "min": 1,
-        "max": 3,
+        "max": 5,
         "weight": 3
       },
       {
@@ -208,7 +208,7 @@
       }
     ],
     "icon": "󰐂",
-    "shortName": "Pharmacy"
+    "shortName": "Pharm."
   },
   {
     "id": "escuela",
@@ -253,7 +253,7 @@
       {
         "resource": "scrap",
         "min": 1,
-        "max": 3,
+        "max": 5,
         "weight": 2
       },
       {
@@ -321,7 +321,7 @@
       {
         "resource": "scrap",
         "min": 2,
-        "max": 4,
+        "max": 6,
         "weight": 3
       },
       {
@@ -427,7 +427,7 @@
       "Stretchers crossed in the lobby. Climbing over them."
     ],
     "icon": "󰋡",
-    "shortName": "Hospital"
+    "shortName": "Hosp."
   },
   {
     "id": "estacion_tren",
@@ -464,7 +464,7 @@
       {
         "resource": "scrap",
         "min": 3,
-        "max": 6,
+        "max": 8,
         "weight": 3
       },
       {
@@ -477,6 +477,12 @@
         "resource": "chips",
         "min": 2,
         "max": 6,
+        "weight": 1
+      },
+      {
+        "resource": "parts",
+        "min": 1,
+        "max": 2,
         "weight": 1
       }
     ],
@@ -551,7 +557,7 @@
       {
         "resource": "scrap",
         "min": 2,
-        "max": 4,
+        "max": 6,
         "weight": 1
       },
       {
@@ -564,6 +570,12 @@
         "resource": "chips",
         "min": 2,
         "max": 6,
+        "weight": 1
+      },
+      {
+        "resource": "parts",
+        "min": 1,
+        "max": 2,
         "weight": 1
       }
     ],
@@ -649,6 +661,12 @@
         "min": 2,
         "max": 6,
         "weight": 1
+      },
+      {
+        "resource": "parts",
+        "min": 1,
+        "max": 2,
+        "weight": 1
       }
     ],
     "items": [
@@ -716,7 +734,7 @@
         "resource": "components",
         "min": 3,
         "max": 6,
-        "weight": 3
+        "weight": 2
       },
       {
         "resource": "batteries",
@@ -741,6 +759,12 @@
         "min": 2,
         "max": 6,
         "weight": 1
+      },
+      {
+        "resource": "scrap",
+        "min": 3,
+        "max": 7,
+        "weight": 2
       }
     ],
     "items": [
@@ -809,12 +833,12 @@
         "resource": "components",
         "min": 3,
         "max": 5,
-        "weight": 2
+        "weight": 1
       },
       {
         "resource": "scrap",
         "min": 4,
-        "max": 8,
+        "max": 10,
         "weight": 2
       },
       {
@@ -880,8 +904,8 @@
     "loot": [
       {
         "resource": "batteries",
-        "min": 3,
-        "max": 6,
+        "min": 2,
+        "max": 4,
         "weight": 3
       },
       {
@@ -941,7 +965,7 @@
       {
         "resource": "scrap",
         "min": 1,
-        "max": 2,
+        "max": 4,
         "weight": 3
       },
       {
@@ -990,7 +1014,7 @@
       {
         "resource": "scrap",
         "min": 1,
-        "max": 3,
+        "max": 5,
         "weight": 3
       },
       {
@@ -1050,14 +1074,14 @@
       {
         "resource": "scrap",
         "min": 2,
-        "max": 4,
+        "max": 6,
         "weight": 2
       },
       {
         "resource": "components",
         "min": 1,
         "max": 2,
-        "weight": 2
+        "weight": 1
       },
       {
         "resource": "batteries",
@@ -1112,7 +1136,7 @@
         "resource": "components",
         "min": 3,
         "max": 7,
-        "weight": 3
+        "weight": 2
       },
       {
         "resource": "medicine",
@@ -1128,6 +1152,12 @@
       },
       {
         "resource": "fuel",
+        "min": 3,
+        "max": 7,
+        "weight": 2
+      },
+      {
+        "resource": "scrap",
         "min": 3,
         "max": 7,
         "weight": 2
@@ -1239,7 +1269,7 @@
         "resource": "components",
         "min": 4,
         "max": 8,
-        "weight": 3
+        "weight": 2
       },
       {
         "resource": "parts",
@@ -1251,6 +1281,12 @@
         "resource": "batteries",
         "min": 3,
         "max": 6,
+        "weight": 2
+      },
+      {
+        "resource": "scrap",
+        "min": 3,
+        "max": 7,
         "weight": 2
       }
     ],

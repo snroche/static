@@ -250,7 +250,10 @@ final class RadioPanel {
         if (tuning.lockable && !wasLockable) {
             sound.click();
         }
-        sound.radioMix(tuning.audio, tuning.strength);
+        // Each station keeps its own voice (the dial position changes while turning, so it
+        // can't be the seed; signals without a name share the plain one).
+        long character = tuning.station != null ? tuning.station.hashCode() : 0;
+        sound.radioMix(tuning.audio, tuning.strength, character);
         wasLockable = tuning.lockable;
 
         int tick = -1;

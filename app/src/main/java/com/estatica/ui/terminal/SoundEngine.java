@@ -60,6 +60,7 @@ final class SoundEngine {
     /** What the dial was hearing when the loops weren't ready yet. */
     private String pendingAudio;
     private double pendingStrength;
+    private long pendingCharacter;
     private final android.os.Handler main = new android.os.Handler(android.os.Looper.getMainLooper());
     private volatile boolean released;
 
@@ -125,11 +126,20 @@ final class SoundEngine {
      * @param strength 0 (static only) to 1 (tuned in)
      */
     void radioMix(String audio, double strength) {
+        radioMix(audio, strength, 0);
+    }
+
+    /**
+     * @param character a number that stays the same for one source (a station, a signal): its
+     *                  sound is pitched and paced its own way, so two voices on the dial differ
+     */
+    void radioMix(String audio, double strength, long character) {
         if (!radioOn || !enabled) {
             return;
         }
         pendingAudio = audio;
         pendingStrength = strength;
+        pendingCharacter = character;
         if (bed == null) {
             return;
         }
@@ -147,8 +157,11 @@ final class SoundEngine {
         AudioTrack signal = loops.get(kind);
         if (signal != null) {
             float level = (float) (0.75 * Math.pow(strength, 1.3));
-            // Off frequency, a voice comes in sped up and thin; on it, natural.
-            float detune = (float) (1 + 0.22 * (1 - strength) * (1 - strength));
+            // Off frequency, a voice comes in sped up and thin; on it, natural (for that source:
+            // each one sits somewhere between 0.88× and 1.12×).
+            float own = character == 0 ? 1f
+                    : 0.88f + 0.24f * (Math.floorMod(character * 0x9E3779B97F4A7C15L >>> 33, 1000) / 1000f);
+            float detune = (float) (own * (1 + 0.22 * (1 - strength) * (1 - strength)));
             loop(signal, level, detune);
         }
     }
@@ -227,7 +240,7 @@ final class SoundEngine {
             if (radioOn && enabled) {
                 loop(bed, 0.25f, 1f);
                 if (pendingAudio != null) {
-                    radioMix(pendingAudio, pendingStrength);
+                    radioMix(pendingAudio, pendingStrength, pendingCharacter);
                 }
             }
         });

@@ -117,6 +117,21 @@ public class RomanceTest {
         assertFalse("once together, no more confessions", engine.isEligible(s, confession, List.of(s), T0));
     }
 
+    /** Dozens of everyday talks queued at higher priority must not keep romance away forever. */
+    @Test
+    public void romanceGetsItsShareOfTalks() {
+        Stub stub = new Stub();
+        DialogueEngine engine = new DialogueEngine(content, rules);
+        engine.setRomance(stub);
+        Scout s = TestScouts.custom("mara", 5, 10, 100, T0);
+        int romantic = 0;
+        for (long seed = 0; seed < 100; seed++) {
+            DialogueDef d = engine.pick(s, false, List.of(s), GameRandom.fromSeed(seed), T0);
+            romantic += d != null && d.isRomantic() ? 1 : 0;
+        }
+        assertTrue("romantic talks: " + romantic, romantic >= 20 && romantic <= 60);
+    }
+
     @Test
     public void lotsOfRomanceToFind() {
         int count = 0;

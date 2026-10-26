@@ -10,6 +10,43 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.7.2] — Map labels, steadier economy, room upgrades — in verification
+
+App 0.7.2 (versionCode 702) · DB 13 (no change) · **Content 25 → 26**
+
+### Added
+- **Upgrades for the rooms you restore.** Each one builds on what the room already does:
+  - Lookout: watchtower, up to +6 defense with someone on lookout.
+  - School: library, teaching up to 50% faster.
+  - Water recycler: purifier, food lasts longer.
+  - Music room: record player, everyone at home slowly sheds stress.
+  - Hydroponics bay: grow lights, up to 60% more food on a slightly bigger share.
+  - Archive: card index, plans worked out at the bench more often.
+  - Kitchen: stove, food lasts longer.
+- **More to decode:**
+  - Repeatable transmissions now come in three or four wordings each.
+  - Twelve new ones across all bands: caches, warnings, scrap piles, fuel, parts.
+- **More to hear while tuning:**
+  - Two to six new lines for each kind of signal.
+  - Ten more rare finds: a wedding, a birthday, a lost dog, a radio play, whale song on VLF and more.
+- **Each station has its own voice:** pitched and paced its own way, so two voices on the dial no longer sound identical.
+- `tools/font_subset.py` rebuilds the terminal font with new icons. The full source fonts live in `D:\Android\fonts`.
+
+### Changed
+- **Map:**
+  - Names go under each icon when there's room.
+  - Long names are cut to 7 characters ("Hosp.", "Pharm.").
+  - The legend shows the bunker as the dot drawn on the map.
+- **Resources:**
+  - **The Workshop and Sorting tasks** no longer eat all the scrap. Each leaves 20 alone, and they stop at 40 components and 30 parts. Workshop stripping is also slower: 3 scrap → 1 component every 4 h.
+  - **Events:** about half the components they gave are now scrap, the rest give 30% fewer. Medicine and batteries are 30% lower, and scrap slightly higher.
+  - **Places:** scrap turns up more often and in bigger piles. Parts are now found at the police station, the train station and the gated community.
+- **Signals on the dial** each get their own stretch of it, so they never sit on top of each other.
+
+### Fixed
+- **The Fair's map icon** was missing from the font.
+- **Morse and tap code** wrap a whole letter at a time: a letter like ".-" no longer splits across two lines.
+
 ## [0.7.1] — Gear that lasts, the Fair, more radio, chapter 2 — in verification
 
 App 0.7.1 (versionCode 701) · DB 13 (no change) · **Content 24 → 25**

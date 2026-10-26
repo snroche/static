@@ -156,6 +156,22 @@ public final class SignalsDef {
             return text;
         }
 
+        /** Other ways the same message comes through (same meaning, other words). */
+        private List<String> variants;
+
+        /** One of the wordings, picked by {@code pick} (any number; stable for the same value). */
+        public String text(long pick) {
+            if (variants == null || variants.isEmpty()) {
+                return text;
+            }
+            int i = (int) Math.floorMod(pick, (long) variants.size() + 1);
+            return i == 0 ? text : variants.get(i - 1);
+        }
+
+        public List<String> getVariants() {
+            return variants != null ? variants : List.of();
+        }
+
         public Reward getReward() {
             return reward;
         }

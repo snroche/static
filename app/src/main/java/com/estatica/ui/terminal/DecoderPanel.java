@@ -95,6 +95,7 @@ final class DecoderPanel {
         b.title.setText(t.unlocked ? res.getString(R.string.decode_title, t.schemeName)
                 : res.getString(R.string.decode_locked_title));
         b.cipher.setText(t.cipherText);
+        highlightCipher(); // Morse and tap code: wrapped a whole letter at a time
         b.caesarControls.setVisibility(t.unlocked && caesar ? View.VISIBLE : View.GONE);
         // With the manual, Morse is a letter keyboard; without it, the dot/dash pad.
         keyboard = morse && morseTable;
@@ -312,15 +313,32 @@ final class DecoderPanel {
             return;
         }
         String gap = "TAP".equals(transmission.kind) ? "   " : " ";
-        int current = currentGroup();
+        int current = transmission.unlocked ? currentGroup() : -1;
+        // Lines are broken by hand, a whole letter at a time: left to the TextView, a letter
+        // like ".-" could be split after its dash.
+        android.text.TextPaint paint = b.cipher.getPaint();
+        float room = (b.cipher.getWidth() - b.cipher.getTotalPaddingLeft() - b.cipher.getTotalPaddingRight()) * 0.96f;
+        if (room <= 0) {
+            b.cipher.post(this::highlightCipher); // not laid out yet
+        }
+        float used = 0;
         android.text.SpannableStringBuilder out = new android.text.SpannableStringBuilder();
         String[] groups = groups();
         int bright = androidx.core.content.ContextCompat.getColor(b.getRoot().getContext(), R.color.amber_bright);
         int dim = androidx.core.content.ContextCompat.getColor(b.getRoot().getContext(), R.color.amber_dim);
         for (int i = 0; i < groups.length; i++) {
+            float width = paint.measureText(groups[i]);
             if (i > 0) {
-                out.append(gap);
+                float gapWidth = paint.measureText(gap);
+                if (room > 0 && used + gapWidth + width > room) {
+                    out.append('\n');
+                    used = 0;
+                } else {
+                    out.append(gap);
+                    used += gapWidth;
+                }
             }
+            used += width;
             int start = out.length();
             out.append(groups[i]);
             int color = i == current ? bright : current >= 0 && i < current ? dim : 0;

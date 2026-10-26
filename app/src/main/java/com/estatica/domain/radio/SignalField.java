@@ -79,8 +79,20 @@ public final class SignalField {
         int bandIndex = balance.bandIndex(band.getId());
         GameRandom rng = GameRandom.fromSeed(seed ^ (bandIndex + 1) * 0x9E3779B97F4A7C15L ^ window * 0xC2B2AE3D27D4EB4FL);
         List<Spot> spots = new ArrayList<>();
-        for (int slot = 0; slot < band.getSignalsPerWindow(); slot++) {
-            int position = rng.nextInt(balance.getRadio().getDialMax());
+        // Each signal gets its own stretch of the dial (in shuffled order), and sits inside the
+        // middle of it: never two on top of each other.
+        int count = band.getSignalsPerWindow();
+        int stretch = balance.getRadio().getDialMax() / Math.max(1, count);
+        List<Integer> stretches = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            stretches.add(i);
+        }
+        for (int i = stretches.size() - 1; i > 0; i--) {
+            java.util.Collections.swap(stretches, i, rng.nextInt(i + 1));
+        }
+        for (int slot = 0; slot < count; slot++) {
+            int margin = stretch / 6;
+            int position = stretches.get(slot) * stretch + margin + rng.nextInt(Math.max(1, stretch - 2 * margin));
             spots.add(new Spot(band.getId(), window, slot, position, pickKind(band, rng)));
         }
         return spots;

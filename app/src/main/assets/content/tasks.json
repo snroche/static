@@ -32,14 +32,16 @@
   {
     "id": "taller",
     "name": "Workshop",
-    "description": "Works the bench: nothing gets made without someone here, and the better their Craft, the faster and better it comes out. Also strips scrap (3 scrap → 1 component every 2 h) and, now and then, works out a blueprint.",
+    "description": "Works the bench: nothing gets made without someone here, and the better their Craft, the faster and better it comes out. Between jobs, strips scrap for components (3 → 1 every 4 h), leaving 20 scrap alone and stopping at 40 components. Now and then, works out a blueprint.",
     "stat": "craft",
     "xpPerHour": 0.6,
     "conversion": {
       "from": "scrap",
       "input": 3,
       "to": "components",
-      "hoursPerUnit": 2
+      "hoursPerUnit": 4,
+      "keep": 20,
+      "cap": 40
     },
     "room": "workshop"
   },
@@ -98,9 +100,11 @@
       "from": "scrap",
       "input": 4,
       "to": "parts",
-      "hoursPerUnit": 3
+      "hoursPerUnit": 3,
+      "keep": 20,
+      "cap": 30
     },
-    "description": "Takes scrap apart for parts (4 scrap → 1 part every 3 h)."
+    "description": "Takes scrap apart for parts (4 scrap → 1 part every 3 h). Leaves 20 scrap alone and stops at 30 parts."
   },
   {
     "id": "teaching",

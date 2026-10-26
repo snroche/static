@@ -105,6 +105,18 @@ public final class TaskDef {
         private int input;
         private String to;
         private double hoursPerUnit;
+        /** Stock of {@code from} it never touches (a reserve for repairs and recipes). */
+        private int keep;
+        /** Stops once there's this much of {@code to} (0: never). */
+        private int cap;
+
+        public int getKeep() {
+            return keep;
+        }
+
+        public int getCap() {
+            return cap;
+        }
 
         public String getFrom() {
             return from;

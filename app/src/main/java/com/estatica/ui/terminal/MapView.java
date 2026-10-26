@@ -98,7 +98,17 @@ public final class MapView extends View {
         layoutLabels();
     }
 
-    /** Right, left, above or below each icon: the first spot that doesn't cover anything; else none. */
+    /** Longest label on the map; longer names are cut with a period ("Hospital" → "Hospit."). */
+    private static final int MAX_LABEL = 7;
+
+    static String abbreviate(String name) {
+        if (name == null || name.length() <= MAX_LABEL) {
+            return name;
+        }
+        return name.substring(0, MAX_LABEL - 1).trim() + ".";
+    }
+
+    /** Under each icon if there's room; else right, left or above; else none. */
     private void layoutLabels() {
         labels.clear();
         if (map == null || getWidth() == 0) {
@@ -118,13 +128,14 @@ public final class MapView extends View {
             float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
             float px = x(radius, p.turn);
             float py = y(radius, p.turn);
-            float w = text.measureText(p.shortName);
+            String name = abbreviate(p.shortName);
+            float w = text.measureText(name);
             float gap = iconSize / 2 + 2 * dp;
             float[][] spots = {
+                    {px, py + gap + h},
                     {px + gap + w / 2, py + h / 3},
                     {px - gap - w / 2, py + h / 3},
                     {px, py - gap},
-                    {px, py + gap + h},
             };
             for (float[] spot : spots) {
                 android.graphics.RectF box = new android.graphics.RectF(spot[0] - w / 2, spot[1] - h, spot[0] + w / 2, spot[1] + 2 * dp);
@@ -133,7 +144,7 @@ public final class MapView extends View {
                     free &= !android.graphics.RectF.intersects(box, other);
                 }
                 if (free) {
-                    labels.add(new Label(p.shortName, spot[0], spot[1], p.reachable));
+                    labels.add(new Label(name, spot[0], spot[1], p.reachable));
                     taken.add(box);
                     break;
                 }

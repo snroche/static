@@ -181,8 +181,10 @@ public final class BunkerRules {
             double progress = s.getLife().getTaskOutputCarry() + hours / conversion.getHoursPerUnit();
             int units = (int) Math.floor(progress);
             int available = resources.getOrDefault(conversion.getFrom(), 0)
-                    + out.resourceDelta.getOrDefault(conversion.getFrom(), 0);
-            int affordable = Math.min(units, available / conversion.getInput());
+                    + out.resourceDelta.getOrDefault(conversion.getFrom(), 0) - conversion.getKeep();
+            int have = resources.getOrDefault(conversion.getTo(), 0) + out.resourceDelta.getOrDefault(conversion.getTo(), 0);
+            int room = conversion.getCap() > 0 ? Math.max(0, conversion.getCap() - have) : Integer.MAX_VALUE;
+            int affordable = Math.max(0, Math.min(Math.min(units, room), available / conversion.getInput()));
             // Without input the work is lost, not banked: idle hands, empty shelves.
             s.getLife().setTaskOutputCarry(progress - units);
             if (affordable > 0) {

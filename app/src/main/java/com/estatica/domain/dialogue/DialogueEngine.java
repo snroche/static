@@ -254,8 +254,12 @@ public final class DialogueEngine {
      *
      * @param initiated true for dialogues the scout starts (INITIATED, GUIDANCE, GRIEF)
      */
+    /** Share of talks that go to romance when any romantic talk is open. */
+    static final double ROMANCE_SHARE = 0.4;
+
     public DialogueDef pick(Scout s, boolean initiated, Collection<Scout> everyone, GameRandom rng, long now) {
         List<DialogueDef> best = new ArrayList<>();
+        List<DialogueDef> romantic = new ArrayList<>();
         int bestPriority = Integer.MIN_VALUE;
         String last = lastHad.get(s.getId());
         for (DialogueDef d : content.getDialogues().values()) {
@@ -264,6 +268,9 @@ public final class DialogueEngine {
             }
             if (d.isRepeatable() && d.getId().equals(last)) {
                 continue;
+            }
+            if (d.isRomantic()) {
+                romantic.add(d);
             }
             // A repeatable talk jumps the queue only the first time; after that it joins the
             // everyday pool, so no single one can come back again and again.
@@ -278,6 +285,11 @@ public final class DialogueEngine {
         }
         if (best.isEmpty()) {
             return null;
+        }
+        // Once someone is open to it, romance gets its share of talks whatever else is queued:
+        // with dozens of everyday talks ahead of it, it would otherwise never come up.
+        if (!romantic.isEmpty() && rng.chance(ROMANCE_SHARE)) {
+            best = romantic;
         }
         // Among repeatable ones, those never had come first.
         List<DialogueDef> fresh = new ArrayList<>();
