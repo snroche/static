@@ -98,6 +98,47 @@ public final class ExpeditionEngine {
     }
 
     /** Flag a once-only situation leaves behind when it comes up. */
+    /** What the bunker has of a resource (for prices out there). Set by the session. */
+    private java.util.function.ToIntFunction<String> stock = id -> 0;
+
+    public void setStock(java.util.function.ToIntFunction<String> stock) {
+        this.stock = stock;
+    }
+
+    /** Whether they can pay for an option: what they carry plus what the bunker has. */
+    public boolean affordable(Expedition expedition, EventDef.Option option) {
+        for (EventDef.Cost c : option.getCost()) {
+            int carried = expedition.getCarriedLoot().getOrDefault(c.getResource(), 0);
+            if (carried + stock.applyAsInt(c.getResource()) < c.getAmount()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Someone on the team can take it, and it can be paid for. */
+    private boolean canTake(Expedition expedition, Scout scout, Party party, EventDef.Option option) {
+        return isAvailable(scout, party, option) && affordable(expedition, option);
+    }
+
+    /** Pays an option's price: out of what they carry first, the rest from the bunker. */
+    private void pay(Expedition expedition, EventDef.Option option, Map<String, Integer> paid, ExpeditionResult out) {
+        for (EventDef.Cost c : option.getCost()) {
+            int carried = expedition.getCarriedLoot().getOrDefault(c.getResource(), 0);
+            int fromBag = Math.min(carried, c.getAmount());
+            if (fromBag > 0) {
+                expedition.addLoot(c.getResource(), -fromBag);
+            }
+            int fromBunker = Math.min(c.getAmount() - fromBag, stock.applyAsInt(c.getResource()));
+            if (fromBunker > 0) {
+                out.spend(c.getResource(), fromBunker);
+            }
+            if (fromBag + fromBunker > 0) {
+                paid.merge(c.getResource(), fromBag + fromBunker, Integer::sum);
+            }
+        }
+    }
+
     public static String seenFlag(String eventId) {
         return "seen:" + eventId;
     }
@@ -136,6 +177,9 @@ public final class ExpeditionEngine {
     }
 
     private boolean stillUseful(EventDef event) {
+        if (event.isFollowUp()) {
+            return false; // only reached from the situation before it
+        }
         if (event.getGrantsKey() != null && hasKey.test(event.getGrantsKey())) {
             return false;
         }
@@ -340,13 +384,14 @@ public final class ExpeditionEngine {
         List<String> out = new ArrayList<>();
         for (int i = 0; i < event.getOptions().size(); i++) {
             EventDef.Option option = event.getOptions().get(i);
-            if (!isAvailable(scout, party, option)) {
+            if (!canTake(expedition, scout, party, option)) {
                 out.add(null);
             } else if (!expedition.heardHint(i)) {
                 out.add("LOST");
             } else {
-                out.add(checks.hint(chanceFor(expedition, scout, party, option, zone,
-                        expedition.getPendingSinceMillis())).name());
+                OddsHint hint = checks.hint(chanceFor(expedition, scout, party, option, zone,
+                        expedition.getPendingSinceMillis()));
+                out.add(hint == OddsHint.BAD && couldKill(scout, option) ? "DEADLY" : hint.name());
             }
         }
         return out;
@@ -369,6 +414,16 @@ public final class ExpeditionEngine {
         lines.add(radio(arrives, scout, say(voice, scout, "goingHome",
                 GameRandom.fromState(expedition.getRngState()), vars(scout))));
         return lines;
+    }
+
+    /**
+     * Ordered into this with a bad feeling heard, failing it could kill them (GDD §5.5): the
+     * decision card says so plainly.
+     */
+    private boolean couldKill(Scout scout, EventDef.Option option) {
+        EventDef.Outcome f = option.getFailure();
+        return f != null && (f.isLethal()
+                || (Injury.fromKey(f.getInjury()) != Injury.NONE && scout.getInjury() == Injury.CRITICAL));
     }
 
     /** Whether the situation can come up for this scout (event requirements). */
@@ -457,7 +512,7 @@ public final class ExpeditionEngine {
         }
         List<String> labels = new ArrayList<>();
         for (EventDef.Option option : event.getOptions()) {
-            labels.add(isAvailable(scout, party, option) ? labelOf(expedition, option) : null);
+            labels.add(canTake(expedition, scout, party, option) ? labelOf(expedition, option) : null);
         }
         if (expedition.isRetreatOffered()) {
             labels.add(content.getTerminal().getBunker().getRetreatLabel());
@@ -679,7 +734,7 @@ public final class ExpeditionEngine {
         int shown = 0;
         for (int i = 0; i < options.size(); i++) {
             EventDef.Option option = options.get(i);
-            if (!isAvailable(scout, party, option)) {
+            if (!canTake(expedition, scout, party, option)) {
                 continue;
             }
             OddsHint hint = checks.hint(chanceFor(expedition, scout, party, option, zone, at));
@@ -719,11 +774,17 @@ public final class ExpeditionEngine {
 
         int choice;
         boolean byOrder = ordered;
+        java.util.function.Predicate<EventDef.Option> takeable = o -> canTake(expedition, scout, party, o);
         if (ordered) {
             choice = expedition.getChosenOption();
-            if (scout.getTrust() < rules.disobeyThreshold(scout)
+            if (!takeable.test(event.getOptions().get(choice))) {
+                // The bunker spent it before the order got there.
+                choice = decider.pick(event, scout, zone, rules.bias(scout), rng, takeable);
+                byOrder = false;
+                out.line(system(at, TextTemplate.format(text.getCantAfford(), vars), scout));
+            } else if (scout.getTrust() < rules.disobeyThreshold(scout)
                     && rng.chance(expeditionBalance.getDisobeyChance())) {
-                int own = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, party, o));
+                int own = decider.pick(event, scout, zone, rules.bias(scout), rng, takeable);
                 if (own != choice) {
                     choice = own;
                     byOrder = false;
@@ -731,7 +792,7 @@ public final class ExpeditionEngine {
                 }
             }
         } else {
-            choice = decider.pick(event, scout, zone, rules.bias(scout), rng, o -> isAvailable(scout, party, o));
+            choice = decider.pick(event, scout, zone, rules.bias(scout), rng, takeable);
             out.line(radio(at, scout, say(voice, scout, "autoDecide", rng, vars)));
         }
 
@@ -748,6 +809,22 @@ public final class ExpeditionEngine {
         }
         boolean success = rng.nextDouble() < chance;
         EventDef.Outcome outcome = success ? option.getSuccess() : option.getFailure();
+        Map<String, Integer> paid = new java.util.LinkedHashMap<>();
+        Map<String, Integer> gained = new java.util.LinkedHashMap<>();
+        List<String> found = new ArrayList<>();
+        Map<String, Integer> lost = new java.util.LinkedHashMap<>();
+        if (!outcome.isRefund()) {
+            pay(expedition, option, paid, out);
+        }
+        if (outcome.getLose() > 0) {
+            for (Map.Entry<String, Integer> e : new java.util.LinkedHashMap<>(expedition.getCarriedLoot()).entrySet()) {
+                int gone = (int) Math.ceil(e.getValue() * outcome.getLose());
+                if (gone > 0) {
+                    expedition.addLoot(e.getKey(), -gone);
+                    lost.put(e.getKey(), gone);
+                }
+            }
+        }
 
         String cue = outcome.getCue();
         for (String line : outcome.getText()) {
@@ -782,7 +859,11 @@ public final class ExpeditionEngine {
         }
         if (outcome.getLoot() != null) {
             for (LootRoll roll : outcome.getLoot()) {
-                expedition.addLoot(roll.getResource(), rollAmount(roll, scout, party, rng));
+                int amount = rollAmount(roll, scout, party, rng);
+                expedition.addLoot(roll.getResource(), amount);
+                if (amount > 0) {
+                    gained.merge(roll.getResource(), amount, Integer::sum);
+                }
             }
         }
         if (outcome.getPlot() != null) {
@@ -791,17 +872,21 @@ public final class ExpeditionEngine {
         if (outcome.getKeyItem() != null && !hasKey.test(outcome.getKeyItem())
                 && !expedition.getCarriedItems().contains(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX + outcome.getKeyItem())) {
             expedition.addItem(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX + outcome.getKeyItem());
+            found.add(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX + outcome.getKeyItem());
         }
         if (outcome.getGear() != null) {
             EventDef.GearFind g = outcome.getGear();
             expedition.addItem(GEAR_PREFIX + g.getId() + ":" + g.getRarity() + ":" + g.getCondition());
+            found.add(GEAR_PREFIX + g.getId());
         }
         if (outcome.getPart() != null && !worldFlag.test(PART_PREFIX + outcome.getPart())
                 && !expedition.getCarriedItems().contains(PART_PREFIX + outcome.getPart())) {
             expedition.addItem(PART_PREFIX + outcome.getPart());
+            found.add(PART_PREFIX + outcome.getPart());
         }
         if (outcome.getItem() != null) {
             expedition.addItem(outcome.getItem());
+            found.add(outcome.getItem());
         }
         for (String flag : outcome.getSetWorld()) {
             out.world(flag);
@@ -875,6 +960,7 @@ public final class ExpeditionEngine {
         if (incoming != Injury.NONE) {
             out.line(radio(at, scout, say(voice, scout, "injured", rng, vars)));
         }
+        tally(scout, gained, paid, lost, found, incoming, at, out);
         if (scout.getInjury() == Injury.CRITICAL) {
             expedition.abortToReturn(at);
         } else {
@@ -886,8 +972,54 @@ public final class ExpeditionEngine {
                         scout));
             }
             // The next leg starts later (waited it out) or sooner (got through fast).
-            expedition.advance(at + shift);
+            String next = outcome.getNext();
+            if (next != null && content.event(next) != null) {
+                expedition.chainTo(next, at + Math.max(0, shift), expeditionBalance.getFollowUpMillis());
+            } else {
+                expedition.advance(at + shift);
+            }
         }
+    }
+
+    /**
+     * What came of a situation, plainly: "+3 rations, paid 2 batteries, found a racing bike
+     * frame, light injury". The scout's words say what happened; this says what it means.
+     */
+    private void tally(Scout scout, Map<String, Integer> gained, Map<String, Integer> paid, Map<String, Integer> lost,
+                       List<String> found, Injury injury, long at, ExpeditionResult out) {
+        List<String> parts = new ArrayList<>();
+        for (Map.Entry<String, Integer> e : gained.entrySet()) {
+            parts.add(tallyPiece(text.getTallyGain(), e.getKey(), e.getValue()));
+        }
+        for (Map.Entry<String, Integer> e : paid.entrySet()) {
+            parts.add(tallyPiece(text.getTallyPaid(), e.getKey(), e.getValue()));
+        }
+        for (Map.Entry<String, Integer> e : lost.entrySet()) {
+            parts.add(tallyPiece(text.getTallyLost(), e.getKey(), e.getValue()));
+        }
+        for (String itemId : found) {
+            Map<String, String> v = new HashMap<>();
+            v.put("item", carriedName(itemId).toLowerCase(Locale.ROOT));
+            parts.add(TextTemplate.format(text.getTallyFound(), v));
+        }
+        if (injury != Injury.NONE) {
+            Map<String, String> v = new HashMap<>();
+            v.put("injury", content.getTerminal().getInjuries().get(injury.name()));
+            parts.add(TextTemplate.format(text.getTallyHurt(), v));
+        }
+        if (parts.isEmpty()) {
+            return;
+        }
+        Map<String, String> v = vars(scout);
+        v.put("tally", String.join(text.getLootSeparator(), parts));
+        out.line(system(at, TextTemplate.format(text.getOutcomeTally(), v), scout));
+    }
+
+    private String tallyPiece(String template, String resource, int amount) {
+        Map<String, String> v = new HashMap<>();
+        v.put("amount", String.valueOf(amount));
+        v.put("resource", content.resource(resource).getName().toLowerCase(Locale.ROOT));
+        return TextTemplate.format(template, v);
     }
 
     /** What an option does to the trip's length, in millis (0 for nothing, or a failed shortcut). */
@@ -908,12 +1040,26 @@ public final class ExpeditionEngine {
 
     /** "Wait it out (+4 min)": the label with what it does to the trip. */
     private String labelOf(Expedition expedition, EventDef.Option option) {
+        String label = option.getLabel();
+        if (!option.getCost().isEmpty()) {
+            List<String> prices = new ArrayList<>();
+            for (EventDef.Cost c : option.getCost()) {
+                Map<String, String> v = new HashMap<>();
+                v.put("amount", String.valueOf(c.getAmount()));
+                v.put("resource", content.resource(c.getResource()).getName().toLowerCase(Locale.ROOT));
+                prices.add(TextTemplate.format(text.getLootItem(), v));
+            }
+            Map<String, String> v = new HashMap<>();
+            v.put("label", label);
+            v.put("cost", String.join(text.getLootSeparator(), prices));
+            label = TextTemplate.format(text.getOptionCost(), v);
+        }
         if (option.getTime() == 0) {
-            return option.getLabel();
+            return label;
         }
         long shift = Math.round(TimelineGenerator.plannedDuration(expedition.getSegments()) * Math.abs(option.getTime()));
         Map<String, String> vars = new HashMap<>();
-        vars.put("label", option.getLabel());
+        vars.put("label", label);
         vars.put("time", ElapsedFormatter.format(Math.max(60_000L, shift), content.getTerminal().getElapsedUnits()));
         return TextTemplate.format(option.getTime() > 0 ? text.getOptionTimeMore() : text.getOptionTimeLess(), vars);
     }

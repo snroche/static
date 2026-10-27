@@ -47,6 +47,8 @@ Al despachar, se genera con seed una lista de **segmentos** con timestamp:
 - Cada opción tiene una tirada contra stats + rasgos + intel. Las probabilidades **no se muestran exactas**; el explorador las comunica en su voz ("esto me da mala espina").
 - **Timeout [placeholder: 15 min]:** si el operador no responde, el explorador decide solo según rasgos y confianza. Ausentarse no castiga duro, pero responder rinde más.
 - Eventos definidos en JSON: condiciones (zona, rasgos, flags de historia), opciones, resultados, textos.
+- **Situaciones de varios pasos:** un resultado puede llevar directo a otra situación (`next`), que solo existe como continuación. Algunas pasan una sola vez por partida.
+- **Precios:** una opción puede costar recursos (`cost`). Se paga con lo que lleva encima y, si no alcanza, del búnker; si no alcanza ni así, la opción no se ofrece. Después de cada situación, una línea de sistema dice en claro qué salió: recursos ganados, pagados o perdidos, lo encontrado, la herida.
 
 ### 4.3 Catch-up
 Al abrir la app, todos los segmentos vencidos se resuelven en orden y se vuelcan al log. Las situaciones vencidas sin respuesta se resuelven por timeout. No se simula nada en segundo plano.
@@ -128,6 +130,7 @@ La muerte es permanente y **no se puede revertir ni comprar** (decisión de mone
 
 **Reglas de justicia:**
 - **Ninguna muerte sin aviso.** Antes de una situación letal tiene que haber al menos una señal previa (herida, "esto me da mala espina", estrés alto) donde el operador podría haber retirado al explorador. La muerte tiene que sentirse como consecuencia de una decisión del jugador, no como azar.
+  - En la tarjeta de decisión, una opción arriesgada con mala espina que puede matar lo dice sin vueltas ("☠ esto puede matarlos"). Las opciones arriesgadas cuyo fracaso deja una herida seria son letales con aviso.
 - Con Vínculo alto, el explorador puede pedir volver ("quiero volver a casa, por favor").
 
 **El momento:**

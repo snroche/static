@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
         android:accessibilityLiveRegion="none"
-        android:maxLines="2"
+        android:maxLines="4"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

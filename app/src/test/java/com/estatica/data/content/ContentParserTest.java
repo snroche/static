@@ -45,7 +45,9 @@ public class ContentParserTest {
                     .anyMatch(z -> z.getEvents().contains(eventId)
                             || content.event(eventId).getBands().contains(z.getBand()))
                     || content.getStory().getPersonalMissions().stream()
-                    .anyMatch(m -> m.getEvent().equals(eventId));
+                    .anyMatch(m -> m.getEvent().equals(eventId))
+                    // Reached from the step before (the validator checks something leads there).
+                    || content.event(eventId).isFollowUp();
             assertTrue("event not used by any zone, band or personal mission: " + eventId, used);
         }
     }

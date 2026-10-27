@@ -611,11 +611,15 @@ public final class ContentValidator {
      */
     private void checkSpecialEvents() {
         java.util.Set<String> setsFlag = new java.util.HashSet<>();
+        java.util.Set<String> reached = new java.util.HashSet<>();
         for (EventDef e : content.getEvents().values()) {
             for (EventDef.Option o : e.getOptions()) {
                 for (EventDef.Outcome out : java.util.Arrays.asList(o.getSuccess(), o.getFailure())) {
                     if (out != null) {
                         setsFlag.addAll(out.getSetWorld());
+                        if (out.getNext() != null) {
+                            reached.add(out.getNext());
+                        }
                     }
                 }
             }
@@ -637,11 +641,31 @@ public final class ContentValidator {
                 check(setsFlag.contains(f), where + ": nothing sets world flag " + f);
             }
             // Rare, once-only and chained ones need somewhere to happen (story ones are placed by missions).
-            check(!e.isSpecial() || !e.getBands().isEmpty() || placed.contains(e.getId()), where + ": in no zone and no band");
+            check(e.isFollowUp() || !e.isSpecial() || !e.getBands().isEmpty() || placed.contains(e.getId()),
+                    where + ": in no zone and no band");
+            if (e.isFollowUp()) {
+                check(reached.contains(e.getId()), where + ": a follow-up nothing leads to");
+                check(e.getBands().isEmpty() && !placed.contains(e.getId()), where + ": a follow-up can't roll on its own");
+            }
+            boolean free = false;
+            for (EventDef.Option o : e.getOptions()) {
+                free |= o.getCost().isEmpty();
+                for (EventDef.Cost c : o.getCost()) {
+                    check(content.resource(c.getResource()) != null, where + ": unknown price " + c.getResource());
+                    check(c.getAmount() > 0, where + ": a price of nothing");
+                }
+            }
+            // Something they can always do, even with an empty bunker.
+            check(free, where + ": every option costs something");
             for (EventDef.Option o : e.getOptions()) {
                 for (EventDef.Outcome out : java.util.Arrays.asList(o.getSuccess(), o.getFailure())) {
                     if (out == null) {
                         continue;
+                    }
+                    if (out.getNext() != null) {
+                        EventDef next = content.event(out.getNext());
+                        check(next != null, where + ": leads to unknown " + out.getNext());
+                        check(next == null || next.isFollowUp(), where + ": leads to " + out.getNext() + ", not a follow-up");
                     }
                     check(out.getCue() == null || CUES.contains(out.getCue()), where + ": unknown cue " + out.getCue());
                     if (out.getGear() != null) {

@@ -106,9 +106,18 @@
       "GOOD": "looks easy",
       "UNSURE": "could go either way",
       "BAD": "bad feeling",
+      "DEADLY": "☠ bad feeling: this could kill them",
       "LOST": "lost in the static"
     },
-    "summaryRecalled": "Called {who} home. The order's on its way."
+    "summaryRecalled": "Called {who} home. The order's on its way.",
+    "outcomeTally": "{name}: {tally}.",
+    "tallyGain": "+{amount} {resource}",
+    "tallyPaid": "paid {amount} {resource}",
+    "tallyLost": "lost {amount} {resource}",
+    "tallyFound": "found {item}",
+    "tallyHurt": "{injury}",
+    "optionCost": "{label} [{cost}]",
+    "cantAfford": "{name} can't pay for that anymore: the bunker's short. Doing something else."
   },
   "bunker": {
     "retreatLabel": "Come back to the bunker",

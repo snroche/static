@@ -56,6 +56,17 @@ public final class ExpeditionResult {
         return Collections.unmodifiableList(worldFlags);
     }
 
+    private final Map<String, Integer> spent = new LinkedHashMap<>();
+
+    void spend(String resource, int amount) {
+        spent.merge(resource, amount, Integer::sum);
+    }
+
+    /** Paid out of the bunker's stock out there (what they carried didn't cover it). */
+    public Map<String, Integer> getSpent() {
+        return Collections.unmodifiableMap(spent);
+    }
+
     void plot(String fragmentId) {
         plotFragments.add(fragmentId);
     }

@@ -75,6 +75,10 @@ public final class ExpeditionRepository {
     @WorkerThread
     public void insertNew(Expedition expedition) {
         save(expedition);
+        insertSegments(expedition);
+    }
+
+    private void insertSegments(Expedition expedition) {
         List<ExpeditionSegmentEntity> segments = new ArrayList<>();
         List<Segment> source = expedition.getSegments();
         for (int i = 0; i < source.size(); i++) {
@@ -118,6 +122,12 @@ public final class ExpeditionRepository {
         e.partnerId = expedition.getPartnerId();
         e.thirdId = expedition.getThirdId();
         dao.upsert(e);
+        if (expedition.isSegmentsChanged()) {
+            // A multi-step situation rewrote the timeline.
+            dao.clearSegments(expedition.getId());
+            insertSegments(expedition);
+            expedition.markSegmentsSaved();
+        }
 
         dao.clearItems(expedition.getId());
         List<ExpeditionItemEntity> items = new ArrayList<>();

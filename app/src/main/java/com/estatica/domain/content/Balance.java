@@ -1348,9 +1348,15 @@ public final class Balance {
     public static final class Expedition {
         /** A situation seen this recently only comes up once the fresh ones run out. */
         private double eventRecentHours = 48;
+        /** Between one step of a multi-step situation and the next. */
+        private int followUpSeconds = 45;
 
         public double getEventRecentHours() {
             return eventRecentHours;
+        }
+
+        public long getFollowUpMillis() {
+            return Math.max(1, followUpSeconds) * 1000L;
         }
 
         private int situationTimeoutMinutes;

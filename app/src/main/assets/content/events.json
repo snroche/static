@@ -412,7 +412,8 @@
             "The car shifted when I got in. Pinned my leg."
           ],
           "injury": "serious",
-          "stress": 15
+          "stress": 15,
+          "lethal": true
         }
       },
       {
@@ -750,7 +751,8 @@
           ],
           "injury": "serious",
           "stress": 20,
-          "lethal": true
+          "lethal": true,
+          "lose": 1.0
         }
       },
       {
@@ -989,7 +991,8 @@
           "text": [
             "They wanted nothing to do with me. Took what I was carrying."
           ],
-          "stress": 20
+          "stress": 20,
+          "lose": 1.0
         }
       },
       {
@@ -1099,7 +1102,8 @@
             "Bad idea. Very bad idea."
           ],
           "stress": 15,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       }
     ]
@@ -1286,7 +1290,8 @@
             "Slipped off the roof."
           ],
           "injury": "serious",
-          "stress": 15
+          "stress": 15,
+          "lethal": true
         }
       },
       {
@@ -1470,7 +1475,8 @@
             "He wasn't that hurt. Stuck something in my arm."
           ],
           "injury": "serious",
-          "stress": 20
+          "stress": 20,
+          "lethal": true
         }
       },
       {
@@ -2683,7 +2689,8 @@
             "Slipped on the rungs."
           ],
           "stress": 8,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       }
     ]
@@ -2719,7 +2726,8 @@
             "They took everything and ran me off."
           ],
           "injury": "light",
-          "stress": 25
+          "stress": 25,
+          "lose": 1.0
         }
       },
       {
@@ -4109,7 +4117,8 @@
             "The arm swung. I fell."
           ],
           "stress": 8,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       },
       {
@@ -5537,7 +5546,13 @@
             "She short-changed me and I noticed too late."
           ],
           "stress": 4
-        }
+        },
+        "cost": [
+          {
+            "resource": "batteries",
+            "amount": 2
+          }
+        ]
       },
       {
         "id": "haggle",
@@ -5566,8 +5581,15 @@
           "text": [
             "She packed up and left. No deal."
           ],
-          "stress": 4
-        }
+          "stress": 4,
+          "refund": true
+        },
+        "cost": [
+          {
+            "resource": "batteries",
+            "amount": 1
+          }
+        ]
       },
       {
         "id": "pass",
@@ -6288,8 +6310,15 @@
           "text": [
             "Nobody answered. The chickens stared at me."
           ],
-          "stress": 4
-        }
+          "stress": 4,
+          "refund": true
+        },
+        "cost": [
+          {
+            "resource": "batteries",
+            "amount": 1
+          }
+        ]
       },
       {
         "id": "steal",
@@ -6774,7 +6803,8 @@
             "It caught us halfway. I don't remember the next part."
           ],
           "stress": 14,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       }
     ]
@@ -6899,7 +6929,8 @@
             "They knew we were following. They waited for us."
           ],
           "stress": 12,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       },
       {
@@ -7043,7 +7074,8 @@
             "They came closer. Much closer."
           ],
           "stress": 14,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       }
     ]
@@ -7142,7 +7174,8 @@
             "Something brushed my leg down there. I came up too fast and hit my head."
           ],
           "stress": 12,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       },
       {
@@ -7206,7 +7239,8 @@
             "The hull shifted while I was inside."
           ],
           "stress": 12,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       },
       {
@@ -7456,7 +7490,8 @@
             "Sparks. The whole panel went up. We ran."
           ],
           "stress": 12,
-          "injury": "serious"
+          "injury": "serious",
+          "lethal": true
         }
       },
       {
@@ -9635,6 +9670,2860 @@
             "He waves, and is gone over the roofs."
           ],
           "stress": -2
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_hum_1",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "night": true,
+    "once": true,
+    "chance": 0.5,
+    "cue": "EERIE",
+    "intro": [
+      "There's a hum coming from the substation. Low. I can feel it in my teeth.",
+      "The grid's been dead for years."
+    ],
+    "options": [
+      {
+        "id": "closer",
+        "label": "Go in and find out",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "The gate's open. Like someone expected me."
+          ],
+          "stress": 6,
+          "next": "ch_hum_2"
+        },
+        "failure": {
+          "text": [
+            "Got as far as the gate. My legs wouldn't. I'm sorry."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "mark",
+        "label": "Mark it on the map and walk away",
+        "stat": "wits",
+        "difficulty": 2,
+        "time": 0.04,
+        "success": {
+          "text": [
+            "Marked it. Didn't look back. Could still hear it two blocks on."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Walked away. Took the long way round, just to not pass it again."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_hum_2",
+    "followUp": true,
+    "cue": "EERIE",
+    "intro": [
+      "Transformers are cold. Still humming. In the middle of the floor, a chair facing the wall.",
+      "And a radio on the chair. It's playing our frequency. It's playing YOU. Something you said yesterday."
+    ],
+    "options": [
+      {
+        "id": "unplug",
+        "label": "Pull the batteries out of that thing",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Silence. Real silence. It was a recorder, wired to the antenna on the roof. Someone's been listening to us."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "setWorld": [
+            "hum_silenced"
+          ],
+          "memory": "the radio in the substation that had our voices on it",
+          "stress": 8
+        },
+        "failure": {
+          "text": [
+            "The door slammed behind me the second I touched it."
+          ],
+          "stress": 16,
+          "next": "ch_hum_3"
+        }
+      },
+      {
+        "id": "listen",
+        "label": "Listen to what else it recorded",
+        "stat": "nerve",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Days of us. Then other voices, other bunkers, all saying the same things we say.",
+            "Then the tape runs out and the hum gets louder. I'm leaving."
+          ],
+          "stress": 18,
+          "memory": "hearing other bunkers on the tape, saying our words",
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The hum got into my head. I don't remember walking out. I'm outside now. I think."
+          ],
+          "stress": 24,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Back out slowly. Now.",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Out. Didn't turn my back on the chair. Don't ask me why."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Backed into a cabinet. The radio stopped playing. Then it said my name."
+          ],
+          "stress": 18
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_hum_3",
+    "followUp": true,
+    "cue": "EERIE",
+    "intro": [
+      "Door's stuck. The hum's coming from under the floor now. It's getting louder.",
+      "There's a window, high up. And a hatch in the floor."
+    ],
+    "options": [
+      {
+        "id": "window",
+        "label": "Climb out the window, whatever it takes",
+        "stat": "endurance",
+        "difficulty": 7,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Cut my hands on the glass. Don't care. I'm out. I'm out."
+          ],
+          "injury": "light",
+          "stress": 10
+        },
+        "failure": {
+          "text": [
+            "The frame gave. I fell wrong."
+          ],
+          "injury": "serious",
+          "lethal": true,
+          "stress": 20
+        }
+      },
+      {
+        "id": "hatch",
+        "label": "Open the hatch and face it",
+        "stat": "nerve",
+        "difficulty": 8,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Stairs. A generator room. Running. Someone's been feeding it diesel. Recently.",
+            "Took their spare can. If they want it back, they know where to find us. That's the problem."
+          ],
+          "loot": [
+            {
+              "resource": "fuel",
+              "min": 3,
+              "max": 5
+            }
+          ],
+          "stress": 14,
+          "setWorld": [
+            "hum_silenced"
+          ],
+          "memory": "the generator under the substation that someone keeps fed"
+        },
+        "failure": {
+          "text": [
+            "It was dark down there. Something was breathing in the dark."
+          ],
+          "injury": "serious",
+          "lethal": true,
+          "stress": 30
+        }
+      },
+      {
+        "id": "wait",
+        "label": "Sit tight and wait for the hum to stop",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "It stopped at dawn. So did the lock. Walked out like nothing. Nothing was fine."
+          ],
+          "stress": 16,
+          "time": 0.2
+        },
+        "failure": {
+          "text": [
+            "It didn't stop. It never stopped. I kicked the door until it gave."
+          ],
+          "stress": 28,
+          "injury": "light",
+          "time": 0.25
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_bells_1",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "weather": [
+      "FOG"
+    ],
+    "cue": "EERIE",
+    "intro": [
+      "A church bell. Ringing in the fog. Slow, like a funeral.",
+      "Nobody's rung a bell in this city in years."
+    ],
+    "options": [
+      {
+        "id": "go",
+        "label": "Follow the bell",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Found the church. The doors are open. The bell stopped when I stepped in."
+          ],
+          "next": "ch_bells_2"
+        },
+        "failure": {
+          "text": [
+            "Lost it in the fog. It kept ringing from the other side of me. Every side."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "count",
+        "label": "Stay put and count the rings",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Eleven. Then nothing. Eleven. Like the last time I heard it. I never heard it before."
+          ],
+          "stress": 8,
+          "memory": "the bell in the fog that rang eleven"
+        },
+        "failure": {
+          "text": [
+            "Lost count. Started again. Lost count. I'm moving on."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "away",
+        "label": "Head away from it",
+        "stat": "stealth",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Went the other way. Fog's thinner there. Good."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Every way I went, the bell was ahead of me."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_bells_2",
+    "followUp": true,
+    "cue": "EERIE",
+    "intro": [
+      "The bell rope's tied to a clock motor. Somebody set this up.",
+      "And the pews. Coats on every pew, folded. Each one with a paper tag. Names."
+    ],
+    "options": [
+      {
+        "id": "names",
+        "label": "Read the names",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Strangers. Strangers. Then a tag with my name on it. My handwriting.",
+            "I didn't write it. I didn't."
+          ],
+          "stress": 20,
+          "memory": "the coat in the church with my name on it",
+          "cue": "EERIE"
+        },
+        "failure": {
+          "text": [
+            "Too dark to read. I didn't want to anyway."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "sacristy",
+        "label": "Search the sacristy",
+        "stat": "stealth",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Candles, wine, a first-aid box nobody opened. Someone keeps this place."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "item": "rosario"
+        },
+        "failure": {
+          "text": [
+            "The sacristy door opened from the inside before I touched it. I ran."
+          ],
+          "stress": 16,
+          "injury": "light"
+        }
+      },
+      {
+        "id": "coat",
+        "label": "Take a coat. It's cold",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Warm. Fits. Pocket had a candy and a note: 'for the walk home'."
+          ],
+          "item": "caramelos",
+          "stress": 6
+        },
+        "failure": {
+          "text": [
+            "Put it on and it was wet. Inside. Took it off. My shirt is wet now too."
+          ],
+          "stress": 14
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_cellar_1",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "once": true,
+    "chance": 0.45,
+    "cue": "EERIE",
+    "intro": [
+      "Knocking. Under a manhole. Three, two, three.",
+      "Somebody's down there."
+    ],
+    "options": [
+      {
+        "id": "open",
+        "label": "Lift the cover",
+        "stat": "endurance",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "It's heavy. Got it. A girl's face looking up. Fifteen, maybe. She doesn't scream."
+          ],
+          "next": "ch_cellar_2"
+        },
+        "failure": {
+          "text": [
+            "Couldn't shift it. The knocking stopped. I told myself she found another way out."
+          ],
+          "stress": 14
+        }
+      },
+      {
+        "id": "knock",
+        "label": "Knock back the same rhythm",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Three, two, three. A pause. Then she pushes from below and I pull. A girl. Thin."
+          ],
+          "next": "ch_cellar_2"
+        },
+        "failure": {
+          "text": [
+            "Knocked. Silence. Knocked again. Nothing. Maybe I scared them."
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Not our business. Keep moving",
+        "stat": "stealth",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Walked on. The knocking followed me for a block."
+          ],
+          "stress": 8
+        },
+        "failure": {
+          "text": [
+            "Walked on. I can still hear it. I'll hear it tonight."
+          ],
+          "stress": 14
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_cellar_2",
+    "followUp": true,
+    "intro": [
+      "Her name's Abril. Been in the drains since the water came up. Days.",
+      "She's got a ring of keys she won't let go of."
+    ],
+    "options": [
+      {
+        "id": "feed",
+        "label": "Share our food with her",
+        "stat": "nerve",
+        "difficulty": 2,
+        "cost": [
+          {
+            "resource": "rations",
+            "amount": 2
+          }
+        ],
+        "success": {
+          "text": [
+            "She ate like it was a crime. Then she gave me the keys.",
+            "\"The pharmacy on the corner. The back room. I couldn't go alone.\""
+          ],
+          "bond": 3,
+          "setWorld": [
+            "cellar_girl_helped"
+          ],
+          "next": "ch_cellar_3"
+        },
+        "failure": {
+          "text": [
+            "She took it and ran. Kept the keys. Can't blame her."
+          ],
+          "setWorld": [
+            "cellar_girl_helped"
+          ]
+        }
+      },
+      {
+        "id": "bunker",
+        "label": "Tell her how to find the bunker",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Drew her the way on her arm with a pen. She read it three times.",
+            "She said she'd think about it. She gave me one key. 'For trusting me.'"
+          ],
+          "setWorld": [
+            "cellar_girl_helped"
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "She laughed. 'Underground? I've had enough of underground.' Then she was gone."
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "keys",
+        "label": "Ask for the keys",
+        "stat": "nerve",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "She looked at me a long time. Then handed them over. I hope I'm what she thinks."
+          ],
+          "next": "ch_cellar_3"
+        },
+        "failure": {
+          "text": [
+            "She bolted. Back into the drain. I shouldn't have asked like that."
+          ],
+          "stress": 10,
+          "setWorld": [
+            "cellar_girl_scared"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_cellar_3",
+    "followUp": true,
+    "intro": [
+      "The pharmacy. The back room's locked tight. Keys fit.",
+      "Shelves. Full shelves. But the floor in front of them is wired. A tripwire, old."
+    ],
+    "options": [
+      {
+        "id": "step",
+        "label": "Step over the wire, carefully",
+        "stat": "stealth",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Over. Filled the bag. Over again. Didn't breathe once, I think."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 4,
+              "max": 6
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "memory": "the pharmacy Abril gave us the keys to"
+        },
+        "failure": {
+          "text": [
+            "Caught it with my heel. Shelf came down on my shoulder."
+          ],
+          "injury": "light",
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "disarm",
+        "label": "Disarm it first",
+        "stat": "craft",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "A shotgun shell in a pipe. Took it apart. Took everything. Took the shell too."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 4,
+              "max": 6
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "It went off. Missed me by a hand. My ears are ringing."
+          ],
+          "injury": "serious",
+          "stress": 22,
+          "lethal": true
+        }
+      },
+      {
+        "id": "grab",
+        "label": "Grab what's near the door and go",
+        "stat": "wits",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Two boxes from the shelf by the door. Enough. Not worth dying for more."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Grabbed a box. It was empty. Someone got here before the wire did."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "r_abril_wall",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "requiresWorld": [
+      "cellar_girl_helped"
+    ],
+    "once": true,
+    "chance": 0.5,
+    "cue": "FIND",
+    "intro": [
+      "Writing on a wall in fresh chalk. 'RADIO PEOPLE.' An arrow.",
+      "Signed with a drawing of a key."
+    ],
+    "options": [
+      {
+        "id": "follow",
+        "label": "Follow the arrows",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Arrow after arrow. A boarded-up kiosk with a bag inside. A note: 'from the drain. A.'",
+            "She made it."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 4
+            },
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "memory": "the chalk arrows Abril left for us",
+          "cue": "WARM",
+          "bond": 2
+        },
+        "failure": {
+          "text": [
+            "Lost the arrows where someone washed the wall. Found her bag anyway, by luck. Half of it."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Leave it. It might not be for us",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Left it. Drew a little radio next to the key, so she knows we saw it."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Left it. Felt wrong all the way."
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_pack_1",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "chance": 0.6,
+    "intro": [
+      "Dogs. Not one. Seven, eight. Thin. They've been walking behind me for a while.",
+      "They stop when I stop."
+    ],
+    "options": [
+      {
+        "id": "food",
+        "label": "Throw them food and back off",
+        "stat": "nerve",
+        "difficulty": 3,
+        "cost": [
+          {
+            "resource": "rations",
+            "amount": 1
+          }
+        ],
+        "success": {
+          "text": [
+            "They went for it. Fought over it. I walked, didn't run. You never run."
+          ]
+        },
+        "failure": {
+          "text": [
+            "They ate it and kept following. Closer now."
+          ],
+          "stress": 10,
+          "next": "ch_pack_2"
+        }
+      },
+      {
+        "id": "climb",
+        "label": "Get up on a car roof",
+        "stat": "endurance",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Up on a bus. They circled for an hour and lost interest. Lost the hour too."
+          ],
+          "time": 0.15,
+          "stress": 8
+        },
+        "failure": {
+          "text": [
+            "Slipped on the bonnet. They're on me. Running."
+          ],
+          "stress": 14,
+          "next": "ch_pack_2"
+        }
+      },
+      {
+        "id": "run",
+        "label": "Run for it",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Ran. Found a door. Shut it. They howled at it for a while."
+          ],
+          "stress": 12
+        },
+        "failure": {
+          "text": [
+            "Ran. Wrong street. Dead end."
+          ],
+          "stress": 18,
+          "next": "ch_pack_2"
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_pack_2",
+    "followUp": true,
+    "intro": [
+      "Cornered. A stairwell. They're at the bottom. Growling now.",
+      "There's a fire extinguisher. And a door at the top. Locked."
+    ],
+    "options": [
+      {
+        "id": "spray",
+        "label": "Blast them with the extinguisher",
+        "stat": "nerve",
+        "difficulty": 5,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "White cloud. They scattered, yelping. I was down and gone before it cleared."
+          ],
+          "stress": 12
+        },
+        "failure": {
+          "text": [
+            "It was empty. Just a cough of powder. They came up."
+          ],
+          "injury": "serious",
+          "stress": 26,
+          "lethal": true
+        }
+      },
+      {
+        "id": "door",
+        "label": "Break the door at the top",
+        "stat": "endurance",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "Shoulder, shoulder, shoulder. It gave. Shut it behind me. Hands won't stop shaking."
+          ],
+          "stress": 16
+        },
+        "failure": {
+          "text": [
+            "It wouldn't give. One got my leg before I kicked it off."
+          ],
+          "injury": "serious",
+          "stress": 24
+        }
+      },
+      {
+        "id": "fire",
+        "label": "Light a fire on the stairs",
+        "stat": "craft",
+        "difficulty": 5,
+        "cost": [
+          {
+            "resource": "fuel",
+            "amount": 1
+          }
+        ],
+        "success": {
+          "text": [
+            "Paper, a chair, the fuel I had. They backed off from the flames. I went out the window."
+          ],
+          "stress": 10
+        },
+        "failure": {
+          "text": [
+            "Couldn't get it going. Wet. I'm waiting them out, on the top step."
+          ],
+          "stress": 20,
+          "time": 0.25
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_bridge_1",
+    "bands": [
+      "medium"
+    ],
+    "once": true,
+    "chance": 0.5,
+    "intro": [
+      "A man on the bridge. Outside the railing. Looking down at the river.",
+      "He hasn't seen me yet."
+    ],
+    "options": [
+      {
+        "id": "talk",
+        "label": "Talk to him",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "He saw me. He didn't move. He said 'don't'. But he's listening."
+          ],
+          "next": "ch_bridge_2"
+        },
+        "failure": {
+          "text": [
+            "He saw me and stepped back to the edge. I stopped. I stayed where I was."
+          ],
+          "stress": 14,
+          "next": "ch_bridge_2"
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Leave him alone",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Walked on. Didn't look back. I will think about this."
+          ],
+          "stress": 16,
+          "memory": "the man on the bridge I walked past"
+        },
+        "failure": {
+          "text": [
+            "Walked on. Heard nothing. That's worse."
+          ],
+          "stress": 20,
+          "memory": "the man on the bridge I walked past"
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_bridge_2",
+    "followUp": true,
+    "intro": [
+      "He asks me why. Why bother. Everyone's gone.",
+      "He wants an answer. A real one."
+    ],
+    "options": [
+      {
+        "id": "bunker",
+        "label": "Tell him about the bunker. About us",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Told him about the radio. About you. That someone's still keeping the lights on.",
+            "He climbed back over. Gave me his compass. 'You'll need it more.'"
+          ],
+          "gear": {
+            "id": "gear_brujula",
+            "rarity": "RARE",
+            "condition": 90
+          },
+          "bond": 3,
+          "setWorld": [
+            "bridge_saved"
+          ],
+          "memory": "the man I talked down from the bridge",
+          "cue": "WARM"
+        },
+        "failure": {
+          "text": [
+            "He listened. He said thank you. Then he looked at the water for a long time.",
+            "I don't know what he did after I left. I keep telling myself."
+          ],
+          "stress": 26,
+          "memory": "the man on the bridge"
+        }
+      },
+      {
+        "id": "sit",
+        "label": "Sit on the railing beside him and say nothing",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "We sat. An hour. Then he said 'my legs are cold' and climbed back. We laughed. God.",
+            "He said he'd keep an eye out for us."
+          ],
+          "setWorld": [
+            "bridge_saved"
+          ],
+          "stress": -6,
+          "time": 0.2,
+          "memory": "the hour on the bridge"
+        },
+        "failure": {
+          "text": [
+            "We sat. He said 'thank you for sitting'. I looked away for a second."
+          ],
+          "stress": 30,
+          "time": 0.15,
+          "memory": "the man on the bridge"
+        }
+      },
+      {
+        "id": "grab",
+        "label": "Grab him and pull him over",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Got him by the collar. We both fell on the right side. He punched me. Then he cried."
+          ],
+          "injury": "light",
+          "setWorld": [
+            "bridge_saved"
+          ],
+          "memory": "pulling the man off the bridge"
+        },
+        "failure": {
+          "text": [
+            "He fought. We both went over the rail. The cold. I got out. I got out."
+          ],
+          "injury": "serious",
+          "stress": 30,
+          "lethal": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "r_bridge_man",
+    "bands": [
+      "medium"
+    ],
+    "requiresWorld": [
+      "bridge_saved"
+    ],
+    "once": true,
+    "chance": 0.5,
+    "cue": "WARM",
+    "intro": [
+      "Someone on a rooftop. Waving. Both arms.",
+      "It's him. The man from the bridge. He's got a garden up there."
+    ],
+    "options": [
+      {
+        "id": "up",
+        "label": "Go up and say hello",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Tomatoes. On a roof. He wouldn't let me leave without a bag.",
+            "He said 'I'm glad you were stupid that day'."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 4,
+              "max": 6
+            }
+          ],
+          "bond": 2,
+          "memory": "the rooftop garden of the man from the bridge",
+          "cue": "WARM"
+        },
+        "failure": {
+          "text": [
+            "Stairs were blocked. He lowered a bucket on a rope instead."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        }
+      },
+      {
+        "id": "wave",
+        "label": "Wave back and keep going",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Waved. He waved until I turned the corner."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Waved. He waved until I turned the corner."
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_steps_1",
+    "bands": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "night": true,
+    "chance": 0.6,
+    "cue": "EERIE",
+    "intro": [
+      "Footsteps behind me. Same pace as mine.",
+      "I stopped. They stopped. One step late."
+    ],
+    "options": [
+      {
+        "id": "turn",
+        "label": "Stop and turn around",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Turned. Nobody. Street's empty all the way back. But there are footprints in the dust."
+          ],
+          "stress": 12,
+          "next": "ch_steps_2"
+        },
+        "failure": {
+          "text": [
+            "Couldn't make myself turn. Walked faster. They walked faster."
+          ],
+          "stress": 20
+        }
+      },
+      {
+        "id": "hide",
+        "label": "Duck into a doorway and wait",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Waited ten minutes. Nothing passed. Then I heard it walk away. The other way."
+          ],
+          "stress": 10
+        },
+        "failure": {
+          "text": [
+            "Waited. The steps came right up to the doorway. And stopped. I didn't breathe."
+          ],
+          "stress": 24,
+          "next": "ch_steps_2"
+        }
+      },
+      {
+        "id": "speed",
+        "label": "Walk faster. Don't look back",
+        "stat": "endurance",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Walked till the steps were gone. Don't know when they stopped."
+          ],
+          "stress": 8
+        },
+        "failure": {
+          "text": [
+            "Faster and faster. So did they. I'm running now."
+          ],
+          "stress": 18
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_steps_2",
+    "followUp": true,
+    "cue": "EERIE",
+    "intro": [
+      "The footprints. They come up to where I stood.",
+      "Then they keep going. Past me. Ahead. Toward an open manhole."
+    ],
+    "options": [
+      {
+        "id": "follow",
+        "label": "Follow them to the manhole",
+        "stat": "wits",
+        "difficulty": 7,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Down the ladder. A dry tunnel. Someone's camp, long cold. A tin box.",
+            "There were footprints going down. None coming back up."
+          ],
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 3
+            }
+          ],
+          "item": "postal",
+          "stress": 18,
+          "memory": "the footprints that walked ahead of me"
+        },
+        "failure": {
+          "text": [
+            "A rung was missing. I fell in the dark."
+          ],
+          "injury": "serious",
+          "stress": 26,
+          "lethal": true
+        }
+      },
+      {
+        "id": "scuff",
+        "label": "Scuff them out and go another way",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Scuffed out every one. Went around the long way. Felt silly. Didn't feel silly."
+          ],
+          "time": 0.1
+        },
+        "failure": {
+          "text": [
+            "Scuffed them out. Behind me, I heard a new one land in the dust."
+          ],
+          "stress": 22,
+          "time": 0.1
+        }
+      },
+      {
+        "id": "call",
+        "label": "Call out: who's there?",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Nobody answered. Then, from the manhole, very quietly, my own voice: 'who's there?'"
+          ],
+          "stress": 26,
+          "cue": "EERIE",
+          "memory": "my voice coming back out of the manhole"
+        },
+        "failure": {
+          "text": [
+            "Nobody answered. I'm going. I'm going now."
+          ],
+          "stress": 14
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_metro_1",
+    "bands": [
+      "medium"
+    ],
+    "weather": [
+      "RAIN",
+      "STORM"
+    ],
+    "once": true,
+    "chance": 0.5,
+    "intro": [
+      "Rain's pouring into the subway entrance. But there's light down there.",
+      "Electric light."
+    ],
+    "options": [
+      {
+        "id": "down",
+        "label": "Go down and look",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "A train at the platform. Lights on. Doors open. No driver."
+          ],
+          "next": "ch_metro_2"
+        },
+        "failure": {
+          "text": [
+            "Halfway down the steps the light went off. Back up. Fast."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "pass",
+        "label": "Not today",
+        "stat": "wits",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Kept to the street. Rain's bad enough."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Kept to the street. The light stayed on behind me. Like it was waiting."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_metro_2",
+    "followUp": true,
+    "cue": "EERIE",
+    "intro": [
+      "The carriage lights hum. Seats, bags, an umbrella. Like everyone just stood up.",
+      "Water's coming in at the far end of the platform."
+    ],
+    "options": [
+      {
+        "id": "search",
+        "label": "Search the carriages",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Bags full of somebody's life. Took what's useful. Left the photos."
+          ],
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "components",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "item": "naipes"
+        },
+        "failure": {
+          "text": [
+            "The doors closed behind me. With a chime. The train's moving."
+          ],
+          "stress": 24,
+          "next": "ch_metro_3"
+        }
+      },
+      {
+        "id": "cab",
+        "label": "Check the driver's cab",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "A battery bank keeps it lit. Pulled half of it. Lights dimmed. Better that way."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 3,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Touched the panel. Sparks, water, my arm went dead for a minute."
+          ],
+          "injury": "light",
+          "stress": 12
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Get out before the water does",
+        "stat": "wits",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Up the stairs. The lights went off behind me as I reached the street."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Up the stairs. Took one look back. Someone was sitting in the carriage now."
+          ],
+          "stress": 18
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_metro_3",
+    "followUp": true,
+    "intro": [
+      "It stopped in the tunnel. Lights off. Water's coming in under the doors.",
+      "Up to my ankles. Rising."
+    ],
+    "options": [
+      {
+        "id": "doors",
+        "label": "Pry the doors open",
+        "stat": "endurance",
+        "difficulty": 7,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Got them open. Waded back along the rails in the dark. Never been so glad to see rain."
+          ],
+          "stress": 14,
+          "injury": "light"
+        },
+        "failure": {
+          "text": [
+            "They wouldn't. The water kept coming."
+          ],
+          "injury": "serious",
+          "lethal": true,
+          "stress": 30
+        }
+      },
+      {
+        "id": "hatch",
+        "label": "Find the roof hatch",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Emergency hatch. Out on the roof, crawled to a service door. Out."
+          ],
+          "stress": 12
+        },
+        "failure": {
+          "text": [
+            "Couldn't find it in the dark. Found it in the end. Swallowed half the tunnel."
+          ],
+          "injury": "light",
+          "stress": 20
+        }
+      },
+      {
+        "id": "wait",
+        "label": "Climb on the seats and wait",
+        "stat": "nerve",
+        "difficulty": 6,
+        "success": {
+          "text": [
+            "It stopped rising at my knees. Then it drained. Walked out at dawn."
+          ],
+          "stress": 18,
+          "time": 0.3
+        },
+        "failure": {
+          "text": [
+            "It rose past the seats. I swam for the light."
+          ],
+          "injury": "serious",
+          "stress": 28,
+          "time": 0.3
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_mast_1",
+    "bands": [
+      "long"
+    ],
+    "once": true,
+    "chance": 0.5,
+    "cue": "EERIE",
+    "intro": [
+      "A radio mast on a hill. A cabin at the foot of it. Lamp in the window.",
+      "Someone's keeping a light on out here."
+    ],
+    "options": [
+      {
+        "id": "knock",
+        "label": "Knock on the cabin door",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "No answer. Door's open. Lamp's warm. Kettle's warm."
+          ],
+          "next": "ch_mast_2"
+        },
+        "failure": {
+          "text": [
+            "Knocked. The lamp went out. I left."
+          ],
+          "stress": 14
+        }
+      },
+      {
+        "id": "watch",
+        "label": "Watch the cabin a while first",
+        "stat": "stealth",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Nobody came or went in an hour. The lamp never flickered. I'm going in."
+          ],
+          "time": 0.1,
+          "next": "ch_mast_2"
+        },
+        "failure": {
+          "text": [
+            "Watched. Something watched back from the window. I left."
+          ],
+          "stress": 16
+        }
+      },
+      {
+        "id": "mast",
+        "label": "Climb the mast for parts instead",
+        "stat": "endurance",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Pulled the dish feed and a box of relays. Good haul. The lamp watched me the whole time."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 3,
+              "max": 4
+            },
+            {
+              "resource": "chips",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "stress": 6
+        },
+        "failure": {
+          "text": [
+            "Ice on the rungs."
+          ],
+          "injury": "serious",
+          "stress": 20,
+          "lethal": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_mast_2",
+    "followUp": true,
+    "cue": "EERIE",
+    "intro": [
+      "A logbook on the table. Radio frequencies, times, the weather.",
+      "The last entry is today. The handwriting is mine."
+    ],
+    "options": [
+      {
+        "id": "read",
+        "label": "Read the last page",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "It says I came in, read the last page, and left with the logbook.",
+            "It says that's what I'll do. I'm doing it. I don't want to."
+          ],
+          "stress": 24,
+          "memory": "the logbook in the cabin in my handwriting",
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 2,
+              "max": 2
+            }
+          ],
+          "cue": "EERIE"
+        },
+        "failure": {
+          "text": [
+            "I tried to read it. The words kept sliding. I left it open."
+          ],
+          "stress": 18
+        }
+      },
+      {
+        "id": "burn",
+        "label": "Burn it in the stove",
+        "stat": "nerve",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Burned it. The lamp went out when the last page did. Took their tinned food. Ran."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ],
+          "stress": 12,
+          "memory": "burning the logbook in the cabin"
+        },
+        "failure": {
+          "text": [
+            "It wouldn't catch. Wet pages. Dry room. I left it."
+          ],
+          "stress": 20
+        }
+      },
+      {
+        "id": "take",
+        "label": "Take the batteries and the lamp, leave the book",
+        "stat": "craft",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Lamp runs on a battery pack. Took it. The book stays. The book is not my problem."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Took the lamp. Behind me, a page turned."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "stress": 16
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_shop_1",
+    "bands": [
+      "short"
+    ],
+    "once": true,
+    "chance": 0.5,
+    "cue": "EERIE",
+    "intro": [
+      "A department store, doors open. Mannequins in the window.",
+      "All of them facing the street."
+    ],
+    "options": [
+      {
+        "id": "in",
+        "label": "Go in and look for clothes",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Coats, boots, a pharmacy counter. And the mannequins. All facing the door I came in."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "next": "ch_shop_2"
+        },
+        "failure": {
+          "text": [
+            "Went in. Came out. Something about the window. I can't say."
+          ],
+          "stress": 10
+        }
+      },
+      {
+        "id": "pass",
+        "label": "Walk past",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Walked past. Didn't look at the window."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Walked past. Their heads turned. They did. They DID."
+          ],
+          "stress": 18,
+          "cue": "EERIE"
+        }
+      }
+    ]
+  },
+  {
+    "id": "ch_shop_2",
+    "followUp": true,
+    "cue": "EERIE",
+    "intro": [
+      "Upstairs. I came back down for the pharmacy counter.",
+      "The mannequins are on the stairs now. Facing up. Facing me."
+    ],
+    "options": [
+      {
+        "id": "through",
+        "label": "Walk through them to the pharmacy",
+        "stat": "nerve",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Walked between them. Didn't touch them. Filled the bag at the counter. Walked out between them."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 2,
+              "max": 4
+            },
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "stress": 16,
+          "memory": "walking between the mannequins"
+        },
+        "failure": {
+          "text": [
+            "One fell against me. Just plastic. I screamed anyway. Fell down the stairs."
+          ],
+          "injury": "light",
+          "stress": 22
+        }
+      },
+      {
+        "id": "window",
+        "label": "Out the upstairs window",
+        "stat": "endurance",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "Dropped to the awning, then the street. Not going back in there."
+          ],
+          "stress": 8
+        },
+        "failure": {
+          "text": [
+            "Landed badly."
+          ],
+          "injury": "light",
+          "stress": 10
+        }
+      },
+      {
+        "id": "look",
+        "label": "Look at them properly",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Wires. Fishing line, pulleys. Someone's been moving them. Someone who wanted the place to themselves."
+          ],
+          "stress": 6,
+          "memory": "the mannequins on fishing line"
+        },
+        "failure": {
+          "text": [
+            "I looked too long. When I looked up, one was closer."
+          ],
+          "stress": 24,
+          "cue": "EERIE"
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_wedding",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "once": true,
+    "chance": 0.35,
+    "intro": [
+      "A wedding hall. The table's still set. Eighty places. A cake, gone to stone.",
+      "One place card at the head of the table says 'RADIO'."
+    ],
+    "options": [
+      {
+        "id": "sit",
+        "label": "Sit down a minute",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Sat. Poured an imaginary glass. Toasted you. Felt better than it should."
+          ],
+          "stress": -10,
+          "memory": "the toast at the empty wedding"
+        },
+        "failure": {
+          "text": [
+            "Sat. Felt like eighty people were looking at me. Got up."
+          ],
+          "stress": 12,
+          "cue": "EERIE"
+        }
+      },
+      {
+        "id": "kitchen",
+        "label": "Raid the kitchen",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Tins. A whole shelf of tins nobody wanted for a wedding."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Kitchen's been raided. Took the last two tins."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        }
+      },
+      {
+        "id": "card",
+        "label": "Take the place card",
+        "stat": "wits",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "It's in my pocket. I'll give it to you."
+          ],
+          "item": "postal"
+        },
+        "failure": {
+          "text": [
+            "It's in my pocket. I'll give it to you."
+          ],
+          "item": "postal"
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_camel",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "once": true,
+    "chance": 0.3,
+    "intro": [
+      "There's a camel in the street.",
+      "I'm serious. A camel. Must be from the zoo. It's eating a hedge."
+    ],
+    "options": [
+      {
+        "id": "feed",
+        "label": "Give it something",
+        "stat": "nerve",
+        "difficulty": 2,
+        "cost": [
+          {
+            "resource": "rations",
+            "amount": 1
+          }
+        ],
+        "success": {
+          "text": [
+            "It ate out of my hand and followed me two blocks. Then went back to the hedge. Best day."
+          ],
+          "stress": -12,
+          "memory": "the camel in the street",
+          "cue": "WARM"
+        },
+        "failure": {
+          "text": [
+            "It spat at me. Fair."
+          ],
+          "stress": -4
+        }
+      },
+      {
+        "id": "follow",
+        "label": "See where it goes",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "It knew the way to a water main still leaking. Animals know."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "memory": "following the camel to water"
+        },
+        "failure": {
+          "text": [
+            "It just walked in circles. So did I, for a while."
+          ],
+          "time": 0.08
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Leave it be",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Left it to its hedge. Didn't believe it myself."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Left it to its hedge. Didn't believe it myself."
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_payphone",
+    "bands": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "once": true,
+    "chance": 0.35,
+    "cue": "EERIE",
+    "intro": [
+      "A payphone. Ringing.",
+      "There's no line. The cable's cut. I can see the end of it."
+    ],
+    "options": [
+      {
+        "id": "answer",
+        "label": "Answer it",
+        "stat": "nerve",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Static. Then a woman, very far away: 'Is that the radio? Tell them we're still here.'",
+            "Then the dial tone. There's no line."
+          ],
+          "stress": 16,
+          "memory": "the phone call on a cut line",
+          "cue": "EERIE"
+        },
+        "failure": {
+          "text": [
+            "Breathing. Just breathing. Then it said my name, wrong, like it read it somewhere."
+          ],
+          "stress": 26,
+          "cue": "EERIE"
+        }
+      },
+      {
+        "id": "coins",
+        "label": "Break open the coin box",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "It stopped ringing when I touched it. Coins, and a circuit board worth keeping."
+          ],
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "It kept ringing while I worked. I gave up."
+          ],
+          "stress": 12
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Let it ring",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Let it ring. It rang until I was out of earshot. I think it stopped then."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Let it ring. It's still ringing. I can hear it from here."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_greenhouse",
+    "bands": [
+      "medium"
+    ],
+    "once": true,
+    "chance": 0.35,
+    "cue": "FIND",
+    "intro": [
+      "The botanical garden. The big glasshouse.",
+      "Half the panes are gone. It's green inside. Green and warm."
+    ],
+    "options": [
+      {
+        "id": "pick",
+        "label": "Pick what's edible",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Lemons. Beans gone wild. Herbs. I'm going to smell like this all week."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 4,
+              "max": 6
+            }
+          ],
+          "stress": -8,
+          "memory": "the glasshouse that kept growing"
+        },
+        "failure": {
+          "text": [
+            "Half of it's poison or ornamental. Got some. Not much."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        }
+      },
+      {
+        "id": "rest",
+        "label": "Lie down in the warm for a bit",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Fell asleep under a fig tree. Woke up and forgot, for a second. That was nice."
+          ],
+          "stress": -18,
+          "time": 0.12
+        },
+        "failure": {
+          "text": [
+            "Couldn't settle. Too quiet, too green."
+          ],
+          "time": 0.06
+        }
+      },
+      {
+        "id": "seeds",
+        "label": "Look for the seed store",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Labelled envelopes in a drawer. Seeds. For the hydroponics, if anyone knows how."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Seed drawer's empty. Someone knew to come here first."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_studio",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "once": true,
+    "chance": 0.35,
+    "cue": "EERIE",
+    "intro": [
+      "A TV studio. The news desk is still there.",
+      "A tape in the deck. Label says DO NOT AIR."
+    ],
+    "options": [
+      {
+        "id": "play",
+        "label": "Play it",
+        "stat": "wits",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "The anchor, sweating. 'If you are hearing this, stay inside. Do not trust the... '",
+            "She looks off camera. The tape stops."
+          ],
+          "stress": 20,
+          "memory": "the tape that said do not air",
+          "cue": "EERIE",
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Deck's dead. I'm almost glad."
+          ],
+          "stress": 4
+        }
+      },
+      {
+        "id": "strip",
+        "label": "Strip the equipment",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Broadcast gear. Real broadcast gear."
+          ],
+          "loot": [
+            {
+              "resource": "components",
+              "min": 3,
+              "max": 4
+            },
+            {
+              "resource": "chips",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Pulled a cable and the lights flickered. There's no power here."
+          ],
+          "stress": 14,
+          "cue": "EERIE"
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Leave the tape where it is",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Left it. Some things weren't meant to go out."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Left it. The deck clicked as I walked out. Rewinding."
+          ],
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_plane",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "once": true,
+    "chance": 0.35,
+    "cue": "FIND",
+    "intro": [
+      "A small plane. Nose-down in the park. Been here a long time.",
+      "The cockpit door is shut."
+    ],
+    "options": [
+      {
+        "id": "cockpit",
+        "label": "Open the cockpit",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Empty. The pilot walked away from this. Fuel in the tank, still."
+          ],
+          "loot": [
+            {
+              "resource": "fuel",
+              "min": 3,
+              "max": 5
+            }
+          ],
+          "memory": "the plane in the park"
+        },
+        "failure": {
+          "text": [
+            "Not empty. Not anymore. I closed it again."
+          ],
+          "stress": 22
+        }
+      },
+      {
+        "id": "luggage",
+        "label": "Go through the luggage",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Suitcases. Someone's holiday. A good jacket, a radio, chocolate."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "item": "radio_bolsillo"
+        },
+        "failure": {
+          "text": [
+            "Picked over. Only a broken umbrella and a paperback."
+          ],
+          "item": "libro"
+        }
+      },
+      {
+        "id": "wing",
+        "label": "Strip the instruments",
+        "stat": "craft",
+        "difficulty": 6,
+        "risk": "RISKY",
+        "success": {
+          "text": [
+            "Avionics. Fine work. You'll like these."
+          ],
+          "loot": [
+            {
+              "resource": "chips",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "The wing shifted while I was under it."
+          ],
+          "injury": "light",
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_cinema",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "once": true,
+    "chance": 0.35,
+    "intro": [
+      "The cinema's projector is running. On its own. On a battery rig.",
+      "A beach. Waves. Nobody on it. The same thirty seconds, over and over."
+    ],
+    "options": [
+      {
+        "id": "watch",
+        "label": "Sit and watch the sea",
+        "stat": "nerve",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Watched it ten times. I could almost smell it. Thank you, whoever left it on."
+          ],
+          "stress": -14,
+          "memory": "the sea on the cinema screen"
+        },
+        "failure": {
+          "text": [
+            "On the eleventh loop there was someone on the beach. Looking at the camera. I left."
+          ],
+          "stress": 18,
+          "cue": "EERIE"
+        }
+      },
+      {
+        "id": "battery",
+        "label": "Take the battery rig",
+        "stat": "craft",
+        "difficulty": 4,
+        "success": {
+          "text": [
+            "The beach went dark. The rig's heavy and good."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 3,
+              "max": 5
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Shocked myself. Took half of it."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "injury": "light"
+        }
+      },
+      {
+        "id": "reel",
+        "label": "Take the reel. Someone should keep it",
+        "stat": "wits",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "Rolled it up careful. A beach for the bunker, if we ever have a projector."
+          ],
+          "item": "casete",
+          "memory": "taking the beach reel from the cinema"
+        },
+        "failure": {
+          "text": [
+            "It snapped. I took the half with the waves."
+          ],
+          "stress": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "u_swings",
+    "bands": [
+      "short"
+    ],
+    "night": true,
+    "once": true,
+    "chance": 0.5,
+    "cue": "EERIE",
+    "intro": [
+      "A playground. One swing is moving.",
+      "No wind. The others are still."
+    ],
+    "options": [
+      {
+        "id": "stop",
+        "label": "Stop the swing",
+        "stat": "nerve",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Caught the chain. Cold. Under the seat, taped, a little bag. Batteries and a sweet."
+          ],
+          "loot": [
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "item": "caramelos",
+          "stress": 10
+        },
+        "failure": {
+          "text": [
+            "When I caught it, it pulled. Just once. I let go."
+          ],
+          "stress": 24,
+          "cue": "EERIE"
+        }
+      },
+      {
+        "id": "watch",
+        "label": "Watch it from a distance",
+        "stat": "wits",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "It slowed, stopped. A cat jumped off the back of it. A cat. I need to sleep."
+          ],
+          "stress": -4
+        },
+        "failure": {
+          "text": [
+            "It never slowed. Not once. I'm leaving."
+          ],
+          "stress": 14
+        }
+      },
+      {
+        "id": "around",
+        "label": "Go around the playground",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Went the long way. Heard it creak the whole time."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Went the long way. Heard it creak the whole time. Then heard it stop."
+          ],
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "t_medic",
+    "bands": [
+      "short",
+      "medium"
+    ],
+    "chance": 0.6,
+    "intro": [
+      "A woman with a red cross painted on her bag. Says she's a doctor.",
+      "She'll trade medicine. For batteries. Her lamp's dying."
+    ],
+    "options": [
+      {
+        "id": "trade",
+        "label": "Trade",
+        "stat": "wits",
+        "difficulty": 2,
+        "cost": [
+          {
+            "resource": "batteries",
+            "amount": 2
+          }
+        ],
+        "success": {
+          "text": [
+            "Good trade. Real antibiotics, sealed. She showed me the dates."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 3,
+              "max": 4
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "Half the boxes were empty. She'd gone by the time I checked."
+          ],
+          "loot": [
+            {
+              "resource": "medicine",
+              "min": 1,
+              "max": 1
+            }
+          ],
+          "stress": 8
+        }
+      },
+      {
+        "id": "ask",
+        "label": "Ask her to look at a sore spot instead",
+        "stat": "nerve",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "She checked me over, free. Said I'm in better shape than most. Said to say hi to the radio."
+          ],
+          "stress": -8
+        },
+        "failure": {
+          "text": [
+            "She said she doesn't work for free. Fair enough."
+          ]
+        }
+      },
+      {
+        "id": "pass",
+        "label": "Wave and move on",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Waved. She waved back."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Waved. She waved back."
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "t_mechanic",
+    "bands": [
+      "medium",
+      "long"
+    ],
+    "chance": 0.6,
+    "intro": [
+      "A guy fixing a scooter in a garage. Smart, fast hands.",
+      "Says he'd swap parts for fuel. 'Can't ride on promises.'"
+    ],
+    "options": [
+      {
+        "id": "trade",
+        "label": "Swap fuel for parts",
+        "stat": "wits",
+        "difficulty": 3,
+        "cost": [
+          {
+            "resource": "fuel",
+            "amount": 2
+          }
+        ],
+        "success": {
+          "text": [
+            "Fuel for parts. He threw in some wire, too."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "resource": "scrap",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "He gave me junk. I found out three streets later."
+          ],
+          "loot": [
+            {
+              "resource": "scrap",
+              "min": 2,
+              "max": 2
+            }
+          ],
+          "stress": 6
+        }
+      },
+      {
+        "id": "help",
+        "label": "Help him fix it, for a cut",
+        "stat": "craft",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "We got it running. He laughed like a kid. Gave me a box of what he didn't need."
+          ],
+          "loot": [
+            {
+              "resource": "parts",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "resource": "components",
+              "min": 1,
+              "max": 2
+            }
+          ],
+          "time": 0.12
+        },
+        "failure": {
+          "text": [
+            "I made it worse. He told me to go away, nicely."
+          ],
+          "time": 0.08,
+          "stress": 4
+        }
+      },
+      {
+        "id": "pass",
+        "label": "Not today",
+        "stat": "stealth",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "Moved on. He didn't look up."
+          ]
+        },
+        "failure": {
+          "text": [
+            "Moved on. He didn't look up."
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "t_kids",
+    "bands": [
+      "short"
+    ],
+    "chance": 0.5,
+    "intro": [
+      "Three kids on a wall. Selling 'tickets' to cross their street.",
+      "One ration. Each. They're very serious about it."
+    ],
+    "options": [
+      {
+        "id": "pay",
+        "label": "Pay the toll",
+        "stat": "nerve",
+        "difficulty": 1,
+        "cost": [
+          {
+            "resource": "rations",
+            "amount": 1
+          }
+        ],
+        "success": {
+          "text": [
+            "Paid. They gave me a ticket drawn on cardboard and walked me across like an escort. Best guards in town."
+          ],
+          "stress": -8,
+          "memory": "the kids who sold tickets to cross the street",
+          "setWorld": [
+            "toll_paid"
+          ]
+        },
+        "failure": {
+          "text": [
+            "Paid. They gave me a ticket drawn on cardboard and walked me across like an escort. Best guards in town."
+          ],
+          "stress": -8,
+          "memory": "the kids who sold tickets to cross the street",
+          "setWorld": [
+            "toll_paid"
+          ]
+        }
+      },
+      {
+        "id": "around",
+        "label": "Go around",
+        "stat": "stealth",
+        "difficulty": 3,
+        "success": {
+          "text": [
+            "Went around. They booed. Fair."
+          ],
+          "time": 0.06
+        },
+        "failure": {
+          "text": [
+            "Went around. They followed, booing, the whole block."
+          ],
+          "time": 0.08,
+          "stress": 4
+        }
+      },
+      {
+        "id": "bluff",
+        "label": "Show them a \"radio pass\"",
+        "stat": "wits",
+        "difficulty": 5,
+        "success": {
+          "text": [
+            "Told them I'm with the radio. They looked at each other and let me through. Saluted, too."
+          ],
+          "setWorld": [
+            "toll_paid"
+          ]
+        },
+        "failure": {
+          "text": [
+            "They didn't buy it. They threw a shoe at me."
+          ],
+          "stress": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "r_kids_return",
+    "bands": [
+      "short"
+    ],
+    "requiresWorld": [
+      "toll_paid"
+    ],
+    "once": true,
+    "chance": 0.5,
+    "cue": "WARM",
+    "intro": [
+      "The ticket kids. They found me.",
+      "They've got something in a sack. 'For the radio. Our dad says hello.'"
+    ],
+    "options": [
+      {
+        "id": "take",
+        "label": "Take it and say thanks",
+        "stat": "nerve",
+        "difficulty": 1,
+        "success": {
+          "text": [
+            "A sack of potatoes and a battery with 'RADIO' written on it. I may cry."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 4
+            },
+            {
+              "resource": "batteries",
+              "min": 1,
+              "max": 1
+            }
+          ],
+          "cue": "WARM",
+          "bond": 2
+        },
+        "failure": {
+          "text": [
+            "A sack of potatoes. A bit of a sprout on them. Still. Still."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        }
+      },
+      {
+        "id": "give",
+        "label": "Tell them to keep it",
+        "stat": "wits",
+        "difficulty": 2,
+        "success": {
+          "text": [
+            "They insisted. Then they gave me half anyway and ran off before I could argue."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 2,
+              "max": 2
+            }
+          ]
+        },
+        "failure": {
+          "text": [
+            "They looked hurt. I took it."
+          ],
+          "loot": [
+            {
+              "resource": "rations",
+              "min": 3,
+              "max": 3
+            }
+          ]
         }
       }
     ]

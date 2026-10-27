@@ -31,6 +31,12 @@ public final class EventDef {
     private List<String> forbidsWorld;
     /** Sound when it comes up (LogLine.Cue), or null. */
     private String cue;
+    /** Only reached from another situation's outcome ({@code next}): never rolls on its own. */
+    private boolean followUp;
+
+    public boolean isFollowUp() {
+        return followUp;
+    }
 
     public List<String> getWeather() {
         return weather != null ? weather : List.of();
@@ -111,9 +117,15 @@ public final class EventDef {
          * a cost is paid either way.
          */
         private double time;
+        /** What it costs, paid either way: from what they carry first, then from the bunker. */
+        private List<Cost> cost;
 
         public double getTime() {
             return time;
+        }
+
+        public List<Cost> getCost() {
+            return cost != null ? cost : List.of();
         }
 
         /** Only for someone with any of these traits (visible ones). */
@@ -184,6 +196,24 @@ public final class EventDef {
         private int bond;
         /** Sound (LogLine.Cue) when it lands, or null. */
         private String cue;
+        /** A follow-up situation that comes up right after (multi-step situations), or null. */
+        private String next;
+        /** No deal: the option's price stays in the bag. */
+        private boolean refund;
+        /** Share (0–1) of what they carry that's taken or lost here. */
+        private double lose;
+
+        public boolean isRefund() {
+            return refund;
+        }
+
+        public double getLose() {
+            return Math.max(0, Math.min(1, lose));
+        }
+
+        public String getNext() {
+            return next;
+        }
 
         public GearFind getGear() {
             return gear;
@@ -239,6 +269,28 @@ public final class EventDef {
 
         public String getPlot() {
             return plot;
+        }
+    }
+
+    /** A price: so much of a resource. */
+    public static final class Cost {
+        private String resource;
+        private int amount;
+
+        public Cost() {
+        }
+
+        public Cost(String resource, int amount) {
+            this.resource = resource;
+            this.amount = amount;
+        }
+
+        public String getResource() {
+            return resource;
+        }
+
+        public int getAmount() {
+            return Math.max(0, amount);
         }
     }
 

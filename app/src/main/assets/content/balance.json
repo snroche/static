@@ -1,5 +1,5 @@
 {
-  "contentVersion": 29,
+  "contentVersion": 30,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -8,7 +8,8 @@
   "_comment": "Everything below is a [placeholder] (from the GDD or our own), untested. Tune with playtesting.",
   "expedition": {
     "situationTimeoutMinutes": 15,
-    "disobeyChance": 0.5
+    "disobeyChance": 0.5,
+    "followUpSeconds": 45
   },
   "scouts": {
     "statMax": 10,

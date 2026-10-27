@@ -81,7 +81,7 @@ public final class Expedition {
         this.zoneId = Objects.requireNonNull(zoneId);
         this.seed = seed;
         this.startedAtMillis = startedAtMillis;
-        this.segments = Collections.unmodifiableList(segments);
+        this.segments = new java.util.ArrayList<>(segments);
         this.rngState = rngState;
         this.status = Objects.requireNonNull(status);
         this.index = index;
@@ -158,8 +158,34 @@ public final class Expedition {
         return startedAtMillis;
     }
 
+    /** The timeline changed after dispatch (a multi-step situation): it needs saving again. */
+    private boolean segmentsChanged;
+
+    public boolean isSegmentsChanged() {
+        return segmentsChanged;
+    }
+
+    public void markSegmentsSaved() {
+        segmentsChanged = false;
+    }
+
+    /**
+     * The situation just resolved leads straight into another: the current segment becomes
+     * that one, due {@code gapMillis} after {@code atMillis}.
+     */
+    void chainTo(String eventId, long atMillis, long gapMillis) {
+        segments.set(index, new Segment(Segment.Type.SITUATION, gapMillis, eventId));
+        segmentsChanged = true;
+        retreatOffered = false;
+        lostHints = 0;
+        cursorAtMillis = atMillis;
+        pendingSinceMillis = NONE;
+        chosenOption = NO_CHOICE;
+        chosenAtMillis = NONE;
+    }
+
     public List<Segment> getSegments() {
-        return segments;
+        return Collections.unmodifiableList(segments);
     }
 
     public long getRngState() {
@@ -249,6 +275,9 @@ public final class Expedition {
 
     void addLoot(String resource, int amount) {
         carriedLoot.merge(resource, amount, Integer::sum);
+        if (carriedLoot.get(resource) <= 0) {
+            carriedLoot.remove(resource); // paid away
+        }
     }
 
     void clearLoot() {

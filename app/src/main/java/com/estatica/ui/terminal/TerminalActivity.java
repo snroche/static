@@ -719,13 +719,19 @@ public final class TerminalActivity extends ComponentActivity {
                 hud.append(r.icon);
                 hud.setSpan(new android.text.style.RelativeSizeSpan(1.35f), start, hud.length(),
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                colored(hud, " " + r.amount, r.amount == 0 ? R.color.danger : R.color.amber);
+                colored(hud, " " + compact(r.amount), r.amount == 0 ? R.color.danger : R.color.amber);
             } else {
                 hud.append(getString(R.string.hud_resource, r.shortName, r.amount));
             }
         }
         binding.hud.setText(hud);
         binding.hud.setContentDescription(getString(R.string.hud_description, hud));
+    }
+
+    /** 1234 → "1.2k": big stocks keep the status bar on its lines. */
+    private static String compact(int amount) {
+        return amount < 1000 ? String.valueOf(amount)
+                : String.format(java.util.Locale.ENGLISH, "%.1fk", amount / 1000.0);
     }
 
     private void colored(android.text.SpannableStringBuilder out, String text, int color) {
@@ -957,6 +963,7 @@ public final class TerminalActivity extends ComponentActivity {
         LayoutInflater inflater = getLayoutInflater();
         int shown = 0;
         int dim = ContextCompat.getColor(this, R.color.amber_dim);
+        int deadly = ContextCompat.getColor(this, R.color.danger);
         for (int i = 0; i < decision.options.size(); i++) {
             if (decision.options.get(i) == null) {
                 continue; // Not for this team: indexes still match the event's options.
@@ -969,8 +976,9 @@ public final class TerminalActivity extends ComponentActivity {
             if (hint != null) {
                 int from = text.length();
                 text.append("\n    ").append(hint);
-                text.setSpan(new android.text.style.ForegroundColorSpan(dim), from, text.length(),
-                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                // "Could kill them" stands out: no death without a warning you can see.
+                text.setSpan(new android.text.style.ForegroundColorSpan(hint.startsWith("☠") ? deadly : dim),
+                        from, text.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 text.setSpan(new android.text.style.RelativeSizeSpan(0.85f), from, text.length(),
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }

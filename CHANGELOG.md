@@ -10,6 +10,35 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.8.4] — Situations in steps, real prices, the dark comes back — in verification
+
+App 0.8.4 (versionCode 804) · DB 14 (no change) · **Content 29 → 30**
+
+### Added
+- **Situations in several steps.** What you decide can lead straight into the next decision: a knock under a manhole becomes a girl in the drains, then a pharmacy with a tripwire. Nine of them so far:
+  - a hum under a dead substation, at night
+  - a bell ringing in the fog
+  - a girl knocking from under the street
+  - a pack of dogs that won't stop following
+  - a man on a bridge
+  - footsteps that match yours, at night
+  - a lit train under the rain
+  - a cabin under a radio mast with a logbook in your scout's handwriting
+  - a department store whose mannequins move
+- **Things that happen once.** A wedding hall set for eighty, with a place card for the radio. A camel in the street. A payphone ringing on a cut line. A glasshouse still growing. A TV tape marked DO NOT AIR. A plane in the park. A cinema looping a beach. A swing moving with no wind.
+- **Kindness comes back here too.** Abril, the girl from the drains, leaves chalk arrows to a bag of supplies. The man from the bridge grows tomatoes on a roof now. Pay the kids' "toll" and their dad sends potatoes.
+- **New traders who want something:** a doctor who trades medicine for batteries, a mechanic who trades parts for fuel.
+- **The decision card warns you when it could kill them.** If they have a bad feeling about a risky option and failing it could be fatal, the hint turns red: "☠ bad feeling: this could kill them".
+
+### Changed
+- **The danger is real again.** Risky options that can leave a serious injury can now kill, if you were warned and gave the order anyway. Several of the new situations can kill too.
+- **After every situation, a plain line says what came of it:** "+3 rations, paid 2 batteries, found a pocket radio, light injury". No more "found apples" without knowing what that meant.
+- **The status bar has room for big numbers.** Supplies wrap onto more lines instead of disappearing, and amounts over 999 are shortened (1.2k).
+
+### Fixed
+- **Trades now cost what they say.** The trader's batteries, the farmhouse's eggs and the new traders take their price, from what the scout carries first and then from the bunker. The price is on the button. If you can't pay, the option isn't offered. If the deal falls through, nothing is paid.
+- **"They took everything" now takes everything.** Being robbed out there empties what the scout was carrying.
+
 ## [0.8.3] — Moments: weather, rare finds, favorites, friends who give back — in verification
 
 App 0.8.3 (versionCode 803) · DB 14 (no change) · **Content 28 → 29**

@@ -28,6 +28,9 @@ public interface ExpeditionDao {
     @Insert
     void insertSegments(List<ExpeditionSegmentEntity> segments);
 
+    @Query("DELETE FROM expedition_segments WHERE expedition_id = :expeditionId")
+    void clearSegments(String expeditionId);
+
     @Query("DELETE FROM expedition_loot WHERE expedition_id = :expeditionId")
     void clearLoot(String expeditionId);
 

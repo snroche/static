@@ -80,7 +80,7 @@ public class WhoIsThereTest {
             List<String> labels = engine.pendingOptions(d.expedition, s);
             for (int i = 0; i < event.getOptions().size(); i++) {
                 EventDef.Option o = event.getOptions().get(i);
-                if (engine.isAvailable(s, o)) {
+                if (engine.isAvailable(s, o) && engine.affordable(d.expedition, o)) {
                     // Options that cost or save time carry it after the label: "(+4 min)".
                     assertTrue(labels.get(i), labels.get(i).startsWith(o.getLabel()));
                 } else {

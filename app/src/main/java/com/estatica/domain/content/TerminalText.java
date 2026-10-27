@@ -245,7 +245,52 @@ public final class TerminalText {
         private String lootItem;
         private String lootSeparator;
         private String signalLost;
-        /** Decision card: "GOOD", "UNSURE", "BAD", "LOST" to a short label. */
+        /** After a situation: {name}, {tally} (what came of it, plainly). */
+        private String outcomeTally;
+        /** Tally pieces: {amount}, {resource} / {item} / {injury}. */
+        private String tallyGain;
+        private String tallyPaid;
+        private String tallyLost;
+
+        public String getTallyLost() {
+            return tallyLost;
+        }
+        private String tallyFound;
+        private String tallyHurt;
+        /** Option label with its price: {label}, {cost}. */
+        private String optionCost;
+        /** Ordered something they can no longer pay for: {name}. */
+        private String cantAfford;
+
+        public String getOutcomeTally() {
+            return outcomeTally;
+        }
+
+        public String getTallyGain() {
+            return tallyGain;
+        }
+
+        public String getTallyPaid() {
+            return tallyPaid;
+        }
+
+        public String getTallyFound() {
+            return tallyFound;
+        }
+
+        public String getTallyHurt() {
+            return tallyHurt;
+        }
+
+        public String getOptionCost() {
+            return optionCost;
+        }
+
+        public String getCantAfford() {
+            return cantAfford;
+        }
+
+        /** Decision card: "GOOD", "UNSURE", "BAD", "DEADLY", "LOST" to a short label. */
         private java.util.Map<String, String> hintLabels;
 
         public java.util.Map<String, String> getHintLabels() {

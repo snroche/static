@@ -314,6 +314,8 @@ public final class GameSession {
         engine.setRecentEvents(id -> clock.nowMillis() - value(EVENT_SEEN + id)
                 < content.getBalance().getExpedition().getEventRecentHours() * HOUR);
         engine.setWorldFlags(this::worldFlag);
+        engine.setStock(id -> resources.getOrDefault(id, 0)
+                + (stepInFlight != null ? stepInFlight.resourceDelta.getOrDefault(id, 0) : 0));
         engine.setWorld(outside = new com.estatica.domain.world.World() {
             @Override
             public com.estatica.domain.world.WeatherRules.Weather weatherAt(long millis) {
@@ -551,6 +553,9 @@ public final class GameSession {
                 scouts.put(scout.getId(), scout);
             }
             resourceDelta.forEach((k, v) -> resources.merge(k, v, Integer::sum));
+            if (stepInFlight == this) {
+                stepInFlight = null; // its spending is in the stock now
+            }
             for (Iterator<Expedition> it = active.values().iterator(); it.hasNext(); ) {
                 if (!it.next().isActive()) {
                     it.remove();
@@ -569,7 +574,11 @@ public final class GameSession {
         return step.commit();
     }
 
+    /** The step being resolved, so prices out there see what was already spent in it. */
+    private Step stepInFlight;
+
     private void advance(Step step) {
+        stepInFlight = step;
         long now = step.now;
         for (Expedition expedition : new ArrayList<>(active.values())) {
             Scout scout = scouts.get(expedition.getScoutId());
@@ -581,6 +590,7 @@ public final class GameSession {
             summarize(expedition, scout, party, result, step);
             step.memories.addAll(result.getMemories());
             result.getDelivered().forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+            result.getSpent().forEach((k, v) -> step.resourceDelta.merge(k, -v, Integer::sum));
             for (String flag : result.getWorldFlags()) {
                 setWorldFlag(flag, step);
             }
