@@ -29,6 +29,9 @@ NEW = {
     "ic_handshake": 0xF1218, "ic_blueprint": 0xF0821, "ic_recycle": 0xF044C, "ic_upgrade": 0xF0738,
     "ic_courier": 0xF053E, "ic_package": 0xF03D6,
     "ic_fair": 0xF07C7,  # storefront: the Fair on the map
+    # 0.8.1: RADIO → LINK.
+    "ic_qr": 0xF0432, "ic_qr_scan": 0xF0433, "ic_bluetooth": 0xF00AF, "ic_copy": 0xF018F,
+    "ic_paste": 0xF0192, "ic_share": 0xF0497, "ic_close": 0xF0156, "ic_text": 0xF09A8,
 }
 
 for weight in ("Regular", "Bold"):

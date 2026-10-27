@@ -87,6 +87,13 @@ public final class TerminalText {
         return console != null ? console : Map.of();
     }
 
+    /** Other bunkers: templates by key (GDD §12). */
+    private Map<String, String> link;
+
+    public Map<String, String> getLink() {
+        return link != null ? link : Map.of();
+    }
+
     /** Stat key to what it does. */
     private Map<String, String> statDescriptions;
     /** Mood key to what it means. */

@@ -343,6 +343,111 @@ public final class Balance {
         return workshop != null ? workshop : new Workshop();
     }
 
+    private Link link = new Link();
+
+    public Link getLink() {
+        return link != null ? link : new Link();
+    }
+
+    /** Other bunkers: codes, QR and Bluetooth (GDD §12). [placeholder] */
+    public static final class Link {
+        /** Codes from players taken per local day (broadcasts and nearby links don't count). */
+        private int dailyLimit = 3;
+        private int messageMaxChars = 140;
+        private int noteMaxChars = 80;
+        private int wordsMaxChars = 160;
+        /** A drop: at most this many units, and pieces of gear. */
+        private int dropMaxUnits = 40;
+        private int dropMaxGear = 2;
+        private List<String> dropResources = List.of("scrap", "components", "parts", "rations", "medicine",
+                "batteries", "fuel", "relay_kit", "chips");
+        /** Stress on everyone at home when a stranger's last words come in. */
+        private int lastWordsStress = 3;
+        /** Codes sent, kept to show again. */
+        private int sentKept = 10;
+        /** ECDSA P-256 public key (X.509, base64) that signs developer broadcasts. */
+        private String broadcastKey = "";
+        private Wanderer wanderer = new Wanderer();
+        /** By scheme: the most of each resource decoding another bunker's message can give. */
+        private java.util.Map<String, java.util.Map<String, Integer>> decodeRewards = new java.util.HashMap<>();
+
+        public java.util.Map<String, java.util.Map<String, Integer>> getDecodeRewards() {
+            return decodeRewards != null ? decodeRewards : java.util.Map.of();
+        }
+
+        public int getDailyLimit() {
+            return dailyLimit;
+        }
+
+        public int getMessageMaxChars() {
+            return messageMaxChars;
+        }
+
+        public int getNoteMaxChars() {
+            return noteMaxChars;
+        }
+
+        public int getWordsMaxChars() {
+            return wordsMaxChars;
+        }
+
+        public int getDropMaxUnits() {
+            return dropMaxUnits;
+        }
+
+        public int getDropMaxGear() {
+            return dropMaxGear;
+        }
+
+        public List<String> getDropResources() {
+            return dropResources != null ? dropResources : List.of();
+        }
+
+        public int getLastWordsStress() {
+            return lastWordsStress;
+        }
+
+        public int getSentKept() {
+            return sentKept;
+        }
+
+        public String getBroadcastKey() {
+            return broadcastKey != null ? broadcastKey : "";
+        }
+
+        public Wanderer getWanderer() {
+            return wanderer != null ? wanderer : new Wanderer();
+        }
+    }
+
+    /** Someone from another bunker, met on the road. */
+    public static final class Wanderer {
+        /** How long they wait before moving on. */
+        private double days = 3;
+        /** Stress the team they meet sheds. */
+        private int stressRelief = 8;
+        /** By their strongest stat: what they leave. */
+        private java.util.Map<String, java.util.Map<String, Integer>> gifts = new java.util.HashMap<>();
+        /** By their strongest stat: intel they share on another place (CACHE or DANGER). */
+        private java.util.Map<String, String> intel = new java.util.HashMap<>();
+
+        public double getDays() {
+            return days;
+        }
+
+        public int getStressRelief() {
+            return stressRelief;
+        }
+
+        public java.util.Map<String, java.util.Map<String, Integer>> getGifts() {
+            return gifts != null ? gifts : java.util.Map.of();
+        }
+
+        public java.util.Map<String, String> getIntel() {
+            return intel != null ? intel : java.util.Map.of();
+        }
+    }
+
     /** THE FAIR: the trader on the radio. Prices in chips. [placeholder] */
     public static final class Market {
         private String station = "st_feria";

@@ -65,7 +65,10 @@ public final class MapView extends View {
         text.setTypeface(terminal != null ? terminal : Typeface.MONOSPACE);
         text.setTextAlign(Paint.Align.CENTER);
         dot.setStyle(Paint.Style.FILL);
+        relayMark = context.getString(R.string.ic_relay);
     }
+
+    private final String relayMark;
 
     private float sp(float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, getResources().getDisplayMetrics());
@@ -131,14 +134,16 @@ public final class MapView extends View {
             String name = abbreviate(p.shortName);
             float w = text.measureText(name);
             float gap = iconSize / 2 + 2 * dp;
+            // Label centers: below, right, left, above.
             float[][] spots = {
-                    {px, py + gap + h},
-                    {px + gap + w / 2, py + h / 3},
-                    {px - gap - w / 2, py + h / 3},
-                    {px, py - gap},
+                    {px, py + gap + h / 2},
+                    {px + gap + w / 2, py},
+                    {px - gap - w / 2, py},
+                    {px, py - gap - h / 2},
             };
             for (float[] spot : spots) {
-                android.graphics.RectF box = new android.graphics.RectF(spot[0] - w / 2, spot[1] - h, spot[0] + w / 2, spot[1] + 2 * dp);
+                android.graphics.RectF box = new android.graphics.RectF(spot[0] - w / 2, spot[1] - h / 2,
+                        spot[0] + w / 2, spot[1] + h / 2);
                 boolean free = box.left >= 0 && box.right <= getWidth() && box.top >= 0 && box.bottom <= getHeight();
                 for (android.graphics.RectF other : taken) {
                     free &= !android.graphics.RectF.intersects(box, other);
@@ -247,7 +252,7 @@ public final class MapView extends View {
             double turn = (double) s.direction / s.count;
             float radius = ringStart(s.ring) + ringWidth() / 2;
             float px = x(radius, turn);
-            float py = y(radius, turn) + text.getTextSize() / 3;
+            float py = y(radius, turn);
             String mark;
             int color;
             if (s.beingScouted) {
@@ -263,10 +268,10 @@ public final class MapView extends View {
                 color = s.heard ? bright : amber;
             }
             text.setColor(s.id.equals(selectedSector) ? bright : color);
-            canvas.drawText(mark, px, py, text);
+            drawCentered(canvas, mark, px, py);
             if (s.id.equals(selectedSector)) {
                 line.setColor(bright);
-                canvas.drawCircle(px, py - text.getTextSize() / 3, text.getTextSize() * 0.9f, line);
+                canvas.drawCircle(px, py, text.getTextSize() * 0.9f, line);
                 line.setColor(hint);
             }
         }
@@ -281,22 +286,46 @@ public final class MapView extends View {
             if (p.icon != null) {
                 text.setTextSize(iconSize);
                 text.setColor(color);
-                canvas.drawText(p.icon, px, py + iconSize / 3, text);
+                drawCentered(canvas, p.icon, px, py);
             } else {
                 dot.setColor(color);
                 canvas.drawCircle(px, py, 3.5f * dp, dot);
             }
+            // A relay there: a small mark at the icon's top right.
+            if (map.relays.containsKey(p.zoneId)) {
+                text.setTextSize(sp(9));
+                text.setColor(map.relays.get(p.zoneId) >= 30 ? bright : dim);
+                drawCentered(canvas, relayMark, px + iconSize * 0.6f, py - iconSize * 0.6f);
+            }
         }
         text.setTextSize(sp(10));
+        // Labels center on their spot by the font's line metrics (not each word's ink, so a row
+        // of names sits on one line).
+        Paint.FontMetrics fm = text.getFontMetrics();
+        float middle = -(fm.ascent + fm.descent) / 2;
         for (Label label : labels) {
             text.setColor(label.reachable ? amber : dim);
-            canvas.drawText(label.text, label.x, label.y, text);
+            canvas.drawText(label.text, label.x, label.y + middle, text);
         }
         // The bunker.
         dot.setColor(bright);
         canvas.drawCircle(cx(), cy(), 5 * dp, dot);
         line.setColor(bright);
         canvas.drawCircle(cx(), cy(), 9 * dp, line);
+    }
+
+    private final android.graphics.Rect bounds = new android.graphics.Rect();
+
+    /**
+     * Draws a glyph with its ink centered on (x, y). Icon glyphs don't sit where their advance
+     * and baseline say (Nerd Font icons overhang the cell), so align by the measured bounds.
+     */
+    private void drawCentered(Canvas canvas, String glyph, float x, float y) {
+        text.getTextBounds(glyph, 0, glyph.length(), bounds);
+        Paint.Align was = text.getTextAlign();
+        text.setTextAlign(Paint.Align.LEFT);
+        canvas.drawText(glyph, x - bounds.left - bounds.width() / 2f, y - bounds.top - bounds.height() / 2f, text);
+        text.setTextAlign(was);
     }
 
     @SuppressLint("ClickableViewAccessibility") // Taps are mirrored by the panel's buttons.

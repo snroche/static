@@ -116,10 +116,15 @@ public final class TerminalViewModel extends ViewModel {
         void run(Step step);
     }
 
+    private final LinkController link;
+
     @Inject
     TerminalViewModel(GameSession session, NotificationScheduler notifications, Settings settings,
                       LogRepository logRepository, GameClock clock, ExecutorService game,
-                      @Named(AppModule.APP_VERSION) String appVersion) {
+                      @Named(AppModule.APP_VERSION) String appVersion,
+                      com.estatica.data.link.NearbyLink nearby) {
+        link = new LinkController(session, nearby, game, main,
+                work -> run(step -> step.animated.addAll(work.get())));
         this.session = session;
         this.notifications = notifications;
         this.settings = settings;
@@ -331,6 +336,54 @@ public final class TerminalViewModel extends ViewModel {
     void dispatch(String scoutId, String zoneId, Mission.Type type, String target, List<String> companions) {
         if (ready) {
             run(step -> step.animated.addAll(session.dispatch(scoutId, zoneId, type, target, companions)));
+        }
+    }
+
+    // ---- Other bunkers (RADIO → LINK) ----
+
+    LinkController link() {
+        return link;
+    }
+
+    void linkMessage(String text, String scheme) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.linkMessage(text, scheme)));
+        }
+    }
+
+    void linkDrop(Map<String, Integer> goods, List<String> pieceIds, String note) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.linkDrop(goods, pieceIds, note)));
+        }
+    }
+
+    void linkWanderer(String scoutId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.linkWanderer(scoutId)));
+        }
+    }
+
+    void linkLastWords(String scoutId) {
+        if (ready) {
+            run(step -> step.animated.addAll(session.linkLastWords(scoutId)));
+        }
+    }
+
+    void linkReceive(String code) {
+        if (ready && code != null && !code.isBlank()) {
+            run(step -> step.animated.addAll(session.linkReceive(code)));
+        }
+    }
+
+    void linkShow(String id) {
+        if (ready) {
+            run(step -> session.linkShow(id));
+        }
+    }
+
+    void linkHide() {
+        if (ready) {
+            run(step -> session.linkHide());
         }
     }
 
@@ -775,5 +828,6 @@ public final class TerminalViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         main.removeCallbacksAndMessages(null);
+        link.release();
     }
 }

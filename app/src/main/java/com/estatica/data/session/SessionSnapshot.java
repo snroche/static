@@ -495,6 +495,53 @@ public final class SessionSnapshot {
         }
     }
 
+    /** RADIO → LINK: codes to and from other bunkers. */
+    public static final class LinkView {
+        /** This bunker on the air: "LU4QXR". */
+        public String callsign;
+        /** Codes from players taken today, of a daily limit. */
+        public int takenToday;
+        public int dailyLimit;
+        public int dropMaxUnits;
+        public int dropMaxGear;
+        public int messageMaxChars;
+        /** Message schemes; disabled until their key item is found. */
+        public List<LinkChoice> schemes = new java.util.ArrayList<>();
+        /** Goods that can go in a drop, with how many are in the stores. */
+        public List<LinkChoice> goods = new java.util.ArrayList<>();
+        /** Gear pieces in stock. */
+        public List<LinkChoice> gear = new java.util.ArrayList<>();
+        public List<LinkChoice> crew = new java.util.ArrayList<>();
+        public List<LinkChoice> fallen = new java.util.ArrayList<>();
+        /** Places a team can reach (joint runs). */
+        public List<LinkChoice> places = new java.util.ArrayList<>();
+        /** Codes sent, newest first, to show again. */
+        public List<LinkChoice> sent = new java.util.ArrayList<>();
+        /** Newest first: "LU4QXR · Drop · 10 scrap". */
+        public List<String> received = new java.util.ArrayList<>();
+        /** Wanderers waiting on the road. */
+        public List<String> waiting = new java.util.ArrayList<>();
+        /** The code on screen, or null. */
+        public String code;
+        public String codeLabel;
+    }
+
+    /** Something to pick on the LINK screen. */
+    public static final class LinkChoice {
+        public final String id;
+        public final String name;
+        /** How many there are (goods), or 0. */
+        public final int count;
+        public final boolean enabled;
+
+        LinkChoice(String id, String name, int count, boolean enabled) {
+            this.id = id;
+            this.name = name;
+            this.count = count;
+            this.enabled = enabled;
+        }
+    }
+
     /** THE FAIR: the trader on the radio. */
     public static final class MarketView {
         /** Heard at least once. */
@@ -542,6 +589,8 @@ public final class SessionSnapshot {
     public static final class RadioView {
         /** The trader, or null before 0.7 content. */
         public MarketView market;
+        /** Other bunkers (GDD §12). */
+        public LinkView link;
         public final List<StationView> stations;
         public final List<BandView> bands;
         public final int dialMax;
@@ -746,6 +795,10 @@ public final class SessionSnapshot {
         public final List<String> bands;
         /** How much of its loot a picked-over place gets back per day, in percent. */
         public final int refillPercentPerDay;
+        /** Relays installed: place id to condition, percent. */
+        public java.util.Map<String, Integer> relays = java.util.Map.of();
+        /** Relay kits in the stores, ready to install. */
+        public int relayKits;
 
         MapView(List<SectorView> sectors, List<PlaceView> places, List<String> bands, int refillPercentPerDay) {
             this.refillPercentPerDay = refillPercentPerDay;

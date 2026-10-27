@@ -136,4 +136,12 @@
     <string name="ic_courier" translatable="false">&#xE53E;</string>
     <string name="ic_package" translatable="false">&#xE3D6;</string>
     <string name="ic_fair" translatable="false">&#xE7C7;</string>
+    <string name="ic_qr" translatable="false">&#xE432;</string>
+    <string name="ic_qr_scan" translatable="false">&#xE433;</string>
+    <string name="ic_bluetooth" translatable="false">&#xE0AF;</string>
+    <string name="ic_copy" translatable="false">&#xE18F;</string>
+    <string name="ic_paste" translatable="false">&#xE192;</string>
+    <string name="ic_share" translatable="false">&#xE497;</string>
+    <string name="ic_close" translatable="false">&#xE156;</string>
+    <string name="ic_text" translatable="false">&#xE9A8;</string>
 </resources>

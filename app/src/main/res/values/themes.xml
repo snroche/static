@@ -77,6 +77,16 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <!-- Section button with an icon over its label (radio): two lines, like the bottom bar. -->
+    <style name="TerminalSection.Icon">
+        <item name="android:maxLines">2</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
+        <item name="android:autoSizeMaxTextSize">12sp</item>
+    </style>
+
     <!-- Text button: [ LABEL ], 48dp touch target. -->
     <style name="TerminalButton" parent="TerminalText.Bright">
         <item name="android:background">@drawable/bg_terminal_button</item>

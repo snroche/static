@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A popup box: terminal black, amber frame, rounded corners. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/terminal_bg" />
+    <stroke
+        android:width="1.5dp"
+        android:color="@color/amber" />
+    <corners android:radius="14dp" />
+</shape>

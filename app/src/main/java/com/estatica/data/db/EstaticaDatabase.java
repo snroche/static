@@ -22,8 +22,8 @@ import androidx.room.RoomDatabase;
                 RadioEntities.RescueTarget.class, RadioEntities.Lore.class,
                 RadioEntities.Module.class,
                 BaseEntities.Power.class, BaseEntities.Value.class, BaseEntities.CraftJobRow.class,
-                GearEntity.class},
-        version = 13,
+                GearEntity.class, LinkSignalEntity.class},
+        version = 14,
         exportSchema = true)
 public abstract class EstaticaDatabase extends RoomDatabase {
 
@@ -50,4 +50,6 @@ public abstract class EstaticaDatabase extends RoomDatabase {
     public abstract RadioDao radioDao();
 
     public abstract BaseDao baseDao();
+
+    public abstract LinkDao linkDao();
 }

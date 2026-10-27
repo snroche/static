@@ -79,6 +79,8 @@ dependencies {
 
     implementation libs.gson
     implementation libs.work.runtime
+    // QR codes for RADIO → LINK (show and scan). Pulls in zxing core.
+    implementation libs.zxing.embedded
 
     testImplementation libs.junit
 }

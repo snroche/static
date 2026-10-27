@@ -85,6 +85,7 @@ public final class TerminalActivity extends ComponentActivity {
     /** Pending decision currently rendered, to avoid rebuilding its buttons needlessly. */
     private String shownDecisionId;
     private RadioPanel radioPanel;
+    private CodeDialog codeDialog;
     private DecoderPanel decoderPanel;
     private BunkerPanel bunkerPanel;
     private MapPanel mapPanel;
@@ -1024,7 +1025,46 @@ public final class TerminalActivity extends ComponentActivity {
             public void closeRadio() {
                 selectTab(Tab.COMMS);
             }
+
+            @Override
+            public void showCode(String code, String label, String callsign) {
+                codeDialog.show(code, label, callsign, viewModel.link().view().getValue());
+            }
+
+            @Override
+            public void scanQr() {
+                scanner.launch(new com.journeyapps.barcodescanner.ScanOptions()
+                        .setDesiredBarcodeFormats(com.journeyapps.barcodescanner.ScanOptions.QR_CODE)
+                        .setPrompt(getString(R.string.link_scan_prompt))
+                        .setBeepEnabled(false)
+                        .setOrientationLocked(false));
+            }
+
+            @Override
+            public void nearby(boolean host) {
+                startNearby(host);
+            }
         }, sound);
+        codeDialog = new CodeDialog(this, new CodeDialog.Host() {
+            @Override
+            public void sendNearby(String code) {
+                viewModel.link().sendCode(code);
+            }
+
+            @Override
+            public void openNearby() {
+                radioPanel.showNearby();
+            }
+
+            @Override
+            public void closed() {
+                viewModel.linkHide();
+            }
+        });
+        viewModel.link().view().observe(this, near -> {
+            radioPanel.onNearby(near);
+            codeDialog.onNearby(near);
+        });
         decoderPanel = new DecoderPanel(binding.decodePanel, viewModel, () -> {
             decoderPanel.hide();
             updateBack();
@@ -1366,6 +1406,78 @@ public final class TerminalActivity extends ComponentActivity {
             out.append(out.length() > 0 ? "\n\n" : "").append(e.lastWords);
         }
         return out.toString();
+    }
+
+    // ---- Other bunkers: QR and Bluetooth (RADIO → LINK) ----
+
+    private final ActivityResultLauncher<com.journeyapps.barcodescanner.ScanOptions> scanner =
+            registerForActivityResult(new com.journeyapps.barcodescanner.ScanContract(), result -> {
+                if (result.getContents() != null) {
+                    viewModel.linkReceive(result.getContents());
+                }
+            });
+
+    /** Whether the Bluetooth link being set up is the host (true) or the one finding it. */
+    private boolean nearbyHost;
+
+    private String[] bluetoothPermissions(boolean host) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return host ? new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_ADVERTISE}
+                    : new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN};
+        }
+        // Before Android 12, finding devices needed location.
+        return new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+    }
+
+    private final ActivityResultLauncher<String[]> bluetoothPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), granted -> {
+                if (granted.containsValue(false)) {
+                    android.widget.Toast.makeText(this, R.string.link_bluetooth_denied,
+                            android.widget.Toast.LENGTH_LONG).show();
+                } else {
+                    startNearby(nearbyHost);
+                }
+            });
+
+    private final ActivityResultLauncher<android.content.Intent> bluetoothOn =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (viewModel.link().enabled()) {
+                    startNearby(nearbyHost);
+                } else {
+                    android.widget.Toast.makeText(this, R.string.link_bluetooth_off,
+                            android.widget.Toast.LENGTH_LONG).show();
+                }
+            });
+
+    /** Paired phones can link anyway, so the host starts even if discoverability is refused. */
+    private final ActivityResultLauncher<android.content.Intent> discoverable =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> viewModel.link().host());
+
+    /** Permissions, Bluetooth on, discoverable (when hosting), then host or search. */
+    private void startNearby(boolean host) {
+        nearbyHost = host;
+        List<String> missing = new ArrayList<>();
+        for (String permission : bluetoothPermissions(host)) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                missing.add(permission);
+            }
+        }
+        if (!missing.isEmpty()) {
+            bluetoothPermission.launch(missing.toArray(new String[0]));
+            return;
+        }
+        if (!viewModel.link().enabled()) {
+            bluetoothOn.launch(new android.content.Intent(android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE));
+            return;
+        }
+        if (host) {
+            discoverable.launch(new android.content.Intent(android.bluetooth.BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+                    .putExtra(android.bluetooth.BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300));
+        } else {
+            viewModel.link().search();
+        }
     }
 
     private final ActivityResultLauncher<String> notificationPermission =

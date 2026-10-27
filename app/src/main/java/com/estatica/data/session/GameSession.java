@@ -8,6 +8,7 @@ import com.estatica.core.Ids;
 import com.estatica.core.TextTemplate;
 import com.estatica.data.content.ContentRepository;
 import com.estatica.data.db.EstaticaDatabase;
+import com.estatica.data.db.LinkSignalEntity;
 import com.estatica.data.repo.BaseRepository;
 import com.estatica.data.repo.BunkerRepository;
 import com.estatica.data.repo.ExpeditionRepository;
@@ -47,6 +48,9 @@ import com.estatica.domain.expedition.Expedition;
 import com.estatica.domain.expedition.ExpeditionEngine;
 import com.estatica.domain.expedition.ExpeditionResult;
 import com.estatica.domain.expedition.Mission;
+import com.estatica.domain.link.LinkCodec;
+import com.estatica.domain.link.LinkPacket;
+import com.estatica.domain.link.LinkRules;
 import com.estatica.domain.radio.Broadcasts;
 import com.estatica.domain.radio.RadioRules;
 import com.estatica.domain.radio.Relay;
@@ -345,6 +349,7 @@ public final class GameSession {
         rescuePersonas.putAll(radioRepository.rescuePersonas());
         lore.putAll(radioRepository.lore());
         moduleLevels.putAll(radioRepository.moduleLevels());
+        loadLinks();
         registerPronouns();
         long now = clock.nowMillis();
         db.runInTransaction(() -> {
@@ -607,6 +612,7 @@ public final class GameSession {
                     }
                 }
                 finishMission(expedition, scout, result.isMissionCompleted(), step);
+                meetWanderers(team, expedition.getZoneId(), step);
                 if (result.isMissionCompleted()) {
                     count("expeditions", step);
                 }
@@ -654,6 +660,7 @@ public final class GameSession {
         eagerTreatments(step);
         roomsTick(step);
         romanceTick(step);
+        expireWanderers(step);
     }
 
     // ---- Romance with the operator ----
@@ -1271,6 +1278,9 @@ public final class GameSession {
         }
         for (ScoutTemplate p : rescuePersonas.values()) {
             com.estatica.core.Pronouns.register(p.getName(), content.isFemale(p));
+        }
+        for (LinkPacket p : wanderers.values()) {
+            com.estatica.core.Pronouns.register(p.getName(), p.isFemale());
         }
     }
 
@@ -2250,8 +2260,15 @@ public final class GameSession {
                 bands.add(b.getName());
             }
         }
-        return new SessionSnapshot.MapView(sectors, places, bands,
+        SessionSnapshot.MapView view = new SessionSnapshot.MapView(sectors, places, bands,
                 (int) Math.round(content.getBalance().getDepletion().getRecoveryPerDay() * 100));
+        Map<String, Integer> installed = new LinkedHashMap<>();
+        for (Relay relay : relays.values()) {
+            installed.put(relay.getZoneId(), (int) Math.round(relay.getCondition()));
+        }
+        view.relays = installed;
+        view.relayKits = resources.getOrDefault("relay_kit", 0);
+        return view;
     }
 
     /** What the dial hears at a position: the strongest of a hidden signal, a station or an echo. */
@@ -2866,6 +2883,20 @@ public final class GameSession {
         Map<String, String> vars = new HashMap<>();
         vars.put("text", t.getPlainText());
         step.system(text.getDecoded(), vars, null);
+        LinkSignalEntity fromLink = t.getSourceId().startsWith(LINK_SOURCE)
+                ? linkSignals.get(t.getSourceId().substring(LINK_SOURCE.length())) : null;
+        LinkPacket signer = fromLink != null ? unpack(fromLink.code) : null;
+        if (signer != null) {
+            linkLine("signed", linkVars(signer), null, step);
+            // The harder the scheme, the more they left for whoever cracked it.
+            Map<String, Integer> stash = linkRules.decodeReward(t.getKind().name(), random);
+            if (!stash.isEmpty()) {
+                stash.forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+                Map<String, String> stashVars = linkVars(signer);
+                stashVars.put("loot", describe(stash));
+                linkLine("decodeReward", stashVars, null, step);
+            }
+        }
 
         SignalsDef.Transmission def = null;
         for (SignalsDef.Transmission d : content.getSignals().getTransmissions()) {
@@ -4302,6 +4333,697 @@ public final class GameSession {
         return out;
     }
 
+    // ---- Other bunkers: codes, QR, Bluetooth (GDD §12) ----
+
+    /** Transmissions that came from another bunker: sourceId is this plus the packet id. */
+    private static final String LINK_SOURCE = "link:";
+    /** Incoming over Bluetooth: face to face, so no daily limit. */
+    private static final String NEAR = "NEAR";
+    private static final long DAY = 24 * HOUR;
+    private static final Map<String, String> SCHEME_KEYS = Map.of(
+            "ATBASH", "mirror_card", "TAP", "tap_chart", "BASE64", "b64_notebook");
+
+    private final Map<String, LinkSignalEntity> linkSignals = new LinkedHashMap<>();
+    /** Wanderers on the road, by packet id. */
+    private final Map<String, LinkPacket> wanderers = new LinkedHashMap<>();
+    private LinkRules linkRules;
+    private String callsign;
+    /** The code just made or picked to show again, until the operator closes it. */
+    private String shownCode;
+    private String shownLabel;
+
+    private void loadLinks() {
+        linkRules = new LinkRules(content);
+        callsign = com.estatica.domain.link.Callsign.of(state.getOperatorId());
+        for (LinkSignalEntity e : db.linkDao().all()) {
+            linkSignals.put(e.id, e);
+            if (LinkSignalEntity.WAITING.equals(e.status)) {
+                LinkPacket p = unpack(e.code);
+                if (p != null) {
+                    wanderers.put(e.id, p);
+                }
+            }
+        }
+    }
+
+    public String callsign() {
+        return callsign;
+    }
+
+    private LinkPacket unpack(String code) {
+        LinkCodec.Decoded d = LinkCodec.decode(code, content.getBalance().getLink().getBroadcastKey());
+        return d.ok() ? linkRules.sanitize(d.packet) : null;
+    }
+
+    private void linkLine(String key, Map<String, String> vars, Scout scout, Step step) {
+        String template = content.getTerminal().getLink().get(key);
+        if (template != null) {
+            step.system(template, vars, scout);
+        }
+    }
+
+    private Map<String, String> linkVars(LinkPacket p) {
+        Map<String, String> vars = new HashMap<>();
+        vars.put("callsign", p.getCallsign());
+        vars.put("sender", p.getSender().isEmpty() ? "" : " (" + p.getSender() + ")");
+        vars.put("name", p.getName());
+        vars.put("words", p.getText());
+        vars.put("text", p.getText());
+        vars.put("title", p.getTitle());
+        return vars;
+    }
+
+    private String linkText(String key, Map<String, String> vars) {
+        String template = content.getTerminal().getLink().get(key);
+        return template != null ? TextTemplate.format(template, vars) : key;
+    }
+
+    private static String clip(String text, int max) {
+        return text.length() > max ? text.substring(0, max) + "…" : text;
+    }
+
+    /** "10 scrap, 2 components, helmet". */
+    private String describeDrop(Map<String, Integer> amounts, List<String> gearNames) {
+        List<String> parts = new ArrayList<>();
+        if (!amounts.isEmpty()) {
+            parts.add(describe(amounts));
+        }
+        parts.addAll(gearNames);
+        return parts.isEmpty() ? linkText("nothing", Map.of()) : String.join(", ", parts);
+    }
+
+    private void keepSent(LinkPacket p, String code, String label, Step step) {
+        LinkSignalEntity e = new LinkSignalEntity();
+        e.id = p.getId();
+        e.direction = LinkSignalEntity.OUT;
+        e.type = p.getType().name();
+        e.callsign = callsign;
+        e.code = code;
+        e.label = label;
+        e.atMillis = step.now;
+        linkSignals.put(e.id, e);
+        step.radioWrites.add(() -> db.linkDao().upsert(e));
+        // Only the last few sent are kept to show again.
+        List<String> sent = new ArrayList<>();
+        for (LinkSignalEntity s : linkSignals.values()) {
+            if (LinkSignalEntity.OUT.equals(s.direction)) {
+                sent.add(s.id);
+            }
+        }
+        for (int i = 0; i < sent.size() - content.getBalance().getLink().getSentKept(); i++) {
+            String old = sent.get(i);
+            linkSignals.remove(old);
+            step.radioWrites.add(() -> db.linkDao().delete(old));
+        }
+        shownCode = code;
+        shownLabel = label;
+        linkLine("codeReady", Map.of(), null, step);
+    }
+
+    private String operatorTag() {
+        return state.getOperatorName() != null ? state.getOperatorName() : "";
+    }
+
+    /** Schemes the operator can send in: plain, Caesar, Morse, and the ones whose key they hold. */
+    private boolean canSendIn(String scheme) {
+        String key = SCHEME_KEYS.get(scheme);
+        return LinkRules.MESSAGE_SCHEMES.contains(scheme) && (key == null || hasKey(key));
+    }
+
+    /** A message for another bunker, in the clear or in a scheme they'll have to crack. */
+    @WorkerThread
+    public List<LogLine> linkMessage(String text, String scheme) {
+        Step step = new Step();
+        advance(step);
+        String clean = text == null ? "" : text.trim();
+        int max = content.getBalance().getLink().getMessageMaxChars();
+        if (clean.length() > max) {
+            clean = clean.substring(0, max);
+        }
+        boolean ciphered = !LinkRules.PLAIN.equals(scheme);
+        if (clean.isEmpty() || !canSendIn(scheme)
+                || (ciphered && com.estatica.domain.radio.Cipher.normalize(clean).isEmpty())) {
+            return step.commit();
+        }
+        int shift = "CAESAR".equals(scheme) ? random.nextIntInclusive(1, 25) : 0;
+        LinkPacket p = LinkPacket.message(callsign, operatorTag(), step.now, clean, scheme, shift);
+        keepSent(p, LinkCodec.encode(p), linkText("labelMessage", Map.of("text", clip(clean, 24))), step);
+        return step.commit();
+    }
+
+    /** Pieces in stock, by id, ignoring any that aren't. */
+    private List<com.estatica.domain.bunker.GearPiece> stockPieces(List<String> pieceIds) {
+        List<com.estatica.domain.bunker.GearPiece> out = new ArrayList<>();
+        for (String id : pieceIds) {
+            com.estatica.domain.bunker.GearPiece piece = gear.get(id);
+            if (piece != null && piece.isInBunker() && !out.contains(piece)) {
+                out.add(piece);
+            }
+        }
+        return out;
+    }
+
+    private static Map<String, Integer> positive(Map<String, Integer> goods) {
+        Map<String, Integer> out = new LinkedHashMap<>();
+        goods.forEach((k, v) -> {
+            if (v != null && v > 0) {
+                out.put(k, v);
+            }
+        });
+        return out;
+    }
+
+    /** A drop packet for what's in the stores, or null if it isn't there or breaks the limits. */
+    private LinkPacket dropPacket(Map<String, Integer> goods, List<String> pieceIds, String note, long now) {
+        Map<String, Integer> amounts = positive(goods);
+        List<com.estatica.domain.bunker.GearPiece> pieces = stockPieces(pieceIds);
+        if (pieces.size() != pieceIds.size() || !linkRules.dropAllowed(amounts, pieces.size()) || !canAfford(amounts)) {
+            return null;
+        }
+        List<LinkPacket.Gear> packed = new ArrayList<>();
+        for (com.estatica.domain.bunker.GearPiece piece : pieces) {
+            packed.add(new LinkPacket.Gear(piece.getGearId(), piece.getRarity().name(), piece.getCondition()));
+        }
+        String cleanNote = note == null ? "" : note.trim();
+        int max = content.getBalance().getLink().getNoteMaxChars();
+        return LinkPacket.drop(callsign, operatorTag(), now, amounts, packed,
+                cleanNote.length() > max ? cleanNote.substring(0, max) : cleanNote);
+    }
+
+    /** Takes a drop's goods and pieces out of the stores; returns the pieces' names. */
+    private List<String> handOver(LinkPacket p, List<String> pieceIds, Step step) {
+        pay(p.getResources(), step);
+        List<String> names = new ArrayList<>();
+        for (com.estatica.domain.bunker.GearPiece piece : stockPieces(pieceIds)) {
+            names.add(gearName(piece));
+            piece.moveTo(com.estatica.domain.bunker.GearPiece.GONE);
+        }
+        return names;
+    }
+
+    /** Supplies for another bunker: they leave the stores now, so they can't be sent twice. */
+    @WorkerThread
+    public List<LogLine> linkDrop(Map<String, Integer> goods, List<String> pieceIds, String note) {
+        Step step = new Step();
+        advance(step);
+        LinkPacket p = dropPacket(goods, pieceIds, note, step.now);
+        if (p == null) {
+            linkLine("invalid", Map.of(), null, step);
+            return step.commit();
+        }
+        List<String> names = handOver(p, pieceIds, step);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("loot", describeDrop(p.getResources(), names));
+        linkLine("dropPacked", vars, null, step);
+        keepSent(p, LinkCodec.encode(p), linkText("labelDrop", vars), step);
+        return step.commit();
+    }
+
+    /** Someone from the crew as another bunker will meet them (or remember them). */
+    private LinkPacket personPacket(Scout s, LinkPacket.Type type, long now) {
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        for (StatType t : StatType.values()) {
+            stats.put(t.key(), s.stat(t).getValue());
+        }
+        List<String> traits = new ArrayList<>();
+        for (ScoutTrait t : s.getTraits()) {
+            if (t.isVisible()) {
+                traits.add(t.getTraitId());
+            }
+        }
+        String words;
+        if (type == LinkPacket.Type.LAST_WORDS) {
+            words = echoWords(s);
+        } else {
+            words = "";
+            for (Memory m : memoryRepository.forScout(s.getId())) {
+                if (m.getType() != Memory.Type.GRIEF && m.getType() != Memory.Type.LAST_WORDS) {
+                    words = m.getText();
+                }
+            }
+        }
+        int max = content.getBalance().getLink().getWordsMaxChars();
+        return LinkPacket.person(type, callsign, operatorTag(), now, s.getName(), content.isFemale(s), stats, traits,
+                words.length() > max ? words.substring(0, max) : words);
+    }
+
+    /** One of the crew, out on another bunker's roads for a while. They stay home here. */
+    @WorkerThread
+    public List<LogLine> linkWanderer(String scoutId) {
+        Step step = new Step();
+        advance(step);
+        Scout s = scouts.get(scoutId);
+        if (s == null || !s.isAlive()) {
+            return step.commit();
+        }
+        LinkPacket p = personPacket(s, LinkPacket.Type.WANDERER, step.now);
+        keepSent(p, LinkCodec.encode(p), linkText("labelWanderer", linkVars(p)), step);
+        return step.commit();
+    }
+
+    /** Someone who died, so other bunkers hear them once. */
+    @WorkerThread
+    public List<LogLine> linkLastWords(String scoutId) {
+        Step step = new Step();
+        advance(step);
+        Scout s = scouts.get(scoutId);
+        if (s == null || s.isAlive()) {
+            return step.commit();
+        }
+        LinkPacket p = personPacket(s, LinkPacket.Type.LAST_WORDS, step.now);
+        keepSent(p, LinkCodec.encode(p), linkText("labelLastWords", linkVars(p)), step);
+        return step.commit();
+    }
+
+    /** Shows a code sent before. */
+    @WorkerThread
+    public void linkShow(String id) {
+        LinkSignalEntity e = linkSignals.get(id);
+        if (e != null && LinkSignalEntity.OUT.equals(e.direction)) {
+            shownCode = e.code;
+            shownLabel = e.label;
+        }
+    }
+
+    @WorkerThread
+    public void linkHide() {
+        shownCode = null;
+        shownLabel = null;
+    }
+
+    /** A code typed, pasted or scanned. */
+    @WorkerThread
+    public List<LogLine> linkReceive(String code) {
+        Step step = new Step();
+        advance(step);
+        takeLink(code, LinkSignalEntity.IN, null, step);
+        return step.commit();
+    }
+
+    /** A code that came over Bluetooth from a bunker in the same room. */
+    @WorkerThread
+    public List<LogLine> linkReceiveNearby(String code) {
+        Step step = new Step();
+        advance(step);
+        takeLink(code, NEAR, null, step);
+        return step.commit();
+    }
+
+    private int takenToday(long now) {
+        int n = 0;
+        for (LinkSignalEntity e : linkSignals.values()) {
+            if (LinkSignalEntity.IN.equals(e.direction) && !"BROADCAST".equals(e.type)
+                    && localDay(e.atMillis) == localDay(now)) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    /**
+     * Checks a code and lets in what it carries. {@code waitAt}: where a wanderer waits (joint
+     * runs), or null for the farthest place within reach. Returns the packet, or null.
+     */
+    private LinkPacket takeLink(String code, String direction, String waitAt, Step step) {
+        Balance.Link balance = content.getBalance().getLink();
+        LinkCodec.Decoded d = LinkCodec.decode(code, balance.getBroadcastKey());
+        if (!d.ok()) {
+            linkLine(d.error.name().toLowerCase(Locale.ROOT), Map.of(), null, step);
+            return null;
+        }
+        LinkPacket p = linkRules.sanitize(d.packet);
+        if (p == null) {
+            linkLine("invalid", Map.of(), null, step);
+            return null;
+        }
+        LinkPacket.Type type = p.getType();
+        if (type != LinkPacket.Type.BROADCAST && callsign.equals(p.getCallsign())) {
+            linkLine("own", Map.of(), null, step);
+            return null;
+        }
+        if (linkSignals.containsKey(p.getId())) {
+            linkLine("used", Map.of(), null, step);
+            return null;
+        }
+        if (type == LinkPacket.Type.BROADCAST) {
+            if (p.getExpiresDay() > 0 && localDay(step.now) > p.getExpiresDay()) {
+                linkLine("expired", Map.of(), null, step);
+                return null;
+            }
+        } else if (LinkSignalEntity.IN.equals(direction) && takenToday(step.now) >= balance.getDailyLimit()) {
+            linkLine("limit", Map.of("limit", String.valueOf(balance.getDailyLimit())), null, step);
+            return null;
+        }
+        LinkSignalEntity e = new LinkSignalEntity();
+        e.id = p.getId();
+        e.direction = direction;
+        e.type = type.name();
+        e.callsign = p.getCallsign();
+        e.code = code.trim();
+        e.atMillis = step.now;
+        Map<String, String> vars = linkVars(p);
+        switch (type) {
+            case MESSAGE:
+                e.label = linkText("labelMessage", Map.of("text", clip(p.getText(), 24)));
+                receiveMessage(p, vars, step);
+                break;
+            case DROP:
+                e.label = linkText("labelDrop", Map.of("loot", receiveDrop(p, vars, step)));
+                break;
+            case WANDERER:
+                e.label = linkText("labelWanderer", vars);
+                e.zoneId = receiveWanderer(p, waitAt, vars, step);
+                e.status = e.zoneId != null ? LinkSignalEntity.WAITING : LinkSignalEntity.DONE;
+                break;
+            case LAST_WORDS:
+                e.label = linkText("labelLastWords", vars);
+                vars.put("frequency", someFrequency());
+                linkLine("lastWords", vars, null, step);
+                addLore(LINK_SOURCE + p.getId(), linkText("lastWordsLore", vars), step);
+                unsettle(balance.getLastWordsStress(), step);
+                break;
+            case BROADCAST:
+                e.label = linkText("labelBroadcast", vars);
+                vars.put("frequency", someFrequency());
+                linkLine("broadcast", vars, null, step);
+                for (String line : p.getText().split("\n")) {
+                    if (!line.isBlank()) {
+                        step.system(line.trim(), Map.of(), null);
+                    }
+                }
+                grant(p.getResources(), step);
+                if (!p.getLore().isEmpty()) {
+                    addLore(LINK_SOURCE + p.getId(), p.getLore(), step);
+                }
+                break;
+            default:
+                break;
+        }
+        linkSignals.put(e.id, e);
+        step.radioWrites.add(() -> db.linkDao().upsert(e));
+        return p;
+    }
+
+    /** A spot on an open band, for flavor. */
+    private String someFrequency() {
+        List<BandDef> open = new ArrayList<>();
+        for (BandDef band : content.getBalance().getBands()) {
+            if (isUnlocked(band)) {
+                open.add(band);
+            }
+        }
+        BandDef band = open.isEmpty() ? content.getBalance().getBands().get(0) : random.pick(open);
+        return band.frequency(random.nextInt(content.getBalance().getRadio().getDialMax()));
+    }
+
+    private void receiveMessage(LinkPacket p, Map<String, String> vars, Step step) {
+        if (LinkRules.PLAIN.equals(p.getScheme()) || com.estatica.domain.radio.Cipher.normalize(p.getText()).isEmpty()) {
+            linkLine("messagePlain", vars, null, step);
+            return;
+        }
+        Transmission.Kind kind = Transmission.Kind.fromName(p.getScheme());
+        int shift = kind == Transmission.Kind.CAESAR && p.getShift() == 0 ? 3 : p.getShift();
+        Transmission t = Transmission.create(LINK_SOURCE + p.getId(), kind, p.getText(), shift,
+                content.getBalance().getBands().get(0).getId(), null, step.now);
+        transmissions.put(t.getId(), t);
+        step.radioWrites.add(() -> radioRepository.save(t));
+        linkLine("messageCiphered", vars, null, step);
+    }
+
+    /** Into the stores; returns what came, described. */
+    private String receiveDrop(LinkPacket p, Map<String, String> vars, Step step) {
+        p.getResources().forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+        List<String> names = new ArrayList<>();
+        for (LinkPacket.Gear g : p.getGear()) {
+            com.estatica.domain.bunker.GearPiece piece = new com.estatica.domain.bunker.GearPiece(Ids.newId(), g.gearId,
+                    com.estatica.domain.bunker.GearPiece.Rarity.fromKey(g.rarity), g.condition,
+                    com.estatica.domain.bunker.GearPiece.BUNKER, null);
+            gear.put(piece.getId(), piece);
+            names.add(gearName(piece));
+        }
+        String loot = describeDrop(p.getResources(), names);
+        vars.put("loot", loot);
+        linkLine("drop", vars, null, step);
+        if (!p.getText().isEmpty()) {
+            linkLine("dropNote", vars, null, step);
+        }
+        return loot;
+    }
+
+    /** Known places a team could reach now (no wilds or deep runs). */
+    private List<String> reachablePlaces() {
+        List<String> out = new ArrayList<>();
+        for (String id : knownZones) {
+            ZoneDef z = content.getZones().get(id);
+            if (z != null && !z.isWilds() && !z.isEndless() && canReach(z)) {
+                out.add(id);
+            }
+        }
+        java.util.Collections.sort(out);
+        return out;
+    }
+
+    private Map<String, Integer> bandIndexes(List<String> zoneIds) {
+        List<BandDef> bands = content.getBalance().getBands();
+        Map<String, Integer> out = new HashMap<>();
+        for (String id : zoneIds) {
+            for (int i = 0; i < bands.size(); i++) {
+                if (bands.get(i).getId().equals(content.zone(id).getBand())) {
+                    out.put(id, i);
+                }
+            }
+        }
+        return out;
+    }
+
+    /** Where they'll wait, or null if they came by the hatch and were met already. */
+    private String receiveWanderer(LinkPacket p, String waitAt, Map<String, String> vars, Step step) {
+        com.estatica.core.Pronouns.register(p.getName(), p.isFemale());
+        List<String> places = reachablePlaces();
+        String zone = waitAt != null && places.contains(waitAt) ? waitAt
+                : LinkRules.waitingZone(places, bandIndexes(places));
+        if (zone == null) {
+            // Nowhere known yet: they come by the bunker instead.
+            linkLine("wandererHome", vars, null, step);
+            List<Scout> home = new ArrayList<>();
+            for (Scout s : scouts.values()) {
+                if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE) {
+                    home.add(s);
+                }
+            }
+            meet(p, home, null, step);
+            return null;
+        }
+        wanderers.put(p.getId(), p);
+        vars.put("zone", content.zone(zone).getName());
+        vars.put("days", String.valueOf(Math.round(content.getBalance().getLink().getWanderer().getDays())));
+        linkLine("wandererHeard", vars, null, step);
+        return zone;
+    }
+
+    /** A team met someone from another bunker: words, a gift or a tip, and a lighter heart. */
+    private void meet(LinkPacket p, List<Scout> team, String zoneId, Step step) {
+        Map<String, String> vars = linkVars(p);
+        vars.put("zone", zoneId != null ? content.zone(zoneId).getName() : "");
+        if (!team.isEmpty() && zoneId != null) {
+            vars.put("lead", team.get(0).getName());
+            linkLine("wandererMet", vars, team.get(0), step);
+        }
+        Map<String, Integer> gift = linkRules.wandererGift(p);
+        if (!gift.isEmpty()) {
+            gift.forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+            vars.put("loot", describe(gift));
+            linkLine("wandererGift", vars, null, step);
+        }
+        String intelType = linkRules.wandererIntel(p);
+        if (intelType != null) {
+            List<String> places = reachablePlaces();
+            places.remove(zoneId);
+            if (!places.isEmpty()) {
+                addIntel(random.pick(places), intelType, step);
+            }
+        }
+        int relief = content.getBalance().getLink().getWanderer().getStressRelief();
+        if (relief > 0 && !team.isEmpty()) {
+            for (Scout s : team) {
+                rules.addStress(s, -relief);
+            }
+            linkLine("wandererCalm", vars, null, step);
+        }
+        addLore(LINK_SOURCE + p.getId(), linkText("wandererLore", vars), step);
+    }
+
+    /** Back from a place where someone from another bunker was waiting. */
+    private void meetWanderers(List<Scout> team, String zoneId, Step step) {
+        for (LinkSignalEntity e : linkSignals.values()) {
+            LinkPacket p = wanderers.get(e.id);
+            if (p != null && LinkSignalEntity.WAITING.equals(e.status) && zoneId.equals(e.zoneId)) {
+                meet(p, team, zoneId, step);
+                settle(e, step);
+            }
+        }
+    }
+
+    /** Wanderers nobody met move on. */
+    private void expireWanderers(Step step) {
+        double days = content.getBalance().getLink().getWanderer().getDays();
+        for (LinkSignalEntity e : linkSignals.values()) {
+            LinkPacket p = wanderers.get(e.id);
+            if (p != null && LinkSignalEntity.WAITING.equals(e.status) && step.now - e.atMillis > days * DAY) {
+                Map<String, String> vars = linkVars(p);
+                vars.put("zone", e.zoneId != null && content.getZones().containsKey(e.zoneId)
+                        ? content.zone(e.zoneId).getName() : "");
+                linkLine("wandererGone", vars, null, step);
+                settle(e, step);
+            }
+        }
+    }
+
+    private void settle(LinkSignalEntity e, Step step) {
+        e.status = LinkSignalEntity.DONE;
+        wanderers.remove(e.id);
+        step.radioWrites.add(() -> db.linkDao().upsert(e));
+    }
+
+    // ---- Nearby (Bluetooth): trades and joint runs ----
+
+    /** An offer for a live trade: what's in the stores, nothing taken yet. Null if not possible. */
+    @WorkerThread
+    public String linkOffer(Map<String, Integer> goods, List<String> pieceIds) {
+        if (positive(goods).isEmpty() && pieceIds.isEmpty()) {
+            // Giving nothing is a fine offer: a gift from the other side.
+            return LinkCodec.encode(LinkPacket.drop(callsign, operatorTag(), clock.nowMillis(), Map.of(), List.of(), ""));
+        }
+        LinkPacket p = dropPacket(goods, pieceIds, "", clock.nowMillis());
+        return p != null ? LinkCodec.encode(p) : null;
+    }
+
+    /**
+     * Both sides agreed: what we offered leaves, what they offered comes in. Each phone does
+     * its own half; our offer is checked again in case the stores changed meanwhile.
+     */
+    @WorkerThread
+    public List<LogLine> linkTrade(Map<String, Integer> goods, List<String> pieceIds, String theirOffer) {
+        Step step = new Step();
+        advance(step);
+        LinkCodec.Decoded d = LinkCodec.decode(theirOffer, "");
+        boolean giving = !positive(goods).isEmpty() || !pieceIds.isEmpty();
+        LinkPacket mine = giving ? dropPacket(goods, pieceIds, "", step.now) : null;
+        if (!d.ok() || d.packet.getType() != LinkPacket.Type.DROP || (giving && mine == null)) {
+            linkLine("invalid", Map.of(), null, step);
+            return step.commit();
+        }
+        List<String> gave = mine != null ? handOver(mine, pieceIds, step) : new ArrayList<>();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("callsign", d.packet.getCallsign());
+        vars.put("gave", describeDrop(mine != null ? mine.getResources() : Map.of(), gave));
+        LinkPacket theirs = linkRules.sanitize(d.packet);
+        vars.put("got", theirs != null ? receiveDrop(theirs, linkVars(theirs), step) : linkText("nothing", Map.of()));
+        linkLine("tradeDone", vars, null, step);
+        return step.commit();
+    }
+
+    /** Their side of a trade, described ("3 rations, helmet"). */
+    @WorkerThread
+    public String linkDescribeOffer(String code) {
+        LinkCodec.Decoded d = LinkCodec.decode(code, "");
+        LinkPacket p = d.ok() && d.packet.getType() == LinkPacket.Type.DROP ? linkRules.sanitize(d.packet) : null;
+        if (p == null) {
+            return linkText("nothing", Map.of());
+        }
+        List<String> names = new ArrayList<>();
+        for (LinkPacket.Gear g : p.getGear()) {
+            names.add(content.gear(g.gearId).getName().toLowerCase(Locale.ROOT));
+        }
+        return describeDrop(p.getResources(), names);
+    }
+
+    /** A crew member's code for a joint run (they stay home; the other bunker meets them). */
+    @WorkerThread
+    public String linkWandererCode(String scoutId) {
+        Scout s = scouts.get(scoutId);
+        if (s == null || !s.isAlive()) {
+            return null;
+        }
+        return LinkCodec.encode(personPacket(s, LinkPacket.Type.WANDERER, clock.nowMillis()));
+    }
+
+    /**
+     * A joint run: the other bunker watches the route to {@code zoneId} (a cache and dangers
+     * called out) and their scout waits there to meet our team.
+     */
+    @WorkerThread
+    public List<LogLine> linkJoint(String zoneId, String theirWanderer) {
+        Step step = new Step();
+        advance(step);
+        if (zoneId == null || !reachablePlaces().contains(zoneId)) {
+            return step.commit();
+        }
+        LinkPacket p = takeLink(theirWanderer, NEAR, zoneId, step);
+        Map<String, String> vars = new HashMap<>();
+        vars.put("callsign", p != null ? p.getCallsign() : "?");
+        vars.put("zone", content.zone(zoneId).getName());
+        linkLine("jointSet", vars, null, step);
+        addIntel(zoneId, "CACHE", step);
+        addIntel(zoneId, "DANGER", step);
+        return step.commit();
+    }
+
+    private SessionSnapshot.LinkView linkView(long now) {
+        Balance.Link balance = content.getBalance().getLink();
+        SessionSnapshot.LinkView v = new SessionSnapshot.LinkView();
+        v.callsign = callsign;
+        v.takenToday = takenToday(now);
+        v.dailyLimit = balance.getDailyLimit();
+        v.dropMaxUnits = balance.getDropMaxUnits();
+        v.dropMaxGear = balance.getDropMaxGear();
+        v.messageMaxChars = balance.getMessageMaxChars();
+        Map<String, String> schemeNames = content.getTerminal().getRadio().getSchemeNames();
+        for (String s : LinkRules.MESSAGE_SCHEMES) {
+            String name = LinkRules.PLAIN.equals(s) ? linkText("plain", Map.of()) : schemeNames.getOrDefault(s, s);
+            v.schemes.add(new SessionSnapshot.LinkChoice(s, name, 0, canSendIn(s)));
+        }
+        for (String id : balance.getDropResources()) {
+            ResourceDef r = content.getResources().get(id);
+            if (r != null) {
+                v.goods.add(new SessionSnapshot.LinkChoice(id, r.getName(), resources.getOrDefault(id, 0), true));
+            }
+        }
+        for (com.estatica.domain.bunker.GearPiece piece : gear.values()) {
+            if (piece.isInBunker()) {
+                v.gear.add(new SessionSnapshot.LinkChoice(piece.getId(), gearLabel(piece), 1, true));
+            }
+        }
+        v.gear.sort(Comparator.comparing(c -> c.name));
+        for (Scout s : scouts.values()) {
+            (s.isAlive() ? v.crew : v.fallen).add(new SessionSnapshot.LinkChoice(s.getId(), s.getName(), 0, true));
+        }
+        for (String id : reachablePlaces()) {
+            v.places.add(new SessionSnapshot.LinkChoice(id, content.zone(id).getName(), 0, true));
+        }
+        for (LinkSignalEntity e : linkSignals.values()) {
+            if (LinkSignalEntity.OUT.equals(e.direction)) {
+                v.sent.add(0, new SessionSnapshot.LinkChoice(e.id, e.label, 0, true));
+                continue;
+            }
+            v.received.add(0, e.callsign.isEmpty() ? e.label : e.callsign + " · " + e.label);
+            LinkPacket p = wanderers.get(e.id);
+            if (p != null && e.zoneId != null && content.getZones().containsKey(e.zoneId)) {
+                Map<String, String> vars = linkVars(p);
+                vars.put("zone", content.zone(e.zoneId).getName());
+                long left = (long) (e.atMillis + balance.getWanderer().getDays() * DAY - now);
+                vars.put("left", ElapsedFormatter.format(Math.max(0, left), content.getTerminal().getElapsedUnits()));
+                v.waiting.add(linkText("waitingRow", vars));
+            }
+        }
+        if (v.received.size() > 10) {
+            v.received = new ArrayList<>(v.received.subList(0, 10));
+        }
+        v.code = shownCode;
+        v.codeLabel = shownLabel;
+        return v;
+    }
+
     // ---- Read models ----
 
     @WorkerThread
@@ -4634,6 +5356,7 @@ public final class GameSession {
                 pendingTransmissions, gameFlags.contains(FLAG_MORSE_TABLE),
                 resources.getOrDefault("relay_kit", 0), relayLines, stationViews());
         view.market = marketView(clock.nowMillis());
+        view.link = linkView(clock.nowMillis());
         return view;
     }
 

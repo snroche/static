@@ -133,8 +133,13 @@ public final class Migrations {
             "ALTER TABLE `expeditions` ADD COLUMN `third_id` TEXT"
     );
 
+    /** 0.8.0: codes exchanged with other bunkers. */
+    static final List<String> MIGRATION_13_14_SQL = List.of(
+            "CREATE TABLE IF NOT EXISTS `link_signals` (`id` TEXT NOT NULL, `direction` TEXT NOT NULL, `type` TEXT NOT NULL, `callsign` TEXT NOT NULL, `code` TEXT NOT NULL, `status` TEXT NOT NULL, `zone_id` TEXT, `label` TEXT NOT NULL, `at_millis` INTEGER NOT NULL, PRIMARY KEY(`id`))"
+    );
+
     /** SQL of each step; index i migrates version i + 1 to i + 2. */
-    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL, MIGRATION_9_10_SQL, MIGRATION_10_11_SQL, MIGRATION_11_12_SQL, MIGRATION_12_13_SQL);
+    static final List<List<String>> STEPS = List.of(MIGRATION_1_2_SQL, MIGRATION_2_3_SQL, MIGRATION_3_4_SQL, MIGRATION_4_5_SQL, MIGRATION_5_6_SQL, MIGRATION_6_7_SQL, MIGRATION_7_8_SQL, MIGRATION_8_9_SQL, MIGRATION_9_10_SQL, MIGRATION_10_11_SQL, MIGRATION_11_12_SQL, MIGRATION_12_13_SQL, MIGRATION_13_14_SQL);
 
     public static final Migration[] ALL = build();
 

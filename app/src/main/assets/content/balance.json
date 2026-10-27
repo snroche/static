@@ -1,5 +1,5 @@
 {
-  "contentVersion": 26,
+  "contentVersion": 28,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -1252,6 +1252,41 @@
     "lootPerTier": 0.6,
     "oddsPerTier": 0.08,
     "dangerPerTier": 1
+  },
+  "link": {
+    "_comment": "Other bunkers: codes by text, QR or Bluetooth, no server (GDD §12). Codes can be forged, so everything stays modest. [placeholder]",
+    "dailyLimit": 3,
+    "messageMaxChars": 140,
+    "noteMaxChars": 80,
+    "wordsMaxChars": 160,
+    "dropMaxUnits": 40,
+    "dropMaxGear": 2,
+    "dropResources": ["scrap", "components", "parts", "rations", "medicine", "batteries", "fuel", "relay_kit", "chips"],
+    "lastWordsStress": 3,
+    "sentKept": 10,
+    "_decodeRewards": "Decoding a message from another bunker points to a stash they left: up to these amounts, each rolled from 1. Harder schemes give more.",
+    "decodeRewards": {
+      "CAESAR": {"scrap": 2},
+      "MORSE": {"scrap": 3, "components": 1},
+      "ATBASH": {"scrap": 3, "components": 2},
+      "TAP": {"scrap": 2, "components": 3, "batteries": 1},
+      "BASE64": {"components": 3, "batteries": 2, "parts": 2}
+    },
+    "broadcastKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEOlMmm0uVH2B501cNRpfE9Bpx5YMXttYmkW4GxVIKGArc/5GNjcH9Z2JpgDlwn2VM+qKJBHQTxiSEVF1c0dwtKw==",
+    "wanderer": {
+      "_comment": "Met on the road. By their strongest stat: what they leave, or intel they share on another place.",
+      "days": 3,
+      "stressRelief": 8,
+      "gifts": {
+        "endurance": {"rations": 3},
+        "craft": {"components": 2, "parts": 1},
+        "nerve": {"medicine": 1}
+      },
+      "intel": {
+        "wits": "CACHE",
+        "stealth": "DANGER"
+      }
+    }
   },
   "market": {
     "_comment": "The Fair, the trader on the radio. Prices in chips: goods are [buy, sell]. [placeholder]",

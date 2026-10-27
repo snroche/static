@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RADIO → LINK: a code just made, three ways to get it across: TEXT · QR · NEARBY. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/bg_popup"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/codeTitle"
+            style="@style/TerminalHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:accessibilityHeading="true"
+            tools:targetApi="28" />
+
+        <TextView
+            android:id="@+id/codeClose"
+            style="@style/TerminalButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/link_done"
+            android:gravity="center"
+            android:text="@string/ic_close" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/codeLabel"
+        style="@style/TerminalText.Dim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/codeTabText"
+            style="@style/TerminalSection.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/code_tab_text" />
+
+        <TextView
+            android:id="@+id/codeTabQr"
+            style="@style/TerminalSection.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/code_tab_qr" />
+
+        <TextView
+            android:id="@+id/codeTabNearby"
+            style="@style/TerminalSection.Icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/code_tab_nearby" />
+    </LinearLayout>
+
+    <!-- TEXT: the code itself, to copy or share. -->
+    <LinearLayout
+        android:id="@+id/codeTextPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+
+        <!-- Long codes (broadcasts) scroll inside. -->
+        <TextView
+            android:id="@+id/codeText"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:scrollbars="vertical"
+            android:textColor="@color/signal"
+            android:textIsSelectable="true" />
+
+        <TextView
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/code_text_help" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/codeCopy"
+                style="@style/TerminalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/code_copy" />
+
+            <TextView
+                android:id="@+id/codeShare"
+                style="@style/TerminalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/code_share" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- QR: amber paper, dark modules, so any scanner reads it. -->
+    <LinearLayout
+        android:id="@+id/codeQrPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/codeQr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/code_qr_description" />
+
+        <TextView
+            style="@style/TerminalText.Dim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/code_qr_help" />
+    </LinearLayout>
+
+    <!-- NEARBY: straight over the Bluetooth link. -->
+    <LinearLayout
+        android:id="@+id/codeNearbyPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/codeNearbyStatus"
+            style="@style/TerminalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/codeNearbyAction"
+            style="@style/TerminalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center" />
+    </LinearLayout>
+</LinearLayout>

@@ -222,11 +222,16 @@ Todo el MVP es **offline, sin backend**.
 - **Fase 6 — Monetización y lanzamiento:** cosmética, pase de apoyo, anuncios opcionales, Play Store.
 - **Post-MVP:** Banda Profunda, guía en vivo en grilla, triangulación, multijugador (§12).
 
-## 12. Multijugador (etapa posterior, sin definir)
+## 12. Multijugador sin servidor (desde 0.8)
 
-Requiere backend; no se implementa en el MVP. Ideas semilla, a desarrollar más adelante:
-- Transmisiones interceptadas de otros operadores reales en el dial.
-- Exploradores de otros jugadores cruzándose en zonas lejanas.
-- Comercio de objetos entre búnkeres por radio.
+Sin backend. Cada búnker tiene un **indicativo** (`LU4QXR`, derivado del id del operador) y lo que se manda viaja como **código**: texto en grupos de cinco (`7KQ2M X9FAD …`), QR o Bluetooth. El mundo de cada jugador sigue siendo único: no hay región compartida.
 
-Requisito para el MVP: que el modelo de datos no lo impida (IDs globales tipo UUID, estado serializable).
+- **Mensajes:** en claro o cifrados (César, Morse y los esquemas cuya llave tenga el que manda). Llegan como transmisión a descifrar.
+- **Envíos:** recursos y equipo; salen del depósito al empaquetar, así no se duplican. Llegan a la escotilla.
+- **Errantes:** una foto de alguien de la tripulación (nombre, stats, rasgos visibles, un recuerdo). Espera unos días en el lugar más lejano al alcance del otro; el equipo que vuelve de ahí lo cruza y recibe palabras, un regalo o un dato según su mejor stat. Nadie se recluta.
+- **Últimas palabras:** de los caídos; suenan una vez en el dial del otro y quedan en el Diario.
+- **Emisiones del desarrollador:** códigos firmados (ECDSA) para eventos sin servidor; se generan con `tools/link_broadcast.sh`.
+- **Cerca (Bluetooth):** dos teléfonos en la misma sala. Códigos sin tipear, **trueque** en vivo (los dos aceptan las mismas ofertas) y **expedición conjunta** (el otro búnker cubre la ruta: escondite y peligros marcados, y su explorador espera ahí).
+
+Los códigos se pueden falsificar, así que todo es modesto y se recorta a los límites de `balance.json → link`; hay un tope diario de códigos de jugadores (las emisiones y lo que llega por Bluetooth no cuentan).
+

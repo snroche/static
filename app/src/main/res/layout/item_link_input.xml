@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A text field on the LINK screen (message, note, code to take). -->
+<!-- The hint is set in code. -->
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/TerminalText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:background="@drawable/bg_slot_empty"
+    android:gravity="top|start"
+    android:importantForAutofill="no"
+    android:inputType="textMultiLine|textNoSuggestions"
+    android:minHeight="48dp"
+    android:padding="8dp"
+    android:textColorHint="@color/amber_hint"
+    android:textCursorDrawable="@null"
+    tools:ignore="LabelFor" />

@@ -14,8 +14,8 @@ import com.estatica.data.session.SessionSnapshot;
 import com.estatica.databinding.PanelRadioBinding;
 
 /**
- * The radio (GDD §6.1), in three sections: the dial (pick a band, tune, lock on), the
- * transmissions waiting to be decoded, and the relays.
+ * The radio (GDD §6.1), in five sections: the dial (pick a band, tune, lock on), stations, the
+ * transmissions waiting to be decoded, THE FAIR, and LINK to other bunkers. Relays are on the map.
  */
 final class RadioPanel {
 
@@ -25,13 +25,13 @@ final class RadioPanel {
         haptics = on;
     }
 
-    interface Host {
+    interface Host extends LinkPanel.Host {
         void openDecoder(SessionSnapshot.TransmissionView transmission, boolean morseTable);
 
         void closeRadio();
     }
 
-    private enum Section { DIAL, STATIONS, DECODE, RELAYS, TRADE }
+    private enum Section { DIAL, STATIONS, DECODE, TRADE, LINK }
 
     /** Strength steps that give a haptic tick while tuning. */
     private static final double[] TICKS = {0.3, 0.6, 0.85};
@@ -47,6 +47,7 @@ final class RadioPanel {
     private int lastTick = -1;
     private Section section = Section.DIAL;
     private final TradePanel trade;
+    private final LinkPanel link;
 
     RadioPanel(PanelRadioBinding binding, TerminalViewModel viewModel, Host host, SoundEngine sound) {
         this.sound = sound;
@@ -83,9 +84,10 @@ final class RadioPanel {
         b.radioRecharge.setOnClickListener(v -> viewModel.recharge());
         b.sectionDecode.setOnClickListener(v -> showSection(Section.DECODE));
         b.sectionStations.setOnClickListener(v -> showSection(Section.STATIONS));
-        b.sectionRelays.setOnClickListener(v -> showSection(Section.RELAYS));
         b.sectionTrade.setOnClickListener(v -> showSection(Section.TRADE));
         trade = new TradePanel(b.trade, viewModel);
+        b.sectionLink.setOnClickListener(v -> showSection(Section.LINK));
+        link = new LinkPanel(b.link, viewModel, host);
     }
 
     boolean isShown() {
@@ -94,10 +96,6 @@ final class RadioPanel {
 
     void show() {
         b.getRoot().setVisibility(View.VISIBLE);
-        // Waiting transmissions come first: that's usually why you opened the radio.
-        if (snapshot != null && !snapshot.radio.transmissions.isEmpty() && section == Section.RELAYS) {
-            section = Section.DECODE;
-        }
         if (section == Section.DIAL) {
             sound.startRadio();
         }
@@ -142,13 +140,19 @@ final class RadioPanel {
         sectionButton(b.sectionDecode, Section.DECODE, radio.transmissions.isEmpty()
                 ? res.getString(R.string.radio_section_decode)
                 : res.getString(R.string.radio_section_decode_count, radio.transmissions.size()));
-        sectionButton(b.sectionRelays, Section.RELAYS, res.getString(R.string.relays_title));
         boolean open = radio.market != null && radio.market.open;
         sectionButton(b.sectionTrade, Section.TRADE, res.getString(open ? R.string.radio_section_trade_on
                 : R.string.radio_section_trade));
         b.trade.setVisibility(section == Section.TRADE ? View.VISIBLE : View.GONE);
         if (section == Section.TRADE) {
             trade.render(radio.market);
+        }
+        sectionButton(b.sectionLink, Section.LINK, res.getString(viewModel.link().view().getValue() != null
+                && viewModel.link().view().getValue().state == com.estatica.data.link.NearbyLink.State.CONNECTED
+                ? R.string.radio_section_link_on : R.string.radio_section_link));
+        b.link.setVisibility(section == Section.LINK ? View.VISIBLE : View.GONE);
+        if (section == Section.LINK) {
+            link.render(radio.link);
         }
         int onAir = 0;
         for (SessionSnapshot.StationView st : radio.stations) {
@@ -159,7 +163,6 @@ final class RadioPanel {
         b.stations.setVisibility(section == Section.STATIONS ? View.VISIBLE : View.GONE);
         b.dialSection.setVisibility(section == Section.DIAL ? View.VISIBLE : View.GONE);
         b.transmissions.setVisibility(section == Section.DECODE ? View.VISIBLE : View.GONE);
-        b.relays.setVisibility(section == Section.RELAYS ? View.VISIBLE : View.GONE);
 
         if (bandId == null) {
             bandId = radio.bands.get(0).id;
@@ -218,8 +221,23 @@ final class RadioPanel {
             b.stations.addView(row);
         }
 
-        String relays = radio.relays.isEmpty() ? res.getString(R.string.relays_none) : String.join(", ", radio.relays);
-        b.relays.setText(res.getString(R.string.relays_line, radio.relayKits, relays));
+    }
+
+    /** The Bluetooth link changed (state, offers, devices). */
+    void onNearby(LinkController.View near) {
+        link.renderNearby(near);
+        if (snapshot != null && isShown()) {
+            Resources res = b.getRoot().getResources();
+            sectionButton(b.sectionLink, Section.LINK, res.getString(near.state
+                    == com.estatica.data.link.NearbyLink.State.CONNECTED
+                    ? R.string.radio_section_link_on : R.string.radio_section_link));
+        }
+    }
+
+    /** Opens RADIO → LINK → NEARBY. */
+    void showNearby() {
+        showSection(Section.LINK);
+        link.openNearby();
     }
 
     private void sectionButton(TextView view, Section which, String label) {

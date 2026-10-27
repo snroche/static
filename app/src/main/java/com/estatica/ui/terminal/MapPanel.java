@@ -46,6 +46,10 @@ final class MapPanel {
                         ? res.getString(R.string.zone_depleted_long, place.depleted, place.refillIn)
                         : res.getString(R.string.zone_untouched))
                         + " " + res.getString(R.string.map_refill_rule, snapshot.map.refillPercentPerDay);
+                Integer relay = snapshot.map.relays.get(place.zoneId);
+                if (relay != null) {
+                    info += "\n" + res.getString(R.string.map_place_relay, relay);
+                }
                 b.mapInfo.setText(info);
                 b.mapAction.setText(R.string.map_send);
                 b.mapAction.setVisibility(place.reachable ? View.VISIBLE : View.GONE);
@@ -112,6 +116,24 @@ final class MapPanel {
     private void redraw() {
         if (snapshot != null) {
             b.map.setMap(snapshot.map, selectedSector);
+            showRelays();
         }
+    }
+
+    /** Installed relays by name and condition, and kits waiting in the stores. */
+    private void showRelays() {
+        Resources res = b.getRoot().getResources();
+        java.util.List<String> parts = new java.util.ArrayList<>();
+        for (java.util.Map.Entry<String, Integer> r : snapshot.map.relays.entrySet()) {
+            String name = r.getKey();
+            for (SessionSnapshot.PlaceView p : snapshot.map.places) {
+                if (p.zoneId.equals(r.getKey())) {
+                    name = p.name;
+                }
+            }
+            parts.add(res.getString(R.string.map_relay_item, name, r.getValue()));
+        }
+        b.mapRelays.setText(res.getString(R.string.map_relays, snapshot.map.relayKits,
+                parts.isEmpty() ? res.getString(R.string.relays_none) : String.join(", ", parts)));
     }
 }

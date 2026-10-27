@@ -10,6 +10,51 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.8.1] — A tidier radio, a code popup, rewards for cracking codes — in verification
+
+App 0.8.1 (versionCode 801) · DB 14 (no change) · **Content 27 → 28**
+
+### Added
+- **Cracking another bunker's message pays.** Under it are coordinates to a stash they left: up to 2 scrap for Caesar, rising through Morse, Atbash and tap code to Base64 (up to 3 components, 2 batteries and 2 parts). Plain messages give nothing.
+- **Relays on the map.** A small mark next to each place with a relay, its condition in the place's details, and a line under the map with every relay and the kits ready.
+
+### Changed
+- **The radio has five sections, each with an icon over its name:** DIAL, STATIONS, DECODE, TRADE and LINK. RELAYS moved to the map, where the places they serve are.
+- **A code opens in its own popup:** black, framed in amber, with rounded corners. It has three tabs: TEXT (copy or share), QR (dark on amber, so any scanner reads it) and NEARBY (send it over the Bluetooth link, or go set one up).
+- **Icons on LINK:** send, receive, nearby, the four kinds of code, paste, scan, host and find.
+- Eight new icons in the terminal font: QR, scan, Bluetooth, copy, paste, share, close and text.
+
+### Fixed
+- **Map icons, "?" marks and labels** are centered on their place again. Icons were drawn from a guessed baseline that doesn't fit the icon font, so some sat off-center; the selection ring now circles the mark it belongs to.
+
+## [0.8.0] — Other bunkers: codes, QR and Bluetooth — in verification
+
+App 0.8.0 (versionCode 800) · **DB 13 → 14** · **Content 26 → 27**
+
+### Added
+- **Other bunkers, with no server (RADIO → LINK).** Your bunker has a callsign, like LU4QXR. What you send travels as a code: text in groups of five, a QR, or Bluetooth.
+  - **Messages:** in the clear, or in Caesar, Morse or any scheme whose key item you hold. A ciphered one arrives as a transmission to decode, signed with the sender's callsign.
+  - **Drops:** up to 40 units of supplies and 2 pieces of gear. They leave your stores when packed, so they can't be sent twice. They arrive at the other bunker's hatch.
+  - **Wanderers:** someone from your crew, as others will meet them. They wait about 3 days at the farthest place the other bunker can reach. The team coming back from there meets them and gets their words, a lighter heart, and a gift or a tip that depends on their best stat. They stay home with you, and nobody gets recruited.
+  - **Last words:** one of your fallen, heard once on another bunker's dial and kept in their Diary.
+  - **Broadcasts:** signed codes from the developers for events, made with `tools/link_broadcast.sh`.
+  - **Taking codes:** type, paste or scan them. Up to 3 codes from players a day; broadcasts and codes sent over Bluetooth don't count. Your own codes and codes already taken are refused.
+  - **Codes sent lately** can be shown again, to copy, share, show as a QR or send over Bluetooth.
+- **Nearby, over Bluetooth.** Two phones in the same room: one hosts, the other finds it.
+  - Codes go across without typing.
+  - **Trade:** each side puts up an offer. When both agree to the same pair, they swap.
+  - **Joint run:** each side picks a place in their own world and someone from the crew. Each bunker gets a cache and the dangers called out on that route, and the other's scout waits there.
+- `tools/link_broadcast.sh` signs broadcasts. The private key lives in `D:\Android\keys\link_broadcast.pk8`, outside the repo; `tools/broadcasts/example.properties` shows the format.
+
+### Changed
+- **The radio has a sixth section, LINK.**
+- **New permissions:** Bluetooth (for nearby links) and the camera (for scanning QR codes). Both are asked for only when used.
+- **New dependency:** `zxing-android-embedded` 4.3.0, for showing and scanning QR codes.
+
+### Technical
+- DB 14: a `link_signals` table (codes taken, sent, and wanderers waiting), with its migration.
+- `domain/link`: the code format (deflate, salted CRC32 or an ECDSA P-256 signature, Crockford base32), the limits, and the callsign. All pure Java, with tests.
+
 ## [0.7.2] — Map labels, steadier economy, room upgrades — in verification
 
 App 0.7.2 (versionCode 702) · DB 13 (no change) · **Content 25 → 26**
