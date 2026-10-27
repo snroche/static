@@ -102,6 +102,16 @@
             android:layout_weight="0.9"
             android:minHeight="44dp"
             android:text="@string/log_diary" />
+
+        <TextView
+            android:id="@+id/logConsole"
+            style="@style/TerminalTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/console_toggle"
+            android:minWidth="44dp"
+            android:minHeight="44dp"
+            android:text="@string/console_mark" />
     </LinearLayout>
 
     <!-- Narrow EXPEDITIONS / CHATS to one team or one person. -->
@@ -123,6 +133,46 @@
             android:orientation="horizontal" />
     </HorizontalScrollView>
 
+    <!-- CHATS with one person open: talk, give, see their card, without leaving COMMS. -->
+    <LinearLayout
+        android:id="@+id/chatActions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logChipsScroll">
+
+        <TextView
+            android:id="@+id/chatTalk"
+            style="@style/TerminalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/chat_talk" />
+
+        <TextView
+            android:id="@+id/chatGift"
+            style="@style/TerminalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/chat_gift" />
+
+        <TextView
+            android:id="@+id/chatCard"
+            style="@style/TerminalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/chat_card" />
+    </LinearLayout>
+
     <!-- Expeditions in progress, one per line: only in COMMS > EXPEDITIONS. -->
     <TextView
         android:id="@+id/expeditionStrip"
@@ -137,7 +187,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logChipsScroll" />
+        app:layout_constraintTop_toBottomOf="@id/chatActions" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/log"
@@ -218,6 +268,16 @@
                 android:minWidth="40dp"
                 android:gravity="center"
                 android:text="@string/decision_next_mark" />
+
+            <TextView
+                android:id="@+id/decisionFold"
+                style="@style/TerminalButton.Top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/decision_fold"
+                android:minWidth="44dp"
+                android:gravity="center"
+                android:text="@string/decision_fold_mark" />
         </LinearLayout>
 
         <TextView
@@ -273,6 +333,7 @@
         android:layout_marginStart="12dp"
         android:importantForAccessibility="no"
         android:text="@string/input_prompt"
+        android:visibility="gone"
         app:layout_constraintBaseline_toBaselineOf="@id/input"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -292,6 +353,7 @@
         android:paddingVertical="14dp"
         android:textColorHint="@color/amber_hint"
         android:textCursorDrawable="@null"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/prompt" />

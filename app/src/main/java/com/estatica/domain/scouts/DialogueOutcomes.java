@@ -21,6 +21,17 @@ public final class DialogueOutcomes {
         TerminalText.BunkerText text = content.getTerminal().getBunker();
         Map<String, String> vars = new HashMap<>();
         vars.put("name", scout.getName());
+        com.estatica.domain.content.Balance.Bond balance = content.getBalance().getBond();
+        if (delta > 0 && scout.getLife().getBond() >= balance.getMax()) {
+            // Nothing left to grow: being that close shows as ease instead.
+            int eased = -rules.addStress(scout, -Math.max(1, (int) Math.round(delta * balance.getFullBondReliefShare())));
+            if (eased > 0) {
+                vars.put("n", String.valueOf(eased));
+                lines.add(LogLine.draft(now, LogChannel.SYSTEM, null,
+                        TextTemplate.format(content.getTerminal().moment("bondFull"), vars), scout.getId()));
+            }
+            return;
+        }
         int levels = rules.addBond(scout, delta);
         String template = levels > 0 ? text.getBondUp()
                 : delta > 0 ? text.getBondWarmer()
@@ -29,8 +40,9 @@ public final class DialogueOutcomes {
             // Every change shows, not just level-ups: talking to someone always lands somewhere.
             vars.put("progress", String.valueOf(rules.bondProgress(scout)));
             vars.put("level", String.valueOf(rules.bondLevel(scout)));
-            lines.add(LogLine.draft(now, LogChannel.SYSTEM, null,
-                    TextTemplate.format(template, vars), scout.getId()));
+            LogLine line = LogLine.draft(now, LogChannel.SYSTEM, null,
+                    TextTemplate.format(template, vars), scout.getId());
+            lines.add(levels > 0 ? line.withCue(LogLine.Cue.BOND) : line);
         }
         String revealed = rules.revealHiddenIfDue(scout);
         if (revealed != null) {

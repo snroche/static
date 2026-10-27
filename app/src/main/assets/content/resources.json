@@ -191,5 +191,15 @@
     "id": "gear_palanca",
     "name": "Crowbar",
     "kind": "GEAR"
+  },
+  {
+    "id": "gear_bici_ruta",
+    "name": "Road bike",
+    "kind": "GEAR"
+  },
+  {
+    "id": "gear_sidecar",
+    "name": "Sidecar motorbike",
+    "kind": "GEAR"
   }
 ]

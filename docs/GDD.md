@@ -113,7 +113,7 @@ Los exploradores que no están afuera viven en el búnker y hacen cosas:
 
 **Interacciones directas:**
 - **Hablar:** diálogos cortos con opciones. A veces ellos inician ("¿tenés un minuto?"). Lo que se elige se recuerda.
-- **Regalos:** objetos encontrados en expediciones (una armónica, una foto, chocolate, un libro). Cada explorador tiene gustos y disgustos individuales que se **descubren conversando**, no se muestran. El regalo correcto sube mucho el Vínculo; el incorrecto puede bajarlo.
+- **Regalos:** objetos encontrados en expediciones (una armónica, una foto, chocolate, un libro). Cada explorador tiene gustos y disgustos individuales que se **descubren conversando**, no se muestran. El regalo correcto sube mucho el Vínculo; el incorrecto puede bajarlo. Cada uno tiene además **un objeto favorito** (el que más quiere). Un regalo que les gusta baja su estrés y les da +1 a todo en la próxima salida; desde Vínculo 3 (o siempre, si es el favorito) **lo devuelven a su manera** unas horas después: el cocinero cocina para todos, la mecánica arregla el equipo más gastado, el músico toca, la maestra da una clase. Con el Vínculo al máximo, lo que lo subiría pasa a bajar el estrés, y hablar nunca queda en nada.
 - **Guiarlos:** en ciertos hitos el explorador pide consejo ("¿aprendo a usar el rifle o a curar?"). La respuesta del jugador define su especialización (ramas de habilidades). El jugador es su mentor, no solo su jefe.
 
 **Relaciones entre exploradores:** amistades, rivalidades y parejas que surgen de compartir tareas y expediciones. Afectan el rendimiento cuando van juntos y la reacción cuando uno muere.

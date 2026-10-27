@@ -106,6 +106,112 @@ final class SoundEngine {
         play(chirp, 0.4f);
     }
 
+    /** Short sounds for moments (LogLine.Cue), made the first time each is needed. */
+    private final Map<String, AudioTrack> cues = new java.util.HashMap<>();
+
+    /** Plays the sound for a moment in the log: a gift they loved, a rare find, thunder… */
+    void cue(String cue) {
+        if (!enabled || cue == null) {
+            return;
+        }
+        AudioTrack track = cues.get(cue);
+        if (track == null) {
+            short[] pcm = cuePcm(cue);
+            if (pcm == null) {
+                return;
+            }
+            track = track(pcm);
+            cues.put(cue, track);
+        }
+        play(track, "THUNDER".equals(cue) ? 0.7f : 0.45f);
+    }
+
+    private static short[] cuePcm(String cue) {
+        switch (cue) {
+            case "WARM":
+                // Two soft notes, the second held: someone glad.
+                return concat(bell(523.25, 0.16, 0.5), bell(783.99, 0.5, 0.45));
+            case "FIND":
+                // A rising arpeggio with a sparkle on top.
+                return concat(bell(659.25, 0.08, 0.45), bell(783.99, 0.08, 0.45), bell(987.77, 0.08, 0.45),
+                        bell(1318.5, 0.45, 0.5));
+            case "BOND":
+                // A chime: a fifth, struck together, ringing out.
+                return chord(new double[]{587.33, 880.0, 1174.66}, 0.9);
+            case "THUNDER":
+                return thunder(new Random(23), 1.6);
+            case "EERIE":
+                return eerie(1.4);
+            default:
+                return null;
+        }
+    }
+
+    /** A struck tone that rings and fades, with a little overtone. */
+    private static short[] bell(double hz, double seconds, double gain) {
+        int n = (int) (RATE * seconds);
+        short[] out = new short[n];
+        for (int i = 0; i < n; i++) {
+            double t = (double) i / RATE;
+            double attack = Math.min(1, i / (RATE * 0.005));
+            double decay = Math.exp(-t * 5.5 / Math.max(0.2, seconds));
+            double tail = Math.min(1, (n - i) / (RATE * 0.02));
+            double v = Math.sin(2 * Math.PI * hz * t) + 0.3 * Math.sin(2 * Math.PI * hz * 2 * t) * Math.exp(-t * 9);
+            out[i] = (short) (v * attack * decay * tail * gain * 14000);
+        }
+        return out;
+    }
+
+    private static short[] chord(double[] hz, double seconds) {
+        int n = (int) (RATE * seconds);
+        short[] out = new short[n];
+        for (int i = 0; i < n; i++) {
+            double t = (double) i / RATE;
+            double env = Math.min(1, i / (RATE * 0.004)) * Math.exp(-t * 3.2) * Math.min(1, (n - i) / (RATE * 0.03));
+            double v = 0;
+            for (double f : hz) {
+                v += Math.sin(2 * Math.PI * f * t) + 0.2 * Math.sin(2 * Math.PI * f * 3.01 * t) * Math.exp(-t * 8);
+            }
+            out[i] = (short) (v / hz.length * env * 15000);
+        }
+        return out;
+    }
+
+    /** A crack, then a long low roll: filtered noise that rumbles away. */
+    private static short[] thunder(Random random, double seconds) {
+        int n = (int) (RATE * seconds);
+        short[] out = new short[n];
+        double low = 0;
+        double lower = 0;
+        for (int i = 0; i < n; i++) {
+            double t = (double) i / RATE;
+            double white = random.nextDouble() * 2 - 1;
+            low += (white - low) * 0.08;
+            lower += (low - lower) * 0.05;
+            double crack = t < 0.12 ? white * (1 - t / 0.12) * 0.5 : 0;
+            // The roll swells a little after the crack, wobbles, and dies out.
+            double roll = Math.min(1, t / 0.15) * Math.exp(-t * 2.2) * (0.75 + 0.25 * Math.sin(2 * Math.PI * 3.1 * t));
+            double tail = Math.min(1, (n - i) / (RATE * 0.05));
+            out[i] = (short) Math.max(-32000, Math.min(32000, (crack + lower * 9 * roll) * tail * 16000));
+        }
+        return out;
+    }
+
+    /** Two close tones beating against each other, swelling and fading: not quite right. */
+    private static short[] eerie(double seconds) {
+        int n = (int) (RATE * seconds);
+        short[] out = new short[n];
+        for (int i = 0; i < n; i++) {
+            double t = (double) i / RATE;
+            double env = Math.sin(Math.PI * Math.min(1, t / seconds));
+            double vibrato = 1 + 0.004 * Math.sin(2 * Math.PI * 5 * t);
+            double v = Math.sin(2 * Math.PI * 220 * vibrato * t) + Math.sin(2 * Math.PI * 233.1 * t)
+                    + 0.4 * Math.sin(2 * Math.PI * 659.3 * vibrato * t);
+            out[i] = (short) (v / 2.4 * env * env * 11000);
+        }
+        return out;
+    }
+
     private static short[] concat(short[]... parts) {
         int n = 0;
         for (short[] p : parts) {
@@ -199,10 +305,15 @@ final class SoundEngine {
     }
 
     void release() {
+        for (AudioTrack t : cues.values()) {
+            t.release();
+        }
+        cues.clear();
         released = true;
         click.release();
         tick.release();
         beep.release();
+        chirp.release();
         if (sweep != null) {
             sweep.release();
         }

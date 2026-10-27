@@ -33,8 +33,19 @@ public final class BarkRules {
         return bark(scouts, affinities, rng, now, false);
     }
 
-    /** @param hungry the stores are empty: food is all anyone talks about */
     public LogLine bark(Collection<Scout> scouts, Affinities affinities, GameRandom rng, long now, boolean hungry) {
+        return bark(scouts, affinities, rng, now, hungry, null);
+    }
+
+    /** Share of chatter about the sky when there's something to say about it. */
+    static final double WEATHER_SHARE = 0.35;
+
+    /**
+     * @param hungry  the stores are empty: food is all anyone talks about
+     * @param weather what's outside ("STORM", "RAIN", "FOG", "CLOUDY", "CLEAR" or "NIGHT"), or null
+     */
+    public LogLine bark(Collection<Scout> scouts, Affinities affinities, GameRandom rng, long now, boolean hungry,
+                        String weather) {
         List<Scout> home = new ArrayList<>();
         for (Scout s : scouts) {
             if (s.isAlive() && s.getStatus() == ScoutStatus.IDLE) {
@@ -66,6 +77,13 @@ public final class BarkRules {
         vars.put("name", s.getName());
         String key;
         String task = s.getLife().getTaskId();
+        List<String> sky = weather == null ? List.of() : content.getTerminal().momentLines("bunker" + weather);
+        if (!hungry && !sky.isEmpty() && rng.chance(WEATHER_SHARE)) {
+            // The weather gets into the bunker too: the roof, the damp, the quiet.
+            LogLine line = LogLine.draft(now, LogChannel.RADIO, s.getName(),
+                    VoiceRenderer.render(voice, rng.pick(sky), vars), s.getId());
+            return "STORM".equals(weather) ? line.withCue(LogLine.Cue.THUNDER) : line;
+        }
         if (hungry && phrases.containsKey("hungry") && rng.chance(0.7)) {
             key = "hungry";
         } else if (rival != null && rng.chance(0.5)) {

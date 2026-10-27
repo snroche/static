@@ -74,6 +74,12 @@ public final class PeopleDef {
         private List<ScoutTemplate.Habit> habits;
         /** Variants of what they say when rescued; one is picked. */
         private List<List<String>> rescueLines;
+        /** How they pay back a gift they loved. */
+        private ThanksDef thanks;
+
+        public ThanksDef getThanks() {
+            return thanks;
+        }
 
         public String getId() {
             return id;

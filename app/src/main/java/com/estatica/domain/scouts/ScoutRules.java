@@ -31,6 +31,9 @@ public final class ScoutRules {
         return defs;
     }
 
+    /** A gift they loved: +1 to everything on their next trip out. Spent when they come home. */
+    public static final String LIFTED = "lifted";
+
     /** Stat value used in checks: value − injury penalty + trait bonuses, never below 0. */
     public int effectiveStat(Scout scout, StatType type) {
         int value = scout.stat(type).getValue();
@@ -40,6 +43,9 @@ public final class ScoutRules {
         }
         for (com.estatica.domain.bunker.GearPiece piece : working(scout)) {
             value += com.estatica.domain.bunker.GearRules.statBonus(content.gear(piece.getGearId()), piece, type.key());
+        }
+        if (scout.getLife().hasFlag(LIFTED)) {
+            value += 1; // something they love in their pocket
         }
         return Math.max(0, value);
     }
@@ -465,6 +471,7 @@ public final class ScoutRules {
     }
 
     public void markReturned(Scout scout, long atMillis) {
+        scout.getLife().removeFlag(LIFTED);
         scout.setStatus(ScoutStatus.IDLE);
         scout.setRecoveredAtMillis(atMillis);
     }

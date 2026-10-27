@@ -55,6 +55,8 @@ public final class TerminalViewModel extends ViewModel {
     private final MutableLiveData<OptionsState> options = new MutableLiveData<>();
     /** Seq of the latest urgent line revealed, whatever view is open (beep + vibration). */
     private final MutableLiveData<Long> alerts = new MutableLiveData<>();
+    /** Sound of a moment that just showed up (LogLine.Cue). */
+    private final MutableLiveData<String> cues = new MutableLiveData<>();
     /** What the player typed lately, newest last (for suggestions). */
     private final List<String> history = new ArrayList<>();
     /** New game: the next thing typed is the operator's name. */
@@ -146,6 +148,10 @@ public final class TerminalViewModel extends ViewModel {
 
     LiveData<Long> getAlerts() {
         return alerts;
+    }
+
+    LiveData<String> getCues() {
+        return cues;
     }
 
     LiveData<OptionsState> getOptions() {
@@ -765,6 +771,10 @@ public final class TerminalViewModel extends ViewModel {
             if (next.animate && next.line.getChannel() == LogChannel.ALERT
                     && (LogLine.SYSTEM_THREAD.equals(next.line.getThread()) || LogLine.isSummary(next.line.getThread()))) {
                 alerts.setValue(next.line.getSeq());
+            }
+            // A moment with its own sound plays it as it arrives, wherever you're looking.
+            if (next.animate && next.line.getCue() != null) {
+                cues.setValue(next.line.getCue());
             }
             // Only what's on screen gets the typewriter; the rest just arrives.
             if (next.animate && view.shows(next.line, focus)) {

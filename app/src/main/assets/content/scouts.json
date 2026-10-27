@@ -56,7 +56,20 @@
         "minBondLevel": 4
       }
     ],
-    "gender": "F"
+    "gender": "F",
+    "favorite": "armonica",
+    "thanks": {
+      "lines": [
+        "Went out the back way last night. Brought these. And I played a little, after, on the roof.",
+        "You know the alley behind the bakery? Nobody does. I do. Here."
+      ],
+      "text": "{name} slipped out by her own ways and came back with a bag",
+      "resources": {
+        "batteries": 1,
+        "scrap": 2
+      },
+      "crewStress": -4
+    }
   },
   {
     "id": "irene",
@@ -115,6 +128,18 @@
         "minBondLevel": 4
       }
     ],
-    "gender": "F"
+    "gender": "F",
+    "favorite": "cuaderno",
+    "thanks": {
+      "lines": [
+        "I catalogued the stores. Three boxes of components were labelled as scrap. Also, I wrote a procedure. Everyone has read it.",
+        "I've written up how the workshop should be run. Step by step. You'll find it saves time."
+      ],
+      "text": "{name} went through the stores with her notebook",
+      "resources": {
+        "components": 2
+      },
+      "teach": "craft"
+    }
   }
 ]

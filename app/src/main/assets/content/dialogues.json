@@ -7026,5 +7026,1099 @@
         "romance": -6
       }
     ]
+  },
+  {
+    "id": "wx_storm_cant_sleep",
+    "kind": "INITIATED",
+    "weather": [
+      "STORM"
+    ],
+    "repeatable": true,
+    "minBondLevel": 1,
+    "lines": [
+      "Can't sleep with that racket up there.",
+      "Talk to me a bit? About anything."
+    ],
+    "choices": [
+      {
+        "label": "Tell me about the worst storm you remember.",
+        "reply": [
+          "Okay. So. There was this one summer...",
+          "...and the dog was on the roof. Don't laugh. It's true."
+        ],
+        "bond": 3,
+        "stress": -5,
+        "memory": "the storm we sat through, talking"
+      },
+      {
+        "label": "Count between the flash and the thunder. It's moving off.",
+        "reply": [
+          "Seven. Eight. Nine. ...You're right. It is."
+        ],
+        "stress": -3,
+        "trust": 1
+      },
+      {
+        "label": "Try to rest. Tomorrow's long.",
+        "reply": [
+          "Yeah. Sure. Night."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wx_storm_out_there",
+    "kind": "INITIATED",
+    "weather": [
+      "STORM"
+    ],
+    "minBondLevel": 2,
+    "lines": [
+      "You think there's anyone out in this?",
+      "All the people we haven't found yet. Out in this."
+    ],
+    "choices": [
+      {
+        "label": "We'll go looking when it clears.",
+        "reply": [
+          "Promise? Okay. Okay."
+        ],
+        "bond": 2,
+        "trust": 2
+      },
+      {
+        "label": "They've lasted this long. They know how.",
+        "reply": [
+          "Yeah. They'd have to."
+        ],
+        "stress": -3
+      },
+      {
+        "label": "Not our problem tonight.",
+        "reply": [
+          "...Right."
+        ],
+        "bond": -1
+      }
+    ]
+  },
+  {
+    "id": "wx_rain_leak",
+    "kind": "INITIATED",
+    "weather": [
+      "RAIN"
+    ],
+    "repeatable": true,
+    "lines": [
+      "There's a leak over my bunk. Plink. Plink. Plink.",
+      "It's driving me out of my mind."
+    ],
+    "choices": [
+      {
+        "label": "Swap bunks with me tonight.",
+        "reply": [
+          "You'd do that? ...You're weird. Thank you."
+        ],
+        "bond": 5,
+        "stress": -5
+      },
+      {
+        "label": "Put a can under it.",
+        "reply": [
+          "Now it's a plonk. Better? Not really."
+        ],
+        "bond": 1
+      },
+      {
+        "label": "Fix it, then.",
+        "reply": [
+          "With what? With my hopes?"
+        ],
+        "stress": 2
+      }
+    ]
+  },
+  {
+    "id": "wx_rain_smell",
+    "weather": [
+      "RAIN"
+    ],
+    "repeatable": true,
+    "minBondLevel": 1,
+    "lines": [
+      "Smell that? Rain on concrete. Smells like before."
+    ],
+    "choices": [
+      {
+        "label": "Like summer afternoons.",
+        "reply": [
+          "Like summer afternoons. Exactly that."
+        ],
+        "bond": 3,
+        "stress": -3
+      },
+      {
+        "label": "Down here it smells like mould.",
+        "reply": [
+          "Way to ruin it."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wx_fog_periscope",
+    "kind": "INITIATED",
+    "weather": [
+      "FOG"
+    ],
+    "minBondLevel": 1,
+    "lines": [
+      "I looked through the periscope. Thought someone was standing out there in the fog.",
+      "It's a post. It's probably a post."
+    ],
+    "choices": [
+      {
+        "label": "I'll look too.",
+        "reply": [
+          "...It's a post. Okay. Thanks for checking. Really."
+        ],
+        "bond": 3,
+        "stress": -4
+      },
+      {
+        "label": "Fog plays tricks. Don't stare at it.",
+        "reply": [
+          "Easy for you to say."
+        ],
+        "trust": 1,
+        "stress": -2
+      }
+    ]
+  },
+  {
+    "id": "wx_night_stars",
+    "kind": "INITIATED",
+    "night": true,
+    "weather": [
+      "CLEAR"
+    ],
+    "repeatable": true,
+    "minBondLevel": 2,
+    "lines": [
+      "Come up top with me. Just for a minute.",
+      "The sky's all out tonight."
+    ],
+    "choices": [
+      {
+        "label": "Five minutes. Then back down.",
+        "reply": [
+          "...",
+          "Okay. That was worth it."
+        ],
+        "bond": 4,
+        "stress": -6,
+        "memory": "the night we went up top to see the stars"
+      },
+      {
+        "label": "Too risky. Stay inside.",
+        "reply": [
+          "Yeah. Yeah, you're right. Maybe next time."
+        ],
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "wx_night_awake",
+    "night": true,
+    "repeatable": true,
+    "lines": [
+      "You're up too? It's the quiet. Too much of it."
+    ],
+    "choices": [
+      {
+        "label": "Keep me company on the radio shift.",
+        "reply": [
+          "Deal. I'll make the brown water."
+        ],
+        "bond": 2,
+        "trust": 1,
+        "stress": -2
+      },
+      {
+        "label": "Go to bed.",
+        "reply": [
+          "Yes, boss."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wx_clear_day",
+    "weather": [
+      "CLEAR"
+    ],
+    "night": false,
+    "repeatable": true,
+    "minBondLevel": 1,
+    "lines": [
+      "Sun's out. Can I take the next run? I want to feel it on my face."
+    ],
+    "choices": [
+      {
+        "label": "Next one's yours.",
+        "reply": [
+          "Yes!"
+        ],
+        "bond": 3,
+        "stress": -3
+      },
+      {
+        "label": "The sun looks the same from in here.",
+        "reply": [
+          "It doesn't, though."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wx_cloudy_mood",
+    "kind": "INITIATED",
+    "weather": [
+      "CLOUDY"
+    ],
+    "repeatable": true,
+    "minBondLevel": 1,
+    "lines": [
+      "Grey days get into my head. Everything feels further away."
+    ],
+    "choices": [
+      {
+        "label": "Help me sort the stores. Keeps the hands busy.",
+        "reply": [
+          "Yeah. Okay. That helps, actually."
+        ],
+        "stress": -4,
+        "trust": 1
+      },
+      {
+        "label": "Tell me what's on your mind.",
+        "reply": [
+          "Nothing. Everything. Thanks for asking."
+        ],
+        "bond": 3,
+        "stress": -2
+      }
+    ]
+  },
+  {
+    "id": "fav_hint",
+    "minBondLevel": 2,
+    "priority": 3,
+    "forbidsFlags": [
+      "fav_known"
+    ],
+    "lines": [
+      "If I could have one thing back from before, you know what it'd be?",
+      "Silly thing: {favorite}. Out of everything, that."
+    ],
+    "choices": [
+      {
+        "label": "Not stupid at all. I'll keep an eye out.",
+        "reply": [
+          "Yeah? ...Okay. Thanks."
+        ],
+        "bond": 3,
+        "setFlags": [
+          "fav_known"
+        ],
+        "memory": "telling you about the {favorite}"
+      },
+      {
+        "label": "Things don't matter now.",
+        "reply": [
+          "Some do."
+        ],
+        "bond": -1,
+        "setFlags": [
+          "fav_known"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "kin_coffee",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "I made you something. It's mostly hot water. Drink it anyway."
+    ],
+    "choices": [
+      {
+        "label": "Best thing I've had all week.",
+        "reply": [
+          "Liar. Drink."
+        ],
+        "bond": 2,
+        "stress": -5
+      },
+      {
+        "label": "Is that... dirt?",
+        "reply": [
+          "Some of it. Drink."
+        ],
+        "bond": 2,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "kin_kept_this",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "Kept this back for you. Found it on my last run. Didn't tell anyone."
+    ],
+    "choices": [
+      {
+        "label": "You didn't have to.",
+        "reply": [
+          "I know. That's the point."
+        ],
+        "bond": 1,
+        "resources": {
+          "batteries": 1
+        }
+      },
+      {
+        "label": "What else are you hiding?",
+        "reply": [
+          "Wouldn't you like to know."
+        ],
+        "bond": 1,
+        "resources": {
+          "scrap": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "kin_same_time",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "Same time tomorrow? I like that we have a time."
+    ],
+    "choices": [
+      {
+        "label": "Same time. Every day.",
+        "reply": [
+          "Every day."
+        ],
+        "bond": 2,
+        "stress": -4
+      },
+      {
+        "label": "Can't promise. Things happen.",
+        "reply": [
+          "I know. Same time anyway."
+        ],
+        "stress": -2
+      }
+    ]
+  },
+  {
+    "id": "kin_if_i_dont",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "If I don't come back one day, don't make it about you, okay?",
+      "It'll be about the road. Not about you."
+    ],
+    "choices": [
+      {
+        "label": "You'll come back.",
+        "reply": [
+          "Probably. Still."
+        ],
+        "trust": 2,
+        "stress": -3
+      },
+      {
+        "label": "I'd still make it about me.",
+        "reply": [
+          "Figured. Idiot."
+        ],
+        "bond": 2,
+        "stress": -2
+      }
+    ]
+  },
+  {
+    "id": "kin_radio_lesson",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "Show me the radio. Properly. In case you ever can't."
+    ],
+    "choices": [
+      {
+        "label": "Sit. Start with the dial.",
+        "reply": [
+          "Like this? ...Like this. Okay. I've got it."
+        ],
+        "trust": 3,
+        "stress": -2
+      },
+      {
+        "label": "You'll never need to.",
+        "reply": [
+          "Humour me."
+        ],
+        "bond": 1
+      }
+    ]
+  },
+  {
+    "id": "kin_tune",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "I keep humming the same tune. It's yours now, I think.",
+      "I hum it when you're on the radio."
+    ],
+    "choices": [
+      {
+        "label": "Hum it for me.",
+        "reply": [
+          "...",
+          "That's it. That's the one."
+        ],
+        "bond": 2,
+        "stress": -5
+      },
+      {
+        "label": "Now I'll have it stuck in my head.",
+        "reply": [
+          "Good. Then we match."
+        ],
+        "bond": 2,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "kin_after",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "When this is over I'm opening a place. A small one. You eat free for life."
+    ],
+    "choices": [
+      {
+        "label": "I'll hold you to that.",
+        "reply": [
+          "You'd better."
+        ],
+        "bond": 2,
+        "stress": -4
+      },
+      {
+        "label": "What kind of place?",
+        "reply": [
+          "Haven't decided. Somewhere with windows."
+        ],
+        "bond": 2,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "kin_drawers",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "Cleaned out the workshop drawers. These were at the back, under the manuals."
+    ],
+    "choices": [
+      {
+        "label": "Good eye.",
+        "reply": [
+          "I've got two."
+        ],
+        "resources": {
+          "components": 2
+        },
+        "bond": 1
+      },
+      {
+        "label": "Keep them for your gear.",
+        "reply": [
+          "No. They're the bunker's. Take them."
+        ],
+        "resources": {
+          "components": 2
+        },
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "kin_just_see",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "No reason. Just wanted to see you."
+    ],
+    "choices": [
+      {
+        "label": "Here I am.",
+        "reply": [
+          "Here you are."
+        ],
+        "bond": 1,
+        "stress": -6
+      },
+      {
+        "label": "I was hoping you'd come by.",
+        "reply": [
+          "Yeah?",
+          "Yeah."
+        ],
+        "bond": 1,
+        "stress": -6
+      }
+    ]
+  },
+  {
+    "id": "kin_hand_out",
+    "kind": "INITIATED",
+    "minBondLevel": 5,
+    "repeatable": true,
+    "lines": [
+      "Close your eyes. Hold out your hand.",
+      "...It's a battery. I know. Romantic."
+    ],
+    "choices": [
+      {
+        "label": "Perfect.",
+        "reply": [
+          "I know you."
+        ],
+        "resources": {
+          "batteries": 1
+        },
+        "bond": 1
+      },
+      {
+        "label": "Where did you even find this?",
+        "reply": [
+          "A magician never tells."
+        ],
+        "resources": {
+          "batteries": 1
+        },
+        "stress": -2
+      }
+    ]
+  },
+  {
+    "id": "bg_rail_last_train",
+    "requiresBackground": "railway",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "The night of the Silence, the last train never came in.",
+      "I kept the signal green for it until morning. Sometimes I think it's still out there, waiting for a red."
+    ],
+    "choices": [
+      {
+        "label": "Maybe one day we go and find it.",
+        "reply": [
+          "...Affirmative. One day."
+        ],
+        "bond": 4,
+        "memory": "the last train I kept the signal green for"
+      },
+      {
+        "label": "You did your job. That's enough.",
+        "reply": [
+          "Hm. Maybe it is."
+        ],
+        "trust": 3,
+        "stress": -6
+      }
+    ]
+  },
+  {
+    "id": "bg_rail_watch",
+    "requiresBackground": "railway",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "Here. My watch. Stopped at 23:47 that night. Never wound it since.",
+      "I want you to have it."
+    ],
+    "choices": [
+      {
+        "label": "I'll keep it safe.",
+        "reply": [
+          "I know you will."
+        ],
+        "bond": 3,
+        "memory": "the stopped watch I gave you"
+      },
+      {
+        "label": "It's yours. Keep it.",
+        "reply": [
+          "...Right. Thank you."
+        ],
+        "bond": 2,
+        "stress": -4
+      }
+    ]
+  },
+  {
+    "id": "bg_teen_birthday",
+    "requiresBackground": "teen",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "I think it's my birthday. Maybe. I lost track of the days."
+    ],
+    "choices": [
+      {
+        "label": "Then it's your birthday. We're celebrating.",
+        "reply": [
+          "Shut up. ...Really?"
+        ],
+        "bond": 5,
+        "stress": -8,
+        "memory": "the birthday you made up for me"
+      },
+      {
+        "label": "How old?",
+        "reply": [
+          "Old enough. Don't."
+        ],
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "bg_teen_nickname",
+    "requiresBackground": "teen",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "I call you something in my head. Not telling.",
+      "...Fine. 'Nice-boss'. Happy?"
+    ],
+    "choices": [
+      {
+        "label": "Very happy, actually.",
+        "reply": [
+          "Ugh. Don't make it weird."
+        ],
+        "bond": 2,
+        "stress": -4
+      },
+      {
+        "label": "I've got one for you too.",
+        "reply": [
+          "No you don't. ...Do you?"
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "bg_nurse_shift",
+    "requiresBackground": "nurse",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "Thirty-hour shift, the day it happened. I never clocked out.",
+      "Technically I'm still on it."
+    ],
+    "choices": [
+      {
+        "label": "Clock out. Right now. I'll cover.",
+        "reply": [
+          "...Okay. Clocking out. Thirty-hour shift, done."
+        ],
+        "stress": -10,
+        "bond": 3,
+        "memory": "the shift you told me to clock out of"
+      },
+      {
+        "label": "We still need you on shift.",
+        "reply": [
+          "I know. I'm here."
+        ],
+        "trust": 3,
+        "stress": 2
+      }
+    ]
+  },
+  {
+    "id": "bg_nurse_hands",
+    "requiresBackground": "nurse",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "My hands shake now, after. Never during. Only after."
+    ],
+    "choices": [
+      {
+        "label": "Then I'll hold them after.",
+        "reply": [
+          "...Okay."
+        ],
+        "bond": 3,
+        "stress": -6
+      },
+      {
+        "label": "Steady during is what counts.",
+        "reply": [
+          "That's what I tell myself."
+        ],
+        "trust": 3
+      }
+    ]
+  },
+  {
+    "id": "bg_truck_route",
+    "requiresBackground": "trucker",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "Route 3, all the way south. Did it forty times. I could drive it blind."
+    ],
+    "choices": [
+      {
+        "label": "When the roads clear, we drive it together.",
+        "reply": [
+          "Deal. I'll drive, you do the radio."
+        ],
+        "bond": 4,
+        "memory": "the southern route we'll drive one day"
+      },
+      {
+        "label": "Roads aren't coming back.",
+        "reply": [
+          "Then I'll walk it."
+        ],
+        "bond": -1,
+        "stress": 3
+      }
+    ]
+  },
+  {
+    "id": "bg_truck_handle",
+    "requiresBackground": "trucker",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "On the road we all had names on the CB. You need one.",
+      "I'm calling you Lighthouse. You keep us off the rocks."
+    ],
+    "choices": [
+      {
+        "label": "Lighthouse. I like it.",
+        "reply": [
+          "Lighthouse it is. Over."
+        ],
+        "bond": 3,
+        "stress": -4,
+        "memory": "the CB name I gave you"
+      },
+      {
+        "label": "Sounds lonely, a lighthouse.",
+        "reply": [
+          "Not with all of us out here looking at it."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "bg_teacher_roll",
+    "requiresBackground": "teacher",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "I still take roll in my head. Every morning. Thirty-one names."
+    ],
+    "choices": [
+      {
+        "label": "Say them out loud. I'll listen.",
+        "reply": [
+          "...",
+          "Thirty-one. Thank you."
+        ],
+        "bond": 4,
+        "stress": -6,
+        "memory": "the thirty-one names I read out loud"
+      },
+      {
+        "label": "That'll eat you alive.",
+        "reply": [
+          "It already did. This keeps the rest."
+        ],
+        "trust": 2
+      }
+    ]
+  },
+  {
+    "id": "bg_teacher_quiz",
+    "requiresBackground": "teacher",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "Pop quiz. What's the most important thing you've learned down here?"
+    ],
+    "choices": [
+      {
+        "label": "That people are worth the risk.",
+        "reply": [
+          "Full marks."
+        ],
+        "bond": 3,
+        "trust": 2
+      },
+      {
+        "label": "How to make soup out of nothing.",
+        "reply": [
+          "Also full marks. Practical."
+        ],
+        "stress": -5,
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "bg_mech_engine",
+    "requiresBackground": "mechanic",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "I could tell an engine was sick from a block away.",
+      "I listen to the generator the same way now. It's tired. So am I, some days."
+    ],
+    "choices": [
+      {
+        "label": "Then you're its doctor now.",
+        "reply": [
+          "Ha. Doctor. Okay."
+        ],
+        "bond": 3,
+        "trust": 2
+      },
+      {
+        "label": "Rest. The generator can wait a day.",
+        "reply": [
+          "...Yeah. Okay."
+        ],
+        "stress": -6,
+        "bond": 2
+      }
+    ]
+  },
+  {
+    "id": "bg_mech_toolbox",
+    "requiresBackground": "mechanic",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "Made you something. A toolbox. Your name's on it. Spelled right and everything."
+    ],
+    "choices": [
+      {
+        "label": "I'll treasure it.",
+        "reply": [
+          "Use it. That's how you treasure a toolbox."
+        ],
+        "bond": 2,
+        "resources": {
+          "parts": 1
+        },
+        "memory": "the toolbox with your name on it"
+      },
+      {
+        "label": "I don't know how to use half of these.",
+        "reply": [
+          "Then I'll teach you."
+        ],
+        "bond": 3
+      }
+    ]
+  },
+  {
+    "id": "bg_cook_recipe",
+    "requiresBackground": "cook",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "My grandmother's recipe. I never wrote it down.",
+      "I'm telling you, so it isn't only in my head."
+    ],
+    "choices": [
+      {
+        "label": "Tell me. I'll remember.",
+        "reply": [
+          "Okay. First, the onions..."
+        ],
+        "bond": 4,
+        "memory": "my grandmother's recipe, now yours too"
+      },
+      {
+        "label": "Write it down instead.",
+        "reply": [
+          "Writing it down isn't the same. But okay."
+        ],
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "bg_cook_taste",
+    "requiresBackground": "cook",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "Taste this. Honest answer."
+    ],
+    "choices": [
+      {
+        "label": "Honestly? Perfect.",
+        "reply": [
+          "You're just saying that. ...Say it again."
+        ],
+        "bond": 2,
+        "stress": -4
+      },
+      {
+        "label": "Needs salt.",
+        "reply": [
+          "EVERYTHING needs salt. We have no salt!",
+          "...You're right though."
+        ],
+        "bond": 3,
+        "stress": -3
+      }
+    ]
+  },
+  {
+    "id": "bg_music_song",
+    "requiresBackground": "musician",
+    "minBondLevel": 4,
+    "priority": 4,
+    "lines": [
+      "I wrote something. About down here. About you, a little.",
+      "Want to hear it?"
+    ],
+    "choices": [
+      {
+        "label": "Play it.",
+        "reply": [
+          "...",
+          "So? Don't answer. Your face answered."
+        ],
+        "bond": 5,
+        "stress": -6,
+        "memory": "the song I wrote about the bunker"
+      },
+      {
+        "label": "Later. I'm on the radio.",
+        "reply": [
+          "Sure. Later."
+        ],
+        "bond": -1
+      }
+    ]
+  },
+  {
+    "id": "bg_music_chord",
+    "requiresBackground": "musician",
+    "minBondLevel": 5,
+    "priority": 4,
+    "lines": [
+      "Hold this. Fingers here. No, here. There. That's a chord."
+    ],
+    "choices": [
+      {
+        "label": "It sounds awful.",
+        "reply": [
+          "It sounds like a start."
+        ],
+        "bond": 3,
+        "stress": -5
+      },
+      {
+        "label": "Again. Show me again.",
+        "reply": [
+          "Now we're talking."
+        ],
+        "bond": 3,
+        "trust": 1
+      }
+    ]
+  },
+  {
+    "id": "mara_rooftops",
+    "scout": "mara",
+    "minBondLevel": 5,
+    "priority": 5,
+    "lines": [
+      "I mapped a way across the neighbourhood using only rooftops.",
+      "Nobody else knows it. Now you do."
+    ],
+    "choices": [
+      {
+        "label": "Our secret.",
+        "reply": [
+          "Ours."
+        ],
+        "bond": 3,
+        "stress": -4,
+        "memory": "the rooftop route only we know"
+      },
+      {
+        "label": "Use it. It'll keep you safe.",
+        "reply": [
+          "That's why I made it."
+        ],
+        "trust": 2
+      }
+    ]
+  },
+  {
+    "id": "irene_last_page",
+    "scout": "irene",
+    "minBondLevel": 5,
+    "priority": 5,
+    "lines": [
+      "You asked once what I write in the notebook. Here. Page one.",
+      "It's a list of everyone I've lost. And on the last page, everyone I haven't. You're on it."
+    ],
+    "choices": [
+      {
+        "label": "Keep that page safe.",
+        "reply": [
+          "It's the one I keep safest."
+        ],
+        "bond": 3,
+        "memory": "the last page of my notebook"
+      },
+      {
+        "label": "Can I write on it too?",
+        "reply": [
+          "...Yes. Neatly."
+        ],
+        "bond": 3,
+        "stress": -4
+      }
+    ]
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "contentVersion": 28,
+  "contentVersion": 29,
   "ui": {
     "typewriterCharMillis": 22,
     "logWindowLines": 400,
@@ -68,7 +68,16 @@
     "giftLiked": 15,
     "giftDisliked": 6,
     "giftNeutral": 3,
-    "retreatGranted": 4
+    "retreatGranted": 4,
+    "giftFavorite": 25,
+    "likedStressRelief": 10,
+    "favoriteStressRelief": 20,
+    "thanksAtLevel": 3,
+    "thanksDelayHours": 2,
+    "thanksCooldownHours": 20,
+    "teachXp": 6,
+    "fullBondReliefShare": 0.5,
+    "companyStressRelief": 3
   },
   "grief": {
     "baseStress": 15,

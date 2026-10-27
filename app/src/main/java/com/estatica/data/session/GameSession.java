@@ -133,6 +133,8 @@ public final class GameSession {
     private com.estatica.domain.bunker.GearRules gearRules;
     private com.estatica.domain.map.RegionMap regionMap;
     private com.estatica.domain.world.WeatherRules weather;
+    /** Weather and the dark, as the engine and conversations see them. */
+    private com.estatica.domain.world.World outside = com.estatica.domain.world.World.CALM;
     private com.estatica.domain.scouts.VignetteRules vignettes;
     /** Every piece of equipment, by id (stock, equipped, lost in zones). */
     private final Map<String, com.estatica.domain.bunker.GearPiece> gear = new HashMap<>();
@@ -311,7 +313,8 @@ public final class GameSession {
         engine.setPlotOpen(this::plotOpen);
         engine.setRecentEvents(id -> clock.nowMillis() - value(EVENT_SEEN + id)
                 < content.getBalance().getExpedition().getEventRecentHours() * HOUR);
-        engine.setWorld(new com.estatica.domain.world.World() {
+        engine.setWorldFlags(this::worldFlag);
+        engine.setWorld(outside = new com.estatica.domain.world.World() {
             @Override
             public com.estatica.domain.world.WeatherRules.Weather weatherAt(long millis) {
                 return weather.at(millis);
@@ -332,6 +335,7 @@ public final class GameSession {
                 return weather.noise(weatherAt(millis));
             }
         });
+        dialogues.setWorld(outside);
         gameFlags.addAll(radioRepository.flags());
         // Saves from before key items: the Morse table they earned becomes the radio manual.
         if (gameFlags.contains(FLAG_MORSE_TABLE) && gameFlags.add("key:radio_manual")) {
@@ -577,9 +581,24 @@ public final class GameSession {
             summarize(expedition, scout, party, result, step);
             step.memories.addAll(result.getMemories());
             result.getDelivered().forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+            for (String flag : result.getWorldFlags()) {
+                setWorldFlag(flag, step);
+            }
             for (String itemId : result.getDeliveredItems()) {
                 if (itemId.startsWith(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX)) {
                     grantKey(itemId.substring(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX.length()), scout, step);
+                    continue;
+                }
+                if (itemId.startsWith(ExpeditionEngine.GEAR_PREFIX)) {
+                    String[] g = itemId.substring(ExpeditionEngine.GEAR_PREFIX.length()).split(":");
+                    com.estatica.domain.bunker.GearPiece piece = com.estatica.domain.bunker.GearPiece.fresh(g[0],
+                            com.estatica.domain.bunker.GearPiece.Rarity.valueOf(g[1]));
+                    piece.wear(com.estatica.domain.bunker.GearPiece.MAX_CONDITION - Integer.parseInt(g[2]));
+                    gear.put(piece.getId(), piece);
+                    continue;
+                }
+                if (itemId.startsWith(ExpeditionEngine.PART_PREFIX)) {
+                    partHome(itemId.substring(ExpeditionEngine.PART_PREFIX.length()), scout, step);
                     continue;
                 }
                 ItemInstance found = ItemInstance.found(itemId, now);
@@ -654,6 +673,7 @@ public final class GameSession {
         maraBike(step);
         maybeStartConversation(step);
         maybeBark(step);
+        paybacks(step);
         maybeVignette(step);
         maybeOmen(step);
         catchBroadcasts(step);
@@ -1530,6 +1550,12 @@ public final class GameSession {
         }
     }
 
+    /** What's outside for chatter: the weather, or "NIGHT" for a clear night. */
+    private String skyKey(long now) {
+        com.estatica.domain.world.WeatherRules.Weather w = outside.weatherAt(now);
+        return w == com.estatica.domain.world.WeatherRules.Weather.CLEAR && outside.nightAt(now) ? "NIGHT" : w.name();
+    }
+
     /** Ambient chatter: now and then, someone in the bunker says something. */
     private void maybeBark(Step step) {
         Balance.Barks config = content.getBalance().getBarks();
@@ -1543,7 +1569,8 @@ public final class GameSession {
         }
         setValue("last_bark", step.now, step);
         if (random.chance(config.getChance())) {
-            LogLine line = barks.bark(scouts.values(), affinities, random, step.now, value(KEY_HUNGRY) > 0);
+            LogLine line = barks.bark(scouts.values(), affinities, random, step.now, value(KEY_HUNGRY) > 0,
+                    skyKey(step.now));
             if (line != null) {
                 step.lines.add(line.withThread(line.getScoutId() != null
                         ? LogLine.chatThread(line.getScoutId()) : LogLine.SYSTEM_THREAD));
@@ -3300,14 +3327,22 @@ public final class GameSession {
             if (content.gear(recipe.getOutput()) != null) {
                 for (int i = 0; i < recipe.getAmount(); i++) {
                     com.estatica.domain.bunker.GearPiece piece = com.estatica.domain.bunker.GearPiece.fresh(recipe.getOutput(),
-                            gearRules.crafted(bestWorkshopCraft(), random));
+                            recipe.getRarity() != null
+                                    ? com.estatica.domain.bunker.GearPiece.Rarity.valueOf(recipe.getRarity())
+                                    : gearRules.crafted(bestWorkshopCraft(), random));
                     gear.put(piece.getId(), piece);
                     vars.put("item", gearName(piece));
                 }
             } else {
                 step.resourceDelta.merge(recipe.getOutput(), recipe.getAmount(), Integer::sum);
             }
-            step.system(content.getTerminal().getBase().getCraftDone(), vars, null);
+            if (recipe.isProject()) {
+                step.lines.add(LogLine.draft(step.now, LogChannel.ALERT, null,
+                        TextTemplate.format(recipe.getDoneText() != null ? recipe.getDoneText()
+                                : content.getTerminal().getBase().getCraftDone(), vars)).withCue(LogLine.Cue.FIND));
+            } else {
+                step.system(content.getTerminal().getBase().getCraftDone(), vars, null);
+            }
             craftJobs.remove(job);
             step.radioWrites.add(() -> baseRepository.delete(job));
         }
@@ -3378,6 +3413,9 @@ public final class GameSession {
         } else if (moduleLevel("workshop") >= recipe.getMinWorkshopLevel() && pay(recipe.getInputs(), step)) {
             CraftJob job = CraftJob.start(recipeId, step.now);
             craftJobs.add(job);
+            if (recipe.isProject()) {
+                setValue(BUILT + recipe.getId(), 1, step);
+            }
             step.radioWrites.add(() -> baseRepository.save(job));
             Map<String, String> vars = new HashMap<>();
             vars.put("item", recipe.getName());
@@ -3391,8 +3429,62 @@ public final class GameSession {
     private static final String BLUEPRINT = "bp:";
 
     private boolean knowsRecipe(RecipeDef r) {
+        if (r.isProject()) {
+            // Every part home, and not built yet (or being built).
+            if (value(BUILT + r.getId()) > 0) {
+                return false;
+            }
+            for (RecipeDef.Part part : r.getParts()) {
+                if (!worldFlag(ExpeditionEngine.PART_PREFIX + part.getId())) {
+                    return false;
+                }
+            }
+            return true;
+        }
         return r.isKnown() || value(BLUEPRINT + r.getId()) > 0;
     }
+
+    // ---- World flags and projects ----
+
+    /** Bunker-wide flags left by choices out there ("w:" values). */
+    private static final String WORLD = "w:";
+
+    private boolean worldFlag(String flag) {
+        return value(WORLD + flag) > 0;
+    }
+
+    private void setWorldFlag(String flag, Step step) {
+        if (!worldFlag(flag)) {
+            setValue(WORLD + flag, 1, step);
+        }
+    }
+
+    /** A project part made it home: says how far along the project is, and when its plan is ready. */
+    private void partHome(String partId, Scout finder, Step step) {
+        RecipeDef project = content.projectOf(partId);
+        if (project == null || worldFlag(ExpeditionEngine.PART_PREFIX + partId)) {
+            return;
+        }
+        setWorldFlag(ExpeditionEngine.PART_PREFIX + partId, step);
+        int have = 0;
+        for (RecipeDef.Part p : project.getParts()) {
+            have += worldFlag(ExpeditionEngine.PART_PREFIX + p.getId()) ? 1 : 0;
+        }
+        TerminalText text = content.getTerminal();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", finder.getName());
+        vars.put("part", content.part(partId).getName().toLowerCase(Locale.ROOT));
+        vars.put("project", project.getName());
+        vars.put("have", String.valueOf(have));
+        vars.put("of", String.valueOf(project.getParts().size()));
+        boolean ready = have == project.getParts().size();
+        step.lines.add(LogLine.draft(step.now, ready ? LogChannel.ALERT : LogChannel.SYSTEM, null,
+                TextTemplate.format(text.moment(ready ? "projectReady" : "projectPart"), vars), finder.getId())
+                .withCue(LogLine.Cue.FIND));
+    }
+
+    /** Projects already built (or on the bench): one of each. */
+    private static final String BUILT = "built:";
 
     private void learnBlueprint(RecipeDef r, String template, Scout who, Step step) {
         if (knowsRecipe(r)) {
@@ -3409,7 +3501,7 @@ public final class GameSession {
     private List<RecipeDef> unknownRecipes(int maxBand) {
         List<RecipeDef> out = new ArrayList<>();
         for (RecipeDef r : content.getRecipes().values()) {
-            if (!knowsRecipe(r) && content.getBalance().bandIndex(r.getFindBand()) <= maxBand) {
+            if (!r.isProject() && !knowsRecipe(r) && content.getBalance().bandIndex(r.getFindBand()) <= maxBand) {
                 out.add(r);
             }
         }
@@ -3549,7 +3641,7 @@ public final class GameSession {
 
     private com.estatica.domain.bunker.MarketRules.Day marketDay(long now) {
         long day = localDay(now);
-        return marketRules.day(day, r -> !knowsRecipe(r), reputation());
+        return marketRules.day(day, r -> !r.isProject() && !knowsRecipe(r), reputation());
     }
 
     private void traded(Step step) {
@@ -3999,9 +4091,11 @@ public final class GameSession {
         baseView.crafter = atBench != null ? atBench.getName() : null;
         baseView.crafterCraft = atBench != null ? rules.effectiveStat(atBench, StatType.CRAFT) : 0;
         baseView.capacity = workshopRules.capacity(moduleLevel("workshop"));
-        baseView.blueprintsTotal = content.getRecipes().size();
         for (RecipeDef r : content.getRecipes().values()) {
-            baseView.blueprintsKnown += knowsRecipe(r) ? 1 : 0;
+            if (!r.isProject()) {
+                baseView.blueprintsTotal++;
+                baseView.blueprintsKnown += knowsRecipe(r) ? 1 : 0;
+            }
         }
         baseView.fuel = resources.getOrDefault("fuel", 0);
         baseView.fuelGenerator = value(KEY_FUEL_GENERATOR) > 0;
@@ -4176,8 +4270,184 @@ public final class GameSession {
             Conversation c = Conversation.start(scout.getId(), dialogue.getId(), step.now, false);
             conversations.put(c.getId(), c);
             step.conversationsChanged.add(c);
+        } else {
+            keepCompany(scout, step);
         }
         return step.commit();
+    }
+
+    /**
+     * Nothing new to talk about: you just spend a while together. It's never nothing; the
+     * closer they are, the more it shows.
+     */
+    private void keepCompany(Scout scout, Step step) {
+        TerminalText text = content.getTerminal();
+        boolean close = rules.isClose(scout);
+        List<String> pool = text.momentLines(close ? "companyClose" : "company");
+        if (pool.isEmpty()) {
+            return;
+        }
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", scout.getName());
+        com.estatica.domain.content.VoiceDef voice = content.voice(scout.getVoiceId());
+        String thread = LogLine.chatThread(scout.getId());
+        step.lines.add(LogLine.draft(step.now, LogChannel.RADIO, scout.getName(),
+                com.estatica.domain.scouts.VoiceRenderer.render(voice, random.pick(pool), vars), scout.getId())
+                .withThread(thread));
+        Balance.Bond bond = content.getBalance().getBond();
+        int eased = -rules.addStress(scout, -bond.getCompanyStressRelief() * (close ? 2 : 1));
+        vars.put("n", String.valueOf(eased));
+        step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null,
+                TextTemplate.format(text.moment(eased > 0 ? "companyEased" : "companyCalm"), vars), scout.getId())
+                .withThread(thread));
+        scout.getLife().setLastTalkAtMillis(step.now);
+        attention(scout, step);
+    }
+
+    // ---- Paying back a gift they loved ----
+
+    private static final String PAYBACK_DUE = "thanks_due:";
+    private static final String PAYBACK_NEXT = "thanks_next:";
+
+    /**
+     * A gift they loved gets paid back in their own way a little later: their favorite always,
+     * anything they like once you're close. Not more than once in a while.
+     */
+    private void promisePayback(Scout scout, boolean favorite, Step step) {
+        Balance.Bond bond = content.getBalance().getBond();
+        if (!favorite && rules.bondLevel(scout) < bond.getThanksAtLevel()
+                || value(PAYBACK_DUE + scout.getId()) > 0
+                || step.now < value(PAYBACK_NEXT + scout.getId())
+                || content.thanksOf(scout) == null) {
+            return;
+        }
+        setValue(PAYBACK_DUE + scout.getId(), step.now + bond.getThanksDelayHours() * HOUR, step);
+        List<String> pool = content.getTerminal().momentLines("paybackPromise");
+        if (!pool.isEmpty()) {
+            Map<String, String> vars = new HashMap<>();
+            vars.put("name", scout.getName());
+            step.lines.add(LogLine.draft(step.now, LogChannel.RADIO, scout.getName(),
+                    com.estatica.domain.scouts.VoiceRenderer.render(content.voice(scout.getVoiceId()),
+                            random.pick(pool), vars), scout.getId()).withThread(LogLine.chatThread(scout.getId())));
+        }
+    }
+
+    /** Paybacks that are due, for whoever is home (the rest wait until they are). */
+    private void paybacks(Step step) {
+        for (Scout scout : new ArrayList<>(scouts.values())) {
+            double due = value(PAYBACK_DUE + scout.getId());
+            if (due <= 0 || step.now < due) {
+                continue;
+            }
+            if (!scout.isAlive()) {
+                setValue(PAYBACK_DUE + scout.getId(), 0, step);
+            } else if (scout.getStatus() == ScoutStatus.IDLE) {
+                setValue(PAYBACK_DUE + scout.getId(), 0, step);
+                setValue(PAYBACK_NEXT + scout.getId(),
+                        step.now + content.getBalance().getBond().getThanksCooldownHours() * HOUR, step);
+                payBack(scout, content.thanksOf(scout), step);
+            }
+        }
+    }
+
+    private boolean homeNow(Scout s) {
+        return s != null && s.isAlive() && s.getStatus() == ScoutStatus.IDLE;
+    }
+
+    private void payBack(Scout scout, com.estatica.domain.content.ThanksDef thanks, Step step) {
+        if (thanks == null) {
+            return;
+        }
+        TerminalText text = content.getTerminal();
+        Map<String, String> vars = new HashMap<>();
+        vars.put("name", scout.getName());
+        List<Scout> home = new ArrayList<>();
+        for (Scout s : scouts.values()) {
+            if (s != scout && homeNow(s)) {
+                home.add(s);
+            }
+        }
+        home.sort(Comparator.comparing(Scout::getId));
+        // Who it's mostly for: the worst-hurt for a healer, otherwise whoever is around.
+        Scout other = null;
+        if (thanks.getHeal() > 0) {
+            for (Scout s : scouts.values()) {
+                if (homeNow(s) && s.getInjury() != com.estatica.domain.scouts.Injury.NONE
+                        && (other == null || s.getInjury().ordinal() > other.getInjury().ordinal())) {
+                    other = s;
+                }
+            }
+        }
+        if (other == null && !home.isEmpty()) {
+            other = random.pick(home);
+        }
+        vars.put("other", other != null ? other.getName() : text.moment("everyone"));
+        com.estatica.domain.bunker.GearPiece worn = null;
+        if (thanks.getMend() > 0) {
+            for (com.estatica.domain.bunker.GearPiece piece : gear.values()) {
+                String loc = piece.getLocation();
+                boolean here = piece.isInBunker()
+                        || loc.startsWith("scout:") && homeNow(scouts.get(loc.substring("scout:".length())));
+                if (here && piece.getCondition() < com.estatica.domain.bunker.GearPiece.MAX_CONDITION
+                        && (worn == null || piece.getCondition() < worn.getCondition())) {
+                    worn = piece;
+                }
+            }
+            vars.put("gear", worn != null ? gearName(worn).toLowerCase(Locale.ROOT) : text.moment("theTools"));
+        }
+        com.estatica.domain.content.VoiceDef voice = content.voice(scout.getVoiceId());
+        if (!thanks.getLines().isEmpty()) {
+            step.lines.add(LogLine.draft(step.now, LogChannel.RADIO, scout.getName(),
+                    com.estatica.domain.scouts.VoiceRenderer.render(voice, random.pick(thanks.getLines()), vars),
+                    scout.getId()).withThread(LogLine.chatThread(scout.getId())));
+        }
+        List<String> effects = new ArrayList<>();
+        if (!thanks.getResources().isEmpty()) {
+            thanks.getResources().forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+            effects.add(describe(thanks.getResources()));
+        }
+        if (thanks.getCrewStress() != 0) {
+            for (Scout s : scouts.values()) {
+                if (homeNow(s)) {
+                    rules.addStress(s, thanks.getCrewStress());
+                }
+            }
+            vars.put("n", String.valueOf(-thanks.getCrewStress()));
+            effects.add(TextTemplate.format(text.moment("effectCrewStress"), vars));
+        }
+        if (thanks.getHeal() > 0 && other != null && other.getInjury() != com.estatica.domain.scouts.Injury.NONE) {
+            com.estatica.domain.scouts.Injury injury = other.getInjury();
+            for (int i = 0; i < thanks.getHeal(); i++) {
+                injury = injury.better();
+            }
+            rules.setInjury(other, injury);
+            effects.add(TextTemplate.format(text.moment("effectHeal"), vars));
+        }
+        if (worn != null) {
+            worn.mend(thanks.getMend());
+            vars.put("condition", String.valueOf(worn.getCondition()));
+            effects.add(TextTemplate.format(text.moment("effectMend"), vars));
+        }
+        if (thanks.getTeach() != null && !home.isEmpty()) {
+            StatType stat = StatType.fromKey(thanks.getTeach());
+            vars.put("stat", text.getStatNames().get(stat.key()));
+            for (Scout s : home) {
+                if (rules.trainXp(s, stat, content.getBalance().getBond().getTeachXp())) {
+                    Map<String, String> up = new HashMap<>();
+                    up.put("name", s.getName());
+                    up.put("stat", text.getStatNames().get(stat.key()));
+                    up.put("value", String.valueOf(s.stat(stat).getValue()));
+                    step.system(text.getExpedition().getStatUp(), up, s);
+                }
+            }
+            effects.add(TextTemplate.format(text.moment("effectTeach"), vars));
+        }
+        vars.put("effects", String.join(", ", effects));
+        String line = TextTemplate.format(thanks.getText() != null ? thanks.getText() : text.moment("paybackDefault"), vars);
+        if (!effects.isEmpty()) {
+            line += TextTemplate.format(text.moment("paybackEffects"), vars);
+        }
+        step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null, line, scout.getId()).withCue(LogLine.Cue.WARM));
     }
 
     /** The operator picks an answer in a conversation. */
@@ -4192,6 +4462,15 @@ public final class GameSession {
             Set<String> before = new java.util.HashSet<>(scout.getLife().getFlags());
             DialogueEngine.Answer answer = dialogues.answer(scout, dialogue, choice, scouts.values(), step.now);
             step.into(answer.lines, LogLine.chatThread(scout.getId()));
+            if (!answer.resources.isEmpty()) {
+                answer.resources.forEach((k, v) -> step.resourceDelta.merge(k, v, Integer::sum));
+                Map<String, String> favor = new HashMap<>();
+                favor.put("name", scout.getName());
+                favor.put("loot", describe(answer.resources));
+                step.lines.add(LogLine.draft(step.now, LogChannel.SYSTEM, null,
+                        TextTemplate.format(content.getTerminal().moment("favor"), favor), scout.getId())
+                        .withCue(LogLine.Cue.WARM));
+            }
             for (StoryDef.PersonalMission m : content.getStory().getPersonalMissions()) {
                 if (!before.contains(m.offeredFlag()) && scout.getLife().hasFlag(m.offeredFlag())) {
                     Map<String, String> vars = new HashMap<>();
@@ -4222,6 +4501,9 @@ public final class GameSession {
             GiftRules.Result result = gifts.give(scout, content.item(item.getItemId()), random, step.now);
             step.into(result.lines, LogLine.chatThread(scout.getId()));
             step.memories.addAll(result.memories);
+            if (result.reaction.loved()) {
+                promisePayback(scout, result.reaction == GiftRules.Reaction.FAVORITE, step);
+            }
             item.moveTo(ItemInstance.carriedBy(scout.getId()));
             scout.getLife().setLastTalkAtMillis(step.now);
             // A gift to someone who's open to you, or yours, means something more.
@@ -5107,6 +5389,13 @@ public final class GameSession {
             b.veteran = com.estatica.domain.scouts.RetrainRules.tier(s);
             b.canRetrain = retrainRules.canRetrain(s) && s.getStatus() == ScoutStatus.IDLE;
             b.likes = tastes(s, GiftRules.LIKES, text.getKnownLikes());
+            ItemDef favorite = content.favoriteOf(s);
+            if (favorite != null && s.getLife().hasFlag(GiftRules.FAVORITE_KNOWN)) {
+                Map<String, String> fav = new HashMap<>();
+                fav.put("item", favorite.getName().toLowerCase(Locale.ROOT));
+                String line = TextTemplate.format(content.getTerminal().moment("favoriteKnown"), fav);
+                b.likes = b.likes == null ? line : line + "\n" + b.likes;
+            }
             b.dislikes = tastes(s, GiftRules.DISLIKES, text.getKnownDislikes());
             b.gifts = new ArrayList<>();
             for (ItemInstance item : items.values()) {

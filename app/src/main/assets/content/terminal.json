@@ -542,5 +542,84 @@
     "radioLine": "[{n}] {kind} · {band} · {text}",
     "goal": "{label}: {progress}/{target}",
     "time": "It's {time}, {daytime}."
+  },
+  "moments": {
+    "projectPart": "{name} brought home {part}. {project}: {have}/{of} parts.",
+    "projectReady": "{name} brought home {part}. That's every part: the {project} can be built in the workshop.",
+    "giftLift": "{name} lights up. Stress −{n}, and +1 to everything on the next trip out.",
+    "giftEase": "{name} lights up. Stress −{n}.",
+    "favoriteMemory": "the {item} you gave me, the one thing I wanted",
+    "bondFull": "{name} is as close to you as anyone gets. It shows: stress −{n}.",
+    "companyEased": "You sit with {name} a while. Stress −{n}.",
+    "companyCalm": "You sit with {name} a while.",
+    "everyone": "everyone",
+    "theTools": "the tools",
+    "effectCrewStress": "stress −{n} for everyone home",
+    "effectHeal": "{other} hurts less",
+    "effectMend": "{gear} back to {condition}%",
+    "effectTeach": "everyone home learned a little {stat}",
+    "paybackEffects": " ({effects}).",
+    "paybackDefault": "{name} did something for the bunker",
+    "favor": "{name} hands you {loot}.",
+    "favoriteKnown": "Favorite: {item}"
+  },
+  "momentLines": {
+    "favorite": [
+      "This one. How did you know? This exact one.",
+      "I had one just like this, before. Exactly like this.",
+      "...I don't know what to say. Thank you. Really.",
+      "You remembered. Nobody remembers things like that anymore.",
+      "Don't look at me. Give me a minute. Okay. Okay. Thank you."
+    ],
+    "paybackPromise": [
+      "Let me do something for you. Give me a couple of hours.",
+      "I owe you one. Don't argue, I'll think of something.",
+      "Wait till later. I've got an idea.",
+      "Right. My turn. You'll see."
+    ],
+    "company": [
+      "Nothing much to say. Just sit with me a bit?",
+      "Quiet day. That's fine. Stay a while.",
+      "We don't always have to talk, right?",
+      "I'm all talked out. But you can stay."
+    ],
+    "companyClose": [
+      "Hey, you. Sit. I saved you the good crate.",
+      "I don't need anything. I just like it when you're around.",
+      "Tell me something stupid. Anything. I want to hear your voice that isn't on the radio.",
+      "Remember when we didn't know each other? Weird.",
+      "{operator}. Just checking you're still here. Good.",
+      "You look tired. Lean on me a minute, nobody's watching."
+    ],
+    "bunkerSTORM": [
+      "Listen to that. The whole roof's shaking.",
+      "Storm's eating the signal. Hope nobody's out in this.",
+      "Every flash, I count the seconds. Old habit.",
+      "If the antenna holds through this one, I'm kissing it."
+    ],
+    "bunkerRAIN": [
+      "Rain on the hatch. Almost cozy.",
+      "Something's dripping in the corridor again.",
+      "Good night for sleeping, this.",
+      "Smells like wet concrete. Smells like before, a bit."
+    ],
+    "bunkerFOG": [
+      "Fog so thick out there you could lean on it.",
+      "Periscope's all white. Gives me the creeps.",
+      "Sound carries weird in fog. I keep hearing footsteps."
+    ],
+    "bunkerCLOUDY": [
+      "Grey all day. Even the bulbs look tired.",
+      "Clouds low enough to touch. Feels like waiting for something."
+    ],
+    "bunkerCLEAR": [
+      "Sun's out. You can feel it through the vents, I swear.",
+      "Clear day. Good day to be out there."
+    ],
+    "bunkerNIGHT": [
+      "Clear night. If you go up top you can see the whole sky.",
+      "Quiet night. The good kind.",
+      "No clouds. The stars don't know anything happened."
+    ]
   }
 }

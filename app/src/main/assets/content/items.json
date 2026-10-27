@@ -70,5 +70,95 @@
     "tags": [
       "fe"
     ]
+  },
+  {
+    "id": "vinilo",
+    "name": "Vinyl record",
+    "description": "A tango record, scratched. You'd need a player. Or just to hold it.",
+    "tags": [
+      "musica"
+    ]
+  },
+  {
+    "id": "casete",
+    "name": "Mixtape",
+    "description": "A cassette with a handwritten label: 'FOR THE ROAD'.",
+    "tags": [
+      "musica"
+    ]
+  },
+  {
+    "id": "radio_bolsillo",
+    "name": "Pocket radio",
+    "description": "Tiny, dented, still pulls in static and the odd song.",
+    "tags": [
+      "musica"
+    ]
+  },
+  {
+    "id": "alfajor",
+    "name": "Alfajor",
+    "description": "Chocolate-coated, dulce de leche inside. Squashed flat, still perfect.",
+    "tags": [
+      "dulce"
+    ]
+  },
+  {
+    "id": "historieta",
+    "name": "Comic book",
+    "description": "A war comic with half the pages coloured in by a kid.",
+    "tags": [
+      "lectura",
+      "juego"
+    ]
+  },
+  {
+    "id": "termo",
+    "name": "Thermos",
+    "description": "Keeps water hot for hours. Somebody's initials scratched into it.",
+    "tags": [
+      "mate"
+    ]
+  },
+  {
+    "id": "lapices",
+    "name": "Colored pencils",
+    "description": "A tin of twelve. The red one is a stub.",
+    "tags": [
+      "escritura"
+    ]
+  },
+  {
+    "id": "rosario",
+    "name": "Rosary",
+    "description": "Wooden beads on a frayed string.",
+    "tags": [
+      "fe"
+    ]
+  },
+  {
+    "id": "bufanda",
+    "name": "Knitted scarf",
+    "description": "Hand-knitted, lumpy, very warm. Someone made it for someone.",
+    "tags": [
+      "recuerdo"
+    ]
+  },
+  {
+    "id": "dados",
+    "name": "Dice",
+    "description": "Five bone-white dice in a leather cup.",
+    "tags": [
+      "juego"
+    ]
+  },
+  {
+    "id": "postal",
+    "name": "Postcard",
+    "description": "A lake in the south. On the back: 'wish you were here'.",
+    "tags": [
+      "recuerdo",
+      "escritura"
+    ]
   }
 ]

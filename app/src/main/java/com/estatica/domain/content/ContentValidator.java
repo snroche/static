@@ -231,6 +231,8 @@ public final class ContentValidator {
                 }
             }
         }
+        checkSpecialEvents();
+        checkPeopleTheirOwnWay();
         Balance.Weather weatherBalance = content.getBalance().getWeather();
         check(weatherBalance != null && !weatherBalance.getWeights().isEmpty(), "balance.weather: weights");
         for (String kind : java.util.List.of("CLEAR", "CLOUDY", "RAIN", "FOG", "STORM")) {
@@ -598,6 +600,122 @@ public final class ContentValidator {
             known |= b.getId().equals(band);
         }
         check(known, where + ": unknown band " + band);
+    }
+
+    private static final java.util.Set<String> WEATHERS = java.util.Set.of("CLEAR", "CLOUDY", "RAIN", "FOG", "STORM");
+    private static final java.util.Set<String> CUES = java.util.Set.of("FIND", "WARM", "BOND", "THUNDER", "EERIE");
+
+    /**
+     * Weather, rare and once-only situations, the flags that chain them, and what they hand
+     * over (gear, project parts, personal objects).
+     */
+    private void checkSpecialEvents() {
+        java.util.Set<String> setsFlag = new java.util.HashSet<>();
+        for (EventDef e : content.getEvents().values()) {
+            for (EventDef.Option o : e.getOptions()) {
+                for (EventDef.Outcome out : java.util.Arrays.asList(o.getSuccess(), o.getFailure())) {
+                    if (out != null) {
+                        setsFlag.addAll(out.getSetWorld());
+                    }
+                }
+            }
+        }
+        java.util.Set<String> placed = new java.util.HashSet<>();
+        for (ZoneDef z : content.getZones().values()) {
+            if (z.getEvents() != null) {
+                placed.addAll(z.getEvents());
+            }
+        }
+        for (EventDef e : content.getEvents().values()) {
+            String where = "event " + e.getId();
+            check(e.getChance() > 0 && e.getChance() <= 1, where + ": chance in (0, 1]");
+            for (String w : e.getWeather()) {
+                check(WEATHERS.contains(w), where + ": unknown weather " + w);
+            }
+            check(e.getCue() == null || CUES.contains(e.getCue()), where + ": unknown cue " + e.getCue());
+            for (String f : e.getRequiresWorld()) {
+                check(setsFlag.contains(f), where + ": nothing sets world flag " + f);
+            }
+            // Rare, once-only and chained ones need somewhere to happen (story ones are placed by missions).
+            check(!e.isSpecial() || !e.getBands().isEmpty() || placed.contains(e.getId()), where + ": in no zone and no band");
+            for (EventDef.Option o : e.getOptions()) {
+                for (EventDef.Outcome out : java.util.Arrays.asList(o.getSuccess(), o.getFailure())) {
+                    if (out == null) {
+                        continue;
+                    }
+                    check(out.getCue() == null || CUES.contains(out.getCue()), where + ": unknown cue " + out.getCue());
+                    if (out.getGear() != null) {
+                        check(content.gear(out.getGear().getId()) != null, where + ": unknown gear " + out.getGear().getId());
+                        check(java.util.Arrays.stream(com.estatica.domain.bunker.GearPiece.Rarity.values())
+                                        .anyMatch(r -> r.name().equals(out.getGear().getRarity())),
+                                where + ": unknown rarity " + out.getGear().getRarity());
+                    }
+                    check(out.getPart() == null || content.part(out.getPart()) != null,
+                            where + ": unknown project part " + out.getPart());
+                    check(out.getItem() == null || content.getItems().containsKey(out.getItem()),
+                            where + ": unknown item " + out.getItem());
+                }
+            }
+        }
+        for (RecipeDef r : content.getRecipes().values()) {
+            if (!r.isProject()) {
+                continue;
+            }
+            String where = "project " + r.getId();
+            check(content.gear(r.getOutput()) != null, where + ": a project builds gear");
+            check(r.getRarity() == null || java.util.Arrays.stream(com.estatica.domain.bunker.GearPiece.Rarity.values())
+                    .anyMatch(x -> x.name().equals(r.getRarity())), where + ": unknown rarity " + r.getRarity());
+            for (RecipeDef.Part p : r.getParts()) {
+                boolean found = false;
+                for (EventDef e : content.getEvents().values()) {
+                    for (EventDef.Option o : e.getOptions()) {
+                        found |= o.getSuccess() != null && p.getId().equals(o.getSuccess().getPart())
+                                || o.getFailure() != null && p.getId().equals(o.getFailure().getPart());
+                    }
+                }
+                check(found, where + ": no situation hands over part " + p.getId());
+                check(p.getName() != null, where + ": part " + p.getId() + " needs a name");
+            }
+        }
+        for (DialogueDef d : content.getDialogues().values()) {
+            for (String w : d.getWeather()) {
+                check(WEATHERS.contains(w), "dialogue " + d.getId() + ": unknown weather " + w);
+            }
+            for (DialogueDef.Choice c : d.getChoices()) {
+                checkResources(c.getResources(), "dialogue " + d.getId());
+            }
+        }
+        for (String key : java.util.List.of("projectPart", "projectReady", "giftLift", "giftEase", "favoriteMemory",
+                "bondFull", "companyEased", "companyCalm", "effectCrewStress", "effectHeal", "effectMend", "effectTeach",
+                "paybackEffects", "paybackDefault", "favor", "favoriteKnown", "everyone", "theTools")) {
+            check(!content.getTerminal().moment(key).isEmpty(), "terminal.moments: " + key);
+        }
+        for (String key : java.util.List.of("favorite", "paybackPromise", "company", "companyClose")) {
+            check(!content.getTerminal().momentLines(key).isEmpty(), "terminal.momentLines: " + key);
+        }
+    }
+
+    /** Favorites and paybacks: what makes each person their own. */
+    private void checkPeopleTheirOwnWay() {
+        java.util.List<ThanksDef> all = new java.util.ArrayList<>();
+        for (ScoutTemplate t : content.getStarters()) {
+            check(t.getFavorite() == null || content.getItems().containsKey(t.getFavorite()),
+                    "scout " + t.getId() + ": unknown favorite " + t.getFavorite());
+            if (t.getThanks() != null) {
+                all.add(t.getThanks());
+            }
+        }
+        for (PeopleDef.Background b : content.getPeople().getBackgrounds()) {
+            check(b.getThanks() != null, "background " + b.getId() + ": how they pay back a gift (thanks)");
+            if (b.getThanks() != null) {
+                all.add(b.getThanks());
+            }
+        }
+        for (ThanksDef t : all) {
+            check(!t.getLines().isEmpty(), "thanks: lines");
+            checkResources(t.getResources(), "thanks");
+            check(t.getTeach() == null || StatType.fromKey(t.getTeach()) != null, "thanks: unknown stat " + t.getTeach());
+        }
     }
 
     private void checkResources(Map<String, Integer> amounts, String where) {

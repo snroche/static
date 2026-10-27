@@ -49,6 +49,18 @@ public final class DialogueDef {
     private boolean requiresDeadPartner;
     /** Only when the operator is a woman (true) or a man (false). Null: either. */
     private Boolean operatorFemale;
+    /** Only in this weather outside (WeatherRules.Weather names). Empty: any. */
+    private List<String> weather;
+    /** true: only after dark; false: only by day. Null: either. */
+    private Boolean night;
+
+    public List<String> getWeather() {
+        return weather != null ? weather : List.of();
+    }
+
+    public Boolean getNight() {
+        return night;
+    }
 
     public Integer getMinRomance() {
         return minRomance;
@@ -221,6 +233,12 @@ public final class DialogueDef {
         private boolean endRomance;
         /** "Only you": every other romance ends. */
         private boolean exclusive;
+        /** Something they hand over (a favor between friends): resource id to amount. */
+        private Map<String, Integer> resources;
+
+        public Map<String, Integer> getResources() {
+            return resources != null ? resources : Map.of();
+        }
 
         public int getRomance() {
             return romance;

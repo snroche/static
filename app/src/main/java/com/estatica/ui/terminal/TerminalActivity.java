@@ -123,7 +123,7 @@ public final class TerminalActivity extends ComponentActivity {
                 showPanel(Panel.SCOUT_DETAIL);
             } else if (sendPanel.isShown()) {
                 sendPanel.hide();
-            } else if (panel == Panel.DIARY && tab == Tab.COMMS) {
+            } else if (tab == Tab.COMMS && (panel == Panel.DIARY || panel == Panel.GIFTS || panel == Panel.SCOUT_DETAIL)) {
                 showPanel(Panel.NONE);
             } else if (panel == Panel.SCOUT_DETAIL || panel == Panel.GIFTS || panel == Panel.DIARY) {
                 showPanel(Panel.SCOUTS);
@@ -200,9 +200,50 @@ public final class TerminalActivity extends ComponentActivity {
             }
             sound.beep();
         });
+        viewModel.getCues().observe(this, cue -> {
+            sound.cue(cue);
+            if (hapticsOn && (com.estatica.domain.log.LogLine.Cue.FIND.equals(cue)
+                    || com.estatica.domain.log.LogLine.Cue.THUNDER.equals(cue))) {
+                binding.getRoot().performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
+            }
+        });
         binding.logTabSystem.setOnClickListener(v -> switchLog(LogView.SYSTEM, null));
         binding.logTabExpeditions.setOnClickListener(v -> switchLog(LogView.EXPEDITIONS, null));
         binding.logTabChats.setOnClickListener(v -> switchLog(LogView.CHATS, null));
+        consoleOpen = getPreferences(MODE_PRIVATE).getBoolean(PREF_CONSOLE, false);
+        showConsole(consoleOpen, false);
+        binding.logConsole.setOnClickListener(v -> {
+            consoleOpen = !consoleOpen;
+            getPreferences(MODE_PRIVATE).edit().putBoolean(PREF_CONSOLE, consoleOpen).apply();
+            showConsole(consoleOpen, true);
+        });
+        binding.decisionFold.setOnClickListener(v -> {
+            decisionFolded = !decisionFolded;
+            applyFold();
+        });
+        binding.chatTalk.setOnClickListener(v -> {
+            SessionSnapshot.ScoutView s = focusedPerson();
+            if (s != null) {
+                viewModel.talk(s.id);
+                followTail();
+            }
+        });
+        binding.chatGift.setOnClickListener(v -> {
+            SessionSnapshot.ScoutView s = focusedPerson();
+            if (s != null) {
+                select(s);
+                showPanel(Panel.GIFTS);
+                updateBack();
+            }
+        });
+        binding.chatCard.setOnClickListener(v -> {
+            SessionSnapshot.ScoutView s = focusedPerson();
+            if (s != null) {
+                select(s);
+                showPanel(Panel.SCOUT_DETAIL);
+                updateBack();
+            }
+        });
         binding.logTabDiary.setOnClickListener(v -> {
             viewModel.loadDiary();
             showPanel(Panel.DIARY);
@@ -308,6 +349,7 @@ public final class TerminalActivity extends ComponentActivity {
         adapter.setSeparateThreads(view == LogView.EXPEDITIONS && focus == null);
         viewModel.setLogView(view, focus);
         renderLogChips();
+        renderChatActions();
         renderExpeditions(snapshot);
         followTail();
     }
@@ -323,7 +365,8 @@ public final class TerminalActivity extends ComponentActivity {
         addChip(null, getString(R.string.log_all));
         if (logView == LogView.EXPEDITIONS) {
             for (SessionSnapshot.ExpeditionView e : snapshot.expeditions) {
-                addChip(e.thread, e.scoutName);
+                addChip(e.thread, e.waitingForOrders ? getString(R.string.log_chip_team_wait, e.scoutName)
+                        : getString(R.string.log_chip_team, e.scoutName, e.percent));
             }
             // Back home (or not): their log stays a few hours after you got the news.
             for (SessionSnapshot.DoneLog d : snapshot.doneLogs) {
@@ -335,6 +378,59 @@ public final class TerminalActivity extends ComponentActivity {
                     addChip(LogLine.chatThread(s.id), s.name);
                 }
             }
+        }
+    }
+
+    /** CHATS with one person open: their quick actions. */
+    private void renderChatActions() {
+        SessionSnapshot.ScoutView s = tab == Tab.COMMS ? focusedPerson() : null;
+        binding.chatActions.setVisibility(s != null ? View.VISIBLE : View.GONE);
+        if (s == null) {
+            return;
+        }
+        boolean home = s.awayAt == null;
+        binding.chatTalk.setEnabled(home);
+        binding.chatGift.setEnabled(home);
+        int on = ContextCompat.getColor(this, R.color.amber_bright);
+        int off = ContextCompat.getColor(this, R.color.amber_dim);
+        binding.chatTalk.setTextColor(home ? on : off);
+        binding.chatGift.setTextColor(home ? on : off);
+    }
+
+    /** The person whose chat is open in CHATS, or null. */
+    private SessionSnapshot.ScoutView focusedPerson() {
+        if (snapshot == null || logView != LogView.CHATS || logFocus == null
+                || !logFocus.startsWith(LogLine.CHAT_PREFIX)) {
+            return null;
+        }
+        String id = logFocus.substring(LogLine.CHAT_PREFIX.length());
+        for (SessionSnapshot.ScoutView s : snapshot.scouts) {
+            if (s.id.equals(id) && !s.dead) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    // ---- Command line: hidden until asked for ----
+
+    private static final String PREF_CONSOLE = "console_open";
+    private boolean consoleOpen;
+
+    private void showConsole(boolean open, boolean focus) {
+        binding.prompt.setVisibility(open ? View.VISIBLE : View.GONE);
+        binding.input.setVisibility(open ? View.VISIBLE : View.GONE);
+        binding.logConsole.setTextColor(ContextCompat.getColor(this, open ? R.color.amber_bright : R.color.amber_dim));
+        BracketDrawable.mark(binding.logConsole, open);
+        android.view.inputmethod.InputMethodManager ime =
+                (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (open && focus) {
+            binding.input.requestFocus();
+            ime.showSoftInput(binding.input, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+        } else if (!open) {
+            binding.input.clearFocus();
+            ime.hideSoftInputFromWindow(binding.input.getWindowToken(), 0);
+            renderSuggestions();
         }
     }
 
@@ -581,6 +677,7 @@ public final class TerminalActivity extends ComponentActivity {
         renderDecision(snapshot);
         renderHud(snapshot);
         renderExpeditions(snapshot);
+        renderChatActions();
         renderBadges(snapshot);
     }
 
@@ -683,7 +780,8 @@ public final class TerminalActivity extends ComponentActivity {
      * COMMS > EXPEDITIONS, and only the focused team when a chip is picked.
      */
     private void renderExpeditions(SessionSnapshot snapshot) {
-        if (snapshot == null || tab != Tab.COMMS || logView != LogView.EXPEDITIONS) {
+        boolean none = snapshot != null && snapshot.expeditions.isEmpty();
+        if (snapshot == null || tab != Tab.COMMS || logView != LogView.EXPEDITIONS || logFocus == null && !none) {
             binding.expeditionStrip.setVisibility(View.GONE);
             return;
         }
@@ -799,6 +897,7 @@ public final class TerminalActivity extends ComponentActivity {
             renderBadges(snapshot);
         }
         renderExpeditions(snapshot);
+        renderChatActions();
         updateBack();
     }
 
@@ -829,7 +928,13 @@ public final class TerminalActivity extends ComponentActivity {
         binding.decisionPrev.setOnClickListener(v -> pageDecision(-1));
         binding.decisionNext.setOnClickListener(v -> pageDecision(1));
         if (decision.id.equals(shownDecisionId)) {
+            applyFold();
             return;
+        }
+        if (!seenDecisions.contains(decision.id)) {
+            // Something new to decide: show it whole, even if the last one was folded away.
+            seenDecisions.add(decision.id);
+            decisionFolded = false;
         }
         shownDecisionId = decision.id;
         boolean order = decision.kind == SessionSnapshot.PendingDecision.Kind.ORDER;
@@ -886,6 +991,20 @@ public final class TerminalActivity extends ComponentActivity {
             });
             binding.decisionOptions.addView(button);
         }
+        applyFold();
+    }
+
+    /** Folded: only the header, so the log has the room. */
+    private boolean decisionFolded;
+    private final java.util.Set<String> seenDecisions = new java.util.HashSet<>();
+
+    private void applyFold() {
+        int body = decisionFolded ? View.GONE : View.VISIBLE;
+        binding.decisionDeadline.setVisibility(body);
+        binding.decisionOptions.setVisibility(body);
+        binding.decisionSituation.setVisibility(decisionFolded || binding.decisionSituation.length() == 0
+                ? View.GONE : View.VISIBLE);
+        binding.decisionFold.setText(decisionFolded ? R.string.decision_unfold_mark : R.string.decision_fold_mark);
     }
 
     private void pageDecision(int delta) {

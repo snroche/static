@@ -120,7 +120,16 @@
           "Signal received. Coming in.",
           "Keep the line open for me."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "I drew up a timetable for the bunker. Shifts, quiet hours, lights out. Trains ran on time; so can we.",
+          "Put the whole place on a schedule. Nobody argued. Nobody ever argues with a timetable."
+        ],
+        "text": "{name} put the bunker on a timetable",
+        "crewStress": -8,
+        "teach": "nerve"
+      }
     },
     {
       "id": "teen",
@@ -166,7 +175,18 @@
           "Is this real? Someone's actually there?",
           "Don't hang up. Please."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "Went through the vents last night. Found stuff. Don't ask how I fit.",
+          "There's a crawlspace nobody checked. I checked. You're welcome."
+        ],
+        "text": "{name} came back from the vents with their pockets full",
+        "resources": {
+          "components": 2,
+          "scrap": 3
+        }
+      }
     },
     {
       "id": "nurse",
@@ -212,7 +232,16 @@
           "A bunker. With people. I'll bring what's left of my kit.",
           "Hold on, I'm on my way."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "I had a proper look at {other}. Cleaned it, wrapped it. It'll mend faster now.",
+          "Did rounds tonight. Everyone. Even the ones who said they were fine."
+        ],
+        "text": "{name} did a round of the bunker with the first-aid kit",
+        "heal": 1,
+        "crewStress": -3
+      }
     },
     {
       "id": "trucker",
@@ -258,7 +287,18 @@
           "Been driving in circles for weeks. Give me a direction.",
           "Got it. On my way."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "Siphoned a couple of tanks I'd had my eye on. Fuel's in the shed.",
+          "Old trucker trick: there's always a bit left in the lines. Got it all."
+        ],
+        "text": "{name} went out to the dead cars on the avenue",
+        "resources": {
+          "fuel": 2,
+          "parts": 1
+        }
+      }
     },
     {
       "id": "teacher",
@@ -304,7 +344,15 @@
           "Finally, an adult voice. I'm coming.",
           "Please be patient, I walk slowly."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "Gave everyone a little lesson tonight. Maps, mostly. Even {other} took notes.",
+          "Chalk on the wall, everyone sitting on crates. Felt like a classroom again."
+        ],
+        "text": "{name} held a class in the common room",
+        "teach": "wits"
+      }
     },
     {
       "id": "mechanic",
@@ -350,7 +398,15 @@
           "Took me a week to rig this radio. Glad it worked.",
           "Heading your way."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "Your {gear} was falling apart. Not anymore.",
+          "Had the {gear} on my bench all night. Don't thank me, just stop dropping it."
+        ],
+        "text": "{name} spent the night at the bench on the {gear}",
+        "mend": 50
+      }
     },
     {
       "id": "cook",
@@ -396,7 +452,18 @@
           "I'm hungry and I'm tired, but I can cook.",
           "Wait for me."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "Made something out of nothing. Sit down, everyone eats properly tonight.",
+          "Found the good spices I was hiding from myself. Tonight we eat like people."
+        ],
+        "text": "{name} cooked a real dinner for everyone",
+        "resources": {
+          "rations": 3
+        },
+        "crewStress": -6
+      }
     },
     {
       "id": "musician",
@@ -442,7 +509,15 @@
           "Static, static, static, and then you.",
           "On my way."
         ]
-      ]
+      ],
+      "thanks": {
+        "lines": [
+          "Played for everyone last night. First time in a long time {other} laughed.",
+          "Got them all singing. Badly. It was perfect."
+        ],
+        "text": "{name} played for the whole bunker",
+        "crewStress": -12
+      }
     }
   ],
   "genders": {

@@ -10,6 +10,33 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.8.3] — Moments: weather, rare finds, favorites, friends who give back — in verification
+
+App 0.8.3 (versionCode 803) · DB 14 (no change) · **Content 28 → 29**
+
+### Added
+- **Weather and the dark change what happens out there.** New situations only come up in a storm (lightning on the block, a toppled bus to shelter in, numbers between strikes at the northern antenna), in the rain (a flooded underpass, the gutters giving things up), in fog (a party on a looping tape, a horse standing in the road), on a clear night (a candle in a window, more stars than the city ever had), under flat grey cloud (fresh drag marks) or in the sun (a solar panel still humming).
+- **Rare finds, once each.** Some situations only come up now and then, and only once in a game.
+- **Projects: find the parts, build something special.** A racing bike frame, a pair of wheels and a careful chain set are out there in different places. Bring all three home and the workshop can build a **road bike** (trips 40% shorter, no fuel). Farther out, an engine, a police sidecar and a clean tank make a **sidecar motorbike** for three. The log says how many parts you have; the plan shows up when you have them all.
+- **Good calls come back.** Share food with the old man in the kiosk and one day there's a box on his counter for "the radio people". Rob him, and one day the kiosk is ash. Feed a stray dog and it may find you again, and lead you somewhere. Pull a man out from under a shelf and he may turn up on a rooftop with something for you. Leave a stranger's bike where it is and you may find their spare one waiting. Some of these also raise the bond of whoever made the call.
+- **A working bike can be found out there**, and ridden home.
+- **Everyone has a favorite thing.** One object they'd love more than anything (Mara's is a harmonica, Irene's a notebook; everyone else's comes from what they like). Giving it is a moment of its own: more bond, a line of their own, a memory. Someone close may tell you what it is. Once you know, it's on their card.
+- **Gifts they love lift them:** stress eases, and they get +1 to everything on their next trip out.
+- **Friends pay you back, each in their own way.** From bond level 3 (or any time it's their favorite), a gift they love comes back a couple of hours later: a cook makes dinner for everyone, a mechanic fixes your most worn gear, a nurse sees to whoever's hurt worst, a musician plays for the bunker, a teacher holds a class (everyone home learns a little), a trucker brings fuel, a teenager comes back from the vents with full pockets, a signalman puts the bunker on a timetable. Mara and Irene have their own.
+- **Talks for the weather:** a storm keeps someone awake, a leak over a bunk in the rain, a shape in the fog through the periscope, a clear night and "come up top with me".
+- **Talks for the closest friends.** Ten new everyday talks at the top bond level (hot water passed off as coffee, a battery held out like a present, "same time tomorrow?"), some with something to hand over. Plus two late stories for each kind of person (the last train a signalman kept the light green for, a teacher's thirty-one names, a song about the bunker), and one each for Mara and Irene.
+- **The bunker talks about the weather:** the roof shaking in a storm, the drip in the corridor, the periscope gone white.
+- **Eleven new things to give:** a tango record, a mixtape, a pocket radio, an alfajor, a comic, a thermos, colored pencils, a rosary, a knitted scarf, dice and a postcard. Each turns up in its own places.
+- **Sounds for moments:** a rising arpeggio for a rare find or a finished project, two warm notes for a gift they love or a favor returned, a chime when a bond grows, thunder in a storm, something not quite right for the strange ones. A light buzz for finds and thunder.
+
+### Changed
+- **A full bond still means something.** At the top, what would have raised it eases their stress instead, and talking always lands: with nothing new to say, you just keep each other company (more so with the closest).
+- **COMMS is easier to handle:**
+  - The decision card folds down to one line (▾) so the log has room. A new decision opens it again.
+  - The command line is hidden until you tap its icon at the end of the COMMS tabs.
+  - EXPEDITIONS chips show each team's progress (or ⚠ waiting for orders). The line with the return time shows for the team you pick.
+  - With one person's chat open, TALK, GIFT and CARD are right there. Back returns to the chat.
+
 ## [0.8.2] — A cleaner map, popups for trades and incoming codes — in verification
 
 App 0.8.2 (versionCode 802) · DB 14 (no change) · Content 28 (no change)

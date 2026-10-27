@@ -278,5 +278,68 @@
     "minutes": 8,
     "minCraft": 4,
     "findBand": "medium"
+  },
+  {
+    "id": "project_bici_ruta",
+    "name": "Road bike",
+    "inputs": {
+      "scrap": 4,
+      "parts": 2,
+      "components": 1
+    },
+    "output": "gear_bici_ruta",
+    "minutes": 60,
+    "minCraft": 2,
+    "rarity": "RARE",
+    "parts": [
+      {
+        "id": "bike_frame",
+        "name": "Racing bike frame",
+        "description": "Light, bent at the fork, still true where it counts."
+      },
+      {
+        "id": "bike_wheels",
+        "name": "Pair of wheels",
+        "description": "Thin racing wheels. Hardly a spoke missing."
+      },
+      {
+        "id": "bike_gears",
+        "name": "Chain and gears",
+        "description": "A derailleur set, oiled and wrapped in a rag by someone who cared."
+      }
+    ],
+    "doneText": "The road bike is back on its wheels. Light enough to carry, fast enough to matter. It's in the gear store."
+  },
+  {
+    "id": "project_sidecar",
+    "name": "Sidecar motorbike",
+    "inputs": {
+      "scrap": 10,
+      "components": 6,
+      "parts": 5
+    },
+    "output": "gear_sidecar",
+    "minutes": 120,
+    "minWorkshopLevel": 2,
+    "minCraft": 5,
+    "rarity": "RARE",
+    "parts": [
+      {
+        "id": "sidecar_engine",
+        "name": "Motorbike engine",
+        "description": "A big single-cylinder, seized but whole."
+      },
+      {
+        "id": "sidecar_shell",
+        "name": "Sidecar shell",
+        "description": "A police sidecar, dented, the seat still padded."
+      },
+      {
+        "id": "sidecar_tank",
+        "name": "Fuel tank and carburetor",
+        "description": "Clean inside. Someone drained it properly before they left."
+      }
+    ],
+    "doneText": "The sidecar motorbike coughs, catches, and roars in the workshop. Three seats, and the whole bunker came to watch. It's in the gear store."
   }
 ]

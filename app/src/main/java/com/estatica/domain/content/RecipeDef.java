@@ -60,4 +60,49 @@ public final class RecipeDef {
     public String getFindBand() {
         return findBand != null ? findBand : "short";
     }
+
+    /**
+     * A project: the plan shows up once every one of these parts has been found out there
+     * (never as a blueprint), and it can be built once. Empty for ordinary recipes.
+     */
+    private java.util.List<Part> parts;
+    /** Rarity of the gear it makes (projects come out better than the bench usually manages). */
+    private String rarity;
+    /** System line when it's done ({item}); null for the usual one. */
+    private String doneText;
+
+    public java.util.List<Part> getParts() {
+        return parts != null ? parts : java.util.List.of();
+    }
+
+    public boolean isProject() {
+        return !getParts().isEmpty();
+    }
+
+    public String getRarity() {
+        return rarity;
+    }
+
+    public String getDoneText() {
+        return doneText;
+    }
+
+    /** Something found out there that a project needs. */
+    public static final class Part {
+        private String id;
+        private String name;
+        private String description;
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return description != null ? description : "";
+        }
+    }
 }

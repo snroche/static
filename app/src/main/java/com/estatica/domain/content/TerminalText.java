@@ -94,6 +94,28 @@ public final class TerminalText {
         return link != null ? link : Map.of();
     }
 
+    /** Moments that make people and places their own: projects, gifts they love, full bonds. */
+    private Map<String, String> moments;
+    /** Pools of lines for those moments (rendered in each person's voice). */
+    private Map<String, List<String>> momentLines;
+
+    public Map<String, String> getMoments() {
+        return moments != null ? moments : Map.of();
+    }
+
+    public String moment(String key) {
+        return getMoments().getOrDefault(key, "");
+    }
+
+    public Map<String, List<String>> getMomentLines() {
+        return momentLines != null ? momentLines : Map.of();
+    }
+
+    /** Lines in a pool, or none. */
+    public List<String> momentLines(String key) {
+        return getMomentLines().getOrDefault(key, List.of());
+    }
+
     /** Stat key to what it does. */
     private Map<String, String> statDescriptions;
     /** Mood key to what it means. */

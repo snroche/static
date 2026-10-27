@@ -98,6 +98,11 @@ public final class GearPiece {
         condition = MAX_CONDITION;
     }
 
+    /** Some work on it, short of a full repair. */
+    public void mend(int amount) {
+        condition = Math.min(MAX_CONDITION, condition + Math.max(0, amount));
+    }
+
     public String getLocation() {
         return location;
     }

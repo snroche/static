@@ -20,7 +20,21 @@ import java.util.Map;
  */
 public final class GiftRules {
 
-    public enum Reaction { LIKED, NEUTRAL, DISLIKED }
+    public enum Reaction {
+        /** The one thing they'd love most. */
+        FAVORITE,
+        LIKED,
+        NEUTRAL,
+        DISLIKED;
+
+        /** Liked at least: lifts them, and close friends pay it back. */
+        public boolean loved() {
+            return this == FAVORITE || this == LIKED;
+        }
+    }
+
+    /** Flag once their favorite has been found out (by talking, or by giving it). */
+    public static final String FAVORITE_KNOWN = "fav_known";
 
     /** Flag prefixes for discovered tastes, shown on the scout card. */
     public static final String LIKES = "likes:";
@@ -38,6 +52,10 @@ public final class GiftRules {
         ScoutTemplate template = content.persona(scout);
         if (template == null) {
             return Reaction.NEUTRAL;
+        }
+        ItemDef favorite = content.favoriteOf(scout);
+        if (favorite != null && favorite.getId().equals(item.getId())) {
+            return Reaction.FAVORITE;
         }
         if (matches(template.getLikes(), item)) {
             return Reaction.LIKED;
@@ -68,6 +86,12 @@ public final class GiftRules {
         String key;
         int delta;
         switch (reaction) {
+            case FAVORITE:
+                key = "giftLiked";
+                delta = bond.getGiftFavorite();
+                scout.getLife().addFlag(LIKES + item.getId());
+                scout.getLife().addFlag(FAVORITE_KNOWN);
+                break;
             case LIKED:
                 key = "giftLiked";
                 delta = bond.getGiftLiked();
@@ -83,12 +107,35 @@ public final class GiftRules {
                 delta = bond.getGiftNeutral();
         }
         boolean close = rules.isClose(scout);
-        out.lines.add(LogLine.draft(now, LogChannel.RADIO, scout.getName(),
-                VoiceRenderer.phrase(content.voice(scout.getVoiceId()), key, rng, vars, close), scout.getId()));
+        com.estatica.domain.content.VoiceDef voice = content.voice(scout.getVoiceId());
+        LogLine said = LogLine.draft(now, LogChannel.RADIO, scout.getName(),
+                VoiceRenderer.phrase(voice, key, rng, vars, close), scout.getId());
+        out.lines.add(reaction.loved() ? said.withCue(LogLine.Cue.WARM) : said);
+        com.estatica.domain.content.TerminalText text = content.getTerminal();
+        if (reaction == Reaction.FAVORITE) {
+            // Not just something they like: the thing. They say so, in their own words.
+            List<String> pool = text.momentLines("favorite");
+            if (!pool.isEmpty()) {
+                out.lines.add(LogLine.draft(now, LogChannel.RADIO, scout.getName(),
+                        VoiceRenderer.render(voice, rng.pick(pool), vars), scout.getId()));
+            }
+        }
         DialogueOutcomes.applyBond(content, rules, scout, delta, now, out.lines);
+        if (reaction.loved()) {
+            int relief = reaction == Reaction.FAVORITE ? bond.getFavoriteStressRelief() : bond.getLikedStressRelief();
+            int eased = -rules.addStress(scout, -relief);
+            boolean lifted = scout.getLife().addFlag(ScoutRules.LIFTED);
+            vars.put("n", String.valueOf(eased));
+            String template = text.moment(lifted ? "giftLift" : "giftEase");
+            if (!template.isEmpty()) {
+                out.lines.add(LogLine.draft(now, LogChannel.SYSTEM, null, TextTemplate.format(template, vars), scout.getId()));
+            }
+        }
         if (reaction != Reaction.DISLIKED) {
             out.memories.add(Memory.create(scout.getId(), Memory.Type.GIFT,
-                    item.getName().toLowerCase(java.util.Locale.ROOT), item.getId(), now));
+                    reaction == Reaction.FAVORITE
+                            ? TextTemplate.format(text.moment("favoriteMemory"), vars)
+                            : item.getName().toLowerCase(java.util.Locale.ROOT), item.getId(), now));
         }
         return out;
     }

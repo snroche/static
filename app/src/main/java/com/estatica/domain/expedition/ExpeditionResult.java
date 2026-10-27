@@ -45,6 +45,17 @@ public final class ExpeditionResult {
         return Collections.unmodifiableList(deliveredItems);
     }
 
+    private final List<String> worldFlags = new ArrayList<>();
+
+    void world(String flag) {
+        worldFlags.add(flag);
+    }
+
+    /** Bunker-wide flags set out there (earlier choices, once-only situations had). */
+    public List<String> getWorldFlags() {
+        return Collections.unmodifiableList(worldFlags);
+    }
+
     void plot(String fragmentId) {
         plotFragments.add(fragmentId);
     }

@@ -90,6 +90,51 @@ public final class ExpeditionEngine {
         this.plotOpen = plotOpen;
     }
 
+    /** Bunker-wide flags set by earlier choices (and "seen:id" for once-only situations). */
+    private java.util.function.Predicate<String> worldFlag = f -> false;
+
+    public void setWorldFlags(java.util.function.Predicate<String> worldFlag) {
+        this.worldFlag = worldFlag;
+    }
+
+    /** Flag a once-only situation leaves behind when it comes up. */
+    public static String seenFlag(String eventId) {
+        return "seen:" + eventId;
+    }
+
+    /** Carried-home prefixes, next to key items ("key:"). */
+    public static final String GEAR_PREFIX = "gear:";
+    public static final String PART_PREFIX = "part:";
+
+    /**
+     * Whether a situation can come up on a trip leaving now: the weather and the hour, earlier
+     * choices, once-only ones already had, and the luck of the draw for rare ones (its own dice,
+     * so the rest of the trip comes out the same).
+     */
+    private boolean inTheCards(EventDef event, long seed, long now) {
+        if (!event.getWeather().isEmpty() && !event.getWeather().contains(world.weatherAt(now).name())) {
+            return false;
+        }
+        if (event.getNight() != null && event.getNight() != world.nightAt(now)) {
+            return false;
+        }
+        for (String f : event.getRequiresWorld()) {
+            if (!worldFlag.test(f)) {
+                return false;
+            }
+        }
+        for (String f : event.getForbidsWorld()) {
+            if (worldFlag.test(f)) {
+                return false;
+            }
+        }
+        if (event.isOnce() && worldFlag.test(seenFlag(event.getId()))) {
+            return false;
+        }
+        return event.getChance() >= 1.0
+                || GameRandom.fromSeed(seed ^ (event.getId().hashCode() * 0x9E3779B97F4A7C15L)).chance(event.getChance());
+    }
+
     private boolean stillUseful(EventDef event) {
         if (event.getGrantsKey() != null && hasKey.test(event.getGrantsKey())) {
             return false;
@@ -203,6 +248,7 @@ public final class ExpeditionEngine {
         }
         List<Segment> segments = TimelineGenerator.generate(zone, pace, rng, pool,
                 id -> stillUseful(content.event(id))
+                        && inTheCards(content.event(id), seed, now)
                         && anyoneFits(scout, party, content.event(id)),
                 recentEvents);
         if (mission.getType() == Mission.Type.PERSONAL) {
@@ -619,8 +665,13 @@ public final class ExpeditionEngine {
         expedition.markPending(at);
         EventDef event = content.event(expedition.currentSegment().getEventId());
         Map<String, String> vars = vars(scout);
+        if (event.isOnce()) {
+            out.world(seenFlag(event.getId()));
+        }
+        String cue = event.getCue();
         for (String line : event.getIntro()) {
-            out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, line, vars)));
+            out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, line, vars)).withCue(cue));
+            cue = null;
         }
         List<EventDef.Option> options = event.getOptions();
         double noise = Math.min(1.0, expedition.getMission().getNoise() + world.noiseAt(at));
@@ -698,8 +749,10 @@ public final class ExpeditionEngine {
         boolean success = rng.nextDouble() < chance;
         EventDef.Outcome outcome = success ? option.getSuccess() : option.getFailure();
 
+        String cue = outcome.getCue();
         for (String line : outcome.getText()) {
-            out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, line, vars)));
+            out.line(heard(expedition, rng, at, scout, VoiceRenderer.render(voice, line, vars)).withCue(cue));
+            cue = null;
         }
 
         StatType stat = StatType.fromKey(option.getStat());
@@ -738,6 +791,27 @@ public final class ExpeditionEngine {
         if (outcome.getKeyItem() != null && !hasKey.test(outcome.getKeyItem())
                 && !expedition.getCarriedItems().contains(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX + outcome.getKeyItem())) {
             expedition.addItem(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX + outcome.getKeyItem());
+        }
+        if (outcome.getGear() != null) {
+            EventDef.GearFind g = outcome.getGear();
+            expedition.addItem(GEAR_PREFIX + g.getId() + ":" + g.getRarity() + ":" + g.getCondition());
+        }
+        if (outcome.getPart() != null && !worldFlag.test(PART_PREFIX + outcome.getPart())
+                && !expedition.getCarriedItems().contains(PART_PREFIX + outcome.getPart())) {
+            expedition.addItem(PART_PREFIX + outcome.getPart());
+        }
+        if (outcome.getItem() != null) {
+            expedition.addItem(outcome.getItem());
+        }
+        for (String flag : outcome.getSetWorld()) {
+            out.world(flag);
+        }
+        if (outcome.getBond() != 0) {
+            List<LogLine> bondLines = new ArrayList<>();
+            com.estatica.domain.scouts.DialogueOutcomes.applyBond(content, rules, scout, outcome.getBond(), at, bondLines);
+            for (LogLine l : bondLines) {
+                out.line(l);
+            }
         }
         if (outcome.getMemory() != null) {
             remember(Memory.create(scout.getId(), Memory.Type.EVENT,
@@ -903,10 +977,7 @@ public final class ExpeditionEngine {
         out.deliverItems(expedition.getCarriedItems());
         for (String itemId : expedition.getCarriedItems()) {
             Map<String, String> itemVars = vars(scout);
-            String name = itemId.startsWith(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX)
-                    ? content.keyItem(itemId.substring(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX.length())).getName()
-                    : content.item(itemId).getName();
-            itemVars.put("item", name.toLowerCase(Locale.ROOT));
+            itemVars.put("item", carriedName(itemId).toLowerCase(Locale.ROOT));
             out.line(system(at, TextTemplate.format(content.getTerminal().getBunker().getItemFound(), itemVars), scout));
         }
         expedition.clearLoot();
@@ -914,6 +985,21 @@ public final class ExpeditionEngine {
         rules.markReturned(scout, at);
         expedition.setStatus(Expedition.Status.COMPLETED);
         out.markReturned();
+    }
+
+    /** What a carried-home entry is called: a key item, gear, a project part or a personal object. */
+    public String carriedName(String itemId) {
+        if (itemId.startsWith(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX)) {
+            return content.keyItem(itemId.substring(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX.length())).getName();
+        }
+        if (itemId.startsWith(GEAR_PREFIX)) {
+            return content.gear(itemId.substring(GEAR_PREFIX.length()).split(":")[0]).getName();
+        }
+        if (itemId.startsWith(PART_PREFIX)) {
+            com.estatica.domain.content.RecipeDef.Part part = content.part(itemId.substring(PART_PREFIX.length()));
+            return part != null ? part.getName() : itemId;
+        }
+        return content.item(itemId).getName();
     }
 
     /**

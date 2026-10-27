@@ -1136,6 +1136,58 @@ public final class Balance {
             return retreatGranted;
         }
 
+        /** Bond for their favorite thing, and how much a gift they like (or love) eases them. */
+        private int giftFavorite = 25;
+        private int likedStressRelief = 10;
+        private int favoriteStressRelief = 20;
+        /** From this bond level, a gift they like gets paid back in their own way. */
+        private int thanksAtLevel = 3;
+        /** Hours until they pay it back, and how long before they will again. */
+        private double thanksDelayHours = 2;
+        private double thanksCooldownHours = 20;
+        /** XP each person home gets when someone teaches them a little. */
+        private int teachXp = 6;
+        /** Once the bond is full, a share of whatever would have raised it eases stress instead. */
+        private double fullBondReliefShare = 0.5;
+        /** Talking to someone with nothing new to say: a little company, for this much stress. */
+        private int companyStressRelief = 3;
+
+        public int getGiftFavorite() {
+            return giftFavorite;
+        }
+
+        public int getLikedStressRelief() {
+            return likedStressRelief;
+        }
+
+        public int getFavoriteStressRelief() {
+            return favoriteStressRelief;
+        }
+
+        public int getThanksAtLevel() {
+            return thanksAtLevel;
+        }
+
+        public double getThanksDelayHours() {
+            return thanksDelayHours;
+        }
+
+        public double getThanksCooldownHours() {
+            return thanksCooldownHours;
+        }
+
+        public int getTeachXp() {
+            return teachXp;
+        }
+
+        public double getFullBondReliefShare() {
+            return fullBondReliefShare;
+        }
+
+        public int getCompanyStressRelief() {
+            return companyStressRelief;
+        }
+
         public int[] getLevelThresholds() {
             return levelThresholds;
         }

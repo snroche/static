@@ -25,7 +25,9 @@
       "mapa",
       "escotilla",
       "susp_radio_room",
-      "susp_mannequins"
+      "susp_mannequins",
+      "p_bike_gears",
+      "r_kiosk_man"
     ],
     "loot": [
       {
@@ -58,6 +60,14 @@
       {
         "item": "naipes",
         "chance": 0.05
+      },
+      {
+        "item": "alfajor",
+        "chance": 0.12
+      },
+      {
+        "item": "dados",
+        "chance": 0.06
       }
     ],
     "icon": "󰓜",
@@ -89,7 +99,8 @@
       "cables",
       "avispas",
       "semi",
-      "susp_footsteps"
+      "susp_footsteps",
+      "p_bike_gears"
     ],
     "loot": [
       {
@@ -140,6 +151,14 @@
       {
         "item": "naipes",
         "chance": 0.06
+      },
+      {
+        "item": "termo",
+        "chance": 0.1
+      },
+      {
+        "item": "casete",
+        "chance": 0.08
       }
     ],
     "icon": "󰊘",
@@ -205,6 +224,10 @@
       {
         "item": "foto",
         "chance": 0.05
+      },
+      {
+        "item": "rosario",
+        "chance": 0.08
       }
     ],
     "icon": "󰐂",
@@ -241,7 +264,8 @@
       "biblioteca",
       "pupitre",
       "susp_radio_room",
-      "susp_child_voice"
+      "susp_child_voice",
+      "p_bike_frame"
     ],
     "loot": [
       {
@@ -284,6 +308,14 @@
       {
         "item": "foto",
         "chance": 0.05
+      },
+      {
+        "item": "lapices",
+        "chance": 0.12
+      },
+      {
+        "item": "historieta",
+        "chance": 0.1
       }
     ],
     "icon": "󰑴",
@@ -315,7 +347,8 @@
       "cables",
       "escotilla",
       "generador_viejo",
-      "susp_footsteps"
+      "susp_footsteps",
+      "p_bike_frame"
     ],
     "loot": [
       {
@@ -339,6 +372,10 @@
       {
         "item": "naipes",
         "chance": 0.05
+      },
+      {
+        "item": "bufanda",
+        "chance": 0.1
       }
     ],
     "transit": [
@@ -379,7 +416,8 @@
       "llanto",
       "carro_emergencias",
       "despensa_hospital",
-      "susp_child_voice"
+      "susp_child_voice",
+      "p_side_shell"
     ],
     "loot": [
       {
@@ -418,6 +456,14 @@
       },
       {
         "item": "estampita",
+        "chance": 0.06
+      },
+      {
+        "item": "rosario",
+        "chance": 0.08
+      },
+      {
+        "item": "historieta",
         "chance": 0.06
       }
     ],
@@ -458,7 +504,9 @@
       "escalada",
       "manual_campo",
       "susp_footsteps",
-      "susp_shapes_fog"
+      "susp_shapes_fog",
+      "p_side_shell",
+      "s_wounded_stranger"
     ],
     "loot": [
       {
@@ -498,6 +546,14 @@
       {
         "item": "armonica",
         "chance": 0.05
+      },
+      {
+        "item": "postal",
+        "chance": 0.1
+      },
+      {
+        "item": "termo",
+        "chance": 0.06
       }
     ],
     "transit": [
@@ -539,7 +595,8 @@
       "pelea_amigos",
       "celda",
       "armeria",
-      "susp_child_voice"
+      "susp_child_voice",
+      "p_side_shell"
     ],
     "loot": [
       {
@@ -587,6 +644,10 @@
       {
         "item": "foto",
         "chance": 0.06
+      },
+      {
+        "item": "dados",
+        "chance": 0.08
       }
     ],
     "transit": [
@@ -629,7 +690,8 @@
       "pelea_amigos",
       "estudio",
       "susp_footsteps",
-      "susp_radio_room"
+      "susp_radio_room",
+      "p_bike_wheels"
     ],
     "loot": [
       {
@@ -681,6 +743,14 @@
       {
         "item": "libro",
         "chance": 0.05
+      },
+      {
+        "item": "vinilo",
+        "chance": 0.1
+      },
+      {
+        "item": "radio_bolsillo",
+        "chance": 0.06
       }
     ],
     "transit": [
@@ -721,7 +791,8 @@
       "hueco",
       "escalada",
       "oficina_it",
-      "susp_mannequins"
+      "susp_mannequins",
+      "p_side_engine"
     ],
     "loot": [
       {
@@ -779,6 +850,14 @@
       {
         "item": "chocolate",
         "chance": 0.06
+      },
+      {
+        "item": "postal",
+        "chance": 0.12
+      },
+      {
+        "item": "radio_bolsillo",
+        "chance": 0.08
       }
     ],
     "transit": [
@@ -820,7 +899,8 @@
       "pagina_diecinueve",
       "susp_child_voice",
       "susp_shapes_fog",
-      "dam_echo_cabinet"
+      "dam_echo_cabinet",
+      "p_side_engine"
     ],
     "loot": [
       {
@@ -862,6 +942,10 @@
       {
         "item": "mate",
         "chance": 0.07
+      },
+      {
+        "item": "termo",
+        "chance": 0.08
       }
     ],
     "transit": [
@@ -899,7 +983,9 @@
       "cables",
       "radioaficionado",
       "pagina_siete",
-      "susp_radio_room"
+      "susp_radio_room",
+      "p_side_tank",
+      "w_storm_antenna"
     ],
     "loot": [
       {
@@ -923,6 +1009,10 @@
       {
         "item": "libro",
         "chance": 0.06
+      },
+      {
+        "item": "radio_bolsillo",
+        "chance": 0.1
       }
     ],
     "transit": [
@@ -959,7 +1049,9 @@
       "techo",
       "radio_encendida",
       "persiana",
-      "susp_shapes_fog"
+      "susp_shapes_fog",
+      "p_bike_frame",
+      "r_kiosk_man"
     ],
     "loot": [
       {
@@ -979,6 +1071,16 @@
       "Marking street corners on the map as I go.",
       "Checking every side street. Slow work.",
       "Chalk arrows on the walls, so I can find my way back."
+    ],
+    "items": [
+      {
+        "item": "postal",
+        "chance": 0.06
+      },
+      {
+        "item": "casete",
+        "chance": 0.05
+      }
     ]
   },
   {
@@ -1008,7 +1110,9 @@
       "derrumbe",
       "herido",
       "pelea_amigos",
-      "susp_footsteps"
+      "susp_footsteps",
+      "p_bike_wheels",
+      "s_wounded_stranger"
     ],
     "loot": [
       {
@@ -1040,6 +1144,16 @@
       "Following the old bus route. Counting the stops.",
       "Climbed a water tower to look around. Drawing what I see.",
       "Every street looks the same out here. Writing names down."
+    ],
+    "items": [
+      {
+        "item": "bufanda",
+        "chance": 0.06
+      },
+      {
+        "item": "alfajor",
+        "chance": 0.06
+      }
     ]
   },
   {
@@ -1068,7 +1182,8 @@
       "escalada",
       "pista",
       "semi",
-      "susp_shapes_fog"
+      "susp_shapes_fog",
+      "p_side_tank"
     ],
     "loot": [
       {
@@ -1100,6 +1215,12 @@
       "Nothing but road for hours. Writing down every landmark.",
       "Found a road sign still standing. Copied it.",
       "The wind out here never stops. Neither do I."
+    ],
+    "items": [
+      {
+        "item": "vinilo",
+        "chance": 0.05
+      }
     ]
   },
   {

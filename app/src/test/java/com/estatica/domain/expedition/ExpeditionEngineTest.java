@@ -343,7 +343,12 @@ public class ExpeditionEngineTest {
             }
             if (last != null && !last.getDeliveredItems().isEmpty()) {
                 found++;
-                assertTrue(content.getItems().containsKey(last.getDeliveredItems().get(0)));
+                for (String item : last.getDeliveredItems()) {
+                    // Rare finds come home too: project parts, gear, key items.
+                    assertTrue(item, content.getItems().containsKey(item) || item.startsWith(ExpeditionEngine.PART_PREFIX)
+                            || item.startsWith(ExpeditionEngine.GEAR_PREFIX)
+                            || item.startsWith(com.estatica.domain.content.KeyItemDef.CARRIED_PREFIX));
+                }
             }
         }
         assertTrue("escuela should yield objects sometimes", found > 10);

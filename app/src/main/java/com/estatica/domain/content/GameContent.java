@@ -1,5 +1,6 @@
 package com.estatica.domain.content;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -197,6 +198,51 @@ public final class GameContent {
         return scout.getPersona() != null ? scout.getPersona() : starter(scout.getTemplateId());
     }
 
+    /**
+     * The one object someone would love most: their own pick if they have one, else one of the
+     * things they like, chosen by who they are (stable for a person, no dice).
+     */
+    public ItemDef favoriteOf(com.estatica.domain.scouts.Scout scout) {
+        ScoutTemplate persona = persona(scout);
+        if (persona != null && persona.getFavorite() != null && items.containsKey(persona.getFavorite())) {
+            return items.get(persona.getFavorite());
+        }
+        List<ItemDef> liked = new ArrayList<>();
+        List<String> likes = persona != null ? persona.getLikes() : List.of();
+        for (ItemDef item : items.values()) {
+            for (String taste : likes) {
+                if (taste.equals(item.getId()) || item.getTags().contains(taste)) {
+                    liked.add(item);
+                    break;
+                }
+            }
+        }
+        if (liked.isEmpty()) {
+            return null;
+        }
+        liked.sort(java.util.Comparator.comparing(ItemDef::getId));
+        return liked.get(Math.floorMod(scout.getId().hashCode(), liked.size()));
+    }
+
+    /** How someone pays back a gift they loved: their own way, else their background's, else null. */
+    public ThanksDef thanksOf(com.estatica.domain.scouts.Scout scout) {
+        ScoutTemplate persona = persona(scout);
+        if (persona == null) {
+            return null;
+        }
+        if (persona.getThanks() != null) {
+            return persona.getThanks();
+        }
+        if (persona.getBackground() != null) {
+            for (PeopleDef.Background b : people.getBackgrounds()) {
+                if (b.getId().equals(persona.getBackground())) {
+                    return b.getThanks();
+                }
+            }
+        }
+        return null;
+    }
+
     /** Template by id (starter or legacy survivor), or null. */
     public ScoutTemplate starter(String templateId) {
         for (ScoutTemplate template : starters) {
@@ -236,6 +282,30 @@ public final class GameContent {
 
     public RecipeDef recipe(String id) {
         return require(recipes, id, "recipe");
+    }
+
+    /** A project part by id, or null. */
+    public RecipeDef.Part part(String id) {
+        for (RecipeDef r : recipes.values()) {
+            for (RecipeDef.Part p : r.getParts()) {
+                if (p.getId().equals(id)) {
+                    return p;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** The project a part belongs to, or null. */
+    public RecipeDef projectOf(String partId) {
+        for (RecipeDef r : recipes.values()) {
+            for (RecipeDef.Part p : r.getParts()) {
+                if (p.getId().equals(partId)) {
+                    return r;
+                }
+            }
+        }
+        return null;
     }
 
     public Map<String, RecipeDef> getRecipes() {

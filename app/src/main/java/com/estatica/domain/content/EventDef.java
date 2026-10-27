@@ -18,6 +18,53 @@ public final class EventDef {
         return bands != null ? bands : List.of();
     }
 
+    /** Only in this weather when they set out (WeatherRules.Weather names). Empty: any. */
+    private List<String> weather;
+    /** true: only after dark; false: only by day. Null: either. */
+    private Boolean night;
+    /** Chance it's even in the cards on a given trip (rare finds). 1 = always. */
+    private double chance = 1.0;
+    /** Comes up once in the whole game, at most. */
+    private boolean once;
+    /** Bunker-wide flags it needs, or can't have (set by earlier choices). */
+    private List<String> requiresWorld;
+    private List<String> forbidsWorld;
+    /** Sound when it comes up (LogLine.Cue), or null. */
+    private String cue;
+
+    public List<String> getWeather() {
+        return weather != null ? weather : List.of();
+    }
+
+    public Boolean getNight() {
+        return night;
+    }
+
+    public double getChance() {
+        return chance <= 0 ? 1.0 : chance;
+    }
+
+    public boolean isOnce() {
+        return once;
+    }
+
+    public List<String> getRequiresWorld() {
+        return requiresWorld != null ? requiresWorld : List.of();
+    }
+
+    public List<String> getForbidsWorld() {
+        return forbidsWorld != null ? forbidsWorld : List.of();
+    }
+
+    public String getCue() {
+        return cue;
+    }
+
+    /** Rare, once-only, or tied to weather, the dark or an earlier choice: worth a sound. */
+    public boolean isSpecial() {
+        return getChance() < 1.0 || once || !getWeather().isEmpty() || night != null || !getRequiresWorld().isEmpty();
+    }
+
     public String getGrantsKey() {
         return grantsKey;
     }
@@ -125,6 +172,42 @@ public final class EventDef {
         private String plot;
         /** Key item found (carried home, yours on return). */
         private String keyItem;
+        /** A piece of gear found (carried home). */
+        private GearFind gear;
+        /** A part for a workshop project (recipes.json → parts), carried home. */
+        private String part;
+        /** A personal object (items.json), carried home. */
+        private String item;
+        /** Bunker-wide flags this sets, for what comes later. */
+        private List<String> setWorld;
+        /** Bond with whoever was out there (good calls they'll remember). */
+        private int bond;
+        /** Sound (LogLine.Cue) when it lands, or null. */
+        private String cue;
+
+        public GearFind getGear() {
+            return gear;
+        }
+
+        public String getPart() {
+            return part;
+        }
+
+        public String getItem() {
+            return item;
+        }
+
+        public List<String> getSetWorld() {
+            return setWorld != null ? setWorld : List.of();
+        }
+
+        public int getBond() {
+            return bond;
+        }
+
+        public String getCue() {
+            return cue;
+        }
 
         public String getKeyItem() {
             return keyItem;
@@ -156,6 +239,26 @@ public final class EventDef {
 
         public String getPlot() {
             return plot;
+        }
+    }
+
+    /** Gear found on the spot, in the shape it was found in. */
+    public static final class GearFind {
+        private String id;
+        private String rarity = "COMMON";
+        /** 1–100. */
+        private int condition = 100;
+
+        public String getId() {
+            return id;
+        }
+
+        public String getRarity() {
+            return rarity != null ? rarity : "COMMON";
+        }
+
+        public int getCondition() {
+            return condition <= 0 ? 100 : Math.min(100, condition);
         }
     }
 }

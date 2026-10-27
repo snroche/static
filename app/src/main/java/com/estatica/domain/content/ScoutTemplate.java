@@ -130,6 +130,19 @@ public final class ScoutTemplate {
         return background;
     }
 
+    /** The one thing they'd love most (items.json id). Null: worked out from their likes. */
+    private String favorite;
+    /** How they pay back a gift they loved (hand-made crew; others use their background's). */
+    private ThanksDef thanks;
+
+    public String getFavorite() {
+        return favorite;
+    }
+
+    public ThanksDef getThanks() {
+        return thanks;
+    }
+
     public static final class Habit {
         private String text;
         private int minBondLevel = 1;

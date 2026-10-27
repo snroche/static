@@ -116,6 +116,12 @@ public final class DialogueEngine {
     private final ScoutRules rules;
     private final Relations relations;
     private Romance romance = Romance.NONE;
+    /** Weather and the dark outside: some talks only come up in a storm, or at night. */
+    private com.estatica.domain.world.World world = com.estatica.domain.world.World.CALM;
+
+    public void setWorld(com.estatica.domain.world.World world) {
+        this.world = world;
+    }
 
     public void setRomance(Romance romance) {
         this.romance = romance;
@@ -151,6 +157,9 @@ public final class DialogueEngine {
         if (!fitsPersonality(s, d)) {
             return false;
         }
+        if (mentionsFavorite(d) && content.favoriteOf(s) == null) {
+            return false; // nothing they'd name
+        }
         int bond = rules.bondLevel(s);
         if (bond < d.getMinBondLevel() || (d.getMaxBondLevel() != null && bond > d.getMaxBondLevel())) {
             return false;
@@ -160,6 +169,12 @@ public final class DialogueEngine {
             return false;
         }
         if (!romanceFits(s, d)) {
+            return false;
+        }
+        if (!d.getWeather().isEmpty() && !d.getWeather().contains(world.weatherAt(now).name())) {
+            return false;
+        }
+        if (d.getNight() != null && d.getNight() != world.nightAt(now)) {
             return false;
         }
         for (String flag : d.getRequiresFlags()) {
@@ -189,6 +204,15 @@ public final class DialogueEngine {
             return false;
         }
         return d.isRepeatable() || !s.getLife().hasFlag(doneFlag(d, other));
+    }
+
+    private static boolean mentionsFavorite(DialogueDef d) {
+        for (String line : d.getLines()) {
+            if (line.contains("{favorite}")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Romance gates. Anything romantic is for adults only, always. */
@@ -336,6 +360,8 @@ public final class DialogueEngine {
     public static final class Answer {
         public final List<LogLine> lines = new ArrayList<>();
         public final List<Memory> memories = new ArrayList<>();
+        /** What they handed over, for the stores. */
+        public final Map<String, Integer> resources = new HashMap<>();
     }
 
     public Answer answer(Scout s, DialogueDef d, int choiceIndex, Collection<Scout> everyone, long now) {
@@ -381,6 +407,9 @@ public final class DialogueEngine {
         if (choice.isEndRomance()) {
             romance.end(s, now, true, out.lines);
         }
+        if (!choice.getResources().isEmpty()) {
+            out.resources.putAll(choice.getResources());
+        }
         if (choice.getMemory() != null) {
             out.memories.add(Memory.create(s.getId(), Memory.Type.TALK,
                     TextTemplate.format(choice.getMemory(), vars), d.getId(), now));
@@ -404,9 +433,11 @@ public final class DialogueEngine {
         return dead == null ? DONE + d.getId() : DONE + d.getId() + ":" + dead.getId();
     }
 
-    private static Map<String, String> vars(Scout s, Scout other) {
+    private Map<String, String> vars(Scout s, Scout other) {
         Map<String, String> vars = new HashMap<>();
         vars.put("name", s.getName());
+        com.estatica.domain.content.ItemDef favorite = content.favoriteOf(s);
+        vars.put("favorite", favorite != null ? favorite.getName().toLowerCase(java.util.Locale.ROOT) : "");
         if (s.getLife().hasFlag(com.estatica.domain.scouts.RomanceRules.FLAG)) {
             vars.put(VoiceRenderer.LOVE, "1");
         }

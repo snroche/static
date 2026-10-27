@@ -29,6 +29,16 @@
     <string name="decision_prev_mark">◀</string>
     <string name="decision_next_mark">▶</string>
     <string name="decision_option">[%1$d] %2$s</string>
+    <string name="decision_fold">Fold or unfold the decision</string>
+    <string name="decision_fold_mark">▾</string>
+    <string name="decision_unfold_mark">▴</string>
+    <string name="console_toggle">Show or hide the command line</string>
+    <string name="console_mark">&#xE169;</string>
+    <string name="chat_talk">&#xEB79; TALK</string>
+    <string name="chat_gift">&#xEE44; GIFT</string>
+    <string name="chat_card">&#xE004; CARD</string>
+    <string name="log_chip_team">%1$s %2$d%%</string>
+    <string name="log_chip_team_wait">%1$s ⚠</string>
 
     <string name="panel_radio_title">RADIO</string>
     <string name="dial_description">Frequency dial</string>

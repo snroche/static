@@ -229,5 +229,27 @@
     "lootMultiplier": 1.4,
     "findable": false,
     "repairScale": 4
+  },
+  {
+    "id": "gear_bici_ruta",
+    "name": "Road bike",
+    "slot": "RIDE",
+    "description": "Rebuilt from three finds. Light, fast, no fuel: trips 40% shorter for one.",
+    "durationMultiplier": 0.6,
+    "seats": 1,
+    "findable": false,
+    "repairScale": 2
+  },
+  {
+    "id": "gear_sidecar",
+    "name": "Sidecar motorbike",
+    "slot": "RIDE",
+    "description": "A motorbike with a sidecar, pieced together from the far bands. Three aboard, trips 45% shorter, room for 20% more. Burns 1.5 fuel an hour.",
+    "durationMultiplier": 0.55,
+    "seats": 3,
+    "fuelPerHour": 1.5,
+    "lootMultiplier": 1.2,
+    "findable": false,
+    "repairScale": 4
   }
 ]
