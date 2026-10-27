@@ -386,8 +386,8 @@ antenna %2$d</string>
     <string name="link_last_words_help">Pick one of the fallen. Other bunkers will hear them once.</string>
     <string name="link_no_fallen">Nobody has died. Keep it that way.</string>
     <string name="link_sent_title">Sent lately (tap to show the code again):</string>
-    <string name="link_drop_help">Supplies leave the stores as soon as they\'re packed. %1$d/%2$d units · %3$d/%4$d gear.</string>
-    <string name="link_good_row">%1$s · %2$d of %3$d</string>
+    <string name="link_drop_help">Supplies leave the stores as soon as they\'re packed. %1$d/%2$d units · %3$d/%4$d gear. Tap − or + for one, hold for five.</string>
+    <string name="link_good_row">%1$s %2$s · %3$d/%4$d</string>
     <string name="link_pack">PACK AND MAKE CODE</string>
     <string name="link_receive_help">Codes from other bunkers today: %1$d/%2$d. Broadcasts and codes sent nearby don\'t count.</string>
     <string name="link_take">&#xE12C; TAKE</string>
@@ -406,8 +406,8 @@ antenna %2$d</string>
     <string name="link_connected">Linked with %1$s.</string>
     <string name="link_hang_up">HANG UP</string>
     <string name="link_cancel">CANCEL</string>
-    <string name="link_trade_title">TRADE</string>
-    <string name="link_trade_help">Put up what you\'ll give. When you both agree to the same offers, they swap.</string>
+    <string name="link_trade_title">&#xF218; TRADE</string>
+    <string name="link_trade_help">Put up what you\'ll give. When you both agree to the same offers, they swap. Tap − or + for one, hold for five.</string>
     <string name="link_offer_invalid">That offer is more than the stores hold, or over the limits.</string>
     <string name="link_their_offer">They give: %1$s</string>
     <string name="link_waiting_offer">(waiting)</string>
@@ -424,6 +424,15 @@ antenna %2$d</string>
     <string name="link_scan_prompt">Point at the other bunker\'s code</string>
     <string name="link_bluetooth_off">Turn Bluetooth on to link.</string>
     <string name="link_bluetooth_denied">Without Bluetooth permission, phones can\'t link.</string>
+    <string name="radio_section_link_badge">&#xF119; •%1$d\nLINK</string>
+    <string name="link_open_trade">&#xF218; OPEN TRADE</string>
+    <string name="link_trade_with">&#xF218; TRADE · %1$s</string>
+    <string name="link_you_give">You give:</string>
+    <string name="link_more">One more (hold for five)</string>
+    <string name="link_less">One less (hold for five)</string>
+    <string name="link_incoming_title">&#xE43A; RECEIVED</string>
+    <string name="link_incoming_failed">&#xE43A; NOTHING CAME THROUGH</string>
+    <string name="link_ok">OK</string>
     <!-- The code popup: TEXT · QR · NEARBY. -->
     <string name="code_title">%1$s · CODE READY</string>
     <string name="code_tab_text">&#xE9A8;\nTEXT</string>

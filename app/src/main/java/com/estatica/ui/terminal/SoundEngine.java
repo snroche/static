@@ -50,6 +50,7 @@ final class SoundEngine {
     private final AudioTrack click;
     private final AudioTrack tick;
     private final AudioTrack beep;
+    private final AudioTrack chirp;
     private AudioTrack sweep;
     /** Built on a background thread at startup; null until ready (then never touched again). */
     private volatile AudioTrack bed;
@@ -70,6 +71,7 @@ final class SoundEngine {
         click = track(clickBurst(0.012));
         tick = track(staticBurst(random, 0.006));
         beep = track(tone(880, 0.15));
+        chirp = track(concat(tone(1250, 0.05), tone(1650, 0.05), tone(2100, 0.07)));
         // Synthesizing every loop takes a moment: do it now, off the main thread, so opening
         // the radio never stalls the screen.
         Thread builder = new Thread(this::build, "radio-sounds");
@@ -97,6 +99,25 @@ final class SoundEngine {
     /** Urgent message. */
     void beep() {
         play(beep, 0.5f);
+    }
+
+    /** A burst of data: a code made or taken, a link with another bunker up. */
+    void chirp() {
+        play(chirp, 0.4f);
+    }
+
+    private static short[] concat(short[]... parts) {
+        int n = 0;
+        for (short[] p : parts) {
+            n += p.length;
+        }
+        short[] out = new short[n];
+        int at = 0;
+        for (short[] p : parts) {
+            System.arraycopy(p, 0, out, at, p.length);
+            at += p.length;
+        }
+        return out;
     }
 
     // ---- Radio ----

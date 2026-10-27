@@ -3,6 +3,7 @@ package com.estatica.ui.terminal;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -41,7 +42,16 @@ final class LinkPanel {
 
         /** Asks for Bluetooth permissions (and discoverability when hosting), then starts. */
         void nearby(boolean host);
+
+        /** A code was taken (sound: a chirp when it came through, a click when it didn't). */
+        void received(boolean ok);
     }
+
+    /** Resource icons for the goods rows. */
+    private static final Map<String, Integer> ICONS = Map.of(
+            "scrap", R.string.ic_scrap, "components", R.string.ic_components, "parts", R.string.ic_parts,
+            "rations", R.string.ic_rations, "medicine", R.string.ic_medicine, "batteries", R.string.ic_batteries,
+            "fuel", R.string.ic_fuel, "relay_kit", R.string.ic_relay, "chips", R.string.ic_chips);
 
     private enum Mode { SEND, RECEIVE, NEARBY }
 
@@ -64,11 +74,17 @@ final class LinkPanel {
     private boolean deferred;
     /** The code last handed to the popup, so each one opens it once. */
     private String popped;
+    /** Where the building blocks add views: the panel, or a popup's body while filling it. */
+    private LinearLayout into;
+    private Popup tradePopup;
+    /** What the last incoming popup showed (the session's list), so each opens once. */
+    private List<String> shownIncoming;
 
     LinkPanel(LinearLayout root, TerminalViewModel viewModel, Host host) {
         this.root = root;
         this.viewModel = viewModel;
         this.host = host;
+        this.into = root;
         LayoutInflater inflater = LayoutInflater.from(root.getContext());
         message = input(inflater, R.string.link_message_hint, 4);
         note = input(inflater, R.string.link_note_hint, 2);
@@ -95,7 +111,28 @@ final class LinkPanel {
             popped = link.code;
             host.showCode(link.code, link.codeLabel, link.callsign);
         }
+        if (link.incoming != null && link.incoming != shownIncoming) {
+            shownIncoming = link.incoming;
+            showIncoming(link.incoming, link.incomingOk);
+        }
         render();
+    }
+
+    /** What a code just taken brought, in its own popup (the log has it too). */
+    private void showIncoming(List<String> lines, boolean ok) {
+        Context context = root.getContext();
+        Popup popup = Popup.open(context, context.getString(ok ? R.string.link_incoming_title
+                : R.string.link_incoming_failed), viewModel::linkHideIncoming);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        into = popup.body();
+        for (String text : lines) {
+            line(inflater, text, ok ? R.color.amber_bright : R.color.danger);
+        }
+        LinearLayout actions = row(context);
+        button(inflater, actions, context.getString(R.string.link_ok), true, v -> popup.dismiss());
+        into.addView(actions);
+        into = root;
+        host.received(ok);
     }
 
     /** Straight to NEARBY (from the code popup, to set up a link). */
@@ -135,6 +172,13 @@ final class LinkPanel {
             return;
         }
         deferred = false;
+        if (tradePopup != null) {
+            if (near.state == NearbyLink.State.CONNECTED) {
+                fillTrade();
+            } else {
+                tradePopup.dismiss();
+            }
+        }
         detach(message);
         detach(note);
         detach(code);
@@ -273,24 +317,17 @@ final class LinkPanel {
             if (g.count == 0 && chosen == 0) {
                 continue;
             }
-            LinearLayout block = block(inflater, res.getString(R.string.link_good_row, g.name, chosen, g.count));
-            LinearLayout actions = row(root.getContext());
-            for (int step : new int[]{-5, -1, 1, 5}) {
-                boolean ok = step < 0 ? chosen > 0 : chosen < g.count && total < link.dropMaxUnits;
-                button(inflater, actions, step > 0 ? "+" + step : String.valueOf(step), ok, v -> {
-                    int room = link.dropMaxUnits - total;
-                    int next = Math.max(0, Math.min(g.count, chosen + Math.min(step, room)));
-                    if (next == 0) {
-                        drop.remove(g.id);
-                    } else {
-                        drop.put(g.id, next);
-                    }
-                    doneTyping();
-                    render();
-                });
-            }
-            block.addView(actions);
-            root.addView(block);
+            goodRow(inflater, g, chosen, chosen < g.count && total < link.dropMaxUnits, delta -> {
+                int room = link.dropMaxUnits - total;
+                int next = Math.max(0, Math.min(g.count, chosen + Math.min(delta, room)));
+                if (next == 0) {
+                    drop.remove(g.id);
+                } else {
+                    drop.put(g.id, next);
+                }
+                doneTyping();
+                render();
+            });
         }
         for (SessionSnapshot.LinkChoice g : link.gear) {
             boolean on = dropGear.contains(g.id);
@@ -398,28 +435,44 @@ final class LinkPanel {
                 : R.string.link_cancel), true, v -> controller.close());
         root.addView(actions);
         if (near.state == NearbyLink.State.CONNECTED) {
-            trade(inflater, res, controller);
+            line(inflater, res.getString(R.string.link_trade_title), R.color.amber);
+            line(inflater, res.getString(R.string.link_their_offer,
+                    near.theirOffer != null ? near.theirOffer : res.getString(R.string.link_waiting_offer)), R.color.signal);
+            if (near.theirReady && !near.myReady) {
+                line(inflater, res.getString(R.string.link_they_agreed), R.color.amber_bright);
+            }
+            LinearLayout open = row(root.getContext());
+            button(inflater, open, res.getString(R.string.link_open_trade), true, v -> openTrade());
+            root.addView(open);
             joint(inflater, res, controller);
         }
     }
 
+    private void openTrade() {
+        Context context = root.getContext();
+        tradePopup = Popup.open(context, context.getString(R.string.link_trade_with,
+                near.peer != null ? near.peer : "…"), () -> tradePopup = null);
+        fillTrade();
+    }
+
+    /** The trade popup's body, rebuilt on every change (offers come and go while it's open). */
+    private void fillTrade() {
+        Context context = root.getContext();
+        tradePopup.body().removeAllViews();
+        into = tradePopup.body();
+        trade(LayoutInflater.from(context), context.getResources(), viewModel.link());
+        into = root;
+    }
+
     private void trade(LayoutInflater inflater, Resources res, LinkController controller) {
-        line(inflater, res.getString(R.string.link_trade_title), R.color.amber);
         line(inflater, res.getString(R.string.link_trade_help), R.color.amber_dim);
+        line(inflater, res.getString(R.string.link_you_give), R.color.amber);
         for (SessionSnapshot.LinkChoice g : link.goods) {
             int chosen = near.goods.getOrDefault(g.id, 0);
             if (g.count == 0 && chosen == 0) {
                 continue;
             }
-            LinearLayout block = block(inflater, res.getString(R.string.link_good_row, g.name, chosen, g.count));
-            LinearLayout steps = row(root.getContext());
-            for (int step : new int[]{-5, -1, 1, 5}) {
-                boolean ok = step < 0 ? chosen > 0 : chosen < g.count;
-                button(inflater, steps, step > 0 ? "+" + step : String.valueOf(step), ok,
-                        v -> controller.changeGood(g.id, step, g.count));
-            }
-            block.addView(steps);
-            root.addView(block);
+            goodRow(inflater, g, chosen, chosen < g.count, delta -> controller.changeGood(g.id, delta, g.count));
         }
         for (SessionSnapshot.LinkChoice g : link.gear) {
             boolean on = near.gear.contains(g.id);
@@ -438,7 +491,42 @@ final class LinkPanel {
         LinearLayout go = row(root.getContext());
         button(inflater, go, res.getString(R.string.link_agree), !near.myReady && !near.offerInvalid
                 && near.theirOffer != null, v -> controller.agree());
-        root.addView(go);
+        into.addView(go);
+    }
+
+    /** One good: icon, name and how many of how many, then − and + (hold for five). */
+    private void goodRow(LayoutInflater inflater, SessionSnapshot.LinkChoice g, int chosen, boolean canAdd,
+                         java.util.function.IntConsumer change) {
+        Context context = root.getContext();
+        LinearLayout row = row(context);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        TextView name = (TextView) inflater.inflate(R.layout.item_log_line, row, false);
+        name.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        Integer icon = ICONS.get(g.id);
+        name.setText(context.getString(R.string.link_good_row, icon != null ? context.getString(icon) : "·",
+                g.name, chosen, g.count));
+        name.setTextColor(ContextCompat.getColor(context, chosen > 0 ? R.color.amber_bright : R.color.amber));
+        row.addView(name);
+        stepper(inflater, row, "−", chosen > 0, -1, change);
+        stepper(inflater, row, "+", canAdd, 1, change);
+        into.addView(row);
+    }
+
+    private void stepper(LayoutInflater inflater, LinearLayout parent, String label, boolean enabled, int sign,
+                         java.util.function.IntConsumer change) {
+        TextView b = (TextView) inflater.inflate(R.layout.item_tier_tab, parent, false);
+        int width = Math.round(52 * parent.getResources().getDisplayMetrics().density);
+        b.setLayoutParams(new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT));
+        b.setText(label);
+        b.setContentDescription(parent.getResources().getString(sign > 0 ? R.string.link_more : R.string.link_less));
+        b.setAlpha(enabled ? 1f : 0.4f);
+        b.setClickable(enabled);
+        b.setOnClickListener(enabled ? v -> change.accept(sign) : null);
+        b.setOnLongClickListener(enabled ? v -> {
+            change.accept(5 * sign);
+            return true;
+        } : null);
+        parent.addView(b);
     }
 
     private void joint(LayoutInflater inflater, Resources res, LinkController controller) {
@@ -488,24 +576,6 @@ final class LinkPanel {
 
     // ---- Building blocks (as in TradePanel) ----
 
-    private LinearLayout block(LayoutInflater inflater, String title) {
-        Context context = root.getContext();
-        LinearLayout block = new LinearLayout(context);
-        block.setOrientation(LinearLayout.VERTICAL);
-        block.setBackgroundResource(R.drawable.bg_slot_empty);
-        int pad = Math.round(8 * context.getResources().getDisplayMetrics().density);
-        block.setPadding(pad, pad / 2, pad, pad / 2);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.topMargin = pad / 2;
-        block.setLayoutParams(lp);
-        TextView name = (TextView) inflater.inflate(R.layout.item_log_line, block, false);
-        name.setText(title);
-        name.setTextColor(ContextCompat.getColor(context, R.color.amber_bright));
-        block.addView(name);
-        return block;
-    }
-
     private static LinearLayout row(Context context) {
         LinearLayout row = new LinearLayout(context);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -514,10 +584,10 @@ final class LinkPanel {
     }
 
     private void line(LayoutInflater inflater, String text, int color) {
-        TextView line = (TextView) inflater.inflate(R.layout.item_log_line, root, false);
+        TextView line = (TextView) inflater.inflate(R.layout.item_log_line, into, false);
         line.setText(text);
         line.setTextColor(ContextCompat.getColor(root.getContext(), color));
-        root.addView(line);
+        into.addView(line);
     }
 
     /** A full-width row to tap (people, places, devices, codes sent). */
@@ -526,12 +596,12 @@ final class LinkPanel {
     }
 
     private void choiceRow(LayoutInflater inflater, String text, boolean enabled, View.OnClickListener click) {
-        TextView row = (TextView) inflater.inflate(R.layout.item_decision_option, root, false);
+        TextView row = (TextView) inflater.inflate(R.layout.item_decision_option, into, false);
         row.setText(text);
         row.setAlpha(enabled ? 1f : 0.4f);
         row.setOnClickListener(enabled ? click : null);
         row.setClickable(enabled);
-        root.addView(row);
+        into.addView(row);
     }
 
     private static void tab(LayoutInflater inflater, LinearLayout parent, String text, boolean on,

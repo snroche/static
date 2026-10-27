@@ -4351,6 +4351,9 @@ public final class GameSession {
     /** The code just made or picked to show again, until the operator closes it. */
     private String shownCode;
     private String shownLabel;
+    /** What the last code taken brought (lines as logged), until the popup closes; and whether it came through. */
+    private List<String> incoming;
+    private boolean incomingOk;
 
     private void loadLinks() {
         linkRules = new LinkRules(content);
@@ -4614,19 +4617,31 @@ public final class GameSession {
     /** A code typed, pasted or scanned. */
     @WorkerThread
     public List<LogLine> linkReceive(String code) {
-        Step step = new Step();
-        advance(step);
-        takeLink(code, LinkSignalEntity.IN, null, step);
-        return step.commit();
+        return receiveShown(code, LinkSignalEntity.IN);
     }
 
     /** A code that came over Bluetooth from a bunker in the same room. */
     @WorkerThread
     public List<LogLine> linkReceiveNearby(String code) {
+        return receiveShown(code, NEAR);
+    }
+
+    /** Takes a code, and keeps what it said for the popup (or why it didn't come through). */
+    private List<LogLine> receiveShown(String code, String direction) {
         Step step = new Step();
         advance(step);
-        takeLink(code, NEAR, null, step);
+        int from = step.lines.size();
+        incomingOk = takeLink(code, direction, null, step) != null;
+        incoming = new ArrayList<>();
+        for (LogLine line : step.lines.subList(from, step.lines.size())) {
+            incoming.add(line.getText());
+        }
         return step.commit();
+    }
+
+    @WorkerThread
+    public void linkHideIncoming() {
+        incoming = null;
     }
 
     private int takenToday(long now) {
@@ -5021,6 +5036,10 @@ public final class GameSession {
         }
         v.code = shownCode;
         v.codeLabel = shownLabel;
+        v.incoming = incoming;
+        v.incomingOk = incomingOk;
+        // Worth a look: wanderers waiting to be met.
+        v.badge = v.waiting.size();
         return v;
     }
 

@@ -524,6 +524,11 @@ public final class SessionSnapshot {
         /** The code on screen, or null. */
         public String code;
         public String codeLabel;
+        /** What the last code taken brought, as logged, until its popup closes; or null. */
+        public List<String> incoming;
+        public boolean incomingOk;
+        /** Count for the LINK section button (wanderers waiting), 0 for none. */
+        public int badge;
     }
 
     /** Something to pick on the LINK screen. */

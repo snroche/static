@@ -86,6 +86,7 @@ public final class TerminalActivity extends ComponentActivity {
     private String shownDecisionId;
     private RadioPanel radioPanel;
     private CodeDialog codeDialog;
+    private com.estatica.data.link.NearbyLink.State nearbyState;
     private DecoderPanel decoderPanel;
     private BunkerPanel bunkerPanel;
     private MapPanel mapPanel;
@@ -1028,7 +1029,17 @@ public final class TerminalActivity extends ComponentActivity {
 
             @Override
             public void showCode(String code, String label, String callsign) {
+                sound.chirp();
                 codeDialog.show(code, label, callsign, viewModel.link().view().getValue());
+            }
+
+            @Override
+            public void received(boolean ok) {
+                if (ok) {
+                    sound.chirp();
+                } else {
+                    sound.click();
+                }
             }
 
             @Override
@@ -1062,6 +1073,14 @@ public final class TerminalActivity extends ComponentActivity {
             }
         });
         viewModel.link().view().observe(this, near -> {
+            // The link just came up: a chirp and a buzz, like a handshake.
+            if (near.state == com.estatica.data.link.NearbyLink.State.CONNECTED && nearbyState != near.state) {
+                sound.chirp();
+                if (hapticsOn) {
+                    binding.getRoot().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+            }
+            nearbyState = near.state;
             radioPanel.onNearby(near);
             codeDialog.onNearby(near);
         });

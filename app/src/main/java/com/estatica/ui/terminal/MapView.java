@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -11,7 +13,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +27,10 @@ import com.estatica.data.session.SessionSnapshot;
 
 /**
  * The region around the bunker, drawn like a radar plot: the bunker in the middle, one ring per
- * band, eight directions. Unscouted sectors show "?", places found show as dots with names.
- * Static: redrawn only when the snapshot changes, never animated.
+ * band, split into sectors. Unscouted sectors show "?"; places found show as an icon over their
+ * name, in the middle of their sector's cell (spread out when a cell holds more than one).
+ * Ring names sit on the ring borders. Names are drawn on a patch of background so lines never
+ * run through them. Static: laid out when the map or the size changes, never animated.
  */
 public final class MapView extends View {
 
@@ -37,20 +44,44 @@ public final class MapView extends View {
     private static int directionsOn(int ring) {
         return com.estatica.domain.map.RegionMap.directionsOn(ring);
     }
+
     private static final float BUNKER_FRACTION = 0.12f;
+    /** Longest label on the map; longer names are cut with a period ("Hospital" → "Hospi."). */
+    private static final int MAX_LABEL = 7;
 
     private final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint dot = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint knockout = new Paint();
     private final int amber;
     private final int bright;
     private final int dim;
     private final int hint;
     private final float dp;
+    private final String relayMark;
+    private final Rect bounds = new Rect();
 
     private SessionSnapshot.MapView map;
     private String selectedSector;
     private Listener listener;
+
+    /** Where each place is drawn, worked out in layoutPlaces() and used for taps too. */
+    private static final class Spot {
+        final SessionSnapshot.PlaceView place;
+        final float x;
+        final float y;
+        /** The name under (or over) the icon, or null when there's no room for it. */
+        String label;
+        RectF labelBox;
+
+        Spot(SessionSnapshot.PlaceView place, float x, float y) {
+            this.place = place;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    private final List<Spot> spots = new ArrayList<>();
 
     public MapView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -65,44 +96,26 @@ public final class MapView extends View {
         text.setTypeface(terminal != null ? terminal : Typeface.MONOSPACE);
         text.setTextAlign(Paint.Align.CENTER);
         dot.setStyle(Paint.Style.FILL);
+        knockout.setStyle(Paint.Style.FILL);
+        knockout.setColor(ContextCompat.getColor(context, R.color.terminal_bg));
         relayMark = context.getString(R.string.ic_relay);
     }
-
-    private final String relayMark;
 
     private float sp(float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, getResources().getDisplayMetrics());
     }
 
+    private float iconSize() {
+        return sp(15);
+    }
+
+    private float labelSize() {
+        return sp(10);
+    }
+
     void setListener(Listener listener) {
         this.listener = listener;
     }
-
-    /** A place label where it fits, computed when the map or the size changes (not per frame). */
-    private static final class Label {
-        final String text;
-        final float x;
-        final float y;
-        final boolean reachable;
-
-        Label(String text, float x, float y, boolean reachable) {
-            this.text = text;
-            this.x = x;
-            this.y = y;
-            this.reachable = reachable;
-        }
-    }
-
-    private final List<Label> labels = new ArrayList<>();
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
-        super.onSizeChanged(w, h, oldW, oldH);
-        layoutLabels();
-    }
-
-    /** Longest label on the map; longer names are cut with a period ("Hospital" → "Hospit."). */
-    private static final int MAX_LABEL = 7;
 
     static String abbreviate(String name) {
         if (name == null || name.length() <= MAX_LABEL) {
@@ -111,56 +124,16 @@ public final class MapView extends View {
         return name.substring(0, MAX_LABEL - 1).trim() + ".";
     }
 
-    /** Under each icon if there's room; else right, left or above; else none. */
-    private void layoutLabels() {
-        labels.clear();
-        if (map == null || getWidth() == 0) {
-            return;
-        }
-        float iconSize = sp(15);
-        float h = sp(10);
-        text.setTextSize(h);
-        List<android.graphics.RectF> taken = new ArrayList<>();
-        for (SessionSnapshot.PlaceView p : map.places) {
-            float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
-            float px = x(radius, p.turn);
-            float py = y(radius, p.turn);
-            taken.add(new android.graphics.RectF(px - iconSize / 2, py - iconSize / 2, px + iconSize / 2, py + iconSize / 2));
-        }
-        for (SessionSnapshot.PlaceView p : map.places) {
-            float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
-            float px = x(radius, p.turn);
-            float py = y(radius, p.turn);
-            String name = abbreviate(p.shortName);
-            float w = text.measureText(name);
-            float gap = iconSize / 2 + 2 * dp;
-            // Label centers: below, right, left, above.
-            float[][] spots = {
-                    {px, py + gap + h / 2},
-                    {px + gap + w / 2, py},
-                    {px - gap - w / 2, py},
-                    {px, py - gap - h / 2},
-            };
-            for (float[] spot : spots) {
-                android.graphics.RectF box = new android.graphics.RectF(spot[0] - w / 2, spot[1] - h / 2,
-                        spot[0] + w / 2, spot[1] + h / 2);
-                boolean free = box.left >= 0 && box.right <= getWidth() && box.top >= 0 && box.bottom <= getHeight();
-                for (android.graphics.RectF other : taken) {
-                    free &= !android.graphics.RectF.intersects(box, other);
-                }
-                if (free) {
-                    labels.add(new Label(name, spot[0], spot[1], p.reachable));
-                    taken.add(box);
-                    break;
-                }
-            }
-        }
+    @Override
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
+        layoutPlaces();
     }
 
     void setMap(SessionSnapshot.MapView map, String selectedSector) {
         this.map = map;
-        layoutLabels();
         this.selectedSector = selectedSector;
+        layoutPlaces();
         setContentDescription(describe(map));
         invalidate();
     }
@@ -173,6 +146,74 @@ public final class MapView extends View {
             }
         }
         return getResources().getString(R.string.map_description, map.places.size(), unexplored);
+    }
+
+    /** The sector cell a place belongs to (its turn sits inside its sector's wedge). */
+    private static int directionOf(SessionSnapshot.PlaceView p) {
+        int count = directionsOn(p.ring);
+        return (int) Math.round(p.turn * count) % count;
+    }
+
+    /**
+     * Each place in the middle of its cell: alone, right on the center; several, spread across
+     * the cell's width. The icon and its name form one block centered on that point. A name
+     * that would land on another goes above the icon instead, or is left out (tap shows it).
+     */
+    private void layoutPlaces() {
+        spots.clear();
+        if (map == null || getWidth() == 0) {
+            return;
+        }
+        Map<String, List<SessionSnapshot.PlaceView>> cells = new LinkedHashMap<>();
+        for (SessionSnapshot.PlaceView p : map.places) {
+            cells.computeIfAbsent(p.ring + ":" + directionOf(p), k -> new ArrayList<>()).add(p);
+        }
+        float icon = iconSize();
+        float gap = 2 * dp;
+        text.setTextSize(labelSize());
+        Paint.FontMetrics fm = text.getFontMetrics();
+        float h = fm.descent - fm.ascent;
+        List<RectF> taken = new ArrayList<>();
+        for (List<SessionSnapshot.PlaceView> cell : cells.values()) {
+            cell.sort(Comparator.comparing(p -> p.zoneId));
+            int n = cell.size();
+            int ring = cell.get(0).ring;
+            int count = directionsOn(ring);
+            double center = (double) directionOf(cell.get(0)) / count;
+            float radius = ringStart(ring) + ringWidth() / 2;
+            for (int i = 0; i < n; i++) {
+                // Spread over the middle 70% of the wedge.
+                double turn = center + (n == 1 ? 0 : (i - (n - 1) / 2.0) * 0.7 / n / count);
+                float cx = x(radius, turn);
+                float cy = y(radius, turn);
+                // The block (icon over name) is centered on the cell point.
+                Spot spot = new Spot(cell.get(i), cx, cy - (gap + h) / 2);
+                spots.add(spot);
+                taken.add(new RectF(spot.x - icon / 2, spot.y - icon / 2, spot.x + icon / 2, spot.y + icon / 2));
+            }
+        }
+        for (Spot spot : spots) {
+            String name = abbreviate(spot.place.shortName);
+            if (name == null || name.isEmpty()) {
+                continue;
+            }
+            float w = text.measureText(name) + 4 * dp;
+            float below = spot.y + icon / 2 + gap + h / 2;
+            float above = spot.y - icon / 2 - gap - h / 2;
+            for (float ly : new float[]{below, above}) {
+                RectF box = new RectF(spot.x - w / 2, ly - h / 2, spot.x + w / 2, ly + h / 2);
+                boolean free = box.left >= 0 && box.right <= getWidth() && box.top >= 0 && box.bottom <= getHeight();
+                for (RectF other : taken) {
+                    free &= !RectF.intersects(box, other);
+                }
+                if (free) {
+                    spot.label = name;
+                    spot.labelBox = box;
+                    taken.add(box);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -193,7 +234,7 @@ public final class MapView extends View {
     }
 
     private float outer() {
-        return Math.min(getWidth(), getHeight()) / 2f - 8 * dp;
+        return Math.min(getWidth(), getHeight()) / 2f - 10 * dp;
     }
 
     private float ringStart(int ring) {
@@ -226,12 +267,11 @@ public final class MapView extends View {
             return;
         }
         int rings = map.bands.size();
-        // Rings and spokes (sector borders sit between the eight directions).
+        // Rings and spokes (sector borders sit between the directions).
         line.setColor(hint);
         for (int r = 0; r <= rings; r++) {
             canvas.drawCircle(cx(), cy(), ringStart(r), line);
         }
-        // Each ring has its own spokes: farther rings are split finer.
         for (int r = 0; r < rings; r++) {
             int count = directionsOn(r);
             for (int d = 0; d < count; d++) {
@@ -240,13 +280,13 @@ public final class MapView extends View {
                         x(ringStart(r + 1), turn), y(ringStart(r + 1), turn), line);
             }
         }
-        // Ring names, along the north spoke.
+        // Ring names on each ring's outer border, at the top, on a patch of background.
         text.setTextSize(sp(9));
         text.setColor(dim);
         for (int r = 0; r < rings; r++) {
-            canvas.drawText(map.bands.get(r), cx(), cy() - ringStart(r + 1) + text.getTextSize() + 2 * dp, text);
+            label(canvas, map.bands.get(r), cx(), cy() - ringStart(r + 1));
         }
-        // Sectors.
+        // Sectors not scouted yet.
         text.setTextSize(sp(16));
         for (SessionSnapshot.SectorView s : map.sectors) {
             double turn = (double) s.direction / s.count;
@@ -275,37 +315,32 @@ public final class MapView extends View {
                 line.setColor(hint);
             }
         }
-        // Places found: their icon, and the labels laid out in layoutLabels().
-        float iconSize = sp(15);
-        for (SessionSnapshot.PlaceView p : map.places) {
-            float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
-            float px = x(radius, p.turn);
-            float py = y(radius, p.turn);
+        // Places: icon (or a dot), a relay mark, and the name.
+        float icon = iconSize();
+        for (Spot spot : spots) {
+            SessionSnapshot.PlaceView p = spot.place;
             // Picked over: dim. Out of reach: dimmer.
             int color = !p.reachable ? hint : p.depleted >= 50 ? dim : bright;
             if (p.icon != null) {
-                text.setTextSize(iconSize);
+                text.setTextSize(icon);
                 text.setColor(color);
-                drawCentered(canvas, p.icon, px, py);
+                drawCentered(canvas, p.icon, spot.x, spot.y);
             } else {
                 dot.setColor(color);
-                canvas.drawCircle(px, py, 3.5f * dp, dot);
+                canvas.drawCircle(spot.x, spot.y, 3.5f * dp, dot);
             }
-            // A relay there: a small mark at the icon's top right.
             if (map.relays.containsKey(p.zoneId)) {
                 text.setTextSize(sp(9));
                 text.setColor(map.relays.get(p.zoneId) >= 30 ? bright : dim);
-                drawCentered(canvas, relayMark, px + iconSize * 0.6f, py - iconSize * 0.6f);
+                drawCentered(canvas, relayMark, spot.x + icon * 0.65f, spot.y - icon * 0.55f);
             }
         }
-        text.setTextSize(sp(10));
-        // Labels center on their spot by the font's line metrics (not each word's ink, so a row
-        // of names sits on one line).
-        Paint.FontMetrics fm = text.getFontMetrics();
-        float middle = -(fm.ascent + fm.descent) / 2;
-        for (Label label : labels) {
-            text.setColor(label.reachable ? amber : dim);
-            canvas.drawText(label.text, label.x, label.y + middle, text);
+        text.setTextSize(labelSize());
+        for (Spot spot : spots) {
+            if (spot.label != null) {
+                text.setColor(spot.place.reachable ? amber : dim);
+                label(canvas, spot.label, spot.labelBox.centerX(), spot.labelBox.centerY());
+            }
         }
         // The bunker.
         dot.setColor(bright);
@@ -314,7 +349,14 @@ public final class MapView extends View {
         canvas.drawCircle(cx(), cy(), 9 * dp, line);
     }
 
-    private final android.graphics.Rect bounds = new android.graphics.Rect();
+    /** Text centered on (x, y), on a patch of background so lines behind it don't show through. */
+    private void label(Canvas canvas, String s, float x, float y) {
+        Paint.FontMetrics fm = text.getFontMetrics();
+        float w = text.measureText(s) / 2 + 2 * dp;
+        float h = (fm.descent - fm.ascent) / 2;
+        canvas.drawRect(x - w, y - h, x + w, y + h, knockout);
+        canvas.drawText(s, x, y - (fm.ascent + fm.descent) / 2, text);
+    }
 
     /**
      * Draws a glyph with its ink centered on (x, y). Icon glyphs don't sit where their advance
@@ -342,19 +384,21 @@ public final class MapView extends View {
         }
         float tx = event.getX();
         float ty = event.getY();
-        // A place under the finger wins.
-        SessionSnapshot.PlaceView nearest = null;
+        // A place under the finger wins: its icon or its name.
+        Spot nearest = null;
         double best = 24 * dp;
-        for (SessionSnapshot.PlaceView p : map.places) {
-            float radius = ringStart(p.ring) + ringWidth() * (float) p.ringPosition;
-            double d = Math.hypot(tx - x(radius, p.turn), ty - y(radius, p.turn));
+        for (Spot spot : spots) {
+            double d = Math.hypot(tx - spot.x, ty - spot.y);
+            if (spot.labelBox != null && spot.labelBox.contains(tx, ty)) {
+                d = 0;
+            }
             if (d < best) {
                 best = d;
-                nearest = p;
+                nearest = spot;
             }
         }
         if (nearest != null) {
-            listener.onPlace(nearest);
+            listener.onPlace(nearest.place);
             performClick();
             return true;
         }

@@ -387,6 +387,12 @@ public final class TerminalViewModel extends ViewModel {
         }
     }
 
+    void linkHideIncoming() {
+        if (ready) {
+            run(step -> session.linkHideIncoming());
+        }
+    }
+
     // ---- Game executor ----
 
     private void startSession() {

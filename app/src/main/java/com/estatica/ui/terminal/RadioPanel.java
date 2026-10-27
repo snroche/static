@@ -147,9 +147,7 @@ final class RadioPanel {
         if (section == Section.TRADE) {
             trade.render(radio.market);
         }
-        sectionButton(b.sectionLink, Section.LINK, res.getString(viewModel.link().view().getValue() != null
-                && viewModel.link().view().getValue().state == com.estatica.data.link.NearbyLink.State.CONNECTED
-                ? R.string.radio_section_link_on : R.string.radio_section_link));
+        linkButton(res);
         b.link.setVisibility(section == Section.LINK ? View.VISIBLE : View.GONE);
         if (section == Section.LINK) {
             link.render(radio.link);
@@ -227,11 +225,19 @@ final class RadioPanel {
     void onNearby(LinkController.View near) {
         link.renderNearby(near);
         if (snapshot != null && isShown()) {
-            Resources res = b.getRoot().getResources();
-            sectionButton(b.sectionLink, Section.LINK, res.getString(near.state
-                    == com.estatica.data.link.NearbyLink.State.CONNECTED
-                    ? R.string.radio_section_link_on : R.string.radio_section_link));
+            linkButton(b.getRoot().getResources());
         }
+    }
+
+    /** LINK: ◉ while linked to a bunker nearby, else a count of wanderers waiting. */
+    private void linkButton(Resources res) {
+        LinkController.View near = viewModel.link().view().getValue();
+        int badge = snapshot.radio.link != null ? snapshot.radio.link.badge : 0;
+        String label = near != null && near.state == com.estatica.data.link.NearbyLink.State.CONNECTED
+                ? res.getString(R.string.radio_section_link_on)
+                : badge > 0 ? res.getString(R.string.radio_section_link_badge, badge)
+                : res.getString(R.string.radio_section_link);
+        sectionButton(b.sectionLink, Section.LINK, label);
     }
 
     /** Opens RADIO → LINK → NEARBY. */

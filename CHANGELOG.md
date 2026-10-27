@@ -10,6 +10,20 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.8.2] — A cleaner map, popups for trades and incoming codes — in verification
+
+App 0.8.2 (versionCode 802) · DB 14 (no change) · Content 28 (no change)
+
+### Added
+- **Incoming codes open a popup** with what they brought, or why nothing came through. The log still has it all.
+- **Trades open in their own popup.** NEARBY shows what they're offering and whether they've agreed; OPEN TRADE has the rest.
+- **LINK shows a count** of wanderers waiting on the road (◉ while linked to a bunker nearby).
+- **Sounds and touch:** a short data chirp when a code is made or taken, and a chirp and a buzz when a nearby link comes up.
+
+### Changed
+- **The region map is laid out cell by cell.** Each place sits in the middle of its sector, icon over name; several in one cell spread across it. Ring names sit on the ring borders, and names are drawn on a patch of background so lines never cross them. Taps match what's drawn.
+- **Smaller drop and trade editors:** each good is one row with its icon, how many of how many, and − / + (hold for five), instead of four buttons under each.
+
 ## [0.8.1] — A tidier radio, a code popup, rewards for cracking codes — in verification
 
 App 0.8.1 (versionCode 801) · DB 14 (no change) · **Content 27 → 28**
