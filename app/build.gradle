@@ -48,6 +48,13 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
+    // The language can be picked in-game: every translation has to ship, not just the device's.
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
     buildFeatures {
         viewBinding true
         buildConfig true

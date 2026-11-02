@@ -10,6 +10,16 @@ When they change, each entry lists the three independent versions:
 
 _Nothing yet._
 
+## [0.8.5] — Español — in verification
+
+App 0.8.5 (versionCode 805) · DB 14 (no change) · **Content 30 → 31**
+
+### Added
+- **The game in Spanish.** Every screen, every situation, every conversation, every radio station and every voice, in neutral Latin American Spanish. It follows the phone's language, or pick it in ⚙ Options → Language (System / English / Español); the game restarts to switch. Lines already in the log stay as they were written.
+
+### Fixed
+- **The supplies on the status bar no longer split** an icon from its number when the row wraps.
+
 ## [0.8.4] — Situations in steps, real prices, the dark comes back — in verification
 
 App 0.8.4 (versionCode 804) · DB 14 (no change) · **Content 29 → 30**

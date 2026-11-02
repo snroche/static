@@ -137,6 +137,19 @@ public final class TerminalActivity extends ComponentActivity {
     };
 
     @Override
+    protected void attachBaseContext(android.content.Context base) {
+        super.attachBaseContext(com.estatica.data.settings.Language.wrap(base));
+    }
+
+    /** A new language: let pending saves finish, then start over in a fresh process. */
+    private void restartForLanguage() {
+        viewModel.afterPendingWork(() -> {
+            startActivity(android.content.Intent.makeRestartActivityTask(getComponentName()));
+            Runtime.getRuntime().exit(0);
+        });
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityTerminalBinding.inflate(getLayoutInflater());
@@ -167,7 +180,7 @@ public final class TerminalActivity extends ComponentActivity {
         optionsPanel = new OptionsPanel(binding.optionsPanel, viewModel, () -> {
             optionsPanel.hide();
             updateBack();
-        }, viewModel.appVersion());
+        }, this::restartForLanguage, viewModel.appVersion());
         binding.optionsButton.setOnClickListener(v -> {
             if (optionsPanel.isShown()) {
                 optionsPanel.hide();
@@ -719,7 +732,8 @@ public final class TerminalActivity extends ComponentActivity {
                 hud.append(r.icon);
                 hud.setSpan(new android.text.style.RelativeSizeSpan(1.35f), start, hud.length(),
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                colored(hud, " " + compact(r.amount), r.amount == 0 ? R.color.danger : R.color.amber);
+                // No-break space: the icon and its number wrap as one block.
+                colored(hud, " " + compact(r.amount), r.amount == 0 ? R.color.danger : R.color.amber);
             } else {
                 hud.append(getString(R.string.hud_resource, r.shortName, r.amount));
             }

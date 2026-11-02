@@ -1,0 +1,20 @@
+{
+  "mara/name": "Mara",
+  "mara/bio": "Hacía repartos en bicicleta antes del Silencio. Conoce cada callejón del barrio.",
+  "mara/habits/0/text": "Cuenta cosas cuando está ansiosa: tornillos, escalones, latas.",
+  "mara/habits/1/text": "Duerme con las botas puestas, por las dudas.",
+  "mara/habits/2/text": "Tararea las melodías de la armónica de su padre cuando cree que nadie la escucha.",
+  "mara/habits/3/text": "Te guarda la última galleta. Siempre.",
+  "mara/thanks/lines/0": "Anoche salí por atrás. Traje esto. Y después toqué un poco, en el techo.",
+  "mara/thanks/lines/1": "¿Conoces el callejón detrás de la panadería? Nadie lo conoce. Yo sí. Toma.",
+  "mara/thanks/text": "{name} se escabulló por sus caminos y volvió con una bolsa",
+  "irene/name": "Irene",
+  "irene/bio": "Técnica de laboratorio. Anota todo en un cuaderno que no le muestra a nadie.",
+  "irene/habits/0/text": "Le pone etiqueta a todo. A los frascos. A los estantes. Una vez, a la taza de otra persona.",
+  "irene/habits/1/text": "Revisa el cerrojo de la puerta tres veces antes de dormir.",
+  "irene/habits/2/text": "Le habla a la estática cuando cree que está sola.",
+  "irene/habits/3/text": "Te deja té en la consola sin decir nada.",
+  "irene/thanks/lines/0": "Hice el inventario del depósito. Había tres cajas de componentes etiquetadas como chatarra. Además, escribí un procedimiento. Todos lo leyeron.",
+  "irene/thanks/lines/1": "Escribí cómo debería funcionar el taller. Paso a paso. Vas a ver que ahorra tiempo.",
+  "irene/thanks/text": "{name} revisó el depósito con su cuaderno"
+}

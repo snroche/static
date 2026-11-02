@@ -204,6 +204,10 @@
     <string name="options_operator_gender">[ You are: %1$s ]</string>
     <string name="options_man">a man</string>
     <string name="options_woman">a woman</string>
+    <string name="options_language">[ Language: %1$s ]</string>
+    <string name="options_language_system">system</string>
+    <string name="options_language_en" translatable="false">English</string>
+    <string name="options_language_es" translatable="false">Español</string>
     <string name="options_text_speed">Text speed: %1$s</string>
     <string-array name="options_text_speeds">
         <item>slow</item>

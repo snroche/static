@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 
 import com.estatica.R;
+import com.estatica.data.settings.Language;
 import com.estatica.databinding.DialogResetBinding;
 import com.estatica.databinding.PanelOptionsBinding;
 
@@ -22,7 +23,11 @@ final class OptionsPanel {
     private final PanelOptionsBinding b;
     private final TerminalViewModel viewModel;
 
-    OptionsPanel(PanelOptionsBinding binding, TerminalViewModel viewModel, Runnable close, String version) {
+    private final Runnable restart;
+
+    OptionsPanel(PanelOptionsBinding binding, TerminalViewModel viewModel, Runnable close, Runnable restart,
+                 String version) {
+        this.restart = restart;
         this.b = binding;
         this.viewModel = viewModel;
         b.optionsClose.setOnClickListener(v -> close.run());
@@ -41,6 +46,7 @@ final class OptionsPanel {
         b.optionsCrt.setOnClickListener(v -> viewModel.toggleCrtOption());
         b.optionsOperatorGender.setOnClickListener(v -> viewModel.toggleOperatorGender());
         b.optionsReset.setOnClickListener(v -> confirmReset());
+        b.optionsLanguage.setOnClickListener(v -> nextLanguage());
         b.optionsVersion.setText(b.getRoot().getResources().getString(R.string.options_version, version));
     }
 
@@ -65,6 +71,16 @@ final class OptionsPanel {
             }
         });
         dialog.show();
+    }
+
+    /** System → English → Español. Content is read once at start, so the game restarts. */
+    private void nextLanguage() {
+        Context context = b.getRoot().getContext();
+        String picked = Language.picked(context);
+        int i = java.util.Arrays.asList(Language.CHOICES).indexOf(picked);
+        Language.pick(context, Language.CHOICES[(i + 1) % Language.CHOICES.length]);
+        b.optionsLanguage.setEnabled(false);
+        restart.run();
     }
 
     private void saveName() {
@@ -98,6 +114,10 @@ final class OptionsPanel {
         String[] speeds = res.getStringArray(R.array.options_text_speeds);
         b.optionsTextSpeed.setText(res.getString(R.string.options_text_speed, speeds[Math.min(o.textSpeed, speeds.length - 1)]));
         b.optionsCrt.setText(res.getString(R.string.options_toggle, check(o.crt), res.getString(R.string.options_crt)));
+        String picked = Language.picked(b.getRoot().getContext());
+        b.optionsLanguage.setText(res.getString(R.string.options_language, res.getString(
+                picked.equals("en") ? R.string.options_language_en
+                        : picked.equals("es") ? R.string.options_language_es : R.string.options_language_system)));
         b.optionsOperatorGender.setText(res.getString(R.string.options_operator_gender,
                 res.getString(o.operatorFemale ? R.string.options_woman : R.string.options_man)));
     }

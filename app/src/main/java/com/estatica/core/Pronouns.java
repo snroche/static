@@ -44,6 +44,11 @@ public final class Pronouns {
      * @param form he, him, his, hers, himself, man, boy, guy (any capitalized too)
      */
     public static String form(String form, boolean female) {
+        int slash = form.indexOf('/');
+        if (slash > 0 && slash < form.length() - 1) {
+            // Any pair, for languages that gender more than pronouns: {solo/sola:op}.
+            return female ? form.substring(slash + 1) : form.substring(0, slash);
+        }
         String lower;
         switch (form.toLowerCase(java.util.Locale.ROOT)) {
             case "he":

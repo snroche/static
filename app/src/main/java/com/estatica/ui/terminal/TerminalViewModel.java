@@ -207,6 +207,11 @@ public final class TerminalViewModel extends ViewModel {
         refreshOptions();
     }
 
+    /** Runs on the main thread once the game executor has finished what's queued (saves). */
+    void afterPendingWork(Runnable then) {
+        game.execute(() -> main.post(then));
+    }
+
     void toggleCrtOption() {
         settings.toggleCrt();
         refreshOptions();
