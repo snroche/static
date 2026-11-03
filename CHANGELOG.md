@@ -340,8 +340,6 @@ App 0.6.13 (versionCode 613) · DB 12 (no change) · **Content 21 → 22**
     - A little food every hour, never more than a quarter of what the crew eats.
     - Uses reserve for the lamps, and blight stops it for a day now and then.
   - Existing tasks need their room open. All of those rooms are open from the start.
-***REMOVED***
-***REMOVED***
 - **Options → [ RESET ALL DATA ]** wipes every save and setting after a confirmation popup; the game closes and starts from zero next time.
 
 ### Changed
